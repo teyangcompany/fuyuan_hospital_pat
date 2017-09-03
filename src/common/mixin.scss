@@ -1,0 +1,75 @@
+/*mixin and function*/
+
+@mixin h_lh($h) {
+  height: $h;
+  line-height: $h;
+}
+
+@mixin border($pos:bottom,$color:#ccc,$weilei:after,$type:solid) {
+  & {
+    position: relative;
+  }
+  &::#{$weilei} {
+    display: block;
+    content: "";
+    position: absolute;
+  }
+  @if ($pos==bottom) {
+    &::#{$weilei} {
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      border-bottom: 1px $type $color;
+      transform: scaleY(0.5);
+      transform-origin: 0 100%;
+    }
+  }
+
+  @if ($pos==top) {
+    &::#{$weilei} {
+      left: 0;
+      top: 0;
+      width: 100%;
+      border-top: 1px $type $color;
+      transform: scaleY(0.5);
+      transform-origin: 0 0;
+    }
+  }
+
+  @if ($pos==right) {
+    &::#{$weilei} {
+      right: 0;
+      top: 0;
+      height: 100%;
+      border-right: 1px $type $color;
+      transform: scaleX(0.5);
+      transform-origin: 100% 0;
+    }
+  }
+
+  @if ($pos==left) {
+    &::#{$weilei} {
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-left: 1px $type $color;
+      transform: scaleX(0.5);
+      transform-origin: 0 0;
+    }
+  }
+}
+
+@mixin t_r_b_l($top:0,$right:0,$bottom:0,$left:0) {
+  @if ($top==0) {
+    top: 0;
+  }
+  @if ($right==0) {
+    right: 0;
+  }
+  @if ($bottom==0) {
+    bottom: 0;
+  }
+  @if ($left==0) {
+    left: 0;
+  }
+}

@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-size: 14px;/*no*/
+}
+
+li {
+  list-style: none;
+}
+
+input {
+  outline: none;
+  -webkit-appearance: none;
+}
+
+textarea {
+  resize: none;
+}
+
+$i: 6;
+@while $i>0 {
+  h#{$i} {
+    font-weight: normal;
+  }
+  $i: $i - 1;
+}

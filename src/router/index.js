@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 
 Vue.use(Router)
 
+/*路由懒加载*/
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    }
-  ]
+    routes: [
+        {
+            path: '/',
+            component: () => import("../pages/index.vue")
+        },
+        {
+            path:"/demo",
+            component: () => import("../pages/demo.vue")
+        }
+    ]
 })
