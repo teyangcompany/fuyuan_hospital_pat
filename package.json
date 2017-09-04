@@ -13,6 +13,7 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "good-storage": "^1.0.1",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0"
