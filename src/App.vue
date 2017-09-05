@@ -17,15 +17,14 @@
         page: ""
       }
     },
-    created(){
-      http("smarthos.system.area.list",{}).then((res)=>{
-          console.log("111",res);
+    created() {
+      http("smarthos.system.area.list", {}).then((res) => {
+        console.log("111", res);
       });
     },
     watch: {
       $route(to, from) {
         let p = to.fullPath;
-
         if (p === from.fullPath || new Date().getTime() - window.appStartTime < 200) {
           historyCache.clear();
           historyCache.set([p]);
