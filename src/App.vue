@@ -17,11 +17,6 @@
         page: ""
       }
     },
-    created() {
-      http("smarthos.system.area.list", {}).then((res) => {
-        console.log("111", res);
-      });
-    },
     watch: {
       $route(to, from) {
         let p = to.fullPath;
@@ -82,5 +77,17 @@
   #app, .page {
     position: fixed;
     @include t_r_b_l();
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .wrapper {
+      flex: 1 1 auto;
+    }
+    .noflex {
+      flex: 0 0 auto;
+    }
   }
 </style>

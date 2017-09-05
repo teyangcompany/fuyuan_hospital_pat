@@ -10,7 +10,7 @@ export default function (service, options) {
   };
   let axiosConfig = {
     headers: {
-      "test": true,
+      "sign": "test",
       "Content-Type": "application/json"
     },
   }
