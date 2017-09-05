@@ -9,10 +9,6 @@ export default new Router({
         {
             path: '/',
             component: () => import("../pages/index.vue")
-        },
-        {
-            path:"/demo",
-            component: () => import("../pages/demo.vue")
         }
     ]
 })

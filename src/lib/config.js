@@ -1,5 +1,5 @@
 export default {
-  api_url: "http://test-api-ywfy.hztywl.cn/app",
+  api_url: "//test-api-ywfy.hztywl.cn/app",
   base_params: {
     channel: "23",
     format: "JSON",
