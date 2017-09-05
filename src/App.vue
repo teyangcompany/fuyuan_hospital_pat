@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @touchmove.stop>
+  <div id="app" @touchmove.stop.prevent>
     <transition :name="page">
       <router-view></router-view>
     </transition>
@@ -9,7 +9,6 @@
 <script>
   import {historyCache} from "./lib/cache"
   import http from "./lib/http"
-
   export default {
     name: 'app',
     data() {
