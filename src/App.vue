@@ -9,6 +9,7 @@
 <script>
   import {historyCache} from "./lib/cache"
   import http from "./lib/http"
+
   export default {
     name: 'app',
     data() {
@@ -79,10 +80,13 @@
   }
 
   .page {
+    background-color: $bgColor;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     .wrapper {
+      overflow-y: auto;
+      overflow-scrolling: touch;
       flex: 1 1 auto;
     }
     .noflex {

@@ -4,8 +4,8 @@
   box-sizing: border-box;
 }
 
-body{
-  font-size: 14px;/*no*/
+body {
+  font-size: 14px; /*no*/
 }
 
 li {
@@ -21,10 +21,24 @@ textarea {
   resize: none;
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*h1-h6的字体weight重置*/
 $i: 6;
 @while $i>0 {
   h#{$i} {
     font-weight: normal;
   }
   $i: $i - 1;
+}
+
+/*position原子样式设定*/
+@each $i in absolute, relative, fixed {
+  .#{$i} {
+    position: $i;
+  }
 }

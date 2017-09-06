@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <ul>
-      <li :class="[currentNav==index?'cover':'',item.name]" v-for="(item,index) in nav">
+      <li @click="goPage(item.name)" :class="[currentNav==index?'cover':'',item.name]" v-for="(item,index) in nav">
         <div class="icon"></div>
         <div class="text">{{item.value}}</div>
       </li>
@@ -32,11 +32,17 @@
     beforeDestroy() {
 
     },
-    methods: {}
+    methods: {
+      goPage(page) {
+        this.$router.push(`/${page}`);
+      }
+    }
   };
 </script>
 
 <style scoped lang="scss">
+  @import "../common/var";
+
   .footer {
     $footerHei: 60px;
     height: $footerHei; /*no*/
@@ -66,6 +72,9 @@
           }
           &.#{$val}.cover .icon {
             background-image: url("../../static/img/footer/#{$val}.cover.png");
+          }
+          &.#{$val}.cover .text {
+            color: $mainColor;
           }
         }
 

@@ -19,7 +19,7 @@
       left: 0;
       bottom: 0;
       width: 100%;
-      border-bottom: 1px $type $color;
+      border-bottom: 1px $type $color;/*no*/
       transform: scaleY(0.5);
       transform-origin: 0 100%;
     }
@@ -30,7 +30,7 @@
       left: 0;
       top: 0;
       width: 100%;
-      border-top: 1px $type $color;
+      border-top: 1px $type $color;/*no*/
       transform: scaleY(0.5);
       transform-origin: 0 0;
     }
@@ -41,7 +41,7 @@
       right: 0;
       top: 0;
       height: 100%;
-      border-right: 1px $type $color;
+      border-right: 1px $type $color;/*no*/
       transform: scaleX(0.5);
       transform-origin: 100% 0;
     }
@@ -52,7 +52,7 @@
       left: 0;
       top: 0;
       height: 100%;
-      border-left: 1px $type $color;
+      border-left: 1px $type $color;/*no*/
       transform: scaleX(0.5);
       transform-origin: 0 0;
     }
