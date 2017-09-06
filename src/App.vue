@@ -35,7 +35,6 @@
           history.push(p);
         }
         historyCache.set(history);
-        console.log(to.fullPath, from.fullPath);
       }
     }
   }

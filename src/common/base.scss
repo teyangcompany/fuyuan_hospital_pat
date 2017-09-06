@@ -42,3 +42,24 @@ $i: 6;
     position: $i;
   }
 }
+
+/*display原子化样式*/
+@each $i in flex, box, inline, inline-box {
+  .#{$i} {
+    display: $i;
+  }
+}
+
+/*flex原子化样式*/
+@each $i in 0, 1 {
+  .flex#{$i} {
+    flex: $i $i auto;
+  }
+}
+
+/*text-align原子化样式*/
+@each $i in left, center, right {
+  .#{$i} {
+    text-align: $i;
+  }
+}

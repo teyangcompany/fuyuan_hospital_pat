@@ -19,7 +19,7 @@
       left: 0;
       bottom: 0;
       width: 100%;
-      border-bottom: 1px $type $color;/*no*/
+      border-bottom: 1px $type $color; /*no*/
       transform: scaleY(0.5);
       transform-origin: 0 100%;
     }
@@ -30,7 +30,7 @@
       left: 0;
       top: 0;
       width: 100%;
-      border-top: 1px $type $color;/*no*/
+      border-top: 1px $type $color; /*no*/
       transform: scaleY(0.5);
       transform-origin: 0 0;
     }
@@ -41,7 +41,7 @@
       right: 0;
       top: 0;
       height: 100%;
-      border-right: 1px $type $color;/*no*/
+      border-right: 1px $type $color; /*no*/
       transform: scaleX(0.5);
       transform-origin: 100% 0;
     }
@@ -52,7 +52,7 @@
       left: 0;
       top: 0;
       height: 100%;
-      border-left: 1px $type $color;/*no*/
+      border-left: 1px $type $color; /*no*/
       transform: scaleX(0.5);
       transform-origin: 0 0;
     }
@@ -71,5 +71,21 @@
   }
   @if ($left==0) {
     left: 0;
+  }
+}
+
+@mixin w_h($w,$h) {
+  width: $w;
+  height: $h;
+}
+
+@mixin backgroundImageSet($w:100%,$h:100%,$x:center,$y:center,$repeat:no-repeat) {
+  background-position: $x $y;
+  background-repeat: $repeat;
+
+  @if ($h!=0) {
+    background-size: $w $h;
+  } @else {
+    background-size: $w;
   }
 }
