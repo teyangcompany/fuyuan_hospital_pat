@@ -1,6 +1,8 @@
 <template>
   <div class="header relative">
-    <div class="back">{{backText}}</div>
+    <div class="back absolute" @click="$router.go(-1)">
+      <slot name="back"></slot>
+    </div>
     <slot name="right"></slot>
     <span>{{title}}</span>
   </div>
@@ -42,9 +44,21 @@
     font-size: 18px; /*no*/
     background-color: white;
     @include border(bottom);
+
+    .back {
+      @include t_r_b_l(0, 1, 1, 0);
+      i {
+        display: block;
+        width: 45px; /*no*/
+        height: 45px; /*no*/
+        background-image: url(../../static/img/icon/arrow-left-grow.png);
+        @include backgroundImageSet(22px, 39px, $commonSpace);
+      }
+    }
+
     @extend %a;
     .right {
-      right: 28px;
+      right: $commonSpace;
       top: 0px;
       @extend %a;
       font-size: 16px; /*no*/

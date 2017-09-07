@@ -131,8 +131,8 @@
     .title {
         margin-top: $paddingHei;
         @include h_lh(110px);
-        padding-left: 28px;
-        padding-right: 28px;
+        padding-left: $commonSpace;
+        padding-right: $commonSpace;
         background-color: white;
         .name, .more {
             color: #b2b2b2;
@@ -156,7 +156,7 @@
                 margin-top: 30px;
             }
             li {
-                padding: 0 28px;
+                padding: 0 $commonSpace;
                 %a {
                     @include w_h(230px, 150px);
                 }
