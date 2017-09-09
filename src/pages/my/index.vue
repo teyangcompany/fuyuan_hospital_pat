@@ -87,7 +87,7 @@
         @include w_h(750px, 213px);
         background-image: url(../../../static/img/my/bg2.png);
         @include backgroundImageSet(750px, 213px);
-        padding: 0 28px;
+        padding: 0 $commonSpace;
 
         $aWid: 134px;
         %a {
@@ -135,7 +135,7 @@
                 align-items: center;
                 background-color: white;
                 @include h_lh(90px);
-                padding: 0 28px;
+                padding: 0 $commonSpace;
                 .icon {
                     @extend %icon;
                 }

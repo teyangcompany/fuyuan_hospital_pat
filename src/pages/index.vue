@@ -28,7 +28,7 @@
       </div>
       <div class="indexnav">
         <ul>
-          <li v-for="item in nav" :class="[item.name]">
+          <li @click="goPage(item)" v-for="item in nav" :class="[item.name]">
             <div class="icon"></div>
             <div class="text">{{item.value}}</div>
           </li>
@@ -67,7 +67,7 @@
 
 
   export default {
-    mixins:[mainHeightMixin],
+    mixins: [mainHeightMixin],
     data() {
       return {
         adsettings: [],
@@ -113,6 +113,9 @@
             pagination: '.swiper-pagination',
           });
         }, 20)
+      },
+      goPage(item) {
+        item.path && this.$router.push(item.path);
       }
     }
   };
@@ -126,7 +129,7 @@
     .wrapper {
       .message {
         position: absolute;
-        right: 28px;
+        right: $commonSpace;
         top: 52px;
         width: 66px;
         height: 66px;
@@ -170,7 +173,7 @@
             background-size: 100% 100%;
             flex: 0 0 auto;
             padding-top: 20px;
-            padding-left: 28px;
+            padding-left: $commonSpace;
             width: 50%;
             .name {
               font-size: 16px; /*no*/
@@ -229,7 +232,7 @@
             margin-top: $wrapperPadding;
           }
           li {
-            padding: 30px 28px;
+            padding: 30px $commonSpace;
             display: flex;
             background-color: white;
             .icon {

@@ -5,7 +5,7 @@
   line-height: $h;
 }
 
-@mixin border($pos:bottom,$color:#ccc,$weilei:after,$type:solid) {
+@mixin border($pos:bottom,$color:#ccc,$weilei:after,$type:solid,$weight:1px) {
   & {
     position: relative;
   }
@@ -19,9 +19,13 @@
       left: 0;
       bottom: 0;
       width: 100%;
-      border-bottom: 1px $type $color; /*no*/
       transform: scaleY(0.5);
-      transform-origin: 0 100%;
+      transform-origin: 100% 100%;
+      @if ($weight==1px) {
+        border-bottom: $weight $type $color; /*no*/
+      } @else {
+        border-bottom: $weight $type $color;
+      }
     }
   }
 
@@ -52,9 +56,14 @@
       left: 0;
       top: 0;
       height: 100%;
-      border-left: 1px $type $color; /*no*/
+      border-left: $weight $type $color; /*no*/
       transform: scaleX(0.5);
       transform-origin: 0 0;
+      @if ($weight==1px) {
+        border-left: $weight $type $color; /*no*/
+      } @else {
+        border-left: $weight $type $color;
+      }
     }
   }
 }

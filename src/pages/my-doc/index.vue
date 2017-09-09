@@ -110,7 +110,7 @@
 
   .title {
     @include h_lh(60px);
-    padding-left: 28px;
+    padding-left: $commonSpace;
     color: #888888;
     font-size: 16px; /*no*/
   }
@@ -122,7 +122,7 @@
         @include border(top);
       }
       li {
-        padding: 34px 28px;
+        padding: 34px $commonSpace;
         display: flex;
         %a {
           $imgWid: 90px;
@@ -141,7 +141,7 @@
         .info {
           flex: 1 1 auto;
           max-width: 570px;
-          margin-left: 28px;
+          margin-left: $commonSpace;
           h3 {
             @include h_lh(40px);
             display: flex;
@@ -156,7 +156,7 @@
               color: #b2b2b2;
             }
             .dept {
-              margin-left: 28px;
+              margin-left: $commonSpace;
               flex: 1 1 auto;
             }
           }
