@@ -2,7 +2,7 @@
 @import "mixin";
 @import "base";
 
-.message-tip{
+.message-tip {
   $messageWid: 31px;
   position: absolute;
   right: 0;
@@ -16,4 +16,65 @@
   color: white;
   transform: translate(50%, -$messageWid/2+10px);
   font-size: 12px; /*no*/
+}
+
+/*表单相关*/
+.form {
+  %item {
+    background-color: white;
+    padding: 0 $commonSpace;
+  }
+  .form-item + .form-item {
+    @include border(top);
+  }
+  .form-item {
+    @extend %item;
+  }
+  .form-item-input {
+    @include h_lh(90px);
+  }
+  .form-item-text {
+    @extend %item;
+    height: 300px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  .form-item-upload {
+    @extend %item;
+    padding: 30px $commonSpace;
+    .upload {
+      $uploadWid: 140px;
+      @include w_h($uploadWid, $uploadWid);
+      @include backgroundImageSet(99%, 99%);
+    }
+  }
+  .label, .input {
+    color: #333333;
+    font-size: 32px;
+  }
+  .input {
+    @include backgroundImageSet(18px, 30px, right);
+    padding-right: 18px + 20px;
+  }
+  .textarea {
+    textarea {
+      width: 100%;
+      height: 300px - 30px*2;
+      &::-webkit-input-placeholder::after {
+        content: "详细描述您的症状、疾病和身体状况。\A(请放心您的个人信息不回泄露)";
+      }
+    }
+  }
+
+}
+
+/*上传组件*/
+.upload {
+  overflow: hidden;
+  input {
+    opacity: 0;
+  }
+  input, .mask {
+    @include t_r_b_l(0, 0, 0, 0);
+  }
 }

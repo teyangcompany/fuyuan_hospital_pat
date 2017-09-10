@@ -1,5 +1,5 @@
 <template>
-  <div class="header relative">
+  <div class="header relative center">
     <div class="back absolute" @click="$router.go(-1)">
       <slot name="back"></slot>
     </div>
@@ -40,10 +40,10 @@
   }
 
   .header {
-    text-align: center;
     font-size: 18px; /*no*/
     background-color: white;
     @include border(bottom);
+    @extend %a;
 
     .back {
       @include t_r_b_l(0, 1, 1, 0);
@@ -56,7 +56,6 @@
       }
     }
 
-    @extend %a;
     .right {
       right: $commonSpace;
       top: 0px;

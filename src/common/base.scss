@@ -14,11 +14,20 @@ li {
 
 input {
   outline: none;
+  border: 0px none;
+  outline: none;
   -webkit-appearance: none;
 }
 
 textarea {
   resize: none;
+  outline: none;
+  border: 0px none;
+  -webkit-appearance: none;
+}
+
+a {
+  text-decoration: none;
 }
 
 .ellipsis {
@@ -44,7 +53,7 @@ $i: 6;
 }
 
 /*display原子化样式*/
-@each $i in flex, box, inline, inline-box {
+@each $i in flex, block, inline, inline-block {
   .#{$i} {
     display: $i;
   }
@@ -61,5 +70,24 @@ $i: 6;
 @each $i in left, center, right {
   .#{$i} {
     text-align: $i;
+  }
+}
+
+/*overflow原子化样式*/
+@each $i in hidden, auto, scroll {
+  .overflow-#{$i} {
+    overflow: $i;
+  }
+  @each $j in x, y {
+    .overflow-#{$j}-#{$i} {
+      overflow-#{$j}: $i;
+    }
+  }
+}
+
+/*float原子化样式*/
+@each $i in left, right {
+  .float-#{$i} {
+    float: $i;
   }
 }

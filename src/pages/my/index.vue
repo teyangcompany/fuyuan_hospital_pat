@@ -17,7 +17,7 @@
             </div>
             <div class="nav">
                 <ul>
-                    <li v-for="item in nav" :class="[item.name]" class="flex">
+                    <li @click="goPage(item)" v-for="item in nav" :class="[item.name]" class="flex">
                         <div class="icon flex0"></div>
                         <div class="text flex1">{{item.value}}</div>
                     </li>
@@ -61,7 +61,11 @@
         beforeDestroy() {
 
         },
-        methods: {}
+        methods: {
+            goPage(nav) {
+                nav.path && this.$router.push("/my" + nav.path);
+            }
+        }
     };
 </script>
 
