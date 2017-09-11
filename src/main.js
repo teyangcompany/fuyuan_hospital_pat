@@ -3,11 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import weui from './lib/wejs';
+Vue.use(weui)
 
 Vue.config.productionTip = false
 
 let remUnit = 100;     // 在px2rem中预设rem的值 即 1rem = ? px
-let designWid = 320;  // 设计稿宽度
+let designWid = 750;  // 设计稿宽度
 let winWid = window.innerWidth;
 let bl = winWid / designWid;
 document.querySelector('html').style.fontSize = (bl * remUnit) + 'px';

@@ -42,7 +42,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       filename: utils.assetsPath('css/[name].[contenthash].css')
     }),
     // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
+    // duplicated CSS from different business can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: {
         safe: true

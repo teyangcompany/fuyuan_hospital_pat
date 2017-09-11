@@ -1,6 +1,6 @@
 <template>
     <div>
-      
+      212121
     </div>
 </template>
 
@@ -14,7 +14,7 @@
         computed: {},
         components: {},
         mounted() {
-
+            this.$weui.alert(121313)
         },
         beforeDestroy() {
 
@@ -24,5 +24,5 @@
 </script>
 
 <style scoped lang="scss">
-    @import "../common/common";
+    @import "../common/common.scss";
 </style>
