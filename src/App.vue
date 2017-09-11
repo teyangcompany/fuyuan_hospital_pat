@@ -1,5 +1,7 @@
 <template>
-  <div id="app">
+
+  <div id="app" >
+
     <transition :name="page">
       <router-view></router-view>
     </transition>
@@ -17,11 +19,14 @@
         page: ""
       }
     },
+
     created() {
 //      http("smarthos.system.area.list", {}).then((res) => {
 //        console.log("111", res);
 //      });
     },
+
+
     watch: {
       $route(to, from) {
         let p = to.fullPath;
@@ -40,7 +45,6 @@
           history.push(p);
         }
         historyCache.set(history);
-        console.log(to.fullPath, from.fullPath);
       }
     }
   }
@@ -86,5 +90,20 @@
     background: #f5f5f5;
     overflow: hidden;
     @include t_r_b_l();
+  }
+
+  .page {
+    background-color: $bgColor;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .wrapper {
+      overflow-y: auto;
+      overflow-scrolling: touch;
+      flex: 1 1 auto;
+    }
+    .noflex {
+      flex: 0 0 auto;
+    }
   }
 </style>
