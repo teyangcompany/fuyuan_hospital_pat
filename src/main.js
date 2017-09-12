@@ -3,8 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import weui from './lib/wejs';
-Vue.use(weui)
+import "weui";
 
 Vue.config.productionTip = false
 
