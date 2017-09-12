@@ -62,13 +62,13 @@
     import AppHeader from "../../../components/app-header.vue"
     import config from "../../../lib/config"
     import Scroll from "../../../base/scroll.vue"
+    import {scrollHeightMixin} from "../../../lib/mixin"
 
     export default {
+        mixins: [scrollHeightMixin],
         data() {
             return {
-                basicSituation: config.basic_situation,
-                scrollHeight: 0,
-                basicSituationForm: {}
+                _bottomHeight: window.rem2px * (0.94 + 0.3 + 0.3)
             };
         },
         computed: {},
@@ -77,7 +77,6 @@
             AppHeader
         },
         created() {
-            this.scrollHeight = window.innerHeight - 45 - (window.rem2px * (0.94 + 0.3 + 0.3));
         },
         mounted() {
 
@@ -205,7 +204,7 @@
                         }
                     }
                     &.img {
-                        li:nth-child(3n+2),li:nth-child(3n+3){
+                        li:nth-child(3n+2), li:nth-child(3n+3) {
                             margin-left: 20px;
                         }
                         img {

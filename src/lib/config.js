@@ -37,7 +37,7 @@ export default {
         {name: "wiki", value: "健康百科"}
     ],
     my_nav: [
-        {name: "my-consult", value: "我的咨询"},
+        {name: "my-consult", value: "我的咨询",path:"/my-consult"},
         {name: "my-book", value: "我的挂号"},
         {name: "common-visitperson", value: "常用就诊人",path:"/common-visitperson"},
         {name: "archives", value: "健康档案", path: "/archives"},
@@ -54,5 +54,17 @@ export default {
         {name:"",value:"既往史"},
         {name:"",value:"家族史"},
         {name:"",value:"过敏史"},
+    ],
+    consult_type_nav:[
+        {name:"",value:"全部问诊"},
+        {name:"",value:"全部状态"}
+    ],
+    consult_status:[
+        {name:"待付款",status:"0"},
+        {name:"待处理",status:"1"},
+        {name:"进行中",status:"3"},
+        {name:"待评价",status:"5"},
+        {name:"已评价",status:"7"},
+        {name:"已取消",status:"-1"},
     ]
 }
