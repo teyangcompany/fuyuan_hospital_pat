@@ -7,27 +7,9 @@ $fontColor: #666;
 $boederCol:#e8e8e8;
 
 /*字体大小配置*/
-
-$bf:36px;
-$mf:32px;
-.mfb{
-  font-size: 32px;
-  color: #333;
-}
-.mfw{
-  font-size: 32px;
-  color: #ffffff;
-}
-.bf{
-  font-size: 32px;
-}
-.mf{
-  font-size: 28px;
-}
-.mfc{
-  font-size: 28px;
-  color: grey;
-}
+$bigFont:36px;
+$normalFont:32px;
+$smallFont:28px;
 
 $commonSpace: 28px;
 

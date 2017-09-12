@@ -1,5 +1,4 @@
 /*mixin and function*/
-
 @mixin h_lh($h) {
   height: $h;
   line-height: $h;
@@ -22,8 +21,10 @@
       transform: scaleY(0.5);
       transform-origin: 100% 100%;
       @if ($weight==1px) {
+        height: $weight;/*no*/
         border-bottom: $weight $type $color; /*no*/
       } @else {
+        height: $weight;
         border-bottom: $weight $type $color;
       }
     }
