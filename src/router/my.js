@@ -26,5 +26,13 @@ export default [
   {
     path: "/my/wallet",
     component: () => import("../pages/my/wallet/index.vue")
+  },
+  {
+    path: "/my/account",
+    component: () => import("../pages/my/account/index.vue")
+  },
+  {
+    path: "/my/about",
+    component: () => import("../pages/my/about.vue")
   }
 ]

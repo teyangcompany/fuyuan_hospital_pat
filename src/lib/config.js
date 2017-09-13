@@ -41,9 +41,14 @@ export default {
     {name: "my-book", value: "我的挂号", path: "/my-book"},
     {name: "common-visitperson", value: "常用就诊人", path: "/common-visitperson"},
     {name: "archives", value: "健康档案", path: "/archives"},
-    {name: "wallet", value: "我的钱包",path:"/wallet"},
-    {name: "account", value: "账户相关"},
-    {name: "about", value: "关于"}
+    {name: "wallet", value: "我的钱包", path: "/wallet"},
+    {
+      name: "account", value: "账户相关", path: "/account", child: [
+      {name: "", value: "修改绑定手机号"},
+      {name: "", value: "修改密码"}
+    ]
+    },
+    {name: "about", value: "关于", path: "/about"}
   ],
   book_doc_nav: [
     {name: "bypeople", value: "按专家预约"},
@@ -73,5 +78,16 @@ export default {
     {name: "待评价", status: "2"},
     {name: "已评价", status: "3"},
     {name: "已过期", status: "4"}
+  ],
+  help: [
+    {name: "全科分诊", class: "qkfz"},
+    {name: "名医视频", class: "mysp"},
+    {name: "在线医生", class: "zxys"},
+    {name: "预约挂号", class: "yygh"},
+    {name: "常用就诊人", class: "cyjzr"},
+    {name: "健康档案", class: "jkda"},
+    {name: "消费明细", class: "xfmx"},
+    {name: "修改绑定手机号", class: "xgbdsjh"},
+    {name: "修改密码", class: "xgmm"}
   ]
 }
