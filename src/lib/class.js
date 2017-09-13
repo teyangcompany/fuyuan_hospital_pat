@@ -12,7 +12,7 @@ export class fileClass {
         if (file) {
             this.file = file;
         }
-        if (url) {
+        if (url){
             this.url = url;
             this.status = "loaded";
         }

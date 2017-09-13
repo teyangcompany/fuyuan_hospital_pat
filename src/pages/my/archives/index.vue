@@ -3,16 +3,16 @@
         <app-header title="健康档案" class="noflex">
             <i slot="back"></i>
         </app-header>
-        <scroll class="wrapper" :height="scrollHeight">
+        <scroll class="wrapper" :height="scrollHeight" :data="list" ref="wrapper">
             <div>
                 <div class="patinfo flex">
                     <div class="ava flex0">
-                        <img src="../../../../static/img/my/pat-m.png" alt="">
+                        <img :src="patAvatar" alt="">
                     </div>
                     <div class="info flex1">
-                        <h3>小李</h3>
-                        <div>姓名：小李</div>
-                        <p>男 27岁 浙江杭州</p>
+                        <h3>{{commpat.commpatName}}</h3>
+                        <div>姓名：&nbsp; {{commpat.commpatName}}</div>
+                        <p>{{commpat.commpatGender=='M'?'男':'女'}} &nbsp;&nbsp;&nbsp;23</p>
                     </div>
                 </div>
 
@@ -22,10 +22,10 @@
 
                 <div class="basic-situation">
                     <ul>
-                        <li v-for="item in basicSituation" class="flex">
+                        <li v-for="item in basicSituation" class="flex" @click="goDetail(item.name)">
                             <div class="label flex0">{{item.value}}</div>
                             <div class="text flex1 right">
-                                无
+                                {{healthDetail[item.name]||"无"}}
                             </div>
                         </li>
                     </ul>
@@ -37,13 +37,13 @@
 
                 <div class="record">
                     <ul>
-                        <li v-for="(o,i) in 6">
-                            <h3>2017-10-23</h3>
-                            <div class="content">根据中央统一部署，中央第二巡视组对国家烟草专卖局（以下称国家烟草局）党组开展专项巡视。</div>
-                            <ol :class="['img','img'+o]">
-                                <li v-for="oo in o">
-                                    <img
-                                            src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=736173869,3996641019&fm=173&s=D5BE8B75F7AD48BA8320D5CA0100E0B0&w=218&h=146&img.JPEG"
+                        <li v-for="(item,i) in list" @click="goCaseDetail(item)">
+                            <h3>{{item.medicalHistory.createTime | Getdate}}</h3>
+                            <div class="content">{{item.medicalHistory.medContent}}</div>
+                            <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
+                                <li v-for="imgSrc of item.attaList">
+                                    <img @load="$refs.wrapper.refresh()"
+                                            :src="imgSrc.attaFileUrl"
                                             alt="">
                                 </li>
                             </ol>
@@ -58,18 +58,30 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     import AppHeader from "../../../components/app-header.vue"
     import config from "../../../lib/config"
+    import api from "../../../lib/http"
     import Scroll from "../../../base/scroll.vue"
-
+    import {Getdate} from '../../../lib/filter'
     export default {
         data() {
             return {
+                form:{
+                    a:1,b:2
+                },
                 basicSituation: config.basic_situation,
                 scrollHeight: 0,
-                basicSituationForm: {}
+                basicSituationForm: {},
+                token:localStorage.getItem('token'),
+                commpat:JSON.parse(localStorage.getItem('commpat')),
+                list:[],
+                healthDetail:{},
+                patAvatar:localStorage.getItem('patAvatar')
             };
+        },
+        filters:{
+            Getdate
         },
         computed: {},
         components: {
@@ -80,12 +92,56 @@
             this.scrollHeight = window.innerHeight - 45 - (window.rem2px * (0.94 + 0.3 + 0.3));
         },
         mounted() {
-
+            this.getData();
+            this.record();
         },
         beforeDestroy() {
 
         },
-        methods: {}
+        methods: {
+            goDetail(name){
+                console.log(name,7777)
+                this.$router.push({
+                    name:name,
+                    params:{
+                        str:this.healthDetail[name]
+                    }
+                })
+            },
+            goCaseDetail(item){
+                this.$router.push({
+                    name:'caseDetail',
+                    params:{
+                        caseObj:item
+                    }
+                })
+            },
+            getData(){
+                api('smarthos.medical.info.detail',{
+                    token:this.token
+                }).then(res=>{
+                    console.log(res,6666)
+                if(res.succ){
+                    this.$set(this.$data,'healthDetail',res.obj);
+
+                }else {
+                    this.$weui.alert(res.msg)
+                }
+            })
+            },
+            record(){
+                api("smarthos.medical.history.list.page",{
+                    token:this.token,
+                }).then(res=>{
+                    console.log(res,888888)
+                    if(res.succ){
+                        this.$set(this.$data,'list',res.list);
+                    }else {
+                        this.$weui.alert(res.msg)
+                    }
+                })
+            },
+        }
     };
 </script>
 

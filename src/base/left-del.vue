@@ -7,7 +7,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     export default {
         props: {
             tag: String,
@@ -46,7 +46,6 @@
 
                 let yDisplacement = touch.pageY - this.touch.pageY;
 
-                console.log("y", Math.abs(yDisplacement), "x", Math.abs(displacement))
 
                 if (Math.abs(yDisplacement) / Math.abs(displacement) > Math.tan(Math.PI / 180 * 15)){
                     return

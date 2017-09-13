@@ -4,11 +4,9 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     import {fileClass} from "../lib/class"
     import {queue} from "d3-queue"
-
-
     export default {
         props: {
             server: String,
@@ -60,12 +58,9 @@
             queued(file, cb) {
                 let form = new FormData();
                 form.append("file", file.file);
-
                 for (let key in this.options) {
                     form.append(key, this.options[key]);
                 }
-
-
                 let xhr = new XMLHttpRequest();
                 xhr.open("POST", this.server);
 

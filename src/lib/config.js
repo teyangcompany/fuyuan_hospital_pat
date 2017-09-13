@@ -50,9 +50,19 @@ export default {
         {name: "bytime", value: "按时间预约"}
     ],
     basic_situation: [
-        {name:"",value:"所患疾病"},
-        {name:"",value:"既往史"},
-        {name:"",value:"家族史"},
-        {name:"",value:"过敏史"},
+        {name:"presentingComplaint",value:"所患疾病"},
+        {name:"pastHistory",value:"既往史"},
+        {name:"familyHistory",value:"家族史"},
+        {name:"allergyHistory",value:"过敏史"},
+    ] ,
+    basic_bar: [
+        {name:"",value:"简介","router":"intro"},
+        {name:"sel",value:"精选","router":"choiceness"},
+        {name:"",value:"动态","router":"dynamic"}
+    ],
+    doc_bar:[
+        {name:"",value:"简介","router":"docIntro"},
+        {name:"sel",value:"精选","router":"docChoiceness"},
+        {name:"",value:"动态","router":"docDynamic"}
     ]
 }

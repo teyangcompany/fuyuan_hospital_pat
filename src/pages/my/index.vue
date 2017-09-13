@@ -15,6 +15,7 @@
                     <p>男 27岁 浙江杭州</p>
                 </div>
             </div>
+
             <div class="nav">
                 <ul>
                     <li @click="goPage(item)" v-for="item in nav" :class="[item.name]" class="flex">

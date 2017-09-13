@@ -2,33 +2,31 @@
     <div class="page">
         <app-header :title="title" class="noflex">
             <i slot="back"></i>
-            <div slot="right" class="right absolute">
+            <div slot="right" class="right absolute" @click="save">
                 保存
             </div>
         </app-header>
         <div class="wrapper" :style="wrapperStyle">
             <ul class="form">
-                <li class="form-item form-item-input flex">
-                    <div class="label flex0">日期</div>
-                    <div class="input flex1 right">
-                        2017-12-09
-                    </div>
-                </li>
+                <!--<li class="form-item form-item-input flex">-->
+                    <!--<div class="label flex0">日期</div>-->
+                    <!--<div class="input flex1 right">-->
+                        <!--2017-12-09-->
+                    <!--</div>-->
+                <!--</li>-->
+                <date :time="time" @getDate="getDate">
+
+                </date>
                 <li class="form-item form-item-input flex">
                     <div class="label flex0">请输入病历详情</div>
                 </li>
                 <li class="form-item form-item-text">
                     <div class="textarea flex1">
-                        <textarea placeholder="请"></textarea>
+                        <textarea v-model="text" placeholder="请输入"></textarea>
                     </div>
                 </li>
-                <li class="form-item form-item-upload overflow-hidden piclist">
-                    <div class="pic float-left relative" v-for="pic in picList">
-                        <img :id="pic.id" :src="pic.url?pic.url:pic.thumbUrl"
-                             alt="">
-                        <div class="mask absolute" v-show="pic.status!='loaded'">{{pic.progress}}</div>
-                    </div>
-                    <div class="show-upload float-left overflow-hidden">
+                <upload-img :picList="picList">
+                    <span slot="upload">
                         <upload class="float-left"
                                 :server="config.api_url"
                                 :params="config.base_params"
@@ -38,27 +36,25 @@
                                 @progress="progress"
                                 @success="success"
                                 @added="added"></upload>
-                        <div class="text float-left flex">
-                            <div class="flex0">
-                                <h3>添加图片</h3>
-                                <p>上传相关照片</p>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                    </span>
+                </upload-img>
+
             </ul>
         </div>
 
-        <div class="del-record noflex">
-            <a class="block">删除</a>
-        </div>
+        <!--<div class="del-record noflex">-->
+            <!--<a class="block">删除</a>-->
+        <!--</div>-->
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     import Upload from "../../../base/upload.vue"
+    import date from "../../../base/date.vue"
+    import uploadImg from "../../../base/uploadImg.vue"
     import AppHeader from "../../../components/app-header.vue"
     import config from "../../../lib/config"
+    import api from "../../../lib/http"
 
     export default {
         data() {
@@ -66,13 +62,18 @@
                 title: "",
                 wrapperStyle: {},
                 picList: [],
-                config: config
+                config: config,
+                time:"",
+                text:'',
+                token:localStorage.getItem('token')
             };
         },
         computed: {},
         components: {
             AppHeader,
-            Upload
+            Upload,
+            uploadImg,
+            date
         },
         created() {
             if (this.$route.params.type) {
@@ -83,12 +84,20 @@
 
         },
         mounted() {
-
+            console.log(212121132)
+            var day2 = new Date();
+            day2.setTime(day2.getTime());
+            var month = day2.getMonth()+1>10?day2.getMonth()+1:'0'+(day2.getMonth()+1);
+            var day = day2.getDate()>10?day2.getDate():'0'+day2.getDate();
+            this.time = day2.getFullYear()+"-" + month + "-" + day;
         },
         beforeDestroy() {
 
         },
         methods: {
+            getDate(val){
+              this.time = val
+            },
             added(file) {
                 file.thumb().then(res => {
                     file.setThumbUrl(res);
@@ -115,13 +124,35 @@
                     this.picList[index].setUrl(res.obj.attaFileUrl)
                 }
 
-            }
+            },
+            save(){
+                console.log(this.picList);
+                var arr = []
+                for(var i=0;i<this.picList.length;i++){
+                    arr.push(this.picList[i].imgId)
+                };
+                api('smarthos.medical.history.add',{
+                    "medicalTime":this.time,
+                    "medContent":this.text,
+                    "token":this.token,
+                    "attaList":arr
+                }).then(res=>{
+                    console.log(res,6666)
+                    if(res.succ){
+                        this.$router.push({
+                            name:'healthRecord'
+                        })
+                    }else {
+                        this.$weui.alert(res.msg)
+                    }
+                })
+            },
         }
     };
 </script>
 
 <style scoped lang="scss">
-    @import "../../../common/common";
+    @import "../../../common/common.scss";
 
     $wid: 140px;
 

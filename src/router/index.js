@@ -7,6 +7,8 @@ import MyDoc from "./my-doc"
 import Health from "./health"
 import My from "./my"
 import Home from "./home"
+import Account from "./account"
+import teamCard from "./teamCard"
 
 Vue.use(Router)
 
@@ -15,13 +17,19 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/login',
+      component: () => import("../pages/login/index")
+    }, {
       path: '/',
-      component: () => import("../pages/index.vue")
+        name:"home",
+      component: () => import("../pages/index")
     },
     ...MyDoc,
     ...Health,
     ...My,
-    ...Home
+    ...Home,
+  ...Account,
+  ...teamCard
   ]
 
 })
