@@ -17,3 +17,10 @@ export function getConsultStatusText(status) {
     }
     return config.consult_status[index].name;
 }
+
+export function getBookOrderStatusText(status) {
+  let index = config.book_order_status.findIndex((consult) => {
+    return consult.status == status
+  });
+  return config.book_order_status[index].name;
+}

@@ -21,7 +21,7 @@
       transform: scaleY(0.5);
       transform-origin: 100% 100%;
       @if ($weight==1px) {
-        height: $weight;/*no*/
+        height: $weight; /*no*/
         border-bottom: $weight $type $color; /*no*/
       } @else {
         height: $weight;
@@ -97,5 +97,12 @@
     background-size: $w $h;
   } @else {
     background-size: $w;
+  }
+}
+
+@mixin thumb($w,$h) {
+  @include w_h($w,$h);
+  img{
+    @include w_h($w,$h);
   }
 }

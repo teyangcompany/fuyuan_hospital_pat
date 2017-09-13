@@ -1,35 +1,21 @@
 <template>
   <div class="page">
-    <app-header title="我的咨询" class="noflex">
+    <app-header title="交易记录" class="noflex">
       <i slot="back"></i>
     </app-header>
-    <div class="nav">
-      <ul class="flex">
-        <li class="flex0" v-for="item in nav">{{item.value}}</li>
-      </ul>
-    </div>
     <scroll class="wrapper list" :height="scrollHeight">
       <ul>
-        <li v-for="i in 9">
+        <li v-for="i in 10">
           <h3 class="flex">
-            <div class="name flex1">团队咨询 ￥{{20 + i}}</div>
-            <div :class="['status'+(i-2),(i-2)%2==0?'status0':'']" class="status flex0">
-              {{getConsultStatusText(i)}}
+            <div class="name flex1">团队咨询</div>
+            <div class="status flex0">
+              支付￥20元
             </div>
           </h3>
           <div class="content">e租宝案一审在北京宣判，26人因集资诈骗等获刑，判处公司罚金19亿，主犯丁宁被判无期徒刑，处罚金1亿。</div>
-          <div class="piclist">
-            <dl class="overflow-hidden">
-              <dd :class="['img','img'+i]" v-for="j in i" class="float-left">
-                <img
-                  src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3179544980,4261368179&fm=173&s=321014CD448AAD4D1C1A98220300501B&w=218&h=146&img.JPEG"
-                  alt="">
-              </dd>
-            </dl>
-          </div>
           <div class="b flex">
-            <div class="replay flex1">暂无医生回答</div>
-            <div class="time flex0">2小时前 | 3回复</div>
+            <div class="replay flex1"></div>
+            <div class="time flex0">2017-09-09</div>
           </div>
         </li>
       </ul>
@@ -49,11 +35,7 @@
     data() {
       return {};
     },
-    computed: {
-      _bottomHeight() {
-        return window.rem2px * (0.9)
-      }
-    },
+    computed: {},
     components: {
       Scroll,
       AppHeader
@@ -66,9 +48,7 @@
     beforeDestroy() {
 
     },
-    methods: {
-      getConsultStatusText,
-    }
+    methods: {}
   };
 </script>
 
@@ -134,28 +114,6 @@
         color: #666666;
         font-size: 28px;
         line-height: 1.5;
-      }
-      .piclist {
-        dd {
-          margin-top: $commonSpace;
-          $wid: (750px - $commonSpace*4);
-          $wid3: $wid/3;
-          $wid1-2: ($wid/4*3, $wid/5*4/2);
-          &.img {
-            @include thumb($wid3, $wid3);
-          }
-
-          @each $w in $wid1-2 {
-            &.img#{index($wid1-2,$w)} {
-              @include thumb($w, $w);
-            }
-          }
-
-          &:nth-child(3n+2), &:nth-child(3n+3) {
-            margin-left: $commonSpace;
-          }
-
-        }
       }
       .b {
         margin-top: 20px;
