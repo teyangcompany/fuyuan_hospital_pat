@@ -78,3 +78,35 @@
     @include t_r_b_l(0, 0, 0, 0);
   }
 }
+
+.userform {
+  dl {
+    &.btn{
+      padding-top: $commonSpace;
+    }
+    dt {
+      @include h_lh(80px);
+      font-size: $bigFont;
+      padding:0 $commonSpace;
+      .a{
+        color: $mainColor;
+        font-size: $bigFont;
+      }
+    }
+    dd {
+      background-color: white;
+      @include h_lh(90px);
+      display: flex;
+      .hd{
+        flex: 1 1 auto;
+      }
+      .ht{
+        flex: 0 0 auto;
+      }
+      padding:0 $commonSpace;
+      [type='text'], [type='password'] {
+        width: 100%;
+      }
+    }
+  }
+}

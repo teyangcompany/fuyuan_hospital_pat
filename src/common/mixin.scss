@@ -1,7 +1,13 @@
 /*mixin and function*/
-@mixin h_lh($h) {
-  height: $h;
-  line-height: $h;
+@mixin h_lh($h,$px2rem:false) {
+  @if ($px2rem==true) {
+    height: $h; /*no*/
+    line-height: $h; /*no*/
+  } @else {
+    height: $h;
+    line-height: $h;
+  }
+
 }
 
 @mixin border($pos:bottom,$color:#ccc,$weilei:after,$type:solid,$weight:1px) {
@@ -101,8 +107,8 @@
 }
 
 @mixin thumb($w,$h) {
-  @include w_h($w,$h);
-  img{
-    @include w_h($w,$h);
+  @include w_h($w, $h);
+  img {
+    @include w_h($w, $h);
   }
 }

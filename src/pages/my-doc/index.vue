@@ -6,10 +6,10 @@
     <div class="wrapper" ref="main">
       <div class="nav">
         <ul>
-          <li v-for="item in nav" :class="[item.name]">
+          <router-link tag="li" :to="item.path" :key="item.name" v-for="item in nav" :class="[item.name]">
             <div class="icon"></div>
             <div class="text">{{item.value}}</div>
-          </li>
+          </router-link>
         </ul>
       </div>
       <div class="title">最新消息</div>

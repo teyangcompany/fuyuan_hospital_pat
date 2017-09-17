@@ -46,13 +46,11 @@
 
                 let yDisplacement = touch.pageY - this.touch.pageY;
 
-                console.log("y", Math.abs(yDisplacement), "x", Math.abs(displacement))
-
-                if (Math.abs(yDisplacement) / Math.abs(displacement) > Math.tan(Math.PI / 180 * 15)){
+                if (Math.abs(yDisplacement) / Math.abs(displacement) > Math.tan(Math.PI / 180 * 15)) {
                     return
                 }
 
-                    this.touch.displacement = displacement;
+                this.touch.displacement = displacement;
                 let dom = this.$refs.main.querySelector(this.tag);
                 if (displacement < 0 && this.showDel === false) {
                     if (displacement > (0 - this.maxDisplacement)) {

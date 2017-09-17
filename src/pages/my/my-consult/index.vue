@@ -47,7 +47,9 @@
   export default {
     mixins: [scrollHeightMixin],
     data() {
-      return {};
+      return {
+          nav:config.consult_type_nav
+      };
     },
     computed: {
       _bottomHeight() {

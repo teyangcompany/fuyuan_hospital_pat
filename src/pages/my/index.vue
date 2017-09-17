@@ -26,10 +26,11 @@
 
             <div class="quit flex">
                 <div class="icon flex0"></div>
-                <div class="text flex0">退出登录</div>
+                <div class="text flex0" @click="quit">退出登录</div>
             </div>
         </div>
         <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
+        <msg ref="msg" text="demo"></msg>
     </div>
 </template>
 
@@ -37,6 +38,7 @@
     import AppFooter from "../../components/app-footer.vue"
     import config from "../../lib/config"
     import {mainHeightMixin} from "../../lib/mixin"
+    import Msg from "../../base/msg.vue"
 
     export default {
         mixins: [mainHeightMixin],
@@ -48,6 +50,7 @@
         },
         computed: {},
         components: {
+            Msg,
             AppFooter
         },
         mounted() {
@@ -62,6 +65,9 @@
 
         },
         methods: {
+            quit() {
+                this.$refs.msg.show();
+            },
             goPage(nav) {
                 nav.path && this.$router.push("/my" + nav.path);
             }
@@ -160,7 +166,6 @@
                     &.#{$i} {
                         .icon {
                             background-image: url("../../../static/img/my/#{$i}.png");
-
                         }
                     }
                 }
