@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import "weui";
 
+import Vuelidate from "vuelidate"
+
+Vue.use(Vuelidate);
+
 Vue.config.productionTip = false
 
 let remUnit = 100;     // 在px2rem中预设rem的值 即 1rem = ? px
@@ -17,8 +21,8 @@ window.appStartTime = new Date().getTime();
 
 /* eslint-disable no-new */
 new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: {App}
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: {App}
 })

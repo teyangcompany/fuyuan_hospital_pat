@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app" >
+  <div id="app">
 
     <transition :name="page">
       <router-view></router-view>
@@ -11,6 +11,7 @@
 <script type="text/ecmascript-6">
   import {historyCache} from "./lib/cache"
   import http from "./lib/http"
+  import htmldemo from "../static/htmldemo"
 
   export default {
     name: 'app',
