@@ -34,8 +34,9 @@ export const scrollHeightMixin = {
     methods: {
         _calcScrollHeight() {
             let h = window.innerHeight - 45;
-            if (this._bottomHeight) {
-                h = h - this._bottomHeight;
+            console.log(this.bottomHeight);
+            if (this.bottomHeight) {
+                h = h - this.bottomHeight;
             }
             this.scrollHeight = h;
         }

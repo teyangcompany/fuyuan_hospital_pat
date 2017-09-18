@@ -68,7 +68,8 @@
         mixins: [scrollHeightMixin],
         data() {
             return {
-                _bottomHeight: window.rem2px * (0.94 + 0.3 + 0.3)
+                basicSituation:config.basic_situation,
+                bottomHeight: window.rem2px * (0.94 + 0.3 + 0.3)
             };
         },
         computed: {},

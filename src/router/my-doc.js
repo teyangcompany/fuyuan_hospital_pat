@@ -5,6 +5,9 @@ export default [
     }, {
         path: "/follow-doc",
         component: () => import('../pages/my-doc/follow-doc.vue')
+    }, {
+        path: "/chart",
+        component: () => import('../pages/my-doc/chart.vue')
     }
 
 ]
