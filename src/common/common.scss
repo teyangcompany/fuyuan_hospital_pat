@@ -2,9 +2,13 @@
 @import "mixin";
 @import "base";
 
+
 *{
   -webkit-overflow-scrolling: touch;
 }
+
+
+@import 'mix';
 
 .message-tip {
   $messageWid: 31px;
