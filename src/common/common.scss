@@ -2,6 +2,10 @@
 @import "mixin";
 @import "base";
 
+*{
+  -webkit-overflow-scrolling: touch;
+}
+
 .message-tip {
   $messageWid: 31px;
   position: absolute;

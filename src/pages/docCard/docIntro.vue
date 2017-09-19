@@ -17,7 +17,7 @@
             </div>
             <div class="skilled">
                 <div :class="{text:active}" class="mfb">
-                    此时，基于上面的配置，当你访问时，User 的出口是不会渲染任何东西，这是因为没有匹配到合适的子路由。如果你想要渲染点什么，可以提供一个空的子路由：
+                    {{docObj.docSkill}}
                 </div>
                 <div class="mfb" :class="{arrow:active,arrow1:!active}" @click="toggleArrow">
                 </div>
@@ -28,7 +28,8 @@
             </div>
             <div class="skilled">
                 <div :class="{text:isActive}" class="mfb">
-                    数据绑定一个常见需求是操作元素的 class 列表和它的内联样式。因为它们都是属性 ，我们可以用v-bind 处理它们：只需要计算出表达式最终的字符串。不过，字符串拼接麻烦又易错。因此，在 v-bind 用于 class 和 style 时，Vue.js 专门增强了它。表达式的结果类型除了字符串之外，还可以是对象或数组。                </div>
+                    {{docObj.docResume}}
+                </div>
                 <div class="mfb" :class="{arrow:isActive,arrow1:!isActive}" @click="toggleArrow1">
                 </div>
             </div>
@@ -58,10 +59,15 @@
         data(){
             return {
                 active:true,
-                isActive:true
+                isActive:true,
+                docObj:{}
             }
         },
         mounted(){
+            setTimeout(()=>{
+                console.log( this.$store.state.docObj,66666666);
+                this.docObj = this.$store.state.docObj
+            },500)
 
         },
         methods:{

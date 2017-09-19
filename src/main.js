@@ -6,7 +6,9 @@ import router from './router'
 import "weui"
 import weui from './lib/wejs';
 import vuelidate from 'vuelidate'
-
+import Vuex from 'vuex'
+import store from './store/index'
+Vue.use(Vuex)
 Vue.use(weui)
 Vue.use(vuelidate)
 
@@ -24,6 +26,7 @@ window.appStartTime = new Date().getTime();
 new Vue({
     el: '#app',
     router,
+    store,
     template: '<App/>',
     components: {App}
 })

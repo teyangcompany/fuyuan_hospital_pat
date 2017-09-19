@@ -49,5 +49,37 @@ export default [
         path: "/my/editPhone",
           name:'editPhone',
         component: () => import("../pages/my/common-visitperson/editPhone.vue")
-    },
+    },  {
+    path: '/my/changePhone',
+      name:'changePhone',
+      component: () => import("../pages/my/accountAbout/changePhone.vue")
+},{
+    path: '/my/confrimPhone',
+      name:'confrimPhone',
+      component: () => import("../pages/my/accountAbout/confrimPhone.vue")
+},{
+    path: '/my/changePhoneSucc',
+      name:'changePhoneSucc',
+      component: () => import("../pages/my/accountAbout/changePhoneSucc.vue")
+},{
+    path: '/my/changePassword',
+      name:'changePassword',
+      component: () => import("../pages/my/accountAbout/changePassword.vue")
+},{
+    path: '/my/modificationPassword',
+      name:'modificationPassword',
+      component: () => import("../pages/my/accountAbout/modificationPassword.vue")
+},{
+    path: '/my/succeed',
+      name:'succeed',
+      component: () => import("../pages/my/accountAbout/succeed.vue")
+},{
+    path: '/my/accountAbout',
+      name:'accountAbout',
+      component: () => import("../pages/my/accountAbout/accountAbout.vue")
+},{
+    path: '/my/myRegistration',
+      name:'myRegistration',
+      component: () => import("../pages/my/accountAbout/myRegistration.vue")
+},
 ]

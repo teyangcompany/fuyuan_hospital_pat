@@ -46,21 +46,21 @@
                 <span class="mfb">精选文章</span>
                 <span class="more mfc">查看更多</span>
             </div>
-            <div class="docImg voice" v-for="item of 3">
+            <div class="docImg voice" v-for="(item,index) of DocArticleList">
                 <div class="essay">
-                   <p class="mfb">《如何养成睡眠的好习惯》</p>
-                   <p class="mfc essayCon">良好的睡觉可以促进血液循环，皮肤好，血管好等等的......</p>
+                   <p class="mfb">{{item.title}}</p>
+                   <p class="mfc essayCon">{{item.content}}</p>
                 </div>
                 <div class="docTitle">
                     <img class="smallImg" src="../../../static/img/test.jpg" alt="">
                 </div>
                 <div class="mfc">
-                    <span>李时珍</span>
+                    <span>{{item.docName}}</span>
                     <span class="lis smc" >
-                    <img class="good" src="../../../static/img/zan.png" alt="">&nbsp;&nbsp;
-                    200&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
+                    {{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
-                    <span class="lis smc audience" >2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="lis smc audience" >{{item.readCount}}人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 </div>
             </div>
             <div class="headerTro">
@@ -78,7 +78,7 @@
                 <div class="mfc">
                     <span>李时珍</span>
                     <span class="lis smc" >
-                    <img class="good" src="../../../static/img/zan.png" alt="">&nbsp;&nbsp;
+                    <img class="good" src="../../../static/img/zan.png" alt="" >&nbsp;&nbsp;
                     200&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span class="lis smc audience" >2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -92,6 +92,7 @@
     import top from '../../components/app-header.vue'
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
+    import api from '../../lib/http'
     export default{
         components: {
             top
@@ -100,13 +101,48 @@
         data(){
             return {
                 active:true,
-                isActive:true
+                isActive:true,
+                num:Number,
+                token:localStorage.getItem('token'),
+                docId:sessionStorage.getItem('docId')||"",
+                DocArticleList:[],
+                docObj:{}
             }
         },
         mounted(){
-
+            console.log(sessionStorage.getItem('docId'));
+            this.getData()
         },
         methods:{
+            getData(){
+              api('smarthos.user.doc.choice',{
+                  token:this.token,
+                  docId:this.docId
+              }).then(res=>{
+                  console.log(res,222222);
+                  if(res.succ){
+                      this.DocArticleList = res.obj.userDocArticleList
+                  }else {
+                      alert(res.msg)
+                  }
+              })
+            },
+            addZan(index,id){
+                console.log(21212121212)
+                this.num  = index;
+                api('smarthos.user.doc.article.likes',{
+                    token:this.token,
+                    articleId:id
+                }).then(res=>{
+                    console.log(res,6666);
+                    if(res.succ){
+                        this.getData()
+                    }else {
+                        alert(res.msg)
+                    }
+                })
+            },
+
             toggleArrow(){
                 this.active=!this.active
             },
@@ -208,6 +244,16 @@
     .good{
         width: 28px;
         height: 28px;
+    }
+    .big{
+        animation: myfirst .5s
+    }
+    @keyframes myfirst{
+        0%   {transform: scale(1.0);}
+        25%  {transform: scale(1.2);}
+        50%  {transform: scale(1.4);}
+        75%  {transform: scale(1.2);}
+        100% {transform: scale(1.0);}
     }
     .essay{
         /*margin: 20px 30px;*/

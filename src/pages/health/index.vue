@@ -5,44 +5,47 @@
                 <span>0</span>
             </div>
         </app-header>
-        <div class="wrapper" ref="main">
-            <div class="banner swiper-container" ref="swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide" v-for="i in 4">
-                        <img
-                                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1504700244175&di=68e85a71e961263b6321dca0b40c179b&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01b91c577f7b280000012e7ec2cd9b.jpg%40900w_1l_2o_100sh.jpg"
-                                alt="">
+        <scroll :height="scrollHeight">
+            <div class="wrapper" ref="main">
+                <div class="banner swiper-container" ref="swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" v-for="i in 6">
+                            <img
+                                    src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1504700244175&di=68e85a71e961263b6321dca0b40c179b&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01b91c577f7b280000012e7ec2cd9b.jpg%40900w_1l_2o_100sh.jpg"
+                                    alt="">
+                        </div>
                     </div>
+                    <div class="swiper-pagination"></div>
                 </div>
-                <div class="swiper-pagination"></div>
+                <div class="nav">
+                    <ul>
+                        <li v-for="item in nav" :class="[item.name]">
+                            <div class="icon"></div>
+                            <div class="text">{{item.value}}</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="title flex">
+                    <div class="name flex1">健康资讯</div>
+                    <div class="more flex0">更多</div>
+                </div>
+                <div class="list">
+                    <ul>
+                        <li class="flex" v-for="i in 3">
+                            <div class="ava flex0">
+                                <img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1209344693,1206146625&fm=173&s=9D384597490274CE16D48C5A0300D031&w=550&h=385&img.JPEG"
+                                     alt="">
+                            </div>
+                            <div class="info flex1">
+                                <h3>继续教育市场调查：文凭买卖泛滥 花钱拿证成噱头</h3>
+                                <div class="cate">健康资讯</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="nav">
-                <ul>
-                    <li v-for="item in nav" :class="[item.name]">
-                        <div class="icon"></div>
-                        <div class="text">{{item.value}}</div>
-                    </li>
-                </ul>
-            </div>
-            <div class="title flex">
-                <div class="name flex1">健康资讯</div>
-                <div class="more flex0">更多</div>
-            </div>
-            <div class="list">
-                <ul>
-                    <li class="flex" v-for="i in 3">
-                        <div class="ava flex0">
-                            <img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1209344693,1206146625&fm=173&s=9D384597490274CE16D48C5A0300D031&w=550&h=385&img.JPEG"
-                                 alt="">
-                        </div>
-                        <div class="info flex1">
-                            <h3>继续教育市场调查：文凭买卖泛滥 花钱拿证成噱头</h3>
-                            <div class="cate">健康资讯</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        </scroll>
+
         <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
     </div>
 </template>
@@ -52,24 +55,28 @@
     import AppHeader from "../../components/app-header.vue"
     import {mainHeightMixin} from "../../lib/mixin"
     import config from "../../lib/config"
+    import scroll from '../../base/scroll.vue'
 
     export default {
-        mixins: [mainHeightMixin],
+//        mixins: [mainHeightMixin],
         data() {
             return {
                 currentNav: 2,
-                nav: config.health_nav
+                nav: config.health_nav,
+                scrollHeight:""
             };
         },
         computed: {},
         components: {
             AppFooter,
-            AppHeader
+            AppHeader,
+            scroll
         },
         created() {
             this.swiper = null;
         },
         mounted() {
+            this.scrollHeight = window.innerHeight-45-60;
             this._swiper();
         },
         beforeDestroy() {

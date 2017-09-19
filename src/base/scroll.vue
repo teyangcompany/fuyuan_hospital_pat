@@ -1,5 +1,5 @@
 <template>
-    <div ref="wrapper">
+    <div ref="wrapper" class="scrol">
         <slot></slot>
     </div>
 </template>
@@ -96,6 +96,7 @@
                     this.$refs.wrapper.style.height = `${parseFloat(this.height)}px`;
                 }
                 // better-scroll的初始化
+                console.log(this.height,33333)
                 this.scroll = new BScroll(this.$refs.wrapper, {
                     probeType: this.probeType,
                     click: this.click,
@@ -114,6 +115,7 @@
                 if (this.pullup) {
                     this.scroll.on('scrollEnd', () => {
                         // 滚动到底部
+                        console.log(56565656)
                         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
                             this.$emit('scrollToEnd')
                         }
@@ -164,11 +166,19 @@
                 setTimeout(() => {
                     this.refresh()
                 }, this.refreshDelay)
+            },
+            height(){
+                this.$refs.wrapper.style.height = `${parseFloat(this.height)}px`;
+                setTimeout(() => {
+                    this.refresh()
+                }, this.refreshDelay)
             }
         }
     }
 </script>
 
 <style scoped lang="scss">
-
+.scrol{
+    overflow: hidden;
+}
 </style>

@@ -1,0 +1,247 @@
+<template>
+    <div class="page">
+        <top class="noflex" title="咨询科室" ref="header">
+            <i slot="back"></i>
+            <div slot="right" class="right absolute" @click="submit">立即提问</div>
+        </top>
+        <div class="myHeader">
+                <span class="col">
+                        请务必保证填写资料的真实、详细；
+                </span><br>
+                <span class="col">
+                        医生会在48小时内回复您，否则将为您退款。
+                </span>
+        </div>
+        <div class="weui-cells__title">咨询信息</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p class="mfb">咨询对象</p>
+                </div>
+                <div class="weui-cell__ft mfb">{{officeName}}</div>
+            </div>
+            <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
+                <div class="weui-cell__bd">
+                    <p class="mfb">就诊人</p>
+                </div>
+                <div class="weui-cell__ft mfb">{{userName}}</div>
+            </a>
+            <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
+                <div class="weui-cell__bd">
+                    <p class="mfb">疾病名称</p>
+                </div>
+                <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
+                <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
+            </a>
+
+        </div>
+        <div class="weui-cells__title">病情描述</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" v-model="illDescribe" placeholder="请输入描述" rows="3"></textarea>
+                    <div class="weui-textarea-counter"><span>0</span>/200</div>
+                </div>
+            </div>
+        </div>
+        <div class="addImg">
+            <upload-img :picList="picList">
+
+                <upload slot="upload" class="float-left"
+                        :server="config.api_url"
+                        :params="config.base_params"
+                        service="smarthos.system.file.upload"
+                        module="MEDICAL"
+                        fileType="IMAGE"
+                        @progress="progress"
+                        @success="success"
+                        @added="added"></upload>
+
+            </upload-img>
+        </div>
+        <sel-patient ref="patient">
+            <div  slot="pat">
+                <div class="myPat bor" v-for="item of userList" @click="getUser(item)">
+                    {{item.commpatName}}
+                </div>
+            </div>
+        </sel-patient>
+    </div>
+</template>
+<script type="text/ecmascript-6">
+    import top from '../../components/app-header.vue'
+    import upload from "../../base/upload.vue"
+    import {mainHeightMixin} from '../../lib/mixin'
+    import config from '../../lib/config'
+    import scroll from '../../base/scroll.vue'
+    import uploadImg from '../../base/uploadImg.vue'
+    import selPatient from '../../base/selPatient.vue'
+    import api from '../../lib/http'
+    export default{
+        components: {
+            top,
+            scroll,
+            upload,
+            uploadImg,
+            selPatient
+        },
+        mixins: ['mainHeightMixin'],
+        data(){
+            return {
+                scrollHeight:'',
+                config: config,
+                picList: [],
+                deptId:"",
+                officeName:"",
+                userList:[],
+                userName:"",
+                illName:"",
+                userObj:{},
+                illDescribe:"",
+                attaIdList:[],
+                token:localStorage.getItem('token')
+            }
+        },
+        create(){
+            this.scrollHeight = window.innerHeight-45
+        },
+        mounted(){
+            if(sessionStorage.getItem('officeName')&&sessionStorage.getItem('deptId')){
+                this.officeName = sessionStorage.getItem('officeName')
+                this.deptId = sessionStorage.getItem('deptId')
+            }else {
+                this.officeName=this.$route.query.officeName;
+                this.deptId=this.$route.params.id;
+                console.log(this.$route.params.id,55555)
+                sessionStorage.setItem('officeName',this.$route.query.officeName)
+                sessionStorage.setItem('deptId',this.$route.params.id)
+            }
+
+
+            this.getData();
+            if(this.$route.params.value){
+                this.illName = this.$route.params.value
+            }
+        },
+        methods:{
+            submit(){
+                console.log(this.picList,88888);
+                for(var i=0;i<this.picList.length;i++){
+                    this.attaIdList.push(this.picList[i].imgId)
+                };
+                api('smarthos.consult.platform.pic.issue',{
+                    attaIdList:this.attaIdList,
+                    token:this.token,
+                    "consulterName":this.userName,
+                    "consulterMobile":this.userObj.commpatMobile,
+                    "consulterIdcard":this.userObj.commpatIdcard,
+                    "consultContent":this.illDescribe,
+                    "deptId":this.deptId,
+                    "illnessName":this.illName
+                }).then(res=>{
+                    console.log(res,3535535)
+                })
+            },
+            getUser(item){
+                this.userObj = item;
+                this.userName = item.commpatName
+            },
+            changeName(){
+              this.$router.push({
+                  name:'illName',
+                  params:{
+                      routerName:'consultOffice'
+                  }
+              })
+            },
+            getData(){
+              api('smarthos.user.commpat.list',{
+                  token:this.token
+              }).then(res=>{
+                  console.log(res,66666)
+                  if(res.succ){
+                     this.userName = res.list[0].commpatName
+                     this.userObj = res.list[0]
+                      this.userList = res.list;
+
+                  }else {
+                      alert(res.msg)
+                  }
+              })
+            },
+            togglePatient(){
+                this.$refs.patient.flag = true;
+            },
+            added(file) {
+                file.thumb().then(res => {
+                    file.setThumbUrl(res);
+                    this.picList.push(file);
+                    this.picList.sort((a, b) => {
+                        return a.sort - b.sort
+                    })
+                });
+            },
+            progress(file, pro) {
+                let index = this.picList.findIndex((pic) => {
+                    return pic.id == file.id;
+                });
+                this.picList[index].changeStatus("loading");
+                this.picList[index].setProgress(pro);
+            },
+            success(file, res) {
+                let index = this.picList.findIndex((pic) => {
+                    return pic.id == file.id;
+                });
+                if (res.code == 0) {
+                    this.picList[index].changeStatus("loaded");
+                    this.picList[index].setImgId(res.obj.id);
+                    this.picList[index].setUrl(res.obj.attaFileUrl)
+                }
+
+            },
+        }
+    }
+</script>
+<style scoped lang='scss'>
+    @import '../../common/common.scss';
+    .page{
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        flex-direction: column;
+    }
+    .myHeader{
+        width: 100%;
+        height: 90px;
+        background: #e1ebff;
+        text-align: center;
+    }
+    .col{
+        font-size: 24px;
+        color: #2772ff;
+    }
+    .upload {
+        background-image: url(../../../static/img/upload.png);
+        width: 140px;
+        height: 140px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 99% 99%;
+    }
+    .addImg{
+        box-sizing: border-box;
+        background: white;
+        flex: 1;
+        overflow: auto;
+        padding: 10px 30px;
+        margin-top: 30px;
+    }
+    .myPat{
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+        font-size: 30px;
+        color: black;
+        border-bottom: 1px solid gainsboro;
+    }
+</style>

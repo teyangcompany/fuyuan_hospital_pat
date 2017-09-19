@@ -18,7 +18,7 @@
       </div>
       <div class="fastnav">
         <ul>
-          <li :class="[item.name]" v-for="item in fastNav">
+          <li :class="[item.name]" v-for="item in fastNav" @click="goMyRouter(item)">
             <div class="name">{{item.value}}</div>
             <div class="text">{{item.text}}</div>
             <div class="btn">
@@ -74,7 +74,8 @@
       return {
         adsettings: [],
         fastNav: config.index_fast_nav,
-        nav: config.index_nav
+        nav: config.index_nav,
+        token:localStorage.getItem('token')
       };
     },
     computed: {},
@@ -93,13 +94,16 @@
     },
     watch: {},
     methods: {
+
       _init() {
         this.$refs.loading.show();
 
-        http("smarthos.user.pat.index", {})
+        http("smarthos.user.pat.index", {
+          token:this.token
+        })
           .then((res) => {
             this.$refs.loading.hide();
-            console.log(res);
+            console.log(res,88888);
             if (res.code == 0) {
               let obj = res.obj;
               this.adsettings = obj.adsettings;
@@ -118,6 +122,10 @@
       },
       goPage(item) {
         item.path && this.$router.push(item.path);
+      },
+      goMyRouter(item){
+
+        this.$router.push(item.route)
       }
     }
   };

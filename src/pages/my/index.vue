@@ -10,9 +10,9 @@
                         src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1907944229,3898051778&fm=173&s=3A82C44C5402215940ED1C83030060D3&w=218&h=146&img.JPEG"
                         alt=""></div>
                 <div class="info flex1">
-                    <h3>小李</h3>
-                    <div>姓名：李明卫</div>
-                    <p>男 27岁 浙江杭州</p>
+                    <h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0,1)}}</h3>
+                    <div>姓名：{{patDetail.commpatName}}</div>
+                    <p>{{patDetail.commpatGender=='M'?'男':'女'}} 27岁 浙江杭州</p>
                 </div>
             </div>
 
@@ -34,17 +34,19 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     import AppFooter from "../../components/app-footer.vue"
     import config from "../../lib/config"
     import {mainHeightMixin} from "../../lib/mixin"
-
+    import api from '../../lib/http'
     export default {
         mixins: [mainHeightMixin],
         data() {
             return {
                 nav: config.my_nav,
-                currentNav: 3
+                currentNav: 3,
+                token:localStorage.getItem('token'),
+                patDetail:JSON.parse(localStorage.getItem('commpat')) ||{}
             };
         },
         computed: {},
@@ -57,7 +59,6 @@
             this.nav.forEach(function (i) {
                 s += i.name + ","
             })
-            console.log(s)
         },
         beforeDestroy() {
 
@@ -71,7 +72,7 @@
 </script>
 
 <style scoped lang="scss">
-    @import "../../common/common";
+    @import "../../common/common.scss";
 
     header {
         $hHei: 128px;

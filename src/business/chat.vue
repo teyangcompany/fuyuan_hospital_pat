@@ -1,179 +1,135 @@
 <template>
-  <div class="page" ref="pages" >
-    <div  ref="talking"  class="wrap" >
-      <div @click="cancel"   class="talk-detail" >
-        <div>
-          <div class="rightMsg">
-            <div class="floatImg">
-              <img class="titles" src="../../static/img/7.jpg" alt="">
-            </div>
-            <div class="floatRight">
-              <div class="com">
-                您好，我关注你您
-                <div >
-                  <!--<img   class="DocinquiryImg" src="../../static/img/test.jpg" >-->
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="leftMsg" >
-            <div class="otherImg">
-              <img class="otherTitle" src="../../static/img/1.jpg" alt="">
-            </div>
-            <div class="floatLeft">
-              <div class="comment">
-                谢谢您的关注
-                <div >
-                  <!--<img  class="DocinquiryImg" src="../../static/img/test.jpg">-->
-                </div>
-              </div>
-            </div>
 
-          </div>
-          <div class="rightMsg">
-            <div class="floatImg">
-              <img class="titles" src="../../static/img/7.jpg" alt="">
-            </div>
-            <div class="floatRight">
-              <div class="com">
-                <p class="mf" style="border-bottom: 1px dashed black;margin-bottom: 5px">申请了一个服务</p>
-                <div class="apply">
-                  <div class="applyLeft">
-                    <p class="mf">推拿理疗</p>
-                    <p class="sfc">共12次，剩8次</p>
-                    <p class="sfc">时间: 2017-03-09</p>
-                  </div>
-                  <div class="applyRight" @click="subscribeService">
-                    <span class="mf" style="color: blue">处理</span>
-                    <span class="mfc" >></span>
+    <div class="pages" ref="pages" >
+      <scroll :height="scrollHeight" :data="chatList" ref="wrapper">
+      <div  ref="talking"  class="wrap talk-detail" >
+          <div v-for="item of chatList">
+            <div class="leftMsg" v-if="item.msgSenderType=='PAT'" >
+              <div class="otherImg">
+                <img class="otherTitle" :src="patImg" alt="">
+              </div>
+              <div class="floatLeft">
+                <div class="comment">
+                  {{item.msgContent}}
+                  <div >
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="leftMsg" >
-            <div class="otherImg">
-              <img class="otherTitle" src="../../static/img/1.jpg" alt="">
-            </div>
-            <div class="floatLeft">
-              <div class="comment">
-                <div style="float: right;width: 100%">
-                  <p class="mf" style="border-bottom: 1px dashed black;margin-bottom: 5px">同意/拒绝了你得服务</p>
-                  <div class="apply">
-                    <div class="applyLeft">
-                      <p class="mf">推拿理疗</p>
-                      <p class="sfc">共12次，剩8次</p>
-                      <p class="sfc">时间: 2017-03-09</p>
-                    </div>
-                    <div class="applyRight">
-                      <span @click="getDetail" class="mf" style="color: blue">查看</span>
-                      <span class="mfc" >></span>
-                    </div>
+            <div class="rightMsg" v-else-if="item.msgSenderType=='DOC'">
+              <div class="floatImg">
+                <img class="titles" :src="docImg" alt="">
+              </div>
+              <div class="floatRight">
+                <div class="com">
+                  {{item.msgContent}}
+                  <div >
                   </div>
                 </div>
-
               </div>
-            </div>
-
+            </div v-el>
           </div>
-          <div class="leftMsg" >
-            <div class="otherImg">
-              <img class="otherTitle" src="../../static/img/1.jpg" alt="">
-            </div>
-            <div class="floatLeft">
-              <div class="comment">
-                <div style="float: right;width: 100%">
-                  <p class="mf" >我向你发送了一篇文章 <span class="mf" style="color: blue" @click="goText">
-                    《糖尿病患者平常应如何饮食》
-                  </span>快来看吧! </p>
-                </div>
-
+        <div v-for="item of chatList">
+            <div class="leftMsg" v-if="item.msgSenderType=='PAT'" >
+              <div class="otherImg">
+                <img class="otherTitle" :src="patImg" alt="">
               </div>
-            </div>
-
-          </div>
-          <div class="rightMsg" v-for="item of arr">
-            <div class="floatImg">
-              <img class="titles" src="../../static/img/1.jpg" alt="">
-            </div>
-            <div class="floatRight">
-              <div class="com">
-                {{item}}
-                <div>
-                  <!--<img   class="DocinquiryImg" src="../../static/img/test.jpg" >-->
+              <div class="floatLeft">
+                <div class="comment">
+                  {{item.msgContent}}
+                  <div >
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="leftMsg" v-for="item of arr1">
-            <div class="otherImg">
-              <img class="otherTitle" src="../../static/img/1.jpg" alt="">
-            </div>
-            <div class="floatLeft">
-              <div class="comment">
-                <div style="float: right;width: 100%">
-                  <p class="mf" >我向你发送了一篇文章 <span class="mf" style="color: blue" @click="goText">
-                    {{item}}
-                  </span>快来看吧! </p>
+            <div class="rightMsg" v-else-if="item.msgSenderType=='DOC'">
+              <div class="floatImg">
+                <img class="titles" :src="docImg" alt="">
+              </div>
+              <div class="floatRight">
+                <div class="com">
+                  {{item.msgContent}}
+                  <div >
+                  </div>
                 </div>
-
+              </div>
+            </div v-el>
+          </div>
+        <div ref="item" v-for="item of chatList">
+            <div class="leftMsg" v-if="item.msgSenderType=='PAT'" >
+              <div class="otherImg">
+                <img class="otherTitle" :src="patImg" alt="">
+              </div>
+              <div class="floatLeft">
+                <div class="comment">
+                  {{item.msgContent}}
+                  <div >
+                  </div>
+                </div>
               </div>
             </div>
-
+            <div class="rightMsg" v-else-if="item.msgSenderType=='DOC'">
+              <div class="floatImg">
+                <img class="titles" :src="docImg" alt="">
+              </div>
+              <div class="floatRight">
+                <div class="com">
+                  {{item.msgContent}}
+                  <div >
+                  </div>
+                </div>
+              </div>
+            </div v-el>
           </div>
+      </div >
+        </scroll>
+      <div  class="bottom">
+        <div class="robot-room-wirte yk-box yk-cell">
+          <div class="talkImg">
+            <img src="../../static/img/talk.png" alt="" @click="setType">
+          </div>
+          <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
+            {{msg}}
+          </div>
+          <div class="yk-cell-bd mr10" v-show="type=='text'">
+            <edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+          </div>
+          <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
+          <button v-show="text.length" class="send-btn" @click="send">发送</button>
         </div>
-
-      </div>
-    </div >
-
-
-
-
-
-    <div  class="bottom">
-      <div class="robot-room-wirte yk-box yk-cell">
-        <div class="talkImg">
-          <img src="../../static/img/talk.png" alt="" @click="setType">
-        </div>
-        <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
-          {{msg}}
-        </div>
-        <div class="yk-cell-bd mr10" v-show="type=='text'">
-          <edit-div :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
-        </div>
-        <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
-        <button v-show="text.length" class="send-btn" @click="send">发送</button>
-      </div>
-      <div  class="checkList" v-show="checkList">
-        <div class="upload">
-          <label for="upload_img" class="label_img">图片</label>
-          <input  type="file" id="upload_img" >
-        </div>
-        <div class="upload" style="margin-left: 20px" @click="sendArticle">
-          <label  class="label_img">文章</label>
+        <div  class="checkList" v-show="checkList">
+          <div class="upload">
+            <label for="upload_img" class="label_img">图片</label>
+            <input  type="file" id="upload_img" >
+          </div>
+          <div class="upload" style="margin-left: 20px" @click="sendArticle">
+            <label  class="label_img">相机</label>
+          </div>
         </div>
       </div>
     </div>
 
-  </div>
+
 </template>
 <script type="text/ecmascript-6">
   import editDiv from './editDiv.vue'
+  import scroll from '../base/scroll.vue'
   export default{
-    props:['message','id'],
+    props:['chatObj','chatList'],
     components: {
       top,
-      editDiv
+      editDiv,
+      scroll
     },
     data(){
       return {
+        scrollHeight:"",
         talkObj:this.message,
         arr1:[],
         index:Number,
         consultId:'',
         consult:{},
         text:'',
-        msg:'',
         talkList:[],
         checkList:false,
         clean:true,
@@ -183,14 +139,30 @@
         type:"text",
         time:'',
         msg:'按住说话',
-        arr:[]
+        arr:[],
+        patImg:'',
+        docImg:""
       }
     },
     watch:{
-     
+      chatObj(){
+        console.log(this.chatObj,666);
+        this.patImg = this.chatObj.userPat.patAvatar
+        this.docImg = this.chatObj.userDocVO.docAvatar
+      },
+      chatList(){
+        console.log(7777);
+        setTimeout(()=>{
+          this.$refs.wrapper.scrollToElement(this.$refs.item[this.$refs.item.length-1])
+        },500)
+
+      }
+    },
+    created(){
+      this.scrollHeight = window.innerHeight-45-40
     },
     mounted(){
-        console.log(this.$route.params.val,666);
+
       if(this.$route.params.val){
         this.arr1.push(this.$route.params.val)
       }
@@ -204,6 +176,9 @@
           document.body.removeEventListener('touchmove', this.preventScroll,false);
       },
     methods:{
+      inputText(){
+        console.log(213435);
+      },
       goText(){
         this.$router.push({
           name:'articleText'
@@ -216,6 +191,7 @@
       },
       send(){
         console.log(this.text,22222);
+        this.$emit('send',this.text)
         this.arr1 = [];
         this.arr.push(this.text);
         this.$set(this.$data,'clean',!this.clean);
@@ -278,7 +254,7 @@
   }
 </script>
 <style scoped lang="scss">
-  @import "../common/public.scss";
+  @import "../common/common.scss";
   .talkImg{
     width: 60px;
     height: 60px;
@@ -311,9 +287,9 @@
 .applyRight{
   height: 100%;
 }
-.page{
+.pages{
   flex: 1;
-  /*overflow: auto;*/
+  overflow: auto;
   display: flex;
   flex-direction: column;
 

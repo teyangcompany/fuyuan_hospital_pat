@@ -10,5 +10,9 @@ export default [
   {
     path: "/home/server/book/doc",
     component: () => import("../pages/home/server/book/doc.vue")
-  }
+  },  {
+    path: "/home/moreSel",
+      name:'moreSel',
+    component: () => import("../pages/home/moreSel.vue")
+  },
 ]

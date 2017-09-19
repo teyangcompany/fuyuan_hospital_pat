@@ -50,7 +50,7 @@
             </div>
             <router-view></router-view>
         </div>
-        <div ref="footer" class="btn">
+        <div ref="footer" class="btn" @click="consultTeam">
            咨询团队
         </div>
 
@@ -79,6 +79,11 @@
                 this.num=index;
                 this.$router.push({
                     name:item.router
+                })
+            },
+            consultTeam(){
+                this.$router.push({
+                    name:'consultTeam'
                 })
             }
         }
@@ -167,9 +172,10 @@
     }
     .btn{
         width: 100%;
-        height: 120px;
+        height: 100px;
         background: #2772ff;
         text-align: center;
-        line-height: 120px;
+        line-height: 100px;
+        color: white;
     }
 </style>

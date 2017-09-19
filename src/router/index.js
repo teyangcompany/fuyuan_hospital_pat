@@ -9,6 +9,7 @@ import My from "./my"
 import Home from "./home"
 import Account from "./account"
 import teamCard from "./teamCard"
+import inquiry from "./inquiry"
 
 Vue.use(Router)
 
@@ -29,7 +30,8 @@ export default new Router({
     ...My,
     ...Home,
   ...Account,
-  ...teamCard
+  ...teamCard,
+  ...inquiry
   ]
 
 })

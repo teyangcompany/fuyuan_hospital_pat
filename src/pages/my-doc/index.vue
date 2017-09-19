@@ -3,75 +3,112 @@
     <app-header class="noflex" title="我的医生" ref="header">
       <div class="right absolute" slot="right">找医生</div>
     </app-header>
-    <div class="wrapper" ref="main">
-      <div class="nav">
-        <ul>
-          <li v-for="item in nav" :class="[item.name]">
-            <div class="icon"></div>
-            <div class="text">{{item.value}}</div>
-          </li>
-        </ul>
-      </div>
-      <div class="title">最新消息</div>
-      <div class="list">
-        <ul>
-          <li v-for="i in 3">
-            <div class="ava">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1504696725556&di=7876d387d451ec2bd9ad0bc93ba25a26&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Db201c6f9fa1f3a294ec5dd8df14cd644%2F2cf5e0fe9925bc31623566bf54df8db1cb1370a8.jpg"
-                alt="">
-            </div>
-            <div class="info">
-              <h3>
-                <div class="name">泰罗卡</div>
-                <div class="dept">眼科</div>
-                <div class="time">17:09</div>
-              </h3>
-              <div class="content">
-                您的全科分钟已经开始您的全科分钟已经开始您的全科分钟已经开始您的全科分钟已经开始
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <scroll :height="scrollHeight" :data="list">
+        <div class="wrapper">
+          <div class="nav">
+            <ul>
+              <li v-for="item in nav" :class="[item.name]" @click="goPath(item.path)">
+                <div class="icon"></div>
+                <div class="text">{{item.value}}</div>
+              </li>
+            </ul>
+          </div>
+          <div class="title">最新消息</div>
+          <div class="list">
+            <ul>
+              <li v-if="list.length>0"  v-for="item in list" @click="goDocChat(item.followMessage.followId)">
+                <div class="ava">
+                  <img v-if="item.userDoc"
+                          :src="item.userDoc.docAvatar"
+                          alt="">
+                </div>
+                <div class="info">
+                  <h3 v-if="item.userDoc">
+                    <div class="name">{{item.userDoc.docName}}</div>
+                    <div class="dept">{{item.userDoc.docTitle}}</div>
+                    <div class="time">{{item.userDoc.createTime | Todate}}</div>
+                  </h3>
+                  <div class="content" v-if="item.userDoc">
+                    {{item.followMessage.msgContent}}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </scroll>
+
     <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import AppFooter from "../../components/app-footer.vue"
   import AppHeader from "../../components/app-header.vue"
-
   import {mainHeightMixin} from "../../lib/mixin"
   import config from "../../lib/config"
-
+  import api from '../../lib/http'
+  import {Todate} from '../../lib/filter'
+  import scroll from '../../base/scroll.vue'
 
   export default {
-    mixins: [mainHeightMixin],
     data() {
       return {
         currentNav: 1,
-        nav: config.my_doc_nav
+        nav: config.my_doc_nav,
+        token:localStorage.getItem('token'),
+        list:[],
+        scrollHeight:""
       };
+    },
+    filters:{
+      Todate
+    },
+    created(){
+      this.scrollHeight = window.innerHeight-60-45;
+      console.log(this.scrollHeight,99999)
     },
     computed: {},
     components: {
       AppFooter,
-      AppHeader
+      AppHeader,
+      scroll
     },
     mounted() {
-
+      this.getData()
     },
     beforeDestroy() {
 
     },
-    methods: {}
+    methods: {
+      goDocChat(id){
+        this.$router.push('docChat/'+id)
+      },
+      scrollToEnd(){
+        console.log(21212121)
+      },
+      getData(){
+        api('smarthos.follow.message.last.list',{
+          token:this.token,
+
+        }).then(res=>{
+          console.log(res,2222222);
+          if(res.succ){
+            this.list = res.list;
+          }else {
+            alert(res.msg)
+          }
+        })
+      },
+      goPath(path){
+        this.$router.push(path)
+      },
+    }
   };
 </script>
 
 <style scoped lang="scss">
-  @import "../../common/common";
+  @import "../../common/common.scss";
 
   .nav {
     ul {
