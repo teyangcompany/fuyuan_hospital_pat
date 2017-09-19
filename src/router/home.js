@@ -10,5 +10,13 @@ export default [
   {
     path: "/home/server/book/doc",
     component: () => import("../pages/home/server/book/doc.vue")
+  },
+  {
+    path:"/home/server/quickConsult/index",
+    component:()=> import("../pages/home/server/quickConsult/index.vue")
+  },
+  {
+    path:"/home/server/consultService/consultDoc",
+    component:()=> import("../pages/home/server/consultService/consultDoc.vue")
   }
 ]

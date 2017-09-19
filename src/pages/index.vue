@@ -18,7 +18,7 @@
       </div>
       <div class="fastnav">
         <ul>
-          <li :class="[item.name]" v-for="item in fastNav">
+          <li :class="[item.name]" v-for="(item,index) in fastNav" @click="go(index)">
             <div class="name">{{item.value}}</div>
             <div class="text">{{item.text}}</div>
             <div class="btn">
@@ -115,6 +115,11 @@
             pagination: '.swiper-pagination',
           });
         }, 20)
+      },
+      go(index){
+         if(index == 0){
+             this.$router.push('/home/server/quickConsult/index')
+         }
       },
       goPage(item) {
         item.path && this.$router.push(item.path);

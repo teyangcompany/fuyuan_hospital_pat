@@ -1,7 +1,7 @@
 @import "var";
 @import "mixin";
 @import "base";
-
+@import 'mix';
 .message-tip {
   $messageWid: 31px;
   position: absolute;
