@@ -8,10 +8,9 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import {historyCache} from "./lib/cache"
   import http from "./lib/http"
-  import htmldemo from "../static/htmldemo"
 
   export default {
     name: 'app',
@@ -22,6 +21,9 @@
     },
 
     created() {
+      http("user.doc.login", {mock: true}).then((res) => {
+        console.log(res);
+      })
 //      http("smarthos.system.area.list", {}).then((res) => {
 //        console.log("111", res);
 //      });

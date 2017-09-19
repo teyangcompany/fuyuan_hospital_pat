@@ -37,7 +37,7 @@ var hotMiddleware = require('webpack-hot-middleware')(compiler, {
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
+    hotMiddleware.publish({action: 'reload'})
     cb()
   })
 })
@@ -46,13 +46,14 @@ compiler.plugin('compilation', function (compilation) {
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
   if (typeof options === 'string') {
-    options = { target: options }
+    options = {target: options}
   }
-  app.use(proxyMiddleware(options.filter || context, options))
+  app.use(proxyMiddleware(context, options))
 })
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
+
 
 // serve webpack bundle output
 app.use(devMiddleware)
@@ -63,7 +64,9 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
+console.log(staticPath);
 app.use(staticPath, express.static('./static'))
+
 
 var uri = 'http://localhost:' + port
 

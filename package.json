@@ -5,6 +5,7 @@
   "author": "lmw6412036 <lmw6412036@sina.com>",
   "private": true,
   "scripts": {
+    "mock": "nodemon build/mock.js",
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
@@ -37,6 +38,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "babel-register": "^6.22.0",
     "bjx": "^1.0.5",
+    "body-parser": "^1.18.1",
     "chai": "^3.5.0",
     "chalk": "^2.0.1",
     "chromedriver": "^2.27.2",
@@ -65,6 +67,7 @@
     "karma-webpack": "^2.0.2",
     "lmw-px2rem-loader": "^1.0.3",
     "mocha": "^3.2.0",
+    "mockjs": "^1.0.1-beta3",
     "nightwatch": "^0.9.12",
     "node-sass": "^4.5.3",
     "opn": "^5.1.0",
