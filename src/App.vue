@@ -21,9 +21,6 @@
     },
 
     created() {
-      http("user.doc.login", {mock: true}).then((res) => {
-        console.log(res);
-      })
 //      http("smarthos.system.area.list", {}).then((res) => {
 //        console.log("111", res);
 //      });

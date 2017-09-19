@@ -3,7 +3,12 @@
         <app-header class="noflex" title="关注医生" ref="header">
             <i slot="back"></i>
         </app-header>
-        <scroll @scroll="scroll" ref="scroll" :listenScroll="listenScroll" :probeType="probeType" :height="scrollHeight"
+        <scroll ref="scroll"
+                @scroll="scroll"
+                :listenScroll="listenScroll"
+                :probeType="probeType"
+                :height="scrollHeight"
+                :data="nameList"
                 class="wrapper overflow-hidden relative list ">
             <ul>
                 <li ref="name" class="" v-for="item in nameList">
@@ -15,13 +20,14 @@
                         </div>
                         <div class="flex1 name">
                             <h3>{{name.name}}</h3>
-                            <div class="ellipsis from">{{name.from}}</div>
+                            <div class="ellipsis from">{{name.msg}}</div>
                         </div>
                     </div>
                 </li>
             </ul>
-            <ol class="absolute flex">
-                <li @click="goto(index)" :style="alphaStyle" :class="[current==index?'current':'']" class="center flex1"
+            <ol class="absolute flex" :style="alphaStyle.ol">
+                <li @click="goto(index)"  :class="[current==index?'current':'']"
+                    class="center flex1"
                     v-for="(alpha,index) in nameList">
                     {{alpha.alpha}}
                 </li>
@@ -34,8 +40,8 @@
     import AppHeader from "../../components/app-header.vue"
     import {scrollHeightMixin} from "../../lib/mixin"
     import Scroll from "../../base/scroll.vue"
-    import {bjxdata} from "bjx"
     import pinyin from "tiny-pinyin"
+    import http from "../../lib/http"
 
     export default {
         mixins: [scrollHeightMixin],
@@ -69,9 +75,12 @@
             },
             alphaStyle() {
                 let length = this.nameList.length;
-                let height = window.innerHeight - 45 - (1 + 1) * window.rem2px;
+                let bottom = `${(window.innerHeight - 45 - 0.5 * window.rem2px * length) / 2}px`
+                let top = bottom;
                 return {
-                    lineHeight: `${height / length}px`
+                    ol: {
+                        top, bottom
+                    }
                 }
             }
         },
@@ -80,14 +89,7 @@
             AppHeader
         },
         created() {
-            bjxdata.forEach((bjx) => {
-                bjx.pinyin = pinyin.convertToPinyin(bjx.name);
-                this.list.push(bjx);
-            });
-            this.list.sort((a, b) => {
-                return a.pinyin < b.pinyin ? -1 : 1
-            })
-
+            this.postDocList();
         },
         mounted() {
 
@@ -104,6 +106,19 @@
                     }
                 });
                 this.current = i;
+            },
+            postDocList() {
+                http("pat.follow.doc", {
+                    mock: true
+                }).then((res) => {
+                    res.data.forEach((o) => {
+                        o.pinyin = pinyin.convertToPinyin(o.name);
+                        this.list.push(o);
+                        this.list.sort((a, b) => {
+                            return a.pinyin < b.pinyin ? -1 : 1
+                        })
+                    })
+                })
             },
             scroll(e) {
                 this._showCurrentAlpha();
@@ -131,6 +146,7 @@
             li {
                 color: white;
                 width: 40px;
+                line-height: 50px;
                 font-size: 28px;
                 &.current {
                     font-size: 32px;
