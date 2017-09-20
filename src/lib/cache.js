@@ -1,7 +1,8 @@
 import storage from "good-storage";
 import config from "./config"
 
-const HISTORY_CACHE_KEY = config.key_prefix + "history_";
+let prefix = config.key_prefix + (window.version || "") + "_";
+const HISTORY_CACHE_KEY = prefix + "history_";
 export const historyCache = {
     get() {
         return storage.session.get(HISTORY_CACHE_KEY, []);
@@ -19,7 +20,7 @@ export const historyCache = {
     }
 }
 
-const TOKEN_CACHE_KEY = config.key_prefix + "token_"
+const TOKEN_CACHE_KEY = prefix + "token_"
 export const tokenCache = {
     get() {
         return storage.get(TOKEN_CACHE_KEY, null);
@@ -29,7 +30,7 @@ export const tokenCache = {
     }
 }
 
-const FROM_CACHE_KEY = config.key_prefix + "from_"
+const FROM_CACHE_KEY = prefix + "from_"
 export const fromCache = {
     get() {
         return storage.session.get(FROM_CACHE_KEY, null);
