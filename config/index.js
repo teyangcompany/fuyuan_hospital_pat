@@ -1,5 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
+var path = require('path');
+const MOCK_API_PORT = "9090";
 
 module.exports = {
   build: {
@@ -29,7 +30,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": {
-        target: "http://127.0.0.1:9090/",
+        target: `http://127.0.0.1:${MOCK_API_PORT}/`,
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'
@@ -44,6 +45,6 @@ module.exports = {
     cssSourceMap: false
   },
   mock: {
-    port: 9090
+    port: MOCK_API_PORT
   }
 }

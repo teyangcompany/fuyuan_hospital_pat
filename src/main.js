@@ -6,6 +6,7 @@ import router from './router'
 import "weui";
 
 import Vuelidate from "vuelidate"
+import {arrayFind} from "./lib/util";
 
 Vue.use(Vuelidate);
 
@@ -18,6 +19,11 @@ let bl = winWid / designWid;
 window.rem2px = (bl * remUnit);
 document.querySelector('html').style.fontSize = (bl * remUnit) + 'px';
 window.appStartTime = new Date().getTime();
+
+window.onerror = function () {
+  console.log("error", arguments);
+  return false;
+}
 
 /* eslint-disable no-new */
 new Vue({
