@@ -3,8 +3,13 @@ var fs = require('fs')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var HtmlWebpackIncludeAssetsPlugin = require("html-webpack-include-assets-plugin")
 
-function resolve (dir) {
+var publicPath = process.env.NODE_ENV === 'production'
+  ? config.build.assetsPublicPath
+  : config.dev.assetsPublicPath
+
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -15,9 +20,7 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: publicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -64,5 +67,15 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        "static/lib/swiper/swiper-3.4.2.min.js",
+        "static/lib/swiper/swiper-3.4.2.min.css"
+      ],
+      append: false,
+      publicPath: publicPath
+    })
+  ]
 }

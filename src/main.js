@@ -4,9 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import "weui";
-
 import Vuelidate from "vuelidate"
-import {arrayFind} from "./lib/util";
+
+import auth2 from "./lib/auth2"
 
 Vue.use(Vuelidate);
 
@@ -20,16 +20,19 @@ window.rem2px = (bl * remUnit);
 document.querySelector('html').style.fontSize = (bl * remUnit) + 'px';
 
 
-
 window.onerror = function () {
-    console.log("error", arguments);
-    return false;
+  console.log("error", arguments);
+  return false;
 }
 
-/* eslint-disable no-new */
-new Vue({
+auth2(init);
+
+function init() {
+  /* eslint-disable no-new */
+  new Vue({
     el: '#app',
     router,
     template: '<App/>',
     components: {App}
-})
+  })
+}

@@ -41,9 +41,16 @@
       left: 0;
       top: 0;
       width: 100%;
-      border-top: 1px $type $color; /*no*/
       transform: scaleY(0.5);
       transform-origin: 0 0;
+      @if ($weight==1px) {
+        border-top: 1px $type $color; /*no*/
+        height: 1px; /*no*/
+      } @else {
+        border-top: $weight $type $color;
+        height: $weight;
+      }
+
     }
   }
 

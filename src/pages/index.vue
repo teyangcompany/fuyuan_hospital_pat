@@ -4,7 +4,7 @@
     <div class="wrapper" ref="main">
       <div class="banner swiper-container" ref="swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide" v-if="ad.userType=='PAT'" v-for="ad in adsettings">
+          <div class="swiper-slide" v-for="ad in adsettings">
             <img :src="ad.adUrl" alt="">
           </div>
         </div>

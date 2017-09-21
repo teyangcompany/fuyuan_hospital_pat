@@ -8,19 +8,19 @@
         <li class="flex0" v-for="item in nav">{{item.value}}</li>
       </ul>
     </div>
-    <scroll class="wrapper list" :height="scrollHeight">
+    <scroll class="wrapper list" :data="list" :height="scrollHeight">
       <ul>
-        <li v-for="i in 9">
+        <li v-for="(item,index) in list">
           <h3 class="flex">
-            <div class="name flex1">团队咨询 ￥{{20 + i}}</div>
-            <div :class="['status'+(i-2),(i-2)%2==0?'status0':'']" class="status flex0">
-              {{getConsultStatusText(i)}}
+            <div class="name flex1">团队咨询 {{item.price}}</div>
+            <div :class="['status'+(index-2),(index-2)%2==0?'status0':'']" class="status flex0">
+              {{getConsultStatusText(index)}}
             </div>
           </h3>
-          <div class="content">e租宝案一审在北京宣判，26人因集资诈骗等获刑，判处公司罚金19亿，主犯丁宁被判无期徒刑，处罚金1亿。</div>
+          <div class="content">{{item.content}}</div>
           <div class="piclist">
             <dl class="overflow-hidden">
-              <dd :class="['img','img'+i]" v-for="j in i" class="float-left">
+              <dd :class="['img','img'+item.imglist]" v-for="j in item.imglist" class="float-left">
                 <img
                   src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3179544980,4261368179&fm=173&s=321014CD448AAD4D1C1A98220300501B&w=218&h=146&img.JPEG"
                   alt="">
@@ -43,12 +43,14 @@
   import Scroll from "../../../base/scroll.vue"
   import config from "../../../lib/config"
   import {getConsultStatusText} from "../../../lib/util"
+  import http from "../../../lib/http"
 
   export default {
     mixins: [scrollHeightMixin],
     data() {
       return {
-          nav:config.consult_type_nav
+        nav: config.consult_type_nav,
+        list: []
       };
     },
     computed: {
@@ -61,6 +63,7 @@
       AppHeader
     },
     created() {
+      this.postConsultList();
     },
     mounted() {
 
@@ -70,6 +73,11 @@
     },
     methods: {
       getConsultStatusText,
+      postConsultList() {
+        http("my.consult.list", {mock: true}).then((res) => {
+          this.list = res.data;
+        })
+      }
     }
   };
 </script>
