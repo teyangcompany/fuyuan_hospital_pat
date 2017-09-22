@@ -9,8 +9,15 @@
     <script>
         /*程序版本号*/
         window.version = document.querySelector("meta[name='version']").content;
-        /*程序開始時間*/
+        /*程序开始时间*/
         window.appStartTime = new Date().getTime();
+        /*程序rem初始化*/
+        var remUnit = 100;     // 在px2rem中预设rem的值 即 1rem = ? px
+        var designWid = 750;  // 设计稿宽度
+        var winWid = window.innerWidth;
+        var bl = winWid / designWid;
+        window.rem2px = (bl * remUnit);
+        document.querySelector('html').style.fontSize = (window.rem2px) + 'px';
     </script>
   </head>
   <body>
