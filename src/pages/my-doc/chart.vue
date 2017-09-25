@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <app-header class="noflex" title="与医生对话中..." ref="header">
+    <app-header class="noflex" :title="h+':'+scrollHeight+':'+bottomHeight" ref="header">
       <i slot="back"></i>
     </app-header>
     <scroll class="chart flex0" ref="scroll" :height="scrollHeight">
@@ -14,15 +14,19 @@
                 alt="">
             </dt>
             <dd class="flex0 msg">
-              <msg-type @load="onLoad" :type="i%Math.floor(Math.random()*10)==0?'image':'text'" text="信息学"
+              <msg-type @load="onLoad" :type="i==10?'image':'text'" :text="'信息'+i"
                         image="https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=903308649,172955524&fm=173&s=AD705C87EE1211C68101FD3A03006011&w=218&h=146&img.JPEG"></msg-type>
             </dd>
           </dl>
         </li>
       </ul>
     </scroll>
-    <div class="reply noflex">
-
+    <div class="flex fixed reply" ref="reply">
+      <div class="flex0 upload"></div>
+      <div class="flex1 input">
+        <input type="text" ref="input" @focus="onFocus" @blur="onBlur">
+      </div>
+      <div class="flex0 send"></div>
     </div>
   </div>
 </template>
@@ -37,8 +41,8 @@
     mixins: [scrollHeightMixin],
     data() {
       return {
-        bottomHeight: 50,
-        lmw: 'll'
+        bottomHeight: 40,
+        h: window.innerHeight
       }
     },
     computed: {},
@@ -48,19 +52,33 @@
       AppHeader
     },
     mounted() {
-      setTimeout(() => {
-        this.$refs.scroll.refresh();
-      }, 200)
+      window.addEventListener('resize', this.onResize, false);
     },
     beforeDestroy() {
 
     },
     methods: {
+      onBlur() {
+        setTimeout((res)=>{
+          this._calcScrollHeight();
+          this._scrollToBottom();
+        },300)
+        //console.log("blur")
+      },
+      onFocus() {
+        this.$refs.reply.scrollIntoView(false);
+      },
+      onResize() {
+        this._calcScrollHeight();
+        this._scrollToBottom();
+      },
       onLoad(e) {
-        this.$refs.scroll.refresh();
+        this._scrollToBottom();
+      },
+      _scrollToBottom() {
         setTimeout((res) => {
           this.$refs.scroll.scrollToElement(this.$refs.msgItem[this.$refs.msgItem.length - 1]);
-        }, 20)
+        }, 100);
       }
     }
   };
@@ -108,7 +126,18 @@
   }
 
   .reply {
-    height: 50px; /*no*/
+    padding: 5px 0; /*no*/
+    @include t_r_b_l(1px, 0, 0, 0);
+    height: 40px; /*no*/
     background-color: white;
+    .upload, .send {
+      width: 40px; /*no*/
+    }
+    .input {
+      input {
+        width: 100%;
+        height: 30px; /*no*/
+      }
+    }
   }
 </style>
