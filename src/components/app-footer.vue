@@ -36,7 +36,7 @@
         methods: {
             goPage(page) {
                 if (page == "home") {
-                    page = "";
+                    page = "home";
                 }
                 this.$router.push(`/${page}`);
             }

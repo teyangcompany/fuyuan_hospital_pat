@@ -11,16 +11,16 @@
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input" type="password" v-model="patPassword" placeholder="请输入"/>
+              <input class="weui-input" type="password" v-model="patPassword" placeholder="请输入8-20位密码"/>
             </div>
           </div>
         </div>
-        <span class="form-group__message" v-show="!$v.patPassword.minLength&&showPatPassWord">密码至少6位</span>
+        <span class="form-group__message" v-show="showPatPassWord">密码必须是8-20字母和数字组合</span>
         <div class="weui-cells__title">请输入确认新密码</div>
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input" v-model="againPatPassword" type="password" placeholder="请输入"/>
+              <input @focus="getValue" class="weui-input" v-model="againPatPassword" type="password" placeholder="请输入8-20位密码"/>
             </div>
           </div>
         </div>
@@ -71,8 +71,16 @@
             this.$set(this.$data,'cid',localStorage.getItem('cid'))
         },
       methods:{
+          getValue(){
+              if(!/^(?![A-Z]+$)(?![a-z]+$)(?!\d+$)(?!\W+$)\S{8,20}$/g.test(this.patPassword)){
+                  console.log(21212121)
+                  this.$set(this.$data,'showPatPassWord',true)
+              }else {
+                  this.$set(this.$data,'showPatPassWord',false)
+              }
+          },
         editPassword(){
-          if(this.$v.patPassword.$invalid){
+          if(!/^(?![A-Z]+$)(?![a-z]+$)(?!\d+$)(?!\W+$)\S{8,20}$/g.test(this.patPassword)){
             this.$set(this.$data,'showPatPassWord',true)
           }else {
             var passWord = sha512(hex_md5(this.patPassword) + this.patPassword );

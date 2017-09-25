@@ -18,10 +18,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/login',
+      path: '/',
       component: () => import("../pages/login/index")
     }, {
-      path: '/',
+      path: '/home',
         name:"home",
       component: () => import("../pages/index")
     },

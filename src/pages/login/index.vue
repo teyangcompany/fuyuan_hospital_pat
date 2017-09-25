@@ -47,7 +47,7 @@
         data(){
             return {
                 patMobile:'13522365145',
-                patPassword:'',
+                patPassword:'111111',
                 current:''
             }
         },

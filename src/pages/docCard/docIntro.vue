@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="contain">
-            <div class="headerTro">
+            <div class="headerTro" @click="goTeam">
                 <span class="col"></span>
                 <span class="mfb">所属团队</span>
                 <span class="teamName">
@@ -71,6 +71,9 @@
 
         },
         methods:{
+            goTeam(){
+              this.$router.push('/teamCard/1')
+            },
             toggleArrow(){
                 this.active=!this.active
             },

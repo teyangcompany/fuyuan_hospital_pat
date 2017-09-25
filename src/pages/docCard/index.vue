@@ -91,6 +91,7 @@
         mounted(){
             this.docId = this.$route.params.id;
             sessionStorage.setItem('docId',this.$route.params.id)
+
             this.getData()
         },
         methods:{
@@ -118,6 +119,7 @@
                   console.log(res,22222);
                   if(res.succ){
                       this.doc = res.obj.doc;
+                      sessionStorage.setItem('docName',res.obj.doc.docName)
                       console.log(this.$store.state.docObj,66666);
                       this.$store.commit('increment',res.obj.doc)
                   }else {

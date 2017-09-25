@@ -12,7 +12,7 @@
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入"/>
+              <input readonly="readonly" @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入"/>
             </div>
           </div>
         </div>
@@ -24,7 +24,8 @@
               <input class="weui-input" type="number" v-model="captcha" placeholder="请输入"/>
             </div>
             <div class="weui-cell__ft">
-              <button class="weui-vcode-btn" @click="getCode">获取验证</button>
+                <button v-show="!(msgs>0)" class="weui-vcode-btn" @click="getCode">{{msgs}}</button>
+                <button v-show="msgs>0" class="weui-vcode-btn" @click="getCode">有效期{{msgs}}s</button>
             </div>
           </div>
         </div>
@@ -48,11 +49,12 @@
         mixins:['mainHeightMixin'],
         data(){
             return {
-              mobile:'',
+              mobile:JSON.parse(localStorage.getItem('commpat')).commpatMobile||{},
               captcha:'',
               showError:false,
               cid:'',
-              msg:''
+              msg:'',
+                msgs:"获取验证码"
             }
         },
       validations: {
@@ -76,27 +78,40 @@
 //          })
 //        },
         goNext(){
-          api("smarthos.captcha.check",{
-            "cid": this.cid,
-            "captcha": this.captcha
-          }).then(res=>{
-            if(res.succ){
-              localStorage.setItem('captcha',this.captcha)
-              this.$router.push({
-                name:'password',
-                params:{
-                  msg:this.msg
-                }
-              })
+            if(this.captcha.length!=4){
+                alert('请输入正确的验证码')
             }else {
-              this.$weui.alert(res.msg)
+                api("smarthos.captcha.check",{
+                    "cid": this.cid,
+                    "captcha": this.captcha
+                }).then(res=>{
+                    if(res.succ){
+                        localStorage.setItem('captcha',this.captcha)
+                        this.$router.push({
+                            name:'password',
+                            params:{
+                                msg:this.msg
+                            }
+                        })
+                    }else {
+                        this.$weui.alert(res.msg)
+                    }
+                })
             }
-          })
+
         },
         getCode(){
           if(this.$v.mobile.$invalid){
             this.$set(this.$data,'showError',true)
           }else {
+              this.msgs = 60;
+              var time = setInterval(()=>{
+                  this.msgs -=1;
+                  if(this.msgs==0){
+                      this.msgs='重新获取';
+                      clearInterval(time)
+                  }
+              },1000)
             api("smarthos.captcha.pat.password.reset",{
               mobile:this.mobile
             }).then(res=>{

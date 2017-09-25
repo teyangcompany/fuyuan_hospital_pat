@@ -23,7 +23,7 @@ export default [
     component:()=> import("../pages/home/server/quickConsult/index.vue")
   },
   {
-    path:"/home/server/consultService/consultDoc",
+    path:"/my/home/server/consultService/consultDoc",
     component:()=> import("../pages/home/server/consultService/consultDoc.vue")
   }
 

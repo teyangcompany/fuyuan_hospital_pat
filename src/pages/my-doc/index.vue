@@ -29,7 +29,7 @@
                     <div class="time">{{item.userDoc.createTime | Todate}}</div>
                   </h3>
                   <div class="content" v-if="item.userDoc">
-                    {{item.followMessage.msgContent}}
+                    {{item.followMessage.msgContent.substring(0,4)=='http'?'[图片]':item.followMessage.msgContent}}
                   </div>
                 </div>
               </li>

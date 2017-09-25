@@ -27,7 +27,9 @@
                 token:localStorage.getItem('token'),
                 chatObj:{},
                 chatList:[],
-                scrollHeight:''
+                scrollHeight:'',
+                msgContent:"",
+                msgType:""
             }
         },
 
@@ -38,15 +40,22 @@
         methods:{
             send(value){
                 console.log(value,33333);
+                if(value.url){
+                    this.msgContent = value.url;
+                    this.msgType = value.msgType;
+                }else {
+                    this.msgContent = value;
+                    this.msgType = "TEXT";
+                }
                 api('smarthos.follow.message.add',{
                     "token": this.token,
                     "followId": this.followId,
-                    "msgContent":value,
-                    "msgType": "TEXT"
+                    "msgContent":this.msgContent,
+                    "msgType": this.msgType
                 }).then(res=>{
                     console.log(res,444444);
-                    if(res.suc){
-
+                    if(res.succ){
+                        this.getData()
                     }else {
                         alert(res.msg)
                     }

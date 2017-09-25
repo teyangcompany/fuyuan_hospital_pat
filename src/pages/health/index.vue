@@ -27,7 +27,7 @@
                 </div>
                 <div class="title flex">
                     <div class="name flex1">健康资讯</div>
-                    <div class="more flex0">更多</div>
+                    <div class="more flex0" @click="goConsultList">更多</div>
                 </div>
                 <div class="list">
                     <ul>
@@ -50,12 +50,13 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     import AppFooter from "../../components/app-footer.vue"
     import AppHeader from "../../components/app-header.vue"
     import {mainHeightMixin} from "../../lib/mixin"
     import config from "../../lib/config"
     import scroll from '../../base/scroll.vue'
+    import api from '../../lib/http'
 
     export default {
 //        mixins: [mainHeightMixin],
@@ -78,11 +79,20 @@
         mounted() {
             this.scrollHeight = window.innerHeight-45-60;
             this._swiper();
+            api('smarthos.consult.my.list.page',{
+                token:localStorage.getItem('token')
+            }).then(res=>{
+                console.log(res,555555)
+            })
+
         },
         beforeDestroy() {
 
         },
         methods: {
+            goConsultList(){
+              this.$router.push('/consultList')
+            },
             _swiper() {
                 setTimeout((res) => {
                     this.swiper = new Swiper(this.$refs.swiper, {

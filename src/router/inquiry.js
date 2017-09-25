@@ -26,6 +26,10 @@ export default[
     path:"/illName",
     name:"illName",
     component:()=>import("../pages/inquiry/changeName.vue")
+  },{
+    path:"/oneConsult/:id",
+    name:"oneConsult",
+    component:()=>import("../pages/oneConsult/index.vue")
   },
 
 ]
