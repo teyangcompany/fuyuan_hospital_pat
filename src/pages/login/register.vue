@@ -20,11 +20,11 @@
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input  class="weui-input" @blur="$v.patPassword.$touch()" v-model="patPassword" type="password" placeholder="请输入"/>
+              <input  class="weui-input" @blur="$v.patPassword.$touch()" v-model="patPassword" type="password" placeholder="请输入8-20位密码"/>
             </div>
           </div>
         </div>
-        <span class="form-group__message" v-show="!$v.patPassword.minLength&&showPatPassWord">密码至少6位</span>
+        <span class="form-group__message" v-show="showPatPassWord">密码必须是8-20字母和数字组合</span>
         <div class="weui-cells__title">请输入短信验证码</div>
         <div class="weui-cells">
           <div class="weui-cell">
@@ -32,7 +32,8 @@
               <input class="weui-input" v-model="captcha" type="number" placeholder="请输入"/>
             </div>
             <div class="weui-cell__ft">
-              <button class="weui-vcode-btn" @click="getCode">获取验证</button>
+                <button v-show="!(msg>0)" class="weui-vcode-btn" @click="getCode">{{msg}}</button>
+                <button v-show="msg>0" class="weui-vcode-btn" @click="getCode">有效期{{msg}}s</button>
             </div>
           </div>
         </div>
@@ -69,7 +70,8 @@
               showError:false,
               checkbox:Boolean,
               showPatPassWord:false,
-              cid:''
+              cid:'',
+                msg:"获取验证码"
             }
         },
       validations: {
@@ -86,19 +88,43 @@
         mounted(){
 
         },
+        watch:{
+            patPassword(){
+                if(!/^(?![A-Z]+$)(?![a-z]+$)(?!\d+$)(?!\W+$)\S{8,20}$/g.test(this.patPassword)){
+                    console.log(21212121)
+                    this.$set(this.$data,'showPatPassWord',true)
+                }else {
+                    this.$set(this.$data,'showPatPassWord',false)
+                }
+            }
+        },
       methods:{
         getCode(){
-            api("smarthos.captcha.pat.register",{
-              mobile:this.mobile
-            }).then(res=>{
-              console.log(res,11111);
-              if(res.succ){
-                this.$set(this.$data,'cid',res.obj.cid);
-                localStorage.setItem('cid',res.obj.cid)
-              }else {
-                this.$weui.alert('获取失败');
-              }
-            })
+            if(this.$v.mobile.$invalid){
+                console.log(this.$v)
+                this.$set(this.$data,'showError',true)
+            }else {
+                this.msg = 60;
+                var time = setInterval(()=>{
+                    this.msg -=1;
+                    if(this.msg==0){
+                        this.msg='重新获取';
+                        clearInterval(time)
+                    }
+                },1000)
+                api("smarthos.captcha.pat.register",{
+                    mobile:this.mobile
+                }).then(res=>{
+                    console.log(res,11111);
+                    if(res.succ){
+                        this.$set(this.$data,'cid',res.obj.cid);
+                        localStorage.setItem('cid',res.obj.cid)
+                    }else {
+                        this.$weui.alert(res.msg);
+                    }
+                })
+            }
+
 
         },
         myDetail(){
@@ -107,8 +133,8 @@
             this.$set(this.$data,'showError',true)
           }else if(!this.checkbox){
             this.$weui.alert('请先同意协议')
-          }else if(this.$v.patPassword.$invalid){
-            this.$set(this.$data,'showPatPassWord',true)
+          }else if(this.captcha.length!=4){
+            alert('请输入正确的验证码')
           }else {
             api("smarthos.captcha.check",{
               "cid": this.cid,

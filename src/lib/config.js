@@ -16,13 +16,13 @@ export default {
     ],
     index_fast_nav: [
         {name: "fast-consult", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
-        {name: "ask-doc", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/docCard/1/"}
+        {name: "ask-doc", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/officeConsult"}
     ],
     index_nav: [
         {name: "guide", value: "智能导诊",path: "/login"},
         {name: "book", value: "预约挂号", path: "/home/server/book"},
-        {name: "queuing", value: "排队叫号",path: "/teamCard/1"},
-        {name: "payment", value: "诊间支付",path: "/officeConsult"},
+        {name: "queuing", value: "排队叫号"},
+        {name: "payment", value: "诊间支付"},
         {name: "report", value: "查报告单"},
         {name: "steward", value: "住院管家"},
         {name: "help", value: "就诊指南"},

@@ -44,7 +44,7 @@
             <div class="headerTro">
                 <span class="col"></span>
                 <span class="mfb">精选文章</span>
-                <span class="more mfc">查看更多</span>
+                <span class="more mfc" @click="goArticleList">查看更多</span>
             </div>
             <div class="docImg voice" v-for="(item,index) of DocArticleList">
                 <div class="essay">
@@ -94,7 +94,7 @@
     import config from '../../lib/config'
     import api from '../../lib/http'
     export default{
-        components: {
+            components: {
             top
         },
         mixins: ['mainHeightMixin'],
@@ -114,6 +114,11 @@
             this.getData()
         },
         methods:{
+            goArticleList(){
+                this.$router.push({
+                    name:'articleList'
+                })
+            },
             getData(){
               api('smarthos.user.doc.choice',{
                   token:this.token,

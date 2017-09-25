@@ -12,38 +12,41 @@
                         医生会在48小时内回复您，否则将为您退款。
                 </span>
         </div>
-        <div class="weui-cells__title">咨询信息</div>
-        <div class="weui-cells">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <p class="mfb">咨询对象</p>
+        <div>
+            <div class="weui-cells__title">咨询信息</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <p class="mfb">咨询对象</p>
+                    </div>
+                    <div class="weui-cell__ft mfb">{{officeName}}</div>
                 </div>
-                <div class="weui-cell__ft mfb">{{officeName}}</div>
-            </div>
-            <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
-                <div class="weui-cell__bd">
-                    <p class="mfb">就诊人</p>
-                </div>
-                <div class="weui-cell__ft mfb">{{userName}}</div>
-            </a>
-            <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
-                <div class="weui-cell__bd">
-                    <p class="mfb">疾病名称</p>
-                </div>
-                <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
-                <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
-            </a>
+                <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
+                    <div class="weui-cell__bd">
+                        <p class="mfb">就诊人</p>
+                    </div>
+                    <div class="weui-cell__ft mfb">{{userName}}</div>
+                </a>
+                <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
+                    <div class="weui-cell__bd">
+                        <p class="mfb">疾病名称</p>
+                    </div>
+                    <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
+                    <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
+                </a>
 
-        </div>
-        <div class="weui-cells__title">病情描述</div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" v-model="illDescribe" placeholder="请输入描述" rows="3"></textarea>
-                    <div class="weui-textarea-counter"><span>0</span>/200</div>
+            </div>
+            <div class="weui-cells__title">病情描述</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" v-model="illDescribe" placeholder="请输入描述" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span>0</span>/200</div>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="addImg">
             <upload-img :picList="picList">
 
@@ -106,17 +109,23 @@
             this.scrollHeight = window.innerHeight-45
         },
         mounted(){
+            window.addEventListener('resize', function () {
+                if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+                    window.setTimeout(function () {
+                        document.activeElement.scrollIntoViewIfNeeded();
+                    }, 0);
+                }
+            });
+
             if(sessionStorage.getItem('officeName')&&sessionStorage.getItem('deptId')){
                 this.officeName = sessionStorage.getItem('officeName')
                 this.deptId = sessionStorage.getItem('deptId')
             }else {
                 this.officeName=this.$route.query.officeName;
                 this.deptId=this.$route.params.id;
-                console.log(this.$route.params.id,55555)
                 sessionStorage.setItem('officeName',this.$route.query.officeName)
                 sessionStorage.setItem('deptId',this.$route.params.id)
             }
-
 
             this.getData();
             if(this.$route.params.value){

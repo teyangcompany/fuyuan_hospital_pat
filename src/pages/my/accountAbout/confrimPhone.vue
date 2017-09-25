@@ -20,7 +20,8 @@
             <input class="weui-input" type="tel" v-model="newCaptcha" placeholder="请输入验证码"/>
           </div>
           <div class="weui-cell__ft">
-            <button class="weui-vcode-btn" @click="getCode">获取验证码</button>
+            <button v-show="!(msg>0)" class="weui-vcode-btn" @click="getCode">{{msg}}</button>
+            <button v-show="msg>0" class="weui-vcode-btn" @click="getCode">有效期{{msg}}s</button>
           </div>
         </div>
       </div>
@@ -48,7 +49,8 @@
         cid:'',
         showError:false,
         newCid:'',
-        newCaptcha:''
+        newCaptcha:'',
+        msg:"获取验证码"
       }
     },
     validations: {
@@ -64,32 +66,57 @@
     },
     methods:{
       goNext(){
-//        this.$router.push('/changePhoneSucc')
-          api("smarthos.user.pat.mobile.modify",{
-            captcha:this.captcha,
-            cid:this.cid,
-            newCid:this.newCid,
-            newCaptcha:this.newCaptcha,
-            token:this.token,
-            patMobile:this.mobile
+//        this.$router.push('/changePhoneSucc');
+        if(this.newCaptcha.length!=4){
+          alert('请输入正确的号码')
+        }else {
+          api('smarthos.captcha.check',{
+            "cid": this.newCid,
+            "captcha": this.newCaptcha
           }).then(res=>{
-            console.log(res,3363663)
             if(res.succ){
-              this.$router.push({
-                name:'succeed',
-                params:{
-                  msg:'成功修改绑定手机号'
-                }
-              })
+              this.getSucc()
             }else {
               alert(res.msg)
             }
           })
+        }
+
+      },
+      getSucc(){
+        api("smarthos.user.pat.mobile.modify",{
+          captcha:this.captcha,
+          cid:this.cid,
+          newCid:this.newCid,
+          newCaptcha:this.newCaptcha,
+          token:this.token,
+          patMobile:this.mobile
+        }).then(res=>{
+          console.log(res,3363663)
+          if(res.succ){
+            this.$router.push({
+              name:'succeed',
+              params:{
+                msg:'成功修改绑定手机号'
+              }
+            })
+          }else {
+            alert(res.msg)
+          }
+        })
       },
       getCode(){
         if(this.$v.$invalid){
           this.$set(this.$data,'showError',true)
         }else {
+          this.msg = 60;
+          var time = setInterval(()=>{
+            this.msg -=1;
+            if(this.msg==0){
+              this.msg='重新获取';
+              clearInterval(time)
+            }
+          },1000)
           api('smarthos.captcha.pat.mobile.modify',{
             token:this.token,
             mobile:this.mobile
@@ -139,7 +166,7 @@
   }
 
   .weui-label{
-    width: 70px;
+    /*width: 110px;*/
   }
 
 </style>

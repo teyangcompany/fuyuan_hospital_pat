@@ -2,7 +2,7 @@
     <div class="page">
         <top class="noflex" title="图文问诊" ref="header">
             <i slot="back"></i>
-            <div slot="right" class="right absolute">下一步</div>
+            <div slot="right" class="right absolute" @click="submit">下一步</div>
         </top>
             <div class="myHeader">
                 <span class="col">
@@ -12,37 +12,41 @@
                         医生会在48小时内回复您，否则将为您退款。
                 </span>
             </div>
-            <div class="weui-cells__title">咨询信息</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <p class="mfb">咨询对象</p>
-                    </div>
-                    <div class="weui-cell__ft mfb">华佗名医团队</div>
-                </div>
-                <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
-                    <div class="weui-cell__bd">
-                        <p class="mfb">就诊人</p>
-                    </div>
-                    <div class="weui-cell__ft mfb">李康飞 男</div>
-                </a>
-                <a class="weui-cell weui-cell_access" href="javascript:;">
-                    <div class="weui-cell__bd">
-                        <p class="mfb">疾病名称</p>
-                    </div>
-                    <div class="weui-cell__ft mfb">没确定请不要填写</div>
-                </a>
+           <div>
+               <div class="weui-cells__title">咨询信息</div>
+               <div class="weui-cells">
+                   <div class="weui-cell">
+                       <div class="weui-cell__bd">
+                           <p class="mfb">咨询对象</p>
+                       </div>
+                       <div class="weui-cell__ft mfb">{{docName}}</div>
+                   </div>
+                   <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
+                       <div class="weui-cell__bd">
+                           <p class="mfb">就诊人</p>
+                       </div>
+                       <div class="weui-cell__ft mfb">{{userName}}</div>
+                   </a>
+                   <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
+                       <div class="weui-cell__bd">
+                           <p class="mfb">疾病名称</p>
+                       </div>
+                       <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
+                       <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
+                   </a>
 
-            </div>
-            <div class="weui-cells__title">病情描述</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" placeholder="请输入描述" rows="3"></textarea>
-                        <div class="weui-textarea-counter"><span>0</span>/200</div>
-                    </div>
-                </div>
-            </div>
+               </div>
+               <div class="weui-cells__title">病情描述</div>
+               <div class="weui-cells weui-cells_form">
+                   <div class="weui-cell">
+                       <div class="weui-cell__bd">
+                           <textarea v-model="illDescribe" class="weui-textarea" placeholder="请输入描述" rows="3"></textarea>
+                           <div class="weui-textarea-counter"><span>0</span>/200</div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
             <div class="addImg">
                 <upload-img :picList="picList">
 
@@ -59,8 +63,10 @@
                 </upload-img>
             </div>
         <sel-patient ref="patient">
-            <div slot="pat" class="myPat bor" v-for="item of 4">
-                李康飞
+            <div slot="pat" class="myPat bor">
+                <div class="myPat bor" v-for="item of userList" @click="getUser(item)">
+                    {{item.commpatName}}
+                </div>
             </div>
         </sel-patient>
     </div>
@@ -73,7 +79,6 @@
     import scroll from '../../base/scroll.vue'
     import uploadImg from '../../base/uploadImg.vue'
     import selPatient from '../../base/selPatient.vue'
-
     import api from '../../lib/http'
     export default{
         components: {
@@ -89,15 +94,91 @@
                 scrollHeight:'',
                 config: config,
                 picList: [],
+                userList:[],
+                userName:"",
+                userObj:{},
+                token:localStorage.getItem('token'),
+                docName:"",
+                docId:"",
+                illName:"",
+                illDescribe:"",
+                attaIdList:[]
             }
         },
         create(){
             this.scrollHeight = window.innerHeight-45
         },
         mounted(){
-
+            window.addEventListener('resize', function () {
+                if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+                    window.setTimeout(function () {
+                        document.activeElement.scrollIntoViewIfNeeded();
+                    }, 0);
+                }
+            });
+            this.docId = sessionStorage.getItem('docId')
+            this.docName = sessionStorage.getItem('docName');
+            console.log(this.docName,this.docId,8888)
+            this.getData()
+            if(this.$route.params.value){
+                this.illName = this.$route.params.value
+            }
         },
         methods:{
+            submit(){
+                console.log(this.picList,88888);
+                for(var i=0;i<this.picList.length;i++){
+                    this.attaIdList.push(this.picList[i].imgId)
+                };
+                api('smarthos.consult.one2one.pic.issue',{
+                    attaIdList:this.attaIdList,
+                    token:this.token,
+                    "consulterName":this.userName,
+                    "consulterMobile":this.userObj.commpatMobile,
+                    "consulterIdcard":this.userObj.commpatIdcard,
+                    "consultContent":this.illDescribe,
+                    "docId":this.docId,
+                    "illnessName":this.illName
+                }).then(res=>{
+                    console.log(res,3535535);
+                    if(res.succ){
+                       this.$router.push({
+                           path:'oneConsult/'+res.obj.consultInfo.id
+
+                       })
+
+                    }else {
+                        alert(res.msg)
+                    }
+                })
+            },
+            getUser(item){
+                this.userObj = item;
+                this.userName = item.commpatName
+            },
+            changeName(){
+                this.$router.push({
+                    name:'illName',
+                    params:{
+                        routerName:'imageInquiry'
+                    }
+                })
+            },
+            getData(){
+                api('smarthos.user.commpat.list',{
+                    token:this.token
+                }).then(res=>{
+                    console.log(res,66666)
+                    if(res.succ){
+                        this.userName = res.list[0].commpatName
+                        this.userObj = res.list[0]
+                        this.userList = res.list;
+
+                    }else {
+                        alert(res.msg)
+                    }
+                })
+            },
             togglePatient(){
               this.$refs.patient.flag = true;
             },

@@ -3,6 +3,15 @@
  */
 export default[
   {
+    path:'/articleList',
+    name:"articleList",
+    component:()=>import('../pages/docCard/articleList.vue')
+},{
+    path:'/articleDetail/:id',
+    name:"articleDetail",
+    component:()=>import('../pages/docCard/articleDetail.vue')
+},
+  {
     path: "/teamCard/:id",
     component: () => import("../pages/teamCard/index.vue"),
     children:[
@@ -38,6 +47,6 @@ export default[
       component:()=>import('../pages/docCard/docDynamic.vue')
   },
 ]
-}
+},
 
 ]

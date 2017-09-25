@@ -3,7 +3,7 @@
     <div class="pages" ref="pages" >
       <scroll :height="scrollHeight" :data="chatList" ref="wrapper">
       <div  ref="talking"  class="wrap talk-detail" @click="cancel" >
-          <div v-for="item of chatList" ref="item">
+          <div  ref="item">
             <div class="leftMsg" v-if="item.msgSenderType=='PAT'" >
               <div class="otherImg">
                 <img class="otherTitle" :src="patImg" alt="">
@@ -34,28 +34,29 @@
       </div >
         </scroll>
       <div  class="bottom">
-        <div class="robot-room-wirte yk-box yk-cell">
-          <div class="talkImg">
-            <img src="../../static/img/talk.png" alt="" @click="setType">
-          </div>
-          <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
-            {{msg}}
-          </div>
-          <div class="yk-cell-bd mr10" v-show="type=='text'">
-            <edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
-          </div>
-          <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
-          <button v-show="text.length" class="send-btn" @click="send">发送</button>
-        </div>
-        <div  class="checkList" v-show="checkList">
-          <div class="upload">
-            <label for="upload_img" class="label_img">图片</label>
-            <input  type="file" id="upload_img" @change="change"  accept="image/*">
-          </div>
-          <div class="upload" style="margin-left: 20px">
-            <label  class="label_img">相机</label>
-          </div>
-        </div>
+        <div class="pageBtn">去付款</div>
+        <!--<div class="robot-room-wirte yk-box yk-cell">-->
+          <!--<div class="talkImg">-->
+            <!--<img src="../../static/img/talk.png" alt="" @click="setType">-->
+          <!--</div>-->
+          <!--<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">-->
+            <!--{{msg}}-->
+          <!--</div>-->
+          <!--<div class="yk-cell-bd mr10" v-show="type=='text'">-->
+            <!--<edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>-->
+          <!--</div>-->
+          <!--<div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>-->
+          <!--<button v-show="text.length" class="send-btn" @click="send">发送</button>-->
+        <!--</div>-->
+        <!--<div  class="checkList" v-show="checkList">-->
+          <!--<div class="upload">-->
+            <!--<label for="upload_img" class="label_img">图片</label>-->
+            <!--<input  type="file" id="upload_img" @change="change"  accept="image/*">-->
+          <!--</div>-->
+          <!--<div class="upload" style="margin-left: 20px">-->
+            <!--<label  class="label_img">相机</label>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
 
@@ -99,7 +100,6 @@
       chatObj(){
         console.log(this.chatObj,666);
         this.patImg = this.chatObj.userPat.patAvatar
-        this.docImg = this.chatObj.userDocVO.docAvatar
       },
       chatList(){
         console.log(7777);
@@ -230,6 +230,11 @@
 </script>
 <style scoped lang="scss">
   @import "../common/common.scss";
+  .pageBtn{
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+  }
   .commentImg{
     img{
       width: 100%;

@@ -4,7 +4,7 @@
             <div class="teamImg">
                 <div class="myHeader">
                     <span class="back">
-                        <img src="../../../static/img/back.png" alt="">
+                        <img src="../../../static/img/back.png" alt="" @click="goBack">
                     </span>
                    <span class="headerImg">
                        <img src="../../../static/img/share.png" alt="">
@@ -75,6 +75,9 @@
 
         },
         methods:{
+            goBack(){
+              this.$router.go(-1)
+            },
             selItem(index,item){
                 this.num=index;
                 this.$router.push({

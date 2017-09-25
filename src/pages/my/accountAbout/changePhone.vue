@@ -8,7 +8,7 @@
         <div class="weui-cell">
           <div class="weui-cell__hd"><label class="weui-label bf">手机号</label></div>
           <div class="weui-cell__bd" v-bind:class="{ 'form-group--error': $v.mobile.$error }">
-            <input  @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入手机号"/>
+            <input readonly="readonly"  @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入手机号"/>
           </div>
         </div>
         <span class="form-group__message" v-show="!$v.mobile.phone&&showError">请输入正确的手机号</span>
@@ -17,10 +17,11 @@
             <label class="weui-label bf">验证码</label>
           </div>
           <div class="weui-cell__bd">
-            <input class="weui-input" type="tel" v-model="captcha" placeholder="请输入验证码"/>
+            <input  class="weui-input" type="tel" v-model="captcha" placeholder="请输入验证码"/>
           </div>
           <div class="weui-cell__ft">
-            <button class="weui-vcode-btn" @click="getCode">获取验证码</button>
+            <button v-show="!(msg>0)" class="weui-vcode-btn" @click="getCode">{{msg}}</button>
+            <button v-show="msg>0" class="weui-vcode-btn" @click="getCode">有效期{{msg}}s</button>
           </div>
         </div>
       </div>
@@ -43,10 +44,11 @@
     data(){
       return {
         token:localStorage.getItem('token'),
-        mobile:'',
+        mobile:JSON.parse(localStorage.getItem('commpat')).commpatMobile||{},
         captcha:'',
         cid:'',
         showError:false,
+        msg:"获取验证码"
       }
     },
     validations: {
@@ -63,18 +65,37 @@
 //        this.$router.push('./confrimPhone')
         if(this.mobile.length!=11){
           alert('请输入手机号')
+        }else if(this.captcha.length!=4){
+          alert('请输入正确的验证码')
         }else {
-          this.$router.push({
-            name:'confrimPhone',
-            params:{
-              captcha:this.captcha,
-              cid:this.cid
-            }
-          })
+            api('smarthos.captcha.check',{
+              "cid": this.cid,
+              "captcha": this.captcha
+            }).then(res=>{
+              if(res.succ){
+                this.$router.push({
+                  name:'confrimPhone',
+                  params:{
+                    captcha:this.captcha,
+                    cid:this.cid
+                  }
+                })
+              }else {
+                alert(res.msg)
+              }
+            })
         }
-
       },
+
       getCode(){
+        this.msg = 60;
+        var time = setInterval(()=>{
+          this.msg -=1;
+          if(this.msg==0){
+            this.msg='重新获取';
+            clearInterval(time)
+          }
+        },1000)
         if(this.$v.$invalid){
           this.$set(this.$data,'showError',true)
         }else {
