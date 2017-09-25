@@ -22,9 +22,31 @@ export default [
     path:"/home/server/quickConsult/index",
     component:()=> import("../pages/home/server/quickConsult/index.vue")
   },
+  // {
+  //   path:"/my/home/server/consultService/consultDoc",
+  //   component:()=> import("../pages/home/server/consultService/consultDoc.vue")
+  // },
+  // {
+  //   path:"/my/home/server/consultService/myConsult",
+  //   component:()=> import("../pages/home/server/consultService/myConsult.vue")
+  // },
   {
-    path:"/home/server/consultService/consultDoc",
-    component:()=> import("../pages/home/server/consultService/consultDoc.vue")
+    path:"/my/home/server/consultService/whole",
+    component:()=> import("../pages/home/server/consultService/whole.vue"),
+    children:[
+      {
+        path:"/my/home/server/consultService/myConsult",
+        component:()=> import("../pages/home/server/consultService/myConsult.vue")
+      },
+      {
+        path:"/my/home/server/consultService/consultDoc",
+        component:()=> import("../pages/home/server/consultService/consultDoc.vue")
+      },
+      {
+        path:"/my/home/server/consultService/bestPick",
+        component:()=> import("../pages/home/server/consultService/bestPick.vue")
+      },
+    ]
   }
 
 ]

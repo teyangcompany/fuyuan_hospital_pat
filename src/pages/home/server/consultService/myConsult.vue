@@ -5,129 +5,43 @@
       <!--<p class="listP">精选</p>-->
       <!--<router-link tag="p" to="/my/home/server/consultService/myConsult" class="listP">我的</router-link>-->
     <!--</div>-->
-    <div class="toggle" style="display: block;">
-      <div class="searchArea">
-        <div class="inputWrap">
-          <input type="text" placeholder="搜索医院、科室、医生、疾病">
-        </div>
-        <img src="../../../../../static/img/放大镜.png" alt="">
-      </div>
-      <div class="tab border-1px">
+    <div class="toggle">
+      <div class="tab border-1px myTab">
         <div class="tab-item">
           <div class="tab_item_container" @click="chooseType('displaySort')">
-            <span v-if="sortPick == ''">全部科室</span>
+            <span v-if="sortPick == ''">全部问诊</span>
             <span v-else>{{ sortPick }}</span>
           </div>
         </div>
         <div class="tab-item">
           <div class="tab_item_container" @click="chooseType('displayType')">
             <div class="tab_item_border">
-              <span>全部问诊形式</span>
-            </div>
-          </div>
-        </div>
-        <div  class="tab-item" >
-          <div class="tab_item_container" @click="chooseType('displayDefault')">
-            <div class="sort_item_border">
-              <span>默认排序</span>
+              <span>全部状态</span>
             </div>
           </div>
         </div>
       </div>
-      <transition name="showlist">
-        <div class="dropType allRoom" v-show="sortBy == 'displaySort'" >
-          <div class="wrapWhole" >
-            <div class="wrapMenu" ref="wrapMenu">
-              <ul>
-                <li v-for="(item,index) in parentLevel" @click="selectParent(item,index)" :class="{category_active:clickIndex == index}">
-                  <span> {{ item.deptName }}</span>
-                  <img v-if="arrow[index] == '1'" src="../../../../../static/img/icon/arrow-right-grow.png" alt="">
-                </li>
-              </ul>
+      <div class="wrapMy">
+        <ul class="border-1px">
+          <li >
+            <div>
+              <span class="picConsult">团队咨询 <span>¥50</span></span>
+              <span class="consultTim">待付款</span>
             </div>
-            <div class="wrapContent" ref="wrapContent">
-              <ul>
-                <div class="weui-cells weui-cells_radio weuiMargin" >
-                  <label class="weui-cell weui-check__label"  v-for="(item,index) in childDetail" @touchend="selectChild(index,item)">
-                    <div class="weui-cell__bd">
-                      <p>{{ item.deptName }}</p>
-                    </div>
-                    <div class="weui-cell__ft">
-                      <input type="radio" class="weui-check" name="radio1"  :value="item.deptName " v-model="sortPick"/>
-                      <span class="weui-icon-checked"></span>
-                    </div>
-                  </label>
-                </div>
-                <!--<li v-for="item in childDetail">{{ item.deptName }}</li>-->
-              </ul>
+            <div class="mainContent">
+              <p>我有一个问题想要咨询一下，是这样的，去年我在我们那里的医院做了一个检查，你知道德玛关于这个事情，比较复杂的你知道吗</p>
+              <div @click="makeLarge()">
+                <img src="" alt="">
+
+              </div>
             </div>
-          </div>
-        </div>
-      </transition>
-      <transition name="showlist">
-        <div class="dropType" v-show="sortBy == 'displayType'">
-          <ul >
-            <li>全部问诊形式</li>
-            <li>视频问诊</li>
-            <li>图文问诊</li>
-          </ul>
+            <div class="ConsultRelate">
 
-        </div>
-      </transition>
-      <transition name="showlist">
-        <div class="dropType" v-show="sortBy == 'displayDefault'">
-
-          <ul >
-            <li>默认排序</li>
-            <li>按好评排</li>
-          </ul>
-        </div>
-      </transition>
-      <transition name="showcover">
-        <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
-      </transition>
-      <div class="teamList">
-        <ul class="border-1px" v-for="item in followList">
-          <router-link tag="div" to="/">
-            <li class="teamLi">
-              <div class="cancelImg" v-if="item.docAvatar">
-                <img :src="item.docAvatar" alt="">
-              </div>
-              <div class="cancelImg" v-else>
-                <img src="../../../../../static/img/医生男.jpg" alt="">
-              </div>
-              <div class="cancelIntro">
-                <div>
-                  <p><span><span class="followName">{{ item.docName }}</span> <span class="myDoctor">团队成员</span></span><span class="commentValue">{{ item.docScoure }}分</span> </p>
-                  <p>{{ item.deptName }} {{ item.docTitle }}</p>
-                  <p>{{ item.hosName }}</p>
-                </div>
-              </div>
-            </li>
-            <li class="goodAt">
-              <section>
-                <p>擅长：{{ item.docSkill }}</p>
-              </section>
-              <section>
-                <div>
-                  <p>图文120元</p>
-                </div>
-                <div>
-                  <p>电话150元</p>
-                </div>
-                <div>
-                  <p>视频300元</p>
-                </div>
-                <div>
-                  <p>团队50元</p>
-                </div>
-              </section>
-            </li>
-          </router-link>
+              <span class="name"><span class="number">华立</span><span>回答</span>  </span>
+              <span class="money">1小时前创建 | 3条回复</span>
+            </div>
+          </li>
         </ul>
-      </div>
-      <div class="directConsult border-1px-top">
-        <p>直接咨询科室</p>
       </div>
     </div>
   </div>
@@ -154,54 +68,54 @@
       }
     },
     created(){
-         http("smarthos.user.doc.search",{
-         }).then((data)=>{
-             if(data.code == 0){
-                 this.followList = data.userDocList
-             }else{
-                 weui.alert(data.msg)
-             }
-         })
-         http("smarthos.system.stddeptgb.list",{
-           hasDept:true,
-           hasDoc:true,
-           deptLevel:2
-         }).then((data)=>{
-             if(data.code == 0){
-               this.parentLevel = data.obj
-               this.parentLevel = this.allRoom.concat(this.parentLevel)
-               this.childDetail = this.parentLevel[this.clickIndex].subDeptList
-               this.parentLevel.forEach(item =>{
-                 if (item.hasOwnProperty("subDeptList")) {
-                   this.arrow.push('1')
-                 }else{
-                   this.arrow.push('0')
-                 }
-               })
-             }else{
-                 weui.alert(data.msg)
-             }
-             console.log(this.parentLevel)
-         })
+      http("smarthos.user.doc.search",{
+      }).then((data)=>{
+        if(data.code == 0){
+          this.followList = data.userDocList
+        }else{
+          weui.alert(data.msg)
+        }
+      })
+      http("smarthos.system.stddeptgb.list",{
+        hasDept:true,
+        hasDoc:true,
+        deptLevel:2
+      }).then((data)=>{
+        if(data.code == 0){
+          this.parentLevel = data.obj
+          this.parentLevel = this.allRoom.concat(this.parentLevel)
+          this.childDetail = this.parentLevel[this.clickIndex].subDeptList
+          this.parentLevel.forEach(item =>{
+            if (item.hasOwnProperty("subDeptList")) {
+              this.arrow.push('1')
+            }else{
+              this.arrow.push('0')
+            }
+          })
+        }else{
+          weui.alert(data.msg)
+        }
+        console.log(this.parentLevel)
+      })
     },
     mounted(){
 //           this.$nextTick(() => {
 //             this._initScroll();
 //           });
 //      this.$nextTick(()=>{
-//          var top = document.getElementsByClassName('listP')
-//          var toggle = document.getElementsByClassName('toggle')
-//          var lastIndex = 0;
-//          for(var i=0; i<top.length;i++){
-//            top[i].index = i
-//            top[i].onclick = function(){
-//                top[lastIndex].style.borderBottom = ''
-//                this.style.borderBottom = '2px solid blue'
-//                toggle[lastIndex].style.display = 'none'
-//                toggle[this.index].style.display = 'block'
-//                lastIndex = this.index;
-//            }
+//        var top = document.getElementsByClassName('listP')
+//        var toggle = document.getElementsByClassName('toggle')
+//        var lastIndex = 0;
+//        for(var i=0; i<top.length;i++){
+//          top[i].index = i
+//          top[i].onclick = function(){
+//            top[lastIndex].style.borderBottom = ''
+//            this.style.borderBottom = '2px solid blue'
+//            toggle[lastIndex].style.display = 'none'
+//            toggle[this.index].style.display = 'block'
+//            lastIndex = this.index;
 //          }
+//        }
 //      })
     },
     methods:{
@@ -247,45 +161,45 @@
       selectParent(item,index){
         this.clickIndex = index
         this.childDetail = this.parentLevel[this.clickIndex].subDeptList
-          console.log(item)
+        console.log(item)
         if(this.arrow[index] == 0){
-            this.deptId = item.deptCode
-            this.sortPick = item.deptName
-            this.sortBy = ''
-            http("smarthos.user.doc.search",{
-              deptId:this.deptId
-            }).then((data)=>{
-                console.log(data)
-              if(data.code == 0){
-                this.followList = data.userDocList
-              }else{
-                  weui.alert(data.msg)
-              }
-            })
+          this.deptId = item.deptCode
+          this.sortPick = item.deptName
+          this.sortBy = ''
+          http("smarthos.user.doc.search",{
+            deptId:this.deptId
+          }).then((data)=>{
+            console.log(data)
+            if(data.code == 0){
+              this.followList = data.userDocList
+            }else{
+              weui.alert(data.msg)
+            }
+          })
         }
       },
       selectChild(index,item){
         this.deptId = item.deptCode
         this.sortPick = item.deptName
-          http("smarthos.user.doc.search",{
-            deptId:this.deptId
-          }).then((data)=>{
-            if(data.code == 0){
-              this.followList = data.userDocList
-            }else{
-                weui.alert(data.msg)
-            }
+        http("smarthos.user.doc.search",{
+          deptId:this.deptId
+        }).then((data)=>{
+          if(data.code == 0){
+            this.followList = data.userDocList
+          }else{
+            weui.alert(data.msg)
+          }
 //            console.log(data)
-          })
+        })
       }
     },
     watch:{
       childDetail(){
-          this.$nextTick(()=>{
-              setTimeout(()=>{
-                this._initWrapContent()
-              },20)
-          })
+        this.$nextTick(()=>{
+          setTimeout(()=>{
+            this._initWrapContent()
+          },20)
+        })
       },
       sortPick(){
         this.sortBy = ''
@@ -308,14 +222,13 @@
     opacity: 0
   }
   .toggle{
-    /*display: none;*/
     .wrapMy{
-        position: absolute;
-        top:180px;
-        left:0;
-        right:0;
-        bottom:0;
-        overflow: auto;
+      position: absolute;
+      top:180px;
+      left:0;
+      right:0;
+      bottom:0;
+      overflow: auto;
       ul {
         /*margin-top: 10px;*/
         /*padding-bottom: 5px;*/

@@ -37,7 +37,7 @@ export default {
         {name: "wiki", value: "健康百科"}
     ],
     my_nav: [
-        {name: "my-consult", value: "我的咨询"},
+        {name: "my-consult", value: "我的咨询",path:"/home/server/consultService/consultDoc"},
         {name: "my-book", value: "我的挂号",path:"/myRegistration"},
         {name: "common-visitperson", value: "常用就诊人",path:"/common-visitperson"},
         {name: "archives", value: "健康档案", path: "/archives"},
