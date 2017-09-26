@@ -47,6 +47,10 @@ export default [
         component:()=> import("../pages/home/server/consultService/bestPick.vue")
       },
     ]
+  },
+  {
+    path:"/consultDetail",
+    component:()=> import("../pages/home/server/consultService/consultDetail.vue"),
   }
 
 ]

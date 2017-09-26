@@ -28,8 +28,8 @@
       justify-content: center;
     }
     .router-link-exact-active{
-      color: blue;
-      border-bottom: 2px solid blue;
+      color: #2772FF;
+      border-bottom: 4px solid #2772FF;
     }
   }
 </style>

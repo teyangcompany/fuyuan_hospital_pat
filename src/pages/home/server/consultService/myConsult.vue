@@ -9,8 +9,7 @@
       <div class="tab border-1px myTab">
         <div class="tab-item">
           <div class="tab_item_container" @click="chooseType('displaySort')">
-            <span v-if="sortPick == ''">全部问诊</span>
-            <span v-else>{{ sortPick }}</span>
+            <span>全部问诊</span>
           </div>
         </div>
         <div class="tab-item">
@@ -22,26 +21,33 @@
         </div>
       </div>
       <div class="wrapMy">
-        <ul class="border-1px">
+        <router-link tag="ul" to="/consultDetail" class="border-1px" v-for="item in aboutConsult">
           <li >
             <div>
-              <span class="picConsult">团队咨询 <span>¥50</span></span>
-              <span class="consultTim">待付款</span>
+              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">一对一图文<span> ¥{{ item.consultInfo.payFee }}</span></p>
+                <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">平台图文问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1" style="color: #2772FF;">待受理</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 2" style="color: #2772FF;">待处理</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 3" style="color: #2772FF;">进行中</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 4" style="color: #2772FF;">待评价</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 6" style="color: #999999;">已结束</span>
+              <span class="consultTim" v-else-if="item.consultInfo.consultStatus == -1" style="color: #999999;">已取消</span>
             </div>
             <div class="mainContent">
-              <p>我有一个问题想要咨询一下，是这样的，去年我在我们那里的医院做了一个检查，你知道德玛关于这个事情，比较复杂的你知道吗</p>
-              <div @click="makeLarge()">
-                <img src="" alt="">
-
+              <p>{{ item.consultInfo.consultContent }}</p>
+              <div>
+                <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
               </div>
             </div>
             <div class="ConsultRelate">
 
-              <span class="name"><span class="number">华立</span><span>回答</span>  </span>
-              <span class="money">1小时前创建 | 3条回复</span>
+              <span class="name"><span class="number"><img :src="item.userDocVo.docAvatar" alt=""> <span>{{ item.userDocVo.docName }}</span>回答</span></span>
+              <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | Getdate}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
+              <span class="money" v-else>{{ item.consultInfo.createTime | Getdate}}创建 | 0条回复</span>
             </div>
           </li>
-        </ul>
+        </router-link>
       </div>
     </div>
   </div>
@@ -49,161 +55,36 @@
 <script>
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
+  import {Getdate} from '../../../../lib/filter'
   export default{
     data(){
       return{
-        sortBy:'',
-        followList:[],
-        parentLevel:"",
-        childDetail:null,
-        clickIndex:0,
-        arrow:[],
-        deptId:"",
-        sortPick:"",
-        allRoom:[
-          {
-            deptName:"全部科室",
-          }
-        ],
+          aboutConsult:""
       }
+    },
+    filters:{
+      Getdate
     },
     created(){
-      http("smarthos.user.doc.search",{
-      }).then((data)=>{
-        if(data.code == 0){
-          this.followList = data.userDocList
-        }else{
-          weui.alert(data.msg)
-        }
-      })
-      http("smarthos.system.stddeptgb.list",{
-        hasDept:true,
-        hasDoc:true,
-        deptLevel:2
-      }).then((data)=>{
-        if(data.code == 0){
-          this.parentLevel = data.obj
-          this.parentLevel = this.allRoom.concat(this.parentLevel)
-          this.childDetail = this.parentLevel[this.clickIndex].subDeptList
-          this.parentLevel.forEach(item =>{
-            if (item.hasOwnProperty("subDeptList")) {
-              this.arrow.push('1')
-            }else{
-              this.arrow.push('0')
-            }
-          })
-        }else{
-          weui.alert(data.msg)
-        }
-        console.log(this.parentLevel)
-      })
+         http("smarthos.consult.my.list.page",{
+           token:localStorage.getItem('token')
+         }).then((data)=>{
+             if(data.code == 0){
+               this.aboutConsult = data.list
+             }else{
+                 weui.alert(data.msg)
+             }
+              console.log(data)
+         })
     },
     mounted(){
-//           this.$nextTick(() => {
-//             this._initScroll();
-//           });
-//      this.$nextTick(()=>{
-//        var top = document.getElementsByClassName('listP')
-//        var toggle = document.getElementsByClassName('toggle')
-//        var lastIndex = 0;
-//        for(var i=0; i<top.length;i++){
-//          top[i].index = i
-//          top[i].onclick = function(){
-//            top[lastIndex].style.borderBottom = ''
-//            this.style.borderBottom = '2px solid blue'
-//            toggle[lastIndex].style.display = 'none'
-//            toggle[this.index].style.display = 'block'
-//            lastIndex = this.index;
-//          }
-//        }
-//      })
+//      this.getDate()
     },
     methods:{
-//           _initScroll(){
-//             this.doctorScroll = new BScroll(this.$refs.doctor,{
-//               click:true
-//             })
-//           },
-      _initWrapMenu(){
-        if(this.displaySort = true){
-          this.wrapWholeScroll = new BScroll(this.$refs.wrapMenu,{
-            click:true
-          })
-        }else{
-          return
-        }
-      },
-      _initWrapContent(){
-        if(this.displaySort = true){
-          this.wrapWholeScroll = new BScroll(this.$refs.wrapContent,{
-            click:true
-          })
-        }else{
-          return
-        }
-      },
-      chooseType(type){
-        if(this.sortBy !== type){
-          this.sortBy = type
-          if(type == 'displaySort'){
-            this.$nextTick(() => {
-              this._initWrapMenu()
-              this._initWrapContent()
-            });
-          }
-        }else{
-          this.sortBy = ''
-        }
-      },
-      hideCover(){
-        this.sortBy = ''
-      },
-      selectParent(item,index){
-        this.clickIndex = index
-        this.childDetail = this.parentLevel[this.clickIndex].subDeptList
-        console.log(item)
-        if(this.arrow[index] == 0){
-          this.deptId = item.deptCode
-          this.sortPick = item.deptName
-          this.sortBy = ''
-          http("smarthos.user.doc.search",{
-            deptId:this.deptId
-          }).then((data)=>{
-            console.log(data)
-            if(data.code == 0){
-              this.followList = data.userDocList
-            }else{
-              weui.alert(data.msg)
-            }
-          })
-        }
-      },
-      selectChild(index,item){
-        this.deptId = item.deptCode
-        this.sortPick = item.deptName
-        http("smarthos.user.doc.search",{
-          deptId:this.deptId
-        }).then((data)=>{
-          if(data.code == 0){
-            this.followList = data.userDocList
-          }else{
-            weui.alert(data.msg)
-          }
-//            console.log(data)
-        })
-      }
+
     },
     watch:{
-      childDetail(){
-        this.$nextTick(()=>{
-          setTimeout(()=>{
-            this._initWrapContent()
-          },20)
-        })
-      },
-      sortPick(){
-        this.sortBy = ''
-      },
+
     }
   }
 </script>
@@ -224,14 +105,14 @@
   .toggle{
     .wrapMy{
       position: absolute;
-      top:180px;
+      top:170px;
       left:0;
       right:0;
       bottom:0;
+      background-color: white;
       overflow: auto;
       ul {
-        /*margin-top: 10px;*/
-        /*padding-bottom: 5px;*/
+        margin-top: 5px;
         li {
           width: 690px;
           /*height: 166px;*/
@@ -247,8 +128,8 @@
               font-size: 32px;
             }
             span.consultTim {
-              font-size: 32px;
-              color: gray;
+              font-size: 28px;
+              color: #F07818;
             }
           }
           div.mainContent {
@@ -260,6 +141,7 @@
               img{
                 width: 22.5%;
                 height: 120px;
+                margin-left: 15px;
               }
             }
             p {
@@ -267,8 +149,8 @@
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 2;
               overflow: hidden;
-              font-size: 28px;
-              color: gray;
+              font-size: 30px;
+              color: #888888;
               padding-top: 5px;
               /*background-color: #E64340;*/
             }
@@ -277,7 +159,7 @@
             margin-top: 5px;
             span.name {
               font-size: 28px;
-              color: gray;
+              color: #999999;
               .circle {
                 display: inline-block;
                 width: 10px;
@@ -286,9 +168,19 @@
                 background-color: red;
                 border-radius: 50%;
               }
+              .number{
+                display: flex;
+                align-items: center;
+                img{
+                  width: 34px;
+                  height: 34px;
+                  border-radius: 50%;
+                  margin-right: 5px;
+                }
+              }
             }
             span.money {
-              font-size: 28px;
+              font-size: 26px;
               color: #999999;
             }
           }
