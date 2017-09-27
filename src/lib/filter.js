@@ -31,10 +31,10 @@ const Getdate = (time)=> {
 	clock += mm + "-"
 	if(dd < 10) clock += "0"
 	clock += dd + " "
-	// if(hh < 10) clock += "0"
-	// clock += hh + ":"
-	// if (ii < 10) clock += "0"
-	// clock += ii
+	if(hh < 10) clock += "0"
+	clock += hh + ":"
+	if (ii < 10) clock += "0"
+	clock += ii
   	return  clock
   }
   //time为datetime格式，如"2017-02-03 00:00:00"
