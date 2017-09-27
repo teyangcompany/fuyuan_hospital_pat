@@ -30,6 +30,14 @@ export default[
     path:"/oneConsult/:id",
     name:"oneConsult",
     component:()=>import("../pages/oneConsult/index.vue")
+  },{
+    path:"/pay/:id",
+    name:"pay",
+    component:()=>import("../pages/oneConsult/pay.vue")
+  },{
+    path:"/evaluate/:id",
+    name:"evaluate",
+    component:()=>import("../pages/oneConsult/evaluate.vue")
   },
 
 ]

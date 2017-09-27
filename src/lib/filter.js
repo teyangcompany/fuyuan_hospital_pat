@@ -157,6 +157,33 @@ const week = function (item) {
   }
   return date;
 }
+const state = function (item) {
+   var str = "";
+  switch (item){
+    case '-1':
+      str = '已取消';
+      break;
+    case '0':
+      str = '待支付';
+      break;
+    case '1':
+      str = '待受理';
+      break;
+    case '2':
+      str = '待处理';
+      break;
+    case '3':
+      str = '进行中';
+      break;
+    case '4':
+      str = '待评价';
+      break;
+    case '6':
+      str = '已结束';
+      break;
+  }
+  return str;
+}
 
-export {Todate,getWeek,getDay,goodTime,getMyDay,getAge,getGender,Getdate,week}
+export {Todate,getWeek,getDay,goodTime,getMyDay,getAge,getGender,Getdate,week,state}
 

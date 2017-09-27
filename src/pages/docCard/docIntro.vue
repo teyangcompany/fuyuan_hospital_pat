@@ -16,7 +16,7 @@
                 <span class="mfb">团队擅长</span>
             </div>
             <div class="skilled">
-                <div :class="{text:active}" class="mfb">
+                <div :class="{text:active}" class="mfb skillText">
                     {{docObj.docSkill}}
                 </div>
                 <div class="mfb" :class="{arrow:active,arrow1:!active}" @click="toggleArrow">
@@ -27,7 +27,7 @@
                 <span class="mfb">团队介绍</span>
             </div>
             <div class="skilled">
-                <div :class="{text:isActive}" class="mfb">
+                <div :class="{text:isActive}" class="mfb skillText">
                     {{docObj.docResume}}
                 </div>
                 <div class="mfb" :class="{arrow:isActive,arrow1:!isActive}" @click="toggleArrow1">
@@ -88,6 +88,9 @@
 .contain{
     margin: 60px 25px;
 }
+    .skillText{
+        flex: 1;
+    }
     .teamName{
         display: flex;
         justify-content: flex-end;
@@ -132,7 +135,7 @@
     }
     .arrow{
         display: flex;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         margin-left: 10px;
         width: 34px;
         height: 20px;
@@ -143,7 +146,7 @@
     }
     .arrow1{
         display: flex;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         margin-left: 10px;
         width: 34px;
         height: 20px;

@@ -46,7 +46,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
   export default{
@@ -208,7 +208,7 @@
   }
 </script>
 <style scoped lang="scss">
-  @import '../../../../common/common';
+  @import '../../../../common/common.scss';
   .showlist-enter-active,.showlist-leave-active{
     transition: all 0.2s ease-out;
   }

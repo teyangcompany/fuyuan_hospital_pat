@@ -10,7 +10,7 @@
         <div class="inputWrap">
           <input type="text" placeholder="搜索医院、科室、医生、疾病">
         </div>
-        <img src="../../../../../static/img/放大镜.png" alt="">
+        <img src="../../../../../static/img/big.png" alt="">
       </div>
       <div class="tab border-1px">
         <div class="tab-item">
@@ -88,13 +88,13 @@
       </transition>
       <div class="teamList">
         <ul class="border-1px" v-for="item in followList">
-          <router-link tag="div" to="/">
+          <div @click="goDocCard(item.id)">
             <li class="teamLi">
               <div class="cancelImg" v-if="item.docAvatar">
                 <img :src="item.docAvatar" alt="">
               </div>
               <div class="cancelImg" v-else>
-                <img src="../../../../../static/img/医生男.jpg" alt="">
+                <img src="../../../../../static/img/man.jpg" alt="">
               </div>
               <div class="cancelIntro">
                 <div>
@@ -123,16 +123,16 @@
                 </div>
               </section>
             </li>
-          </router-link>
+          </div>
         </ul>
       </div>
-      <div class="directConsult border-1px-top">
+      <div class="directConsult border-1px-top" @click="goOffice">
         <p>直接咨询科室</p>
       </div>
     </div>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
   export default{
@@ -156,6 +156,7 @@
     created(){
          http("smarthos.user.doc.search",{
          }).then((data)=>{
+           console.log(data,66666)
              if(data.code == 0){
                  this.followList = data.userDocList
              }else{
@@ -210,6 +211,13 @@
 //               click:true
 //             })
 //           },
+      goOffice(){
+        this.$router.push('/officeConsult')
+      },
+      goDocCard(id){
+        console.log(id,88888)
+        this.$router.push('/docCard/'+id)
+      },
       _initWrapMenu(){
         if(this.displaySort = true){
           this.wrapWholeScroll = new BScroll(this.$refs.wrapMenu,{
@@ -294,7 +302,7 @@
   }
 </script>
 <style scoped lang="scss">
-  @import '../../../../common/common';
+  @import '../../../../common/common.scss';
   .showlist-enter-active,.showlist-leave-active{
     transition: all 0.2s ease-out;
   }

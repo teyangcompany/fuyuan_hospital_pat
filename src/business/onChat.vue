@@ -3,60 +3,74 @@
     <div class="pages" ref="pages" >
       <scroll :height="scrollHeight" :data="chatList" ref="wrapper">
       <div  ref="talking"  class="wrap talk-detail" @click="cancel" >
-          <div  ref="item">
-            <div class="leftMsg" v-if="item.msgSenderType=='PAT'" >
+         <div class="leftMsg" >
+          <div class="otherImg">
+            <img class="otherTitle" :src="userObj.patAvatar" alt="">
+          </div>
+          <div class="floatLeft">
+            <div class="comment">
+              <p>
+                {{chatObj.consultContent}}
+              </p>
+              <p class="imgList">
+                <img class="patImg" v-for="url of attaList" :src="url.attaFileUrl" alt="" @click="bigImg(url.attaFileUrl)">
+              </p>
+            </div>
+          </div>
+        </div>
+         <div v-for="item of chatList" ref="item">
+            <div class="leftMsg" v-if="item.consultMessage.replierType=='PAT'" >
               <div class="otherImg">
-                <img class="otherTitle" :src="patImg" alt="">
+                <img class="otherTitle" :src="item.userPat.patAvatar" alt="">
               </div>
               <div class="floatLeft">
-                <div class="comment" v-show="item.msgType=='TEXT'">
-                  {{item.msgContent}}
+                <div class="comment" v-show="item.consultMessage.replyContentType=='TEXT'">
+                  {{item.consultMessage.replyContent}}
                 </div>
-                <div class="comment commentImg" v-show="item.msgType=='PIC'">
-                  <img :src="item.msgContent" alt="" @load="getHeight" @click="bigImg(item.msgContent)">
+                <div class="comment commentImg" v-show="item.consultMessage.replyContentType=='PIC'">
+                  <img :src="item.consultMessage.replyContent" alt="" @load="getHeight" @click="bigImg(item.consultMessage.replyContent)">
                 </div>
               </div>
             </div>
-            <div class="rightMsg" v-else-if="item.msgSenderType=='DOC'">
+            <div class="rightMsg" v-else-if="item.consultMessage.replierType=='DOC'">
               <div class="floatImg">
-                <img class="titles" :src="docImg" alt="">
+                <img class="titles" :src="item.userDocVo.docAvatar" alt="">
               </div>
               <div class="floatRight">
-                <div class="com" v-show="item.msgType=='TEXT'">
-                  {{item.msgContent}}
+                <div class="com" v-show="item.consultMessage.replyContentType=='TEXT'">
+                  {{item.consultMessage.replyContent}}
                 </div>
-                <div class="com commentImg" v-show="item.msgType=='PIC'" @load="getHeight" @click="bigImg(item.msgContent)">
-                  <img :src="item.msgContent" alt="">
+                <div class="com commentImg" v-show="item.consultMessage.replyContentType=='PIC'" @load="getHeight" @click="bigImg(item.consultMessage.replyContent)">
+                  <img :src="item.consultMessage.replyContent" alt="">
                 </div>
               </div>
             </div>
           </div>
       </div >
         </scroll>
-      <div  class="bottom">
-        <div class="pageBtn">去付款</div>
-        <!--<div class="robot-room-wirte yk-box yk-cell">-->
-          <!--<div class="talkImg">-->
-            <!--<img src="../../static/img/talk.png" alt="" @click="setType">-->
-          <!--</div>-->
-          <!--<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">-->
-            <!--{{msg}}-->
-          <!--</div>-->
-          <!--<div class="yk-cell-bd mr10" v-show="type=='text'">-->
-            <!--<edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>-->
-          <!--</div>-->
-          <!--<div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>-->
-          <!--<button v-show="text.length" class="send-btn" @click="send">发送</button>-->
-        <!--</div>-->
-        <!--<div  class="checkList" v-show="checkList">-->
-          <!--<div class="upload">-->
-            <!--<label for="upload_img" class="label_img">图片</label>-->
-            <!--<input  type="file" id="upload_img" @change="change"  accept="image/*">-->
-          <!--</div>-->
-          <!--<div class="upload" style="margin-left: 20px">-->
-            <!--<label  class="label_img">相机</label>-->
-          <!--</div>-->
-        <!--</div>-->
+      <div  class="bottom" v-show="chatList.length>0&&chatObj.consultStatus=='3'">
+        <div class="robot-room-wirte yk-box yk-cell">
+          <div class="talkImg">
+            <img src="../../static/img/talk.png" alt="" @click="setType">
+          </div>
+          <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
+            {{msg}}
+          </div>
+          <div class="yk-cell-bd mr10" v-show="type=='text'">
+            <edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+          </div>
+          <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
+          <button v-show="text.length" class="send-btn" @click="send">发送</button>
+        </div>
+        <div  class="checkList" v-show="checkList">
+          <div class="upload">
+            <label for="upload_img" class="label_img">图片</label>
+            <input  type="file" id="upload_img" @change="change"  accept="image/*">
+          </div>
+          <div class="upload" style="margin-left: 20px">
+            <label  class="label_img">相机</label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -67,7 +81,7 @@
   import scroll from '../base/scroll.vue'
   import ajax from '../lib/ajax'
   export default{
-    props:['chatObj','chatList'],
+    props:['chatObj','chatList','attaList','userObj'],
     components: {
       top,
       editDiv,
@@ -85,7 +99,6 @@
         talkList:[],
         checkList:false,
         clean:true,
-        attaList:[],
         attaIdList:[],
         pagesHeight:Number,
         type:"text",
@@ -97,10 +110,11 @@
       }
     },
     watch:{
-      chatObj(){
-        console.log(this.chatObj,666);
-        this.patImg = this.chatObj.userPat.patAvatar
-      },
+//      chatObj(){
+//        console.log(this.chatObj,666);
+//        this.patImg = this.chatObj.userPat.patAvatar
+//        this.docImg = this.chatObj.userDocVO.docAvatar
+//      },
       chatList(){
         console.log(7777);
         setTimeout(()=>{
@@ -230,10 +244,10 @@
 </script>
 <style scoped lang="scss">
   @import "../common/common.scss";
-  .pageBtn{
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
+  .patImg{
+    width: 120px;
+    height: 120px;
+    padding: 3px 5px;
   }
   .commentImg{
     img{

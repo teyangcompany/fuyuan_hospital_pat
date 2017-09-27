@@ -135,7 +135,7 @@
         background-image: url("../../../../static/img/icon/arrow-right-grow.png");
         @include backgroundImageSet(18px, 30px, 750px - $commonSpace*2 -30px - 18px);
         dl + dl {
-            margin-top: 20px;
+            /*margin-top: 20px;*/
         }
         dl {
             dt {
