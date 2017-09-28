@@ -71,6 +71,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
+        "static/lib/md5-min.js",
+        "static/lib/sha512.min.js",
+        "static/lib/url.min.js",
         "static/lib/swiper/swiper-3.4.2.min.js",
         "static/lib/swiper/swiper-3.4.2.min.css"
       ],

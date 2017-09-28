@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import {phone, need} from "../lib/validate"
+  import {validate} from "../lib/class"
 
   export default {
     props: {
@@ -28,12 +28,6 @@
         time: this.timer,
       };
     },
-    validations: {
-      mobile: {
-        need,
-        phone
-      }
-    },
     computed: {
       showText() {
         if (this.time == this.timer) {
@@ -54,16 +48,15 @@
     },
     methods: {
       send() {
-        if (!this.$v.mobile.need) {
-          this.$emit("error", "手机号不能为空");
+        const validator = new validate();
+        let error = validator.add(this.mobile, [
+          ["need", "手机号不能为空"],
+          ["isPhone", "手机号格式错误"]
+        ]).start();
+        if (error) {
+          this.$emit("error", error);
           return
         }
-
-        if (!this.$v.mobile.phone) {
-          this.$emit("error", "手机号格式错误");
-          return
-        }
-
         /*倒计时期间不能重复点击*/
         if (this.text != this.showText) {
           return

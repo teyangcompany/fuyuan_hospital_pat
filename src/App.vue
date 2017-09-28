@@ -1,7 +1,5 @@
 <template>
-
   <div id="app">
-
     <transition :name="page">
       <router-view></router-view>
     </transition>
@@ -10,7 +8,7 @@
 
 <script>
   import {historyCache} from "./lib/cache"
-  import http from "./lib/http"
+  import {validate} from "./lib/class"
 
   export default {
     name: 'app',
@@ -21,9 +19,6 @@
     },
 
     created() {
-//      http("smarthos.system.area.list", {}).then((res) => {
-//        console.log("111", res);
-//      });
     },
 
 
@@ -84,12 +79,12 @@
   }
 
   #app, .page {
-    position: fixed;
     /*display: flex;*/
     /*flex-direction: column;*/
-    background: #f5f5f5;
     overflow: hidden;
-    @include t_r_b_l();
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   .page {

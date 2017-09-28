@@ -1,9 +1,9 @@
 <template>
   <div class="page">
-    <app-header class="noflex" :title="h+':'+scrollHeight+':'+bottomHeight" ref="header">
+    <app-header class="noflex" :title="聊天" ref="header">
       <i slot="back"></i>
     </app-header>
-    <scroll class="chart flex0" ref="scroll" :height="scrollHeight">
+    <scroll class="chart flex1" ref="scroll" :height="scrollHeight">
       <ul>
         <li ref="msgItem" v-for="i in 50" :class="[i%2==0?'receiver':'sender']">
           <div class="time center">2017-09-09 09:08:54</div>
@@ -21,7 +21,7 @@
         </li>
       </ul>
     </scroll>
-    <div class="flex fixed reply" ref="reply">
+    <div class="flex flex0 reply" ref="reply">
       <div class="flex0 upload"></div>
       <div class="flex1 input">
         <input type="text" ref="input" @focus="onFocus" @blur="onBlur">
@@ -36,13 +36,14 @@
   import Scroll from "../../base/scroll.vue"
   import AppHeader from "../../components/app-header.vue"
   import MsgType from "../../components/msg-type.vue"
+  import {isBrower} from "../../lib/util"
 
   export default {
     mixins: [scrollHeightMixin],
     data() {
       return {
         bottomHeight: 40,
-        h: window.innerHeight
+        timer: null
       }
     },
     computed: {},
@@ -59,16 +60,24 @@
     },
     methods: {
       onBlur() {
-        setTimeout((res)=>{
+        clearInterval(this.timer);
+        this.timer = null;
+        setTimeout((res) => {
           this._calcScrollHeight();
           this._scrollToBottom();
-        },300)
+        }, 300)
         //console.log("blur")
       },
       onFocus() {
-        this.$refs.reply.scrollIntoView(false);
+        if (this.timer) {
+          return
+        }
+        this.timer = setInterval((res) => {
+          this.$refs.reply.scrollIntoView();
+        }, 10);
       },
       onResize() {
+        this.y = document.body.scrollHeight;
         this._calcScrollHeight();
         this._scrollToBottom();
       },

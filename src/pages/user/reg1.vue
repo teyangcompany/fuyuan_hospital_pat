@@ -30,35 +30,31 @@
 <script>
   import Msg from "../../base/msg.vue"
   import SendCode from '../../components/code.vue'
-
-  import {required} from "vuelidate/lib/validators"
-  import {phone} from "../../lib/validate"
+  import {mapMutations} from "vuex"
+  import * as types from "../../store/types"
 
   export default {
     data() {
       return {
         form: {
           mobile: "",
-          cid: ""
+          cid: "",
+          captcha: ""
         },
         msg: ""
       };
-    },
-    validations: {
-      form: {
-        mobile: {
-          required,
-          phone
-        }
-      }
     },
     computed: {},
     components: {
       SendCode,
       Msg
     },
+    created() {
+      this.$watch("form", (form) => {
+        this.changeForm(form);
+      }, {deep: true});
+    },
     mounted() {
-
     },
     beforeDestroy() {
 
@@ -67,7 +63,10 @@
       codeError(msg) {
         this.msg = msg;
         this.$refs.msg.show();
-      }
+      },
+      ...mapMutations({
+        changeForm: types.USER_REG_FORM
+      })
     }
   };
 </script>

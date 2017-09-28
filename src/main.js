@@ -4,28 +4,28 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import "weui";
-import Vuelidate from "vuelidate"
+import store from "./store/index"
 
-import auth2 from "./lib/auth2"
 
-Vue.use(Vuelidate);
+import oauth2 from "./lib/oauth2"
 
 Vue.config.productionTip = false
-
-
 
 window.onerror = function () {
   console.log("error", arguments);
   return false;
 }
 
-auth2(init);
+//oauth2(init);
+init();
+
 
 function init() {
   /* eslint-disable no-new */
   new Vue({
     el: '#app',
     router,
+    store,
     template: '<App/>',
     components: {App}
   })
