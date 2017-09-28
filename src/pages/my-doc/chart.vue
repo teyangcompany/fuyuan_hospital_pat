@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <app-header class="noflex" :title="聊天" ref="header">
+    <app-header class="noflex" :title="scrollHeight" ref="header">
       <i slot="back"></i>
     </app-header>
     <scroll class="chart flex1" ref="scroll" :height="scrollHeight">
@@ -22,7 +22,7 @@
       </ul>
     </scroll>
     <div class="flex flex0 reply" ref="reply">
-      <div class="flex0 upload"></div>
+      <div class="flex0 upload">{{top}}</div>
       <div class="flex1 input">
         <input type="text" ref="input" @focus="onFocus" @blur="onBlur">
       </div>
@@ -43,7 +43,8 @@
     data() {
       return {
         bottomHeight: 40,
-        timer: null
+        timer: null,
+        top: 0
       }
     },
     computed: {},
@@ -53,6 +54,7 @@
       AppHeader
     },
     mounted() {
+      this.getTop();
       window.addEventListener('resize', this.onResize, false);
     },
     beforeDestroy() {
@@ -60,8 +62,10 @@
     },
     methods: {
       onBlur() {
-        clearInterval(this.timer);
-        this.timer = null;
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
         setTimeout((res) => {
           this._calcScrollHeight();
           this._scrollToBottom();
@@ -69,20 +73,34 @@
         //console.log("blur")
       },
       onFocus() {
-        if (this.timer) {
-          return
+        if (isBrower("iphone")) {
+          this.toView();
         }
-        this.timer = setInterval((res) => {
-          this.$refs.reply.scrollIntoView();
-        }, 10);
       },
       onResize() {
-        this.y = document.body.scrollHeight;
         this._calcScrollHeight();
         this._scrollToBottom();
       },
       onLoad(e) {
         this._scrollToBottom();
+      },
+      getTop() {
+        if (this.$refs.reply) {
+          this.top = this.$refs.reply.getBoundingClientRect().top
+        }
+        if (this.top === 0) {
+          this.getTop();
+        }
+
+      },
+      toView() {
+        if (this.timer) {
+          return
+        }
+        this.timer = setInterval((res) => {
+          this.$refs.reply.scrollIntoView();
+          this.getTop();
+        }, 100)
       },
       _scrollToBottom() {
         setTimeout((res) => {
