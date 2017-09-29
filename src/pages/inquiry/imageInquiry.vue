@@ -27,14 +27,12 @@
                        </div>
                        <div class="weui-cell__ft mfb">{{userName}}</div>
                    </a>
-                   <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
-                       <div class="weui-cell__bd">
-                           <p class="mfb">疾病名称</p>
-                       </div>
-                       <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
-                       <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
-                   </a>
-
+               </div>
+               <div class="weui-cell"v style="background: white">
+                   <div class="weui-cell__hd"><label class="weui-label">疾病名称</label></div>
+                   <div class="weui-cell__bd">
+                       <input class="weui-input" v-model="illName" type="text" placeholder="没确定请不要填写"/>
+                   </div>
                </div>
                <div class="weui-cells__title">病情描述</div>
                <div class="weui-cells weui-cells_form">
@@ -120,9 +118,6 @@
             this.docName = sessionStorage.getItem('docName');
             console.log(this.docName,this.docId,8888)
             this.getData()
-            if(this.$route.params.value){
-                this.illName = this.$route.params.value
-            }
         },
         methods:{
             submit(){

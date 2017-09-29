@@ -1,0 +1,545 @@
+<template>
+    <div class="page">
+        <top class="noflex" title="" ref="header">
+            <i slot="back" @click="goBack"></i>
+        </top>
+        <div class="wrapper" ref="Scroll" @click="closeCheckList">
+            <div>
+                <div class="weui-cells">
+                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                        <div class="weui-cell__bd">
+                            <p>
+                                <span  class="bf">患者资料： {{consultInfo.consulterName}}
+                                    {{consultInfo.consulterGender='M'?'男':'女'}}
+                                    {{consultInfo.consulterAge}}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="weui-cell__ft bfc"></div>
+                    </a>
+                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                        <div class="weui-cell__bd">
+                            <p>
+                            <span class="bf">
+                                疾病名称：{{consultInfo.illnessName}}
+                            </span>
+                            </p>
+                        </div>
+                        <!--<div class="weui-cell__ft bfc"></div>-->
+                    </a>
+
+                </div>
+                <div class="contain">
+                    <div>
+                        <span class="bf">{{consultInfo.consultContent}}</span>
+                    </div>
+                    <div class="patImg">
+                        <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
+                    </div>
+                    <div>
+                        <span class="mfc">{{consultInfo.consulterName}}</span>
+                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp; {{noReadReplyCount}}条回复</span>
+                    </div>
+                </div>
+                <div class="answerList"  ref="lastItem">
+                    <div class="patAnswer">
+                        <div class="docImg">
+                            <img src="../../../static/img/3.jpg" alt="">
+                        </div>
+                        <div class="docMsg">
+                            <p>
+                                <span class="mf">李康飞</span>
+                                <span class="mfc">&nbsp;&nbsp;&nbsp;中国名医</span>
+                            </p>
+                            <p>
+                                <span class="mfc">1小时前</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                    <span class="bf">
+                        长时间没运动的话不能剧烈运动，稍微休息几天就好了......
+                    </span>
+                    </div>
+                </div>
+                <div class="answerList" v-for="item of arr">
+                    <div class="patAnswer">
+                        <div class="docImg">
+                            <img src="../../../static/img/1.jpg" alt="">
+                        </div>
+                        <div class="docMsg">
+                            <p>
+                                <span class="mf">李康飞</span>
+                                <span class="mfc">&nbsp;&nbsp;&nbsp;中国名医</span>
+                            </p>
+                            <p>
+                                <span class="mfc">1小时前</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                    <span class="bf">
+                        {{item}}
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-show="consultInfo.consultStatus=='3'"  class="bottom">
+                <div class="robot-room-wirte yk-box yk-cell">
+                    <div class="talkImg">
+                        <img src="../../../static/img/talk.png" alt="" @click="setType">
+                    </div>
+                    <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
+                       {{msg}}
+                    </div>
+                    <div class="yk-cell-bd mr10" v-show="type=='text'">
+                        <edit-div :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+                    </div>
+                    <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
+                    <button v-show="text.length" class="send-btn" @click="send">发送</button>
+                </div>
+                <div  class="checkList" v-show="checkList">
+                    <div class="upload">
+                        <label for="upload_img" class="label_img">图片</label>
+                        <input  type="file" id="upload_img" @change="upLoad">
+                    </div>
+                </div>
+        </div>
+        <div class="btn" v-show="consultInfo.consultStatus=='2'">
+            <p class="mfb reply">请等待医生回复</p>
+        </div>
+        <div class="btn" v-show="consultInfo.consultStatus=='4'">
+            <span class="mfb evaluate bor">申请成为他的患者</span>
+            <span class="mfb evaluate">评价</span>
+        </div>
+        <div class="btn" v-show="consultInfo.consultStatus=='6'">
+            <p class="mfb reply ">申请成为他的患者</p>
+        </div>
+    </div>
+</template>
+<script type="text/ecmascript-6">
+    import top from '../../components/app-header.vue'
+    import BScroll from 'better-scroll'
+    import editDiv from '../../components/editDiv.vue'
+    import api from '../../lib/http'
+    import {goodTime} from '../../lib/filter'
+    import ajax from '../../lib/ajax'
+    export default{
+        components: {
+            top,
+            editDiv
+        },
+        data(){
+            return {
+                flag:true,
+                text:'',
+                clean:false,
+                checkList:false,
+                type:"text",
+                time:'',
+                msg:'按住说话',
+                arr:[],
+                consultId:"",
+                token:localStorage.getItem('token'),
+                attaList:[],
+                consultInfo:{},
+                userPat:{},
+                noReadReplyCount:Number,
+                replyContentType:"TEXT"
+            }
+        },
+        filters:{
+            goodTime
+        },
+        mounted(){
+            this.consultId = this.$route.params.id;
+            this.getData()
+            this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
+            this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
+            this.scroll = new BScroll(this.$refs.Scroll,{
+                click:true,
+                probeType: 1,
+                bounce: true
+            });
+
+
+
+        },
+        methods:{
+            //显示大图
+            bigImg(url){
+                this.$weui.gallery(url, {
+                    onDelete: function(){
+
+                    }
+                });
+            },
+            //上传图片
+            upLoad(e){
+                var file = e.target.files[0];
+                var fileName = e.target.files[0].name;
+                ajax('smarthos.system.file.upload',file,'IMAGE',fileName,"PAT").then(res=>{
+                    if(res.succ){
+                      console.log( res.obj.attaFileUrl)
+                    }else {
+                        alert(res.msg)
+                    }
+                })
+            },
+            getData(){
+              api('smarthos.consult.details',{
+                  token:this.token,
+                  consultId:this.consultId
+              }).then(res=>{
+                  console.log(res,352679);
+                  if(res.succ){
+                    this.attaList = res.obj.attaList;
+                    this.consultInfo = res.obj.consultInfo
+                    this.userPat = res.obj.userPat
+                    this.noReadReplyCount = res.obj.noReadReplyCount;
+                      setTimeout(()=>{
+                          this.scroll = new BScroll(this.$refs.Scroll,{
+                              click:true,
+                              probeType: 1,
+                              bounce: true
+                          });
+                          this.scroll.scrollToElement(this.$refs.lastItem[this.$refs.lastItem.length-1])
+
+                      },500)
+                  }else {
+                      alert(res.msg)
+                  }
+              })
+            },
+            goBack(){
+              this.$router.go(-1)
+            },
+            send(){
+                console.log(this.text,22222)
+                api('smarthos.consult.platform.pic.reply',{
+                    token:this.token,
+                    consultId:this.consultId,
+                    replyContent:this.text,
+                    replyContentType:this.replyContentType
+                }).then(res=>{
+                    if(res.succ){
+                        console.log(res,598976);
+                        this.getData()
+                        this.$set(this.$data,'clean',!this.clean);
+
+                    }else {
+                        alert(res.msg)
+                    }
+                })
+
+
+            },
+            startRecord(){
+                this.time= new Date();
+                this.$set(this.$data,'msg','松开结束')
+                this.$refs.recordButton.style.background = 'gainsboro'
+
+            },
+            stopRecord(){
+                this.$set(this.$data,'msg','按住录音');
+                this.$refs.recordButton.style.background = 'white'
+                var interval = new Date()-this.time  ;
+                if (interval<500){
+                   alert("录制时间过短");
+                    return;
+                }
+
+            },
+            setType(event){
+                console.log(event.target,9999);
+                if(this.type=='text'){
+                    this.type='audio';
+                    event.target.src=' ./static/img/chat.png'
+                }else {
+                    this.type='text';
+                    event.target.src='./static/img/talk.png'
+                }
+
+            },
+            showCheckList(){
+                this.$set(this.$data,'checkList',true)
+            },
+            closeCheckList(){
+                this.$set(this.$data,'checkList',false)
+            },
+
+        }
+    }
+</script>
+<style scoped lang='scss'>
+    @import '../../common/common.scss';
+    .evaluate{
+        display: inline-block;
+        width: 49%;
+        text-align: center;
+       height: 80px;
+        line-height: 80px;
+    }
+    .bor{
+        border-right: 1px solid gainsboro;
+    }
+
+
+    .btn{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background: white;
+    }
+    .reply{
+        text-align: center;
+        height: 80px;
+        line-height: 80px;
+    }
+    .page{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .wrapper{
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 88px;
+        bottom:100px;
+
+    }
+    .step {
+        padding-right: 5px;
+        color: #3CC51F;
+        box-sizing: border-box;
+        font-size: 16px;/*no*/
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .contain{
+        background: white;
+        box-sizing: border-box;
+        padding: 20px;
+        border-radius: 20px;
+        border-bottom: 1px solid gainsboro;
+    }
+    .print{
+        float: right;
+        color: orange;
+    }
+    .patImg{
+    img{
+        display: inline-block;
+        width: 160px;
+        height: 160px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    }
+    .date{
+        display: inline-block;
+        float: right;
+        font-size: 14px; /*no*/
+        color: grey;
+    }
+    .answerList{
+        padding: 20px;
+        box-sizing: border-box;
+        background: white;
+        border-bottom: 1px solid gainsboro;
+        margin-top: 30px;
+    }
+    .patAnswer{
+        display: flex;
+        align-items: center;
+
+    }
+    .docImg{
+        img{
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            margin: 0 20px 0 0;
+
+        }
+    }
+    .patMusic{
+        position: relative;
+        margin-left: 80px;
+        margin-top: 20px;
+        width: 400px;
+        height: 80px;
+        img{
+            display: inline-block;
+            width: 400px;
+            height: 80px;
+        }
+    }
+    #music{
+        display: none;
+    }
+    .musicDate{
+        color: white;
+        position: absolute;
+        top:0;
+        right: 30px;
+        height: 80px;
+        line-height: 80px;
+    }
+    .musicImg{
+        position: absolute;
+        top:12px;
+        left: 30px;
+        height: 80px;
+        line-height: 80px;
+        img{
+            height: 48px;
+            width: 40px;
+        }
+    }
+
+
+.bottom{
+    height: auto;
+    position: fixed;
+    width: 100%;
+    z-index: 998;
+    left: 0;
+    bottom: 0;
+    background: white;
+}
+    .mr10 {
+        margin-right: 20px;
+        width: 100%;
+    }
+    .audioInput{
+        margin-right: 20px;
+        width: 100%;
+        text-align: center;
+        border: 1px solid gainsboro;
+        padding: 8px 10px;
+        line-height: 42px;
+        background: white;
+        box-shadow: inset 0 0 18px #ddd;
+    }
+    .yk-cell {
+        display: flex;
+        align-items: center;
+    }
+    .yk-box {
+        padding: 20px 30px
+    }
+    .robot-room-wirte {
+        background: #eee;
+        box-sizing: border-box;
+        border-top: 1px solid #dedede;
+    }
+    .talkImg{
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+        img{
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+    }
+    .robot-room-wirte .input-text {
+        display: block;
+        border: none;
+        outline: none;
+        width: 100%;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 0 18px #ddd;
+        border-radius: 6px;
+        resize: none;
+        background: #fff;
+        word-break: break-all;
+        max-height: 180px;
+        overflow-y: scroll;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        line-height: 42px;
+        font-size: 28px;
+    }
+    .robot-room-wirte .input-text::-webkit-scrollbar {
+        /*width: 0;*/
+        /*opacity: 0;*/
+        display: none;
+    }
+    .robot-room-wirte .showJia{
+        width: 64px;
+        height: 64px;
+        line-height: 54px;
+        box-sizing: border-box;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 32px;
+        color: #454545;
+        display: block;
+        font-size: 32px;
+        min-width: 64px;
+        max-width: 64px;
+        background: white;
+        border: 1px solid #ddd;
+        outline: none;
+
+    }
+    .robot-room-wirte .send-btn {
+        width: 76px;
+        height: 64px;
+        line-height: 64px;
+        box-sizing: border-box;
+        background: greenyellow;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-appearance: none;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 10px;
+        color: #454545;
+        display: block;
+        font-size: 28px;
+        min-width: 100px;
+        max-width: 100px;
+        background: greenyellow;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        outline: none;
+        align-self: flex-end
+    }
+    .robot-room-wirte .send-btn:active {
+        opacity: 0.6;
+    }
+
+    .checkList{
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 20px 40px;
+    }
+    .upload{
+        display: flex;
+        align-items: center;
+    }
+    #upload_img{
+        display: none;
+    }
+    .label_img{
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        line-height: 100px;
+        text-align: center;
+        border: 1px solid darkgray;
+    }
+
+
+
+
+</style>

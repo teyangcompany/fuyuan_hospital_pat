@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="wrapMy">
-        <router-link tag="ul" to="/consultDetail" class="border-1px" v-for="item in aboutConsult">
+        <ul  class="border-1px" key="item" v-for="item in aboutConsult" @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li >
             <div>
               <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">一对一图文<span> ¥{{ item.consultInfo.payFee }}</span></p>
@@ -40,14 +40,15 @@
                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
               </div>
             </div>
-            <div class="ConsultRelate">
-
-              <span class="name"><span class="number"><img :src="item.userDocVo.docAvatar" alt=""> <span>{{ item.userDocVo.docName }}</span>回答</span></span>
+            <div class="ConsultRelate" v-if="item.userDocVo">
+              <span class="name"><span class="number" >
+                <img :src="item.userDocVo.docAvatar" alt="">
+                <span>{{ item.userDocVo.docName }}</span>回答</span></span>
               <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | Getdate}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
               <span class="money" v-else>{{ item.consultInfo.createTime | Getdate}}创建 | 0条回复</span>
             </div>
           </li>
-        </router-link>
+        </ul>
       </div>
     </div>
   </div>
@@ -81,7 +82,13 @@
 //      this.getDate()
     },
     methods:{
-
+      goDetail(type,id){
+        if(type=='PLATFORMPIC'){
+            this.$router.push('/consuitDetail/'+id)
+        }else {
+          this.$router.push('/oneConsult/'+id)
+        }
+      }
     },
     watch:{
 

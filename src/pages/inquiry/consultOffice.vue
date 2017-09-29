@@ -27,15 +27,15 @@
                     </div>
                     <div class="weui-cell__ft mfb">{{userName}}</div>
                 </a>
-                <a class="weui-cell weui-cell_access" href="javascript:;" @click="changeName">
-                    <div class="weui-cell__bd">
-                        <p class="mfb">疾病名称</p>
-                    </div>
-                    <div v-show="!illName" class="weui-cell__ft mfb mfc" >没确定请不要填写</div>
-                    <div v-show="illName" class="weui-cell__ft mfb">{{illName}}</div>
-                </a>
 
             </div>
+            <div class="weui-cell"v style="background: white">
+                <div class="weui-cell__hd"><label class="weui-label">疾病名称</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" v-model="illName" type="text" placeholder="没确定请不要填写"/>
+                </div>
+            </div>
+
             <div class="weui-cells__title">病情描述</div>
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
@@ -117,20 +117,20 @@
                 }
             });
 
-            if(sessionStorage.getItem('officeName')&&sessionStorage.getItem('deptId')){
-                this.officeName = sessionStorage.getItem('officeName')
-                this.deptId = sessionStorage.getItem('deptId')
-            }else {
+            if(this.$route.query.officeName&&this.$route.params.id){
                 this.officeName=this.$route.query.officeName;
                 this.deptId=this.$route.params.id;
                 sessionStorage.setItem('officeName',this.$route.query.officeName)
                 sessionStorage.setItem('deptId',this.$route.params.id)
+                this.officeName = sessionStorage.getItem('officeName')
+                this.deptId = sessionStorage.getItem('deptId')
+            }else {
+                this.officeName = sessionStorage.getItem('officeName')
+                this.deptId = sessionStorage.getItem('deptId')
             }
 
             this.getData();
-            if(this.$route.params.value){
-                this.illName = this.$route.params.value
-            }
+
         },
         methods:{
             submit(){
@@ -148,20 +148,17 @@
                     "deptId":this.deptId,
                     "illnessName":this.illName
                 }).then(res=>{
-                    console.log(res,3535535)
+                    console.log(res,3535535);
+                    if(res.succ){
+                       this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
+                    }else {
+                        alert(res.msg)
+                    }
                 })
             },
             getUser(item){
                 this.userObj = item;
                 this.userName = item.commpatName
-            },
-            changeName(){
-              this.$router.push({
-                  name:'illName',
-                  params:{
-                      routerName:'consultOffice'
-                  }
-              })
             },
             getData(){
               api('smarthos.user.commpat.list',{

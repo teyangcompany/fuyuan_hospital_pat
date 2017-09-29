@@ -33,7 +33,7 @@ export default {
         {name: "circle", value: "医生圈"}
     ],
     health_nav: [
-        {name: "archives", value: "健康档案"},
+        {name: "archives", value: "健康档案" ,router:'/my/archives'},
         {name: "wiki", value: "健康百科"}
     ],
     my_nav: [

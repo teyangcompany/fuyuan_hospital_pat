@@ -38,6 +38,10 @@ export default[
     path:"/evaluate/:id",
     name:"evaluate",
     component:()=>import("../pages/oneConsult/evaluate.vue")
+  },{
+    path:"/consuitDetail/:id",
+    name:"consuitDetail",
+    component:()=>import("../pages/teamConsult/consuitDetail.vue")
   },
 
 ]

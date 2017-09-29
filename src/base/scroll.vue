@@ -96,13 +96,13 @@
                     this.$refs.wrapper.style.height = `${parseFloat(this.height)}px`;
                 }
                 // better-scroll的初始化
-                console.log(this.height,33333)
+
                 this.scroll = new BScroll(this.$refs.wrapper, {
                     probeType: this.probeType,
                     click: this.click,
                     scrollX: this.scrollX
                 })
-
+                console.log( this.scroll,9878787)
                 // 是否派发滚动事件
                 if (this.listenScroll) {
                     let me = this

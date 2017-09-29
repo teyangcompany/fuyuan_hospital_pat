@@ -33,6 +33,13 @@
             </div>
         </div>
     </div>
+    <!--<div class="box1">-->
+        <!--<div class="box2">212121</div>-->
+        <!--<div class="box3" ref="bottom" contenteditable="true"-->
+             <!--@focus="inputText"-->
+             <!--@blur = 'inputText1'-->
+             <!--@input="changeText" style="-webkit-user-select: auto;"></div>-->
+    <!--</div>-->
 </template>
 <script type="text/ecmascript-6">
     import top from '../../components/app-header.vue'
@@ -55,6 +62,13 @@
 
         },
         methods:{
+
+//            inputText(){
+//                window.setInterval(()=>{
+//                    this.$refs.bottom.scrollIntoView(true)
+//                }, 2);
+//            },
+
             forgetPassword(){
                 this.$router.push({
                     name:'forgetPassword',
@@ -100,6 +114,19 @@
 </script>
 <style scoped lang='scss'>
     @import '../../common/common.scss';
+    /*.box1{*/
+        /*display: flex;*/
+        /*flex-direction: column;*/
+        /*height: 100%;*/
+    /*}*/
+    /*.box2{*/
+        /*flex: 1;*/
+    /*}*/
+    /*.box3{*/
+        /*width: 100%;*/
+        /*background: goldenrod;*/
+        /*height: 60px;*/
+    /*}*/
     .active{
         background: gainsboro !important;
     }

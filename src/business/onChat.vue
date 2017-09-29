@@ -48,7 +48,7 @@
           </div>
       </div >
         </scroll>
-      <div  class="bottom" v-show="chatList.length>0&&chatObj.consultStatus=='3'">
+      <div ref="bottom"  class="bottom" v-show="chatList.length>0&&chatObj.consultStatus=='3'">
         <div class="robot-room-wirte yk-box yk-cell">
           <div class="talkImg">
             <img src="../../static/img/talk.png" alt="" @click="setType">
@@ -57,7 +57,7 @@
             {{msg}}
           </div>
           <div class="yk-cell-bd mr10" v-show="type=='text'">
-            <edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+            <p  @focus = getKeys   @input="changeText" message="clean"  id="inputArea" class="input-text" ></p>
           </div>
           <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
           <button v-show="text.length" class="send-btn" @click="send">发送</button>
@@ -141,6 +141,10 @@
           document.body.removeEventListener('touchmove', this.preventScroll,false);
       },
     methods:{
+      //解决ios下键盘的问题
+      getKeys(){
+        this.$refs.bottom.scrollIntoView(true)
+      },
       //放大图片
       bigImg(url){
         this.$weui.gallery(url, {
@@ -157,8 +161,9 @@
       getHeight(){
         this.$refs.wrapper.refresh()
       },
-      inputText(){
-        console.log(213435);
+      changeText(){
+        console.log(document.getElementById('inputArea').innerText,333333)
+        this.text = document.getElementById('inputArea').innerText;
       },
       goText(){
         this.$router.push({
@@ -172,6 +177,7 @@
         this.arr1 = [];
         this.arr.push(this.text);
         this.$set(this.$data,'clean',!this.clean);
+        document.getElementById('inputArea').innerText = "";
         this.text = ""
       },
       cancel(){
@@ -491,6 +497,7 @@
     border-top: 1px solid #dedede;
   }
   .robot-room-wirte .input-text {
+    -webkit-user-select: auto;
     display: block;
     border: none;
     outline: none;

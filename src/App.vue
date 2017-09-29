@@ -84,7 +84,7 @@
   }
 
   #app, .page {
-    position: fixed;
+    position: absolute;
     /*display: flex;*/
     /*flex-direction: column;*/
     background: #f5f5f5;

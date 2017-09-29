@@ -70,7 +70,7 @@
                 }).then((res)=>{
                     console.log(res,1123232);
                     if(res.succ){
-                        this.dept = res.obj
+                        this.dept = res.list
                     }else {
                         alert(res.msg)
                     }

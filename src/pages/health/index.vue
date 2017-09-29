@@ -19,7 +19,7 @@
                 </div>
                 <div class="nav">
                     <ul>
-                        <li v-for="item in nav" :class="[item.name]">
+                        <li v-for="item in nav" :class="[item.name]" @click="goRouter(item.router)">
                             <div class="icon"></div>
                             <div class="text">{{item.value}}</div>
                         </li>
@@ -90,6 +90,9 @@
 
         },
         methods: {
+            goRouter(router){
+              this.$router.push(router)
+            },
             goConsultList(){
               this.$router.push('/consultList')
             },

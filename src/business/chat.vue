@@ -1,6 +1,5 @@
 <template>
-
-    <div class="pages" ref="pages" >
+    <div class="pages" ref="pages">
       <scroll :height="scrollHeight" :data="chatList" ref="wrapper">
       <div  ref="talking"  class="wrap talk-detail" @click="cancel" >
           <div v-for="item of chatList" ref="item">
@@ -33,7 +32,7 @@
           </div>
       </div >
         </scroll>
-      <div  class="bottom">
+      <div  class="bottom" ref="bottomss">
         <div class="robot-room-wirte yk-box yk-cell">
           <div class="talkImg">
             <img src="../../static/img/talk.png" alt="" @click="setType">
@@ -42,7 +41,7 @@
             {{msg}}
           </div>
           <div class="yk-cell-bd mr10" v-show="type=='text'">
-            <edit-div @inputText="inputText" :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+            <p  @input="changeText" @focus = getKeys  contenteditable="true" message="clean"  id="inputArea" class="input-text" ></p>
           </div>
           <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
           <button v-show="text.length" class="send-btn" @click="send">发送</button>
@@ -92,7 +91,7 @@
         msg:'按住说话',
         arr:[],
         patImg:'',
-        docImg:""
+        docImg:"",
       }
     },
     watch:{
@@ -104,13 +103,13 @@
       chatList(){
         console.log(7777);
         setTimeout(()=>{
-          this.$refs.wrapper.scrollToElement(this.$refs.item[this.$refs.item.length-1])
+          this.$refs.wrapper.scrollToElement(this.$refs.item[this.$refs.item.length-1]);
         },500)
 
       }
     },
     created(){
-      this.scrollHeight = window.innerHeight-45-40
+//      this.scrollHeight = window.innerHeight-45-40
     },
     mounted(){
 
@@ -121,12 +120,19 @@
 //      this.$refs.btn.scrollIntoView(false);
       this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
       this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
-
+      setTimeout(()=>{
+        console.log(this.$refs.wrapper.$refs.wrapper.clientHeight,999999);
+        console.log()
+      },500)
     },
       beforeDestroy(){
           document.body.removeEventListener('touchmove', this.preventScroll,false);
       },
     methods:{
+      //解决ios下键盘的问题
+      getKeys(){
+        this.$refs.bottom.scrollIntoView(true)
+      },
       //放大图片
       bigImg(url){
         this.$weui.gallery(url, {
@@ -143,8 +149,9 @@
       getHeight(){
         this.$refs.wrapper.refresh()
       },
-      inputText(){
-        console.log(213435);
+      changeText(){
+        console.log(document.getElementById('inputArea').innerText,333333)
+        this.text = document.getElementById('inputArea').innerText;
       },
       goText(){
         this.$router.push({
@@ -154,10 +161,11 @@
 
       send(){
         console.log(this.text,22222);
-        this.$emit('send',this.text)
+        this.$emit('send',this.text);
         this.arr1 = [];
         this.arr.push(this.text);
         this.$set(this.$data,'clean',!this.clean);
+        document.getElementById('inputArea').innerText = "";
         this.text = ""
       },
       cancel(){
@@ -445,16 +453,7 @@
     text-align: center;
   }
 
-/*
-  .bottom{
-    position: absolute;
-    bottom: 0*2px;
-    left: 0;
-    width: 100%;
-    height: auto;
-    background: white;
-  }
-*/
+
   .mr10 {
     margin-right: 20px;
     width: 100%;
@@ -472,6 +471,7 @@
     border-top: 1px solid #dedede;
   }
   .robot-room-wirte .input-text {
+    -webkit-user-select: auto;
     display: block;
     border: none;
     outline: none;
@@ -561,11 +561,11 @@
   }
 .bottom{
   height: auto;
-  position: fixed;
-  width: 100%;
-  z-index: 998;
-  left: 0;
-  bottom: 0;
+  /*position: fixed;*/
+  /*width: 100%;*/
+  /*z-index: 998;*/
+  /*left: 0;*/
+  /*bottom: 0;*/
   background: white;
 }
 
