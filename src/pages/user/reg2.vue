@@ -6,7 +6,7 @@
             </dt>
             <dd class="">
                 <div class="hd">
-                    <input type="text" placeholder="请输入身份证号">
+                    <input v-model="form.idCard" type="text" placeholder="请输入身份证号">
                 </div>
             </dd>
         </dl>
@@ -14,15 +14,27 @@
 </template>
 
 <script>
-    import SendCode from '../../components/code.vue'
+    import validate from "lmw-validate"
+    import {mapGetters, mapMutations} from "vuex"
+    import * as types from "../../store/types"
 
     export default {
         data() {
-            return {};
+            return {
+                form: {
+                    idCard: ""
+                }
+            };
         },
-        computed: {},
-        components: {
-            SendCode
+        computed: {
+            ...mapGetters([types.USER_REG_FORM])
+        },
+        components: {},
+        created() {
+            this.$watch("form", (val) => {
+                let newF = Object.assign({}, this[types.USER_REG_FORM], val);
+                this.changeForm(newF);
+            }, {deep: true});
         },
         mounted() {
 
@@ -30,7 +42,11 @@
         beforeDestroy() {
 
         },
-        methods: {}
+        methods: {
+            ...mapMutations({
+                changeForm: types.USER_REG_FORM
+            })
+        }
     };
 </script>
 

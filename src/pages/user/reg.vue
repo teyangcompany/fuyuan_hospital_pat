@@ -1,85 +1,92 @@
 <template>
-  <div class="page">
-    <app-header ref="header" class="noflex" title="注册">
-      <i slot="back"></i>
-      <div class="right absolute" slot="right" @click="next">{{$route.name == 'step1' ? "下一步" : "提交"}}</div>
-    </app-header>
-    <div class="wrapper relative overflow-x-hidden" ref="main">
-      <transition :name="step">
-        <router-view></router-view>
-      </transition>
+    <div class="page">
+        <app-header ref="header" class="noflex" title="注册">
+            <i slot="back"></i>
+            <div class="right absolute" slot="right" @click="next">{{$route.name == 'step1' ? "下一步" : "提交"}}</div>
+        </app-header>
+        <div class="wrapper relative overflow-x-hidden" ref="main">
+            <transition :name="step">
+                <router-view></router-view>
+            </transition>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import {mainHeightMixin} from "../../lib/mixin"
-  import {mapGetters} from "vuex"
-  import * as types from "../../store/types"
-  import AppHeader from "../../components/app-header.vue"
+    import {mainHeightMixin} from "../../lib/mixin"
+    import {mapGetters} from "vuex"
+    import * as types from "../../store/types"
+    import AppHeader from "../../components/app-header.vue"
+    import validate from "lmw-validate"
 
-  export default {
-    mixins: [mainHeightMixin],
-    data() {
-      return {
-        step: "left",
-        types: types
-      };
-    },
-    computed: {
-      ...mapGetters([types.USER_REG_FORM])
-    },
-    components: {
-      AppHeader
-    },
-    created() {
+    export default {
+        mixins: [mainHeightMixin],
+        data() {
+            return {
+                step: "left"
+            };
+        },
+        computed: {
+            ...mapGetters([types.USER_REG_FORM])
+        },
+        components: {
+            AppHeader
+        },
+        created() {
 
-    },
-    mounted() {
+        },
+        mounted() {
 
-    },
-    beforeDestroy() {
+        },
+        beforeDestroy() {
 
-    },
-    methods: {
-      next() {
-        if (this.$route.name == "step1") {
-          let form = this[types.USER_REG_FORM];
-          this.$router.push("/reg/step2");
-        } else {
-          console.log(this[types.USER_REG_FORM])
+        },
+        methods: {
+            next() {
+                if (this.$route.name == "step1") {
+                    let form = this[types.USER_REG_FORM];
+                    console.log("form", form)
+                    /*检验逻辑略*/
+                    this.$router.push("/reg/step2");
+                } else {
+                    let form = this[types.USER_REG_FORM];
+                    let validator = new validate();
+                    validator.add(form.idCard, [
+                        ['isIdCard', "有效的身份证号"]
+                    ])
+                    console.log(validator.start());
+                }
+            }
+        },
+        watch: {
+            $route(to, from) {
+                let r = ['step1', 'step2'];
+                let i1 = r.indexOf(to.name);
+                let i2 = r.indexOf(from.name);
+                if (i1 > i2) {
+                    this.step = "left"
+                } else {
+                    this.step = "right"
+                }
+            }
         }
-      }
-    },
-    watch: {
-      $route(to, from) {
-        let r = ['step1', 'step2'];
-        let i1 = r.indexOf(to.name);
-        let i2 = r.indexOf(from.name);
-        if (i1 > i2) {
-          this.step = "left"
-        } else {
-          this.step = "right"
-        }
-      }
-    }
-  };
+    };
 </script>
 
 <style scoped lang="scss">
-  @import "../../common/common";
+    @import "../../common/common";
 
-  .left-enter, .right-leave-to {
-    transform: translateX(100%);
-  }
+    .left-enter, .right-leave-to {
+        transform: translateX(100%);
+    }
 
-  .step-leave-to, .right-enter {
-    transform: translateX(-100%);
-  }
+    .step-leave-to, .right-enter {
+        transform: translateX(-100%);
+    }
 
-  .left-enter-active, .left-leave-active, .right-enter-active, .right-leave-active {
-    @include t_r_b_l();
-    position: absolute;
-    transition: all 0.3s;
-  }
+    .left-enter-active, .left-leave-active, .right-enter-active, .right-leave-active {
+        @include t_r_b_l();
+        position: absolute;
+        transition: all 0.3s;
+    }
 </style>
