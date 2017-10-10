@@ -57,7 +57,7 @@
             {{msg}}
           </div>
           <div class="yk-cell-bd mr10" v-show="type=='text'">
-            <p  @focus = getKeys   @input="changeText" message="clean"  id="inputArea" class="input-text" ></p>
+            <div contenteditable="true" style="height: 30px"  @focus = getKeys   @input="changeText" message="clean"  id="inputArea" class="input-text" ></div>
           </div>
           <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
           <button v-show="text.length" class="send-btn" @click="send">发送</button>

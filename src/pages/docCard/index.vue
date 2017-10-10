@@ -63,7 +63,7 @@
                 患者报道
             </div>
         </div>
-        <seivice ref="ser"></seivice>
+        <seivice :docId="docId" ref="ser"></seivice>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -88,11 +88,16 @@
                 doc:{}
             }
         },
-        mounted(){
+        created(){
             this.docId = this.$route.params.id;
-            sessionStorage.setItem('docId',this.$route.params.id)
+        },
+        mounted(){
 
+            sessionStorage.setItem('docId',this.$route.params.id);
+
+            console.log(this.docId,3333)
             this.getData()
+
         },
         methods:{
             goBack(){

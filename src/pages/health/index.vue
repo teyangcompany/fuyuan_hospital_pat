@@ -57,7 +57,6 @@
     import config from "../../lib/config"
     import scroll from '../../base/scroll.vue'
     import api from '../../lib/http'
-
     export default {
 //        mixins: [mainHeightMixin],
         data() {

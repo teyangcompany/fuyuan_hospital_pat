@@ -38,49 +38,49 @@
                     </div>
                     <div>
                         <span class="mfc">{{consultInfo.consulterName}}</span>
-                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp; {{noReadReplyCount}}条回复</span>
+                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp; {{consultInfo.replyCount}}条回复</span>
                     </div>
                 </div>
-                <div class="answerList"  ref="lastItem">
-                    <div class="patAnswer">
+                <div class="answerList" v-for="item of arr" ref="lastItem">
+                    <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
                         <div class="docImg">
-                            <img src="../../../static/img/3.jpg" alt="">
+                            <img :src="item.userDocVo.docAvatar" alt="">
                         </div>
                         <div class="docMsg">
                             <p>
-                                <span class="mf">李康飞</span>
-                                <span class="mfc">&nbsp;&nbsp;&nbsp;中国名医</span>
+                                <span class="mf">{{item.userDocVo.docName}}</span>
+                                <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userDocVo.docTitle}}</span>
                             </p>
                             <p>
-                                <span class="mfc">1小时前</span>
+                                <span class="mfc">{{item.userDocVo.createTime | goodTime}}</span>
                             </p>
                         </div>
                     </div>
-                    <div>
-                    <span class="bf">
-                        长时间没运动的话不能剧烈运动，稍微休息几天就好了......
-                    </span>
-                    </div>
-                </div>
-                <div class="answerList" v-for="item of arr">
-                    <div class="patAnswer">
+                    <div v-else class="patAnswer">
                         <div class="docImg">
-                            <img src="../../../static/img/1.jpg" alt="">
+                            <img :src="item.userDocVo.patAvatar" alt="">
                         </div>
                         <div class="docMsg">
                             <p>
-                                <span class="mf">李康飞</span>
-                                <span class="mfc">&nbsp;&nbsp;&nbsp;中国名医</span>
+                                <span class="mf">{{item.userDocVo.patName}}</span>
+                                <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userDocVo.patTitle}}</span>
                             </p>
                             <p>
-                                <span class="mfc">1小时前</span>
+                                <span class="mfc">{{item.userDocVo.createTime | goodTime}}</span>
                             </p>
                         </div>
                     </div>
-                    <div>
-                    <span class="bf">
-                        {{item}}
-                    </span>
+                    <div v-if="item.consultMessage.replyContentType=='TEXT'">
+                        <span class="bf" >
+                            {{item.consultMessage.replyContent}}
+                        </span>
+                    </div>
+                    <div v-else-if="item.consultMessage.replyContentType=='PIC'">
+                        <img class="replyImg" :src="item.consultMessage.replyContent" alt="">
+                    </div>
+                    <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
+                        <span>语音需要转换格式</span>
+                        <audio :src="item.consultMessage.replyContent"></audio>
                     </div>
                 </div>
             </div>
@@ -162,9 +162,6 @@
                 probeType: 1,
                 bounce: true
             });
-
-
-
         },
         methods:{
             //显示大图
@@ -181,7 +178,8 @@
                 var fileName = e.target.files[0].name;
                 ajax('smarthos.system.file.upload',file,'IMAGE',fileName,"PAT").then(res=>{
                     if(res.succ){
-                      console.log( res.obj.attaFileUrl)
+                        this.text= res.obj.attaFileUrl;
+                      console.log( res.obj.attaFileUrl,7777)
                     }else {
                         alert(res.msg)
                     }
@@ -195,16 +193,18 @@
                   console.log(res,352679);
                   if(res.succ){
                     this.attaList = res.obj.attaList;
-                    this.consultInfo = res.obj.consultInfo
-                    this.userPat = res.obj.userPat
+                    this.consultInfo = res.obj.consultInfo;
+                    this.userPat = res.obj.userPat;
                     this.noReadReplyCount = res.obj.noReadReplyCount;
+                      res.obj.consultMessage?this.arr =res.obj.consultMessage:"";
+
                       setTimeout(()=>{
                           this.scroll = new BScroll(this.$refs.Scroll,{
                               click:true,
                               probeType: 1,
                               bounce: true
                           });
-                          this.scroll.scrollToElement(this.$refs.lastItem[this.$refs.lastItem.length-1])
+//                          this.scroll.scrollToElement(this.$refs.lastItem[this.$refs.lastItem.length-1])
 
                       },500)
                   }else {
@@ -216,7 +216,8 @@
               this.$router.go(-1)
             },
             send(){
-                console.log(this.text,22222)
+                console.log(this.text,22222);
+                this.text.indexOf('http')=='-1'?this.replyContentType='TEXT':this.replyContentType='PIC';
                 api('smarthos.consult.platform.pic.reply',{
                     token:this.token,
                     consultId:this.consultId,
@@ -225,9 +226,9 @@
                 }).then(res=>{
                     if(res.succ){
                         console.log(res,598976);
-                        this.getData()
+                        this.getData();
                         this.$set(this.$data,'clean',!this.clean);
-
+                        this.text=''
                     }else {
                         alert(res.msg)
                     }
@@ -285,7 +286,11 @@
         border-right: 1px solid gainsboro;
     }
 
-
+.replyImg{
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+}
     .btn{
         position: fixed;
         left: 0;

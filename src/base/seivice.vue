@@ -8,21 +8,15 @@
         <div class="contain" >
             <div class="mfb">选择你需要的服务</div>
             <div class="serviceType">
-                <div class="imageText" :class="{active:test==index}" v-for="(item,index) of list" @click.stop="getText(index)">
-                    <p class="mf">{{item.value}}</p>
-                    <p class="col">{{item.print}}</p>
+                <div class="imageText" :class="{active:test==index}" v-for="(item,index) of serviceList" @click.stop="getText(index)">
+                    <p class="mf">{{item.serveName}}</p>
+                    <p class="col">{{item.servePrice}}</p>
                 </div>
             </div>
-            <div v-show="index==test" v-for="(character,index) of textList" >
-                <p class="mfc" v-for="state of character.text">
-                   {{state}}
+            <div v-if="serviceList.length>0">
+                <p class="mfc">
+                   {{serviceList[test].serveReadme}}
                 </p>
-                <!--<p class="mfc">-->
-                    <!--2.为珍惜您的咨询机会，请全部围绕病情进行沟通，避免无关内容。-->
-                <!--</p>-->
-                <!--<p class="mfc">-->
-                    <!--3.医生工作繁忙，可能无法及时回复您的咨询，若医生48小时未回复，我们会为您自动退款。-->
-                <!--</p>-->
             </div>
             <div class="agree">
                 <span>
@@ -41,20 +35,45 @@
 </template>
 <script type="text/ecmascript-6">
     import config from '../lib/config'
+    import api from '../lib/http'
     export default{
         components: {
 
         },
+        props:['docId'],
         data(){
             return {
                 flag:false,
                 list:config.basic_service,
                 textList:config.basic_text,
-                test:0
+                test:0,
+                token:localStorage.getItem('token'),
+                serviceList:[],
+                id:this.docId
             }
         },
-        mounted(){
 
+        mounted(){
+            console.log(this.id,99999);
+
+            api('user.doc.serve.list',{
+                token:this.token,
+                docId:this.id
+            }).then(res=>{
+                console.log(res,11111);
+                if(res.succ){
+                    var obj = res.obj;
+                    obj.appointmentOutpatientConsultServe.serveName?this.serviceList.push(obj.appointmentOutpatientConsultServe):"";
+                    obj.bookServe.serveName?this.serviceList.push(obj.bookServe):"";
+                    obj.phoneConsultServe.serveName?this.serviceList.push(obj.phoneConsultServe):"";
+                    obj.picConsultServe.serveName?this.serviceList.push(obj.picConsultServe):"";
+                    obj.videoConsultServe.serveName?this.serviceList.push(obj.videoConsultServe):"";
+                    console.log(this.serviceList,123456789)
+                }else {
+                    alert(res.msg)
+                }
+
+            })
         },
         methods:{
             close(){
@@ -97,6 +116,7 @@
         display: flex;
         justify-content: space-around;
         margin: 15px 0;
+        flex-wrap: wrap;
     }
     .imageText{
         border:1px solid gainsboro;
