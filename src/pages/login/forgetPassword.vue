@@ -12,7 +12,7 @@
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input readonly="readonly" @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入"/>
+              <input @blur="$v.mobile.$touch()" class="weui-input" type="number" v-model="mobile" placeholder="请输入"/>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
         mixins:['mainHeightMixin'],
         data(){
             return {
-              mobile:JSON.parse(localStorage.getItem('commpat')).commpatMobile||{},
+              mobile:"",
               captcha:'',
               showError:false,
               cid:'',

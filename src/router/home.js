@@ -30,24 +30,7 @@ export default [
   //   path:"/my/home/server/consultService/myConsult",
   //   component:()=> import("../pages/home/server/consultService/myConsult.vue")
   // },
-  {
-    path:"/my/home/server/consultService/whole",
-    component:()=> import("../pages/home/server/consultService/whole.vue"),
-    children:[
-      {
-        path:"/my/home/server/consultService/myConsult",
-        component:()=> import("../pages/home/server/consultService/myConsult.vue")
-      },
-      {
-        path:"/my/home/server/consultService/consultDoc",
-        component:()=> import("../pages/home/server/consultService/consultDoc.vue")
-      },
-      {
-        path:"/my/home/server/consultService/bestPick",
-        component:()=> import("../pages/home/server/consultService/bestPick.vue")
-      },
-    ]
-  },
+
   {
     path:"/consultDetail",
     component:()=> import("../pages/home/server/consultService/consultDetail.vue"),

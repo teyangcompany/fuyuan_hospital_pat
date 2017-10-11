@@ -16,7 +16,7 @@ export default {
     ],
     index_fast_nav: [
         {name: "fast-consult", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
-        {name: "ask-doc", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/officeConsult"}
+        {name: "ask-doc", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/consultService/consultDoc"}
     ],
     index_nav: [
         {name: "guide", value: "智能导诊",path: "/login"},
@@ -37,7 +37,7 @@ export default {
         {name: "wiki", value: "健康百科"}
     ],
     my_nav: [
-        {name: "my-consult", value: "我的咨询",path:"/home/server/consultService/consultDoc"},
+        {name: "my-consult", value: "我的咨询",path:"/officeConsult"},
         {name: "my-book", value: "我的挂号",path:"/myRegistration"},
         {name: "common-visitperson", value: "常用就诊人",path:"/common-visitperson"},
         {name: "archives", value: "健康档案", path: "/archives"},

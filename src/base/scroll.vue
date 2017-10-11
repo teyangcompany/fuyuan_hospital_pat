@@ -9,6 +9,10 @@
 
     export default {
         props: {
+          scrollbar:{
+             type:Boolean,
+            default:false
+          },
             /**
              * scroll区域高度
              * **/
@@ -100,7 +104,8 @@
                 this.scroll = new BScroll(this.$refs.wrapper, {
                     probeType: this.probeType,
                     click: this.click,
-                    scrollX: this.scrollX
+                    scrollX: this.scrollX,
+                    scrollbar:this.scrollbar
                 })
                 console.log( this.scroll,9878787)
                 // 是否派发滚动事件
@@ -115,7 +120,6 @@
                 if (this.pullup) {
                     this.scroll.on('scrollEnd', () => {
                         // 滚动到底部
-                        console.log(56565656)
                         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
                             this.$emit('scrollToEnd')
                         }

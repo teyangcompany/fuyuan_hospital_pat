@@ -43,5 +43,22 @@ export default[
     name:"consuitDetail",
     component:()=>import("../pages/teamConsult/consuitDetail.vue")
   },
-
+  {
+    path:"/consultService/whole",
+    component:()=> import("../pages/home/server/consultService/whole.vue"),
+    children:[
+      {
+        path:"/consultService/myConsult",
+        component:()=> import("../pages/home/server/consultService/myConsult.vue")
+      },
+      {
+        path:"/consultService/consultDoc",
+        component:()=> import("../pages/home/server/consultService/consultDoc.vue")
+      },
+      {
+        path:"/consultService/bestPick",
+        component:()=> import("../pages/home/server/consultService/bestPick.vue")
+      },
+    ]
+  },
 ]

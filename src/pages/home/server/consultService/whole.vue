@@ -1,9 +1,9 @@
 <template>
     <div>
       <div class="topNav">
-        <router-link tag="p" to="/my/home/server/consultService/consultDoc" class="listP">找医生</router-link>
-        <router-link tag="p" to="/my/home/server/consultService/bestPick" class="listP">精选</router-link>
-        <router-link tag="p" to="/my/home/server/consultService/myConsult" class="listP">我的</router-link>
+        <router-link tag="p" to="/consultService/consultDoc" class="listP">找医生</router-link>
+        <router-link tag="p" to="/consultService/bestPick" class="listP">精选</router-link>
+        <router-link tag="p" to="/consultService/myConsult" class="listP">我的</router-link>
       </div>
       <router-view></router-view>
     </div>

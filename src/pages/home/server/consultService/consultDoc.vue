@@ -13,23 +13,51 @@
         <img src="../../../../../static/img/big.png" alt="">
       </div>
       <div class="tab border-1px">
-        <div class="tab-item">
+        <div class="tab-item" :class="{choose_type:sortBy == 'displaySort'}">
           <div class="tab_item_container" @click="chooseType('displaySort')">
-            <span v-if="sortPick == ''">全部科室</span>
-            <span v-else>{{ sortPick }}</span>
+            <span v-if="sortPick == ''">全部科室
+              <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                <polygon points="0,3 10,3 5,8"/>
+              </svg>
+            </span>
+            <span v-else>{{ sortPick }}
+              <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                <polygon points="0,3 10,3 5,8"/>
+              </svg>
+            </span>
           </div>
         </div>
-        <div class="tab-item">
+        <div class="tab-item" :class="{choose_type:sortBy == 'displayType'}">
           <div class="tab_item_container" @click="chooseType('displayType')">
             <div class="tab_item_border">
-              <span>全部问诊形式</span>
+              <!--<span>全部问诊形式</span>-->
+              <span v-if="typePick == ''">全部问诊形式
+                  <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                    <polygon points="0,3 10,3 5,8"/>
+                  </svg>
+              </span>
+              <span v-else>{{ typePick }}
+                  <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                    <polygon points="0,3 10,3 5,8"/>
+                  </svg>
+              </span>
             </div>
           </div>
         </div>
-        <div  class="tab-item" >
+        <div  class="tab-item" :class="{choose_type:sortBy == 'displayDefault'}">
           <div class="tab_item_container" @click="chooseType('displayDefault')">
             <div class="sort_item_border">
-              <span>默认排序</span>
+              <!--<span>默认排序</span>-->
+              <span v-if="defaultPick == ''">默认排序
+                  <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                    <polygon points="0,3 10,3 5,8"/>
+                  </svg>
+              </span>
+              <span v-else>{{ defaultPick }}
+                  <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                    <polygon points="0,3 10,3 5,8"/>
+                  </svg>
+              </span>
             </div>
           </div>
         </div>
@@ -67,65 +95,157 @@
       <transition name="showlist">
         <div class="dropType" v-show="sortBy == 'displayType'">
           <ul >
-            <li>全部问诊形式</li>
-            <li>视频问诊</li>
-            <li>图文问诊</li>
+            <div class="weui-cells weui-cells_radio weuiMargin">
+              <label class="weui-cell weui-check__label" for="x31">
+                <div class="weui-cell__bd">
+                  <p>全部问诊形式</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" class="weui-check" name="radio3" id="x31" value="全部问诊形式" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x32">
+                <div class="weui-cell__bd">
+                  <p>图文问诊</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio3" class="weui-check" id="x32" value="图文问诊" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x33">
+                <div class="weui-cell__bd">
+                  <p>电话问诊</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio3" class="weui-check" id="x33" value="电话问诊" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x34">
+                <div class="weui-cell__bd">
+                  <p>视频问诊</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio3" class="weui-check" id="x34" value="视频问诊" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x35">
+                <div class="weui-cell__bd">
+                  <p>团队问诊</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio3" class="weui-check" id="x35" value="团队问诊" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+            </div>
+            <!--<li>全部问诊形式</li>-->
+            <!--<li>视频问诊</li>-->
+            <!--<li>图文问诊</li>-->
           </ul>
 
         </div>
       </transition>
       <transition name="showlist">
         <div class="dropType" v-show="sortBy == 'displayDefault'">
-
           <ul >
-            <li>默认排序</li>
-            <li>按好评排</li>
+            <!--<li>默认排序</li>-->
+            <!--<li>按好评排</li>-->
+            <div class="weui-cells weui-cells_radio weuiMargin">
+              <label class="weui-cell weui-check__label" for="x41">
+                <div class="weui-cell__bd">
+                  <p>默认排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" class="weui-check" name="radio4" id="x41" value="默认排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x42">
+                <div class="weui-cell__bd">
+                  <p>按好评排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio4" class="weui-check" id="x42" value="按好评排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x43">
+                <div class="weui-cell__bd">
+                  <p>按服务次数排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio4" class="weui-check" id="x43" value="按服务次数排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x44">
+                <div class="weui-cell__bd">
+                  <p>按职称排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio4" class="weui-check" id="x44" value="按职称排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+            </div>
           </ul>
         </div>
       </transition>
       <transition name="showcover">
         <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
       </transition>
-      <div class="teamList">
-        <ul class="border-1px" v-for="item in followList">
-          <div @click="goDocCard(item.id)">
-            <li class="teamLi">
-              <div class="cancelImg" v-if="item.docAvatar">
-                <img :src="item.docAvatar" alt="">
-              </div>
-              <div class="cancelImg" v-else>
-                <img src="../../../../../static/img/man.jpg" alt="">
-              </div>
-              <div class="cancelIntro">
-                <div>
-                  <p><span><span class="followName">{{ item.docName }}</span> <span class="myDoctor">团队成员</span></span><span class="commentValue">{{ item.docScoure }}分</span> </p>
-                  <p>{{ item.deptName }} {{ item.docTitle }}</p>
-                  <p>{{ item.hosName }}</p>
+      <scroll class="teamList" :data="followList" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
+        <div>
+          <ul class="border-1px" v-for="item in followList">
+            <div @click="goDocCard(item.id)">
+              <li class="teamLi">
+                <div class="cancelImg" v-if="item.docAvatar">
+                  <img :src="item.docAvatar" alt="">
                 </div>
-              </div>
-            </li>
-            <li class="goodAt">
-              <section>
-                <p>擅长：{{ item.docSkill }}</p>
-              </section>
-              <section>
-                <div>
-                  <p>图文120元</p>
+                <div class="cancelImg" v-else>
+                  <img src="../../../../../static/img/man.jpg" alt="">
                 </div>
-                <div>
-                  <p>电话150元</p>
+                <div class="cancelIntro">
+                  <div>
+                    <p><span><span class="followName">{{ item.docName }}</span> <span class="myDoctor">团队成员</span></span><span class="commentValue">{{ item.docScoure }}分</span> </p>
+                    <p>{{ item.deptName }} {{ item.docTitle }}</p>
+                    <p>{{ item.hosName }}</p>
+                  </div>
                 </div>
-                <div>
-                  <p>视频300元</p>
-                </div>
-                <div>
-                  <p>团队50元</p>
-                </div>
-              </section>
-            </li>
+              </li>
+              <li class="goodAt">
+                <section>
+                  <p>擅长：{{ item.docSkill }}</p>
+                </section>
+                <section>
+                  <div>
+                    <p>图文120元</p>
+                  </div>
+                  <div>
+                    <p>电话150元</p>
+                  </div>
+                  <div>
+                    <p>视频300元</p>
+                  </div>
+                  <div>
+                    <p>团队50元</p>
+                  </div>
+                </section>
+              </li>
+            </div>
+          </ul>
+          <div class="loadMore" v-if="loadingStatus">
+            <span class="pullMore">
+               <img src="../../../../../static/img/loading.gif" alt="">
+               数据加载中...
+            </span>
           </div>
-        </ul>
-      </div>
+        </div>
+      </scroll>
       <div class="directConsult border-1px-top" @click="goOffice">
         <p>直接咨询科室</p>
       </div>
@@ -134,11 +254,14 @@
 </template>
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
+  import Scroll from '../../../../base/scroll'
   import http from '../../../../lib/http'
   export default{
     data(){
       return{
         sortBy:'',
+        typePick:"",
+        defaultPick:"",
         followList:[],
         parentLevel:"",
         childDetail:null,
@@ -146,6 +269,9 @@
         arrow:[],
         deptId:"",
         sortPick:"",
+        loadingStatus:true,
+        pullup:true,
+        listPage:1,
         allRoom:[
           {
             deptName:"全部科室",
@@ -155,10 +281,13 @@
     },
     created(){
          http("smarthos.user.doc.search",{
+           pageSize:10,
+           pageNum:1
          }).then((data)=>{
            console.log(data,66666)
+           this.loadingStatus = false
              if(data.code == 0){
-                 this.followList = data.userDocList
+                 this.followList = data.list
              }else{
                  weui.alert(data.msg)
              }
@@ -169,7 +298,8 @@
            deptLevel:2
          }).then((data)=>{
              if(data.code == 0){
-               this.parentLevel = data.obj
+               console.log(data,9999)
+               this.parentLevel = data.list
                this.parentLevel = this.allRoom.concat(this.parentLevel)
                this.childDetail = this.parentLevel[this.clickIndex].subDeptList
                this.parentLevel.forEach(item =>{
@@ -182,7 +312,7 @@
              }else{
                  weui.alert(data.msg)
              }
-             console.log(this.parentLevel)
+
          })
     },
     mounted(){
@@ -211,6 +341,36 @@
 //               click:true
 //             })
 //           },
+      scrollToEnd(){
+        if (this.preventRepeatRequest) {
+          return
+        }
+        this.loadingStatus = true
+        this.preventRepeatRequest = true;
+        this.listPage +=1;
+        let that = this
+        http("smarthos.user.doc.search",{
+          pageNum:that.listPage,
+          pageSize:"10"
+        }).then((data)=>{
+          if(data.code == 0){
+            for(var i=0;i<data.list.length; i++){
+              this.followList.push(data.list[i])
+//              this.createTime.push(formatDate(new Date(data.list[i].createTime)))
+            }
+            this.loadingStatus = false
+            if(data.list.length >= 10){
+              this.preventRepeatRequest = false;
+            }
+          }else if(!(data.msg)){
+            this.loadingStatus = false
+            weui.alert("网络错误，请稍后重试")
+          }else{
+            this.loadingStatus = false
+            weui.alert(data.msg)
+          }
+        })
+      },
       goOffice(){
         this.$router.push('/officeConsult')
       },
@@ -287,6 +447,9 @@
           })
       }
     },
+    components:{
+      Scroll
+    },
     watch:{
       childDetail(){
           this.$nextTick(()=>{
@@ -298,6 +461,12 @@
       sortPick(){
         this.sortBy = ''
       },
+      typePick(){
+        this.sortBy = ''
+      },
+      defaultPick(){
+        this.sortBy = ''
+      }
     }
   }
 </script>
@@ -458,13 +627,30 @@
       flex:1;
       text-align: center;
       span{
-        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
         font-size: 32px;
         color: rgb(77,85,93);
+      }
+      .sort_icon{
+        transition: 0.3s;
+        fill:#666;
       }
     }
     .tab-item:last-child{
       border-right: none;
+    }
+    .choose_type{
+      span{
+        color: $mainColor;
+      }
+      .sort_icon{
+        transform: rotate(180deg);
+        transition: 0.3s;
+        fill:$mainColor;
+      }
     }
   }
   .myTab{
@@ -478,6 +664,15 @@
     text-align: center;
     /*background-color: #0BB20C;*/
     background-color: white;
+    .weuiMargin{
+      margin: 0;
+      p{
+        font-size: 32px;
+        height: 70px;
+        line-height: 70px;
+        color: #333333;
+      }
+    }
     li{
       list-style-type: none;
       height: 80px;
@@ -540,7 +735,7 @@
   .teamList{
     position: fixed;
     top: 260px;
-    bottom:0;
+    bottom:90px;
     right:0;
     left:0;
     overflow: auto;
@@ -635,6 +830,21 @@
               justify-content: center;
             }
           }
+        }
+      }
+    }
+    .loadMore{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span.pullMore{
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        img{
+          width: 16px;
+          height: 16px;
+          margin-right: 5px;
         }
       }
     }

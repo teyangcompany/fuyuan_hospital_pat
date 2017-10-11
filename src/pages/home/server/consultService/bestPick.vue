@@ -27,37 +27,49 @@
           </div>
         </div>
       </div>
-      <div class="wrapMy">
-        <ul class="border-1px" v-for="item in aboutConsult">
-          <li >
-            <div class="border-1px-dashed dashedPlace">
-              <p class="picConsult" >{{ item.consultInfo.illnessName }}</p>
-            </div>
-            <div class="mainContent">
-              <p>{{ item.consultInfo.consultContent }}</p>
-              <div @click="makeLarge()">
-                <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
+      <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
+        <div>
+          <ul class="border-1px" v-for="item in aboutConsult">
+            <li >
+              <div class="border-1px-dashed dashedPlace">
+                <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
               </div>
-            </div>
-            <div class="ConsultRelate">
+              <div class="mainContent">
+                <p>{{ item.consultInfo.consultContent }}</p>
+                <div @click="makeLarge()">
+                  <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
+                </div>
+              </div>
+              <div class="ConsultRelate">
 
-              <span class="name"><span class="number"><img :src="item.userDocVo.docAvatar" alt=""> <span>{{ item.userDocVo.docName }}</span>回答</span></span>
-              <span class="money" >看过 5281 | 1263</span>
-            </div>
-          </li>
-        </ul>
-      </div>
+                <span class="name"><span class="number"> 回答</span></span>
+                <span class="money" >看过 5281 | 1263</span>
+              </div>
+            </li>
+          </ul>
+          <div class="loadMore" v-if="loadingStatus">
+            <span class="pullMore">
+               <img src="../../../../../static/img/loading.gif" alt="">
+               数据加载中...
+            </span>
+          </div>
+        </div>
+      </scroll>
     </div>
   </div>
 </template>
 <script>
   import BScroll from 'better-scroll'
+  import Scroll from '../../../../base/scroll'
   import http from '../../../../lib/http'
   import {Getdate} from '../../../../lib/filter'
   export default{
     data(){
       return{
-        aboutConsult:""
+        aboutConsult:[],
+        pullup:true,
+        loadingStatus:true,
+        listPage:1,
       }
     },
     filters:{
@@ -66,8 +78,11 @@
     created(){
       http("smarthos.consult.all.list.page",{
         token:localStorage.getItem('token'),
-        isChoice:true
+        isChoice:true,
+        pageSize:"10",
+        pageNum:"1"
       }).then((data)=>{
+        this.loadingStatus = false
         if(data.code == 0){
           this.aboutConsult = data.list
         }else{
@@ -80,7 +95,42 @@
 //      this.getDate()
     },
     methods:{
-
+      scrollToEnd(){
+        if (this.preventRepeatRequest) {
+          return
+        }
+        this.loadingStatus = true
+        this.preventRepeatRequest = true;
+        this.listPage +=1;
+        let that = this
+        http("smarthos.consult.all.list.page",{
+          token:localStorage.getItem('token'),
+          isChoice:true,
+          pageNum:that.listPage,
+          pageSize:"10"
+        }).then((data)=>{
+           console.log(data)
+          if(data.code == 0){
+            for(var i=0;i<data.list.length; i++){
+              this.aboutConsult.push(data.list[i])
+//              this.createTime.push(formatDate(new Date(data.list[i].createTime)))
+            }
+            this.loadingStatus = false
+            if(data.list.length >= 10){
+              this.preventRepeatRequest = false;
+            }
+          }else if(!(data.msg)){
+            this.loadingStatus = false
+            weui.alert("网络错误，请稍后重试")
+          }else{
+            this.loadingStatus = false
+            weui.alert(data.msg)
+          }
+        })
+      },
+    },
+    components:{
+      Scroll
     },
     watch:{
 
@@ -109,7 +159,7 @@
       right:0;
       bottom:0;
       background-color: white;
-      overflow: auto;
+      overflow: hidden;
       ul {
         margin-top: 5px;
         li {
@@ -190,6 +240,21 @@
         }
         li:nth-child(1){
           padding-top: 5px;
+        }
+      }
+      .loadMore{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span.pullMore{
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+          img{
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+          }
         }
       }
     }

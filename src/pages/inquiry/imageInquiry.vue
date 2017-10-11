@@ -214,6 +214,12 @@
         flex: 1;
         overflow: hidden;
         flex-direction: column;
+      .weui-cells__title{
+        font-size: 30px;
+      }
+      textarea{
+        font-size: 30px;
+      }
     }
     .myHeader{
         width: 100%;

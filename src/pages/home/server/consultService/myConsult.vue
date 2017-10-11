@@ -7,15 +7,29 @@
     <!--</div>-->
     <div class="toggle">
       <div class="tab border-1px myTab">
-        <div class="tab-item">
-          <div class="tab_item_container" @click="chooseType('displaySort')">
-            <span>全部问诊</span>
+        <div class="tab-item" :class="{choose_type:sortBy == 'all'}">
+          <div class="tab_item_container" @click="chooseType('all')">
+            <span>全部</span>
           </div>
         </div>
-        <div class="tab-item">
-          <div class="tab_item_container" @click="chooseType('displayType')">
+        <div class="tab-item" :class="{choose_type:sortBy == 'waitPay'}">
+          <div class="tab_item_container" @click="chooseType('waitPay')">
             <div class="tab_item_border">
-              <span>全部状态</span>
+              <span>待付款{{ waitPayLength }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-item" :class="{choose_type:sortBy == 'doing'}">
+          <div class="tab_item_container" @click="chooseType('doing')">
+            <div class="tab_item_border">
+              <span>进行中{{ doingLength }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-item" :class="{choose_type:sortBy == 'waitComment'}">
+          <div class="tab_item_container" @click="chooseType('waitComment')">
+            <div class="tab_item_border">
+              <span>待评价{{ waitCommentLength }}</span>
             </div>
           </div>
         </div>
@@ -60,7 +74,11 @@
   export default{
     data(){
       return{
-          aboutConsult:""
+          aboutConsult:"",
+          sortBy:"all",
+          waitPayLength:"",
+          doingLength:"",
+          waitCommentLength:""
       }
     },
     filters:{
@@ -75,8 +93,40 @@
              }else{
                  weui.alert(data.msg)
              }
-              console.log(data)
          })
+        http("smarthos.consult.my.list.page",{
+          token:localStorage.getItem('token'),
+          statusList:['0']
+        }).then((data)=>{
+          if(data.code == 0){
+            this.waitPayLength = data.list.length
+//            this.aboutConsult = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+        http("smarthos.consult.my.list.page",{
+          token:localStorage.getItem('token'),
+          statusList:['3']
+        }).then((data)=>{
+          if(data.code == 0){
+            this.doingLength = data.list.length
+//            this.aboutConsult = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+        http("smarthos.consult.my.list.page",{
+          token:localStorage.getItem('token'),
+          statusList:['4']
+        }).then((data)=>{
+          if(data.code == 0){
+            this.waitCommentLength = data.list.length
+//            this.aboutConsult = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+        })
     },
     mounted(){
 //      this.getDate()
@@ -88,6 +138,59 @@
         }else {
           this.$router.push('/oneConsult/'+id)
         }
+      },
+      chooseType(type){
+          if(type == 'all'){
+            this.sortBy = 'all'
+            http("smarthos.consult.my.list.page",{
+              token:localStorage.getItem('token')
+            }).then((data)=>{
+              if(data.code == 0){
+                this.aboutConsult = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }else if(type == 'waitPay'){
+            this.sortBy = 'waitPay'
+            http("smarthos.consult.my.list.page",{
+              token:localStorage.getItem('token'),
+              statusList:['0']
+            }).then((data)=>{
+              if(data.code == 0){
+                this.waitPayLength = data.list.length
+                this.aboutConsult = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }else if(type == 'doing'){
+            this.sortBy = 'doing'
+            http("smarthos.consult.my.list.page",{
+              token:localStorage.getItem('token'),
+              statusList:['3']
+            }).then((data)=>{
+              if(data.code == 0){
+                this.doingLength = data.list.length
+                this.aboutConsult = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }else if(type == 'waitComment'){
+            this.sortBy = 'waitComment'
+            http("smarthos.consult.my.list.page",{
+              token:localStorage.getItem('token'),
+              statusList:['4']
+            }).then((data)=>{
+              if(data.code == 0){
+                this.waitCommentLength = data.list.length
+                this.aboutConsult = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }
       }
     },
     watch:{
@@ -131,8 +234,11 @@
           >div {
             display: flex;
             justify-content: space-between;
-            span.picConsult {
+            p.picConsult {
               font-size: 32px;
+              span{
+                color: #F07818;
+              }
             }
             span.consultTim {
               font-size: 28px;
@@ -265,6 +371,11 @@
         display: block;
         font-size: 32px;
         color: rgb(77,85,93);
+      }
+    }
+    .choose_type{
+      span{
+        color: $mainColor;
       }
     }
     .tab-item:last-child{

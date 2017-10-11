@@ -9,14 +9,15 @@
     <div class="wrapper" ref="main">
       <div class="list">
         <ul>
-          <router-link :key="i" to="/home/server/book/dept" tag="li" class="flex" v-for="i in 3">
+          <router-link :key="item.id" :to="{path:'/home/server/book/dept',query:{hosid:item.yyid,hosName:item.yyjc}}" tag="li" class="flex" v-for="item in hosList">
             <div class="ava flex0">
-              <img src="https://p.ssl.qhimg.com/dmsmfl/120_95_/t01034ff8df2db3b277.webp?size=196x220" alt="">
+              <img :src="item.yytp" alt="" v-if="item.yytp">
+              <img src="" alt="" v-else>
             </div>
             <div class="info flex1">
-              <h3>浙二医院</h3>
-              <div>三级甲等</div>
-              <p>解放路358号</p>
+              <h3>{{ item.yyjc }}</h3>
+              <div>{{ item.yydj }}</div>
+              <p>{{ item.yydz }}</p>
             </div>
           </router-link>
         </ul>
@@ -27,10 +28,13 @@
 
 <script>
   import AppHeader from "../../../../components/app-header.vue"
+  import api from '../../../../lib/bookApi'
 
   export default {
     data() {
-      return {};
+      return {
+          hosList:""
+      };
     },
     computed: {},
     components: {
@@ -38,6 +42,14 @@
     },
     mounted() {
 
+    },
+    created(){
+        api("smarthos.yygh.ApiHospitalService.areaHosList",{
+//          cityAreaId:"330100"
+        }).then((data)=>{
+            this.hosList = data.list
+            console.log(data)
+        })
     },
     beforeDestroy() {
 
