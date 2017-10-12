@@ -56,8 +56,8 @@
         mounted(){
             console.log(this.id,99999);
 
-            api('user.doc.serve.list',{
-                token:this.token,
+            api('smarthos.user.doc.serve.list',{
+//                token:this.token,
                 docId:this.id
             }).then(res=>{
                 console.log(res,11111);

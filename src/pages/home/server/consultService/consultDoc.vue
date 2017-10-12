@@ -8,9 +8,10 @@
     <div class="toggle" style="display: block;">
       <div class="searchArea">
         <div class="inputWrap">
-          <input type="text" placeholder="搜索医院、科室、医生、疾病">
+          <input type="text" @focus="focus()" @blur="blur()" ref="inputContent" v-model="searchContent" placeholder="搜索医院、科室、医生、疾病">
+          <button @click="searchList">搜索</button>
         </div>
-        <img src="../../../../../static/img/big.png" alt="">
+        <img src="../../../../../static/img/big.png" alt="" ref="searchIcon">
       </div>
       <div class="tab border-1px">
         <div class="tab-item" :class="{choose_type:sortBy == 'displaySort'}">
@@ -221,18 +222,9 @@
                 <section>
                   <p>擅长：{{ item.docSkill }}</p>
                 </section>
-                <section>
-                  <div>
-                    <p>图文120元</p>
-                  </div>
-                  <div>
-                    <p>电话150元</p>
-                  </div>
-                  <div>
-                    <p>视频300元</p>
-                  </div>
-                  <div>
-                    <p>团队50元</p>
+                <section v-if="item.userDocServes">
+                  <div v-for="subItem in item.userDocServes">
+                    <p>{{ subItem.serveName }}{{ subItem.servePrice }}元</p>
                   </div>
                 </section>
               </li>
@@ -272,6 +264,7 @@
         loadingStatus:true,
         pullup:true,
         listPage:1,
+        searchContent:"",
         allRoom:[
           {
             deptName:"全部科室",
@@ -350,6 +343,7 @@
         this.listPage +=1;
         let that = this
         http("smarthos.user.doc.search",{
+          keyWord:this.searchContent,
           pageNum:that.listPage,
           pageSize:"10"
         }).then((data)=>{
@@ -373,6 +367,29 @@
       },
       goOffice(){
         this.$router.push('/officeConsult')
+      },
+      searchList(){
+        http("smarthos.user.doc.search",{
+          keyWord:this.searchContent,
+          pageSize:10,
+          pageNum:1
+        }).then((data)=>{
+          console.log(data,66666)
+          this.loadingStatus = false
+          if(data.code == 0){
+            this.followList = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
+      focus(){
+        this.$refs.inputContent.style.textAlign = 'left'
+        this.$refs.searchIcon.style.display = 'none'
+      },
+      blur(){
+        this.$refs.inputContent.style.textAlign = 'center'
+        this.$refs.searchIcon.style.display = 'block'
       },
       goDocCard(id){
         console.log(id,88888)
@@ -597,8 +614,10 @@
     .inputWrap{
       width: 690px;
       margin:0 auto;
+      display: flex;
+      align-items: center;
       input{
-        width: 690px;
+        width: 600px;
         height: 60px;
         font-size: 32px;
         margin-top: 15px;
@@ -606,12 +625,22 @@
         border-radius: 7px;
         text-align: center;
       }
+      button{
+        border:none;
+        outline: medium;
+        width:70px;
+        height: 60px;
+        margin-left: 20px;
+        font-size: 32px;
+        color: $mainColor;
+        background-color: #FFFFFF;
+      }
     }
     img{
       position: absolute;
       width: 30px;
-      top:110px;
-      left: 130px;
+      top:30px;
+      left: 80px;
     }
   }
   .tab{
@@ -820,7 +849,7 @@
           >div{
             flex:1;
             p{
-              width: 160px;
+              width: 210px;
               border:1px solid #999999;
               color: #999999;
               display: flex;

@@ -61,4 +61,8 @@ export default[
       },
     ]
   },
+  {
+    path:"/bestPickDetail",
+    component:()=>import("../pages/home/server/consultService/bestPickDetail")
+  }
 ]

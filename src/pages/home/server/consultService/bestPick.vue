@@ -29,24 +29,33 @@
       </div>
       <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
         <div>
-          <ul class="border-1px" v-for="item in aboutConsult">
+          <router-link tag="ul" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="border-1px" v-for="item in aboutConsult" :key="item.id">
             <li >
               <div class="border-1px-dashed dashedPlace">
                 <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
               </div>
               <div class="mainContent">
                 <p>{{ item.consultInfo.consultContent }}</p>
-                <div @click="makeLarge()">
+                <div>
                   <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
                 </div>
               </div>
               <div class="ConsultRelate">
 
                 <span class="name"><span class="number"> 回答</span></span>
-                <span class="money" >看过 5281 | 1263</span>
+                <span class="money"> <span>看过</span>&nbsp;
+                  <span v-if="item.consultInfo.readCount">{{ item.consultInfo.readCount }} </span>
+                  <span v-else>0</span>&nbsp;
+
+                  |
+                  &nbsp;
+                  <img src="../../../../../static/img/zan_off.png" alt="">&nbsp;
+                  <span v-if="item.consultInfo.praiseCount">{{ item.consultInfo.praiseCount }}</span>
+                  <span v-else>0</span>
+                </span>
               </div>
             </li>
-          </ul>
+          </router-link>
           <div class="loadMore" v-if="loadingStatus">
             <span class="pullMore">
                <img src="../../../../../static/img/loading.gif" alt="">
@@ -235,6 +244,11 @@
             span.money {
               font-size: 26px;
               color: #999999;
+              display: flex;
+              align-items: center;
+              img{
+                width: 36px;
+              }
             }
           }
         }

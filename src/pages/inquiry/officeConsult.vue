@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <app-header title="浙医二院" class="noflex">
+        <app-header title="选择您要咨询的科室" class="noflex">
             <i slot="back"></i>
         </app-header>
         <div class="wrapper main flex" ref="main">
@@ -13,7 +13,7 @@
             </div>
             <div ref="right" class="subdept flex0">
                 <ul>
-                    <li   :key="index" @click="goConsultOffice(item)" v-for="(item,index) in subDept">{{item.deptName}}</li>
+                    <li :key="index" @click="goConsultOffice(item)" v-for="(item,index) in subDept">{{item.deptName}}</li>
                 </ul>
             </div>
         </div>
