@@ -6,11 +6,11 @@ import config from "./config"
  * @returns {string}
  */
 export function makeRandom(length) {
-  let str = "0123456789", ret = "";
-  for (let i = 0; i < length; i++) {
-    ret += str.substr(Math.floor(Math.random() * str.length), 1);
-  }
-  return ret;
+    let str = "0123456789", ret = "";
+    for (let i = 0; i < length; i++) {
+        ret += str.substr(Math.floor(Math.random() * str.length), 1);
+    }
+    return ret;
 }
 
 /**
@@ -20,8 +20,8 @@ export function makeRandom(length) {
  * @returns {null}
  */
 export function arrayFind(array, fn) {
-  let index = array.findIndex(fn);
-  return index > -1 ? array[index] : null;
+    let index = array.findIndex(fn);
+    return index > -1 ? array[index] : null;
 }
 
 /**
@@ -30,10 +30,10 @@ export function arrayFind(array, fn) {
  * @returns {string}
  */
 export function getConsultStatusText(status) {
-  let c = arrayFind(config.consult_status, (res) => {
-    return res.status == status
-  });
-  return c ? c.name : "暂无";
+    let c = arrayFind(config.consult_status, (res) => {
+        return res.status == status
+    });
+    return c ? c.name : "暂无";
 }
 
 /**
@@ -41,9 +41,9 @@ export function getConsultStatusText(status) {
  * @param status
  */
 export function getBookOrderStatusText(status) {
-  return arrayFind(config.book_order_status, (res) => {
-    return res.status == status
-  }).name
+    return arrayFind(config.book_order_status, (res) => {
+        return res.status == status
+    }).name
 }
 
 /**
@@ -55,6 +55,13 @@ export function getBookOrderStatusText(status) {
  * @returns {boolean}
  */
 export function isBrower(name) {
-  let UA = window.navigator.userAgent.toLowerCase();
-  return UA.indexOf(name) > -1;
+    let UA = window.navigator.userAgent.toLowerCase();
+    return UA.indexOf(name) > -1;
+}
+
+/**
+ * @param args
+ */
+export function debug(...args) {
+    console.log.apply(console, args);
 }
