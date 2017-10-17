@@ -9,9 +9,36 @@ export default [
   },
   {
     path: "/home/server/book/doc",
-    component: () => import("../pages/home/server/book/doc.vue")
+    component: () => import("../pages/home/server/book/doc.vue"),
+    children:[
+      {
+        path:"date",
+        component:()=> import("../pages/home/server/book/date.vue"),
 
-  },  {
+      },
+      {
+        path:"expert",
+        component:()=>import("../pages/home/server/book/expert.vue")
+      },
+    ]
+  },
+  {
+    path:"/home/server/book/famousPage",
+    component:()=> import("../pages/home/server/book/famousPage.vue")
+  },
+  {
+    path:"/home/server/book/commonDetail",
+    component:()=>import("../pages/home/server/book/commonDetail.vue")
+  },
+  {
+    path:"/home/server/book/confirmOrder",
+    component:()=>import("../pages/home/server/book/confirmOrder.vue")
+  },
+  {
+     path:"/home/server/book/bookSuccess",
+     component:()=>import("../pages/home/server/book/bookSuccess.vue")
+  },
+  {
     path: "/home/moreSel",
       name:'moreSel',
     component: () => import("../pages/home/moreSel.vue")

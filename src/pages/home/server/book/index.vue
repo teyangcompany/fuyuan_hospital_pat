@@ -3,7 +3,7 @@
     <app-header title="预约挂号" class="noflex">
       <i slot="back"></i>
       <div class="right absolute" slot="right">
-        <span>我的挂号</span>
+        <router-link tag="span" to="/my/myRegistration">我的挂号</router-link>
       </div>
     </app-header>
     <div class="wrapper" ref="main">
@@ -67,7 +67,8 @@
         @include border(top);
       }
       li {
-        padding: 210px/2 - 130px/2 28px;
+        /*<!--padding: 210px/2 - 130px/2 28px;-->*/
+        padding: 20px 28px;
         background-color: white;
         %a {
           @include w_h(130px, 130px);
@@ -88,7 +89,7 @@
             font-size: 16px; /*no*/
           }
           p, div {
-            margin-top: 20px;
+            margin-top: 0px;
             font-size: 12px; /*no*/
             color: #999;
           }

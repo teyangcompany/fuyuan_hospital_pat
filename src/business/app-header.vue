@@ -2,7 +2,7 @@
   <header >
         <div class="left" >
           <slot name="left">
-            <font><span @click="back">&#xe600;</span></font>
+            <span @click="back">&#xe600;</span>
           </slot>
          </div>
         <slot class=""> </slot>
@@ -18,20 +18,29 @@
   export default {
     props: {},
     data() {
-      return {};
+      return {
+        path:"",
+      };
     },
     computed: {},
 
     mounted() {
-
+      this.path = this.$route.path
     },
     beforeDestroy() {
 
     },
-
+    watch:{
+      "$route":function(){
+        this.path = this.$route.path
+      }
+    },
     methods: {
       back(){
         this.$router.go(-1)
+      },
+      goBack(){
+          this.$emit("on-back")
       }
     }
 
@@ -63,7 +72,7 @@
     width: 100%;
     text-align: center;
     border-bottom:1px solid gainsboro;
-   z-index:888;
+    z-index:888;
   }
 
 

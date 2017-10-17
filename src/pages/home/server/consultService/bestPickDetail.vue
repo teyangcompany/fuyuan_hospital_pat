@@ -1,7 +1,7 @@
 <template>
     <div class="wrapPick">
        <div class="topInfo border-1px">
-            <p>患者资料: <span v-if="detailInfo.userPat">{{ detailInfo.userPat.patName }}</span> <span v-if="detailInfo.userPat">{{ detailInfo.userPat.patGender == 'M'? '男':'女' }}</span> </p>
+            <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
        </div>
        <div class="topInfo border-1px">
            <p>疾病名称: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</span> </p>
@@ -14,18 +14,19 @@
              <!--</div>-->
              <div class="mainContent">
                <p v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consultContent }}</p>
-               <div >
-                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in detailInfo.attaList">
+               <div>
+                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in detailInfo.attaList" @click="makeLarge(secondItem.attaFileUrl)">
                </div>
              </div>
              <div class="ConsultRelate">
 
-               <span class="name"><span class="number"><img :src="detailInfo.userDocVo.docAvatar" alt="" v-if="detailInfo.userDocVo"> <span v-if="detailInfo.userDocVo">{{ detailInfo.userDocVo.docName }}</span></span></span>
-               <!--<span class="money">看过&nbsp;-->
-                  <!--|-->
-                  <!--&nbsp;-->
-                  <!--<img src="../../../../../static/img/zan_off.png" alt="">&nbsp;-->
-                <!--</span>-->
+               <span class="name"><span class="number"><img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat"> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span></span></span>
+               <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | Getdate }}创建&nbsp;
+                  |
+                  &nbsp;
+                  <span v-if="detailInfo.consultInfo.replyCount">{{ detailInfo.consultInfo.replyCount }}条回复</span>
+                  <span v-else>0条回复</span>
+                </span>
              </div>
            </li>
          </ul>
@@ -45,16 +46,25 @@
                 问这个医生
           </div>
        </div>
+      <div class="largePic" v-if="showLargePic" @click="makeSmall">
+        <img :src="largePicUrl" alt="">
+      </div>
     </div>
 </template>
 <script>
   import http from '../../../../lib/http'
+  import {Getdate} from '../../../../lib/filter'
   export default{
       data(){
           return{
             consultId:"",
-            detailInfo:""
+            detailInfo:"",
+            largePicUrl:"",
+            showLargePic:false
           }
+      },
+      filters:{
+        Getdate
       },
       created(){
           this.consultId = this.$route.query.id
@@ -77,6 +87,13 @@
           console.log(id,88888)
           this.$router.push('/docCard/'+id)
         },
+        makeLarge(url){
+          this.showLargePic= true
+          this.largePicUrl = url
+       },
+        makeSmall(){
+          this.showLargePic= false
+        }
       }
   }
 </script>
@@ -85,6 +102,19 @@
    .wrapPick{
      width:100%;
      background-color: #FFFFFF;
+     .largePic{
+       position: absolute;
+       top:0;
+       bottom:0;
+       left:0;
+       right:0;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       img{
+         width:100%;
+       }
+     }
      .topInfo{
        width: 690px;
        margin:0 auto;

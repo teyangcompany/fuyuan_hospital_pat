@@ -18,7 +18,7 @@
                             <div class="weui-cell__bd">
                                 <p class="mfb">
                                     <span class="mfb">{{item.userDocVO.docName}}</span>
-                                    <span class="famous">我的医生</span>
+                                    <span class="famous" v-if="item.followDocpat.vipStatus">我的医生</span>
                                 </p>
                                 <p>
                                     <span  class="mfc">{{item.userDocVO.hosName}}</span>

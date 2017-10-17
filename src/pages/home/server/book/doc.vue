@@ -1,72 +1,33 @@
 <template>
   <div class="page">
-    <app-header title="内科" class="noflex">
-      <i slot="back"></i>
-    </app-header>
+    <!--<app-header :title="selected" class="noflex">-->
+      <!--<i slot="back"></i>-->
+    <!--</app-header>-->
+    <div class="top_bar main_head border-1px">
+      <section class="goBack" @click="goRoom()">
+        <img src="../../../../../static/img/icon/arrow-left-black.png" alt="">
+      </section>
+      <section class="title">
+        <span class="word">{{selected}}</span>
+      </section>
+      <section class="nav">
+
+      </section>
+    </div>
     <div class="nav">
       <ul class="flex">
-        <li class="flex0" @click="current=index" :class="[current==index?'cover':'']" v-for="(item,index) in nav">
-          {{item.value}}
-        </li>
+        <!--<li class="flex0" @click="current=index" :class="[current==index?'cover':'']" v-for="(item,index) in nav">-->
+          <!--{{item.value}}-->
+        <!--</li>-->
+        <router-link tag="li" :to="{path:'/home/server/book/doc/expert',query:{depid:depid,hosid:hosid,selected:selected,hosName:hosName}}">
+            按专家预约
+        </router-link>
+        <router-link tag="li" :to="{path:'/home/server/book/doc/date',query:{depid:depid,hosid:hosid,selected:selected,hosName:hosName}}">
+            按日期预约
+        </router-link>
       </ul>
     </div>
-    <div class="docList">
-      <ul  class="border-1px" v-for="(item,index) in doctorList" v-if="item.bookDocId">
-        <div @click="goExpertDetail(index)">
-          <li>
-            <div class="cancelImg">
-              <img src="" alt="">
-            </div>
-            <div class="cancelIntro">
-              <div>
-                <span class="chatDoctor"></span> <span class="doctorTitle">{{ item.ysxm}}</span>
-                <p>{{ item.yymc }}</p>
-              </div>
-            </div>
-            <div class="cancelTime">
-              <div>
-                <span class="year gray" v-if="item.schemeStatus == 0">无</span>
-                <span class="year gray" v-if="item.schemeStatus == 1">停诊</span>
-                <span class="year gray" v-if="item.schemeStatus == 2">已满</span>
-                <span class="year" v-if="item.schemeStatus == 3">即将(未放号或号子被锁定)</span>
-                <span class="year" v-if="item.schemeStatus == 4">预约</span>
-                <img src="" alt="">
-              </div>
-            </div>
-          </li>
-        </div>
-      </ul>
-      <div class="blank border-1px"></div>
-      <ul  class="border-1px" v-for="(item,index) in doctorList" v-if="item.ysid">
-        <div @click="goFamousPage(index)">
-          <li>
-            <div class="avartarImg" v-if="item.docAvatar != ''">
-              <img :src="item.docAvatar" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
-            </div>
-            <div class="avartarImg" v-else>
-              <img src="" alt="">
-            </div>
-            <div class="cancelIntro">
-              <div>
-                <span class="chatDoctor">{{ item.ysxm }}</span> <span class="doctorTitle">{{ item.yszc }}</span>
-                <p>{{ item.goodat }}</p>
-              </div>
-            </div>
-            <div class="cancelTime">
-              <div >
-                <span class="year gray" v-if="item.schstate == 0">无</span>
-                <span class="year gray" v-if="item.schstate == 1">停诊</span>
-                <span class="year gray" v-if="item.schstate == 2">已满</span>
-                <span class="year" v-if="item.schstate == 3">即将(未放号或号子被锁定)</span>
-                <span class="year" v-if="item.schstate == 4">预约</span>
-                <img src="../../../../../static/img/icon/arrow-right-grow.png" alt="">
-              </div>
-            </div>
-          </li>
-        </div>
-      </ul>
-    </div>
-    <toast v-if="showToast"></toast>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -84,39 +45,35 @@
         depid:"",
         hosid:"",
         doctorList:"",
-        showToast:false
+        showToast:false,
+        bookDocId:"",
+        selected:"",
+        commonRoom:"",
+        hosName:""
       };
     },
     computed: {},
     components: {
       AppHeader,
-      Toast
     },
     mounted() {
 
     },
     created(){
+        this.selected = this.$route.query.selected
         this.depid = this.$route.query.depid
         this.hosid = this.$route.query.hosid
-        this.showToast = true
-        api("smarthos.yygh.ApiDoctorService.pblist",{
-          hosId:this.hosid,
-          deptId:this.depid,
-//          isPb:'0'
-        }).then((data)=>{
-          this.showToast = false
-            if(data.code == 0){
-              this.doctorList = data.list
-            }else{
-                weui.alert(data.msg)
-            }
-            console.log(data)
-        })
+        this.selected = this.$route.query.selected
+        this.hosName = this.$route.query.hosName
     },
     beforeDestroy() {
 
     },
-    methods: {}
+    methods: {
+      goRoom(){
+        this.$router.back(-1)
+      }
+    }
   };
 </script>
 
@@ -124,6 +81,8 @@
   @import "../../../../common/common";
 
   .nav {
+    /*position: relative;*/
+    z-index: 100;
     ul {
       li {
         &:nth-child(2) {
@@ -150,97 +109,86 @@
         font-size: 30px;
         color: #999999;
       }
+      .router-link-exact-active{
+        color: $mainColor;
+        border-bottom: 4px solid $mainColor;
+      }
     }
   }
-  .docList{
-    ul{
-      padding:0;
-      margin:0;
-      height: 180px;
-      li{
-        list-style-type: none;
-        height: 180px;
-        display: flex;
-        .cancelImg{
-          width: 160px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          img{
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-          }
-        }
-        .avartarImg{
-          width: 160px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          img{
-            width: 110px;
-            height: 110px;
-          }
-        }
-        .cancelIntro{
-          flex:2;
-          display: flex;
-          align-items: center;
-          line-height: 40px;
-          .badgeDoc{
-            display: inline-block;
-            padding-top: -5px;
-            .myDoctor{
-              width: 80px;
-              height: 36px;
-              background-color: darkturquoise;
-              border-radius:5px;
-              display: inline-block;
-              font-size: 10px;
-              color: white;
-              line-height: 40px;
-              text-align: center;
-            }
-          }
-          p{
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            margin:0;
-            color: #999999;
-            font-size: 28px;
-          }
-          span.chatDoctor{
-            font-size: 32px;
-            color: #333333;
-          }
-          span.doctorTitle{
-            font-size: 28px;
-            color: #666666;
-          }
-        }
-        .cancelTime{
-          width:200px;
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          padding-right: 20px;
-          img{
-            width:16px;
-            height: 24px;
-          }
-          span.year{
-            font-size: 28px;
-            color: $mainColor;
-          }
-          span.gray{
-            color: #999999;
-          }
-          span.full{
-            color: #999999;
-          }
-        }
+  .top_bar{
+    position: relative;
+    background-color: white;
+    height: 88px;
+    line-height: 88px;
+    width:100%;
+    top:0;
+    display: flex;
+
+    /*z-index:160;*/
+
+    z-index:6;
+
+    section{
+      text-align: center;
+      .word{
+        font-size: 18px;
+        color: #333333;
+        font-family: PingFang SC;
+      }
+      span{
+        display: block;
+      }
+    }
+    .goBack{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      img{
+        height: 35px;
+        padding-left: 30px;
+      }
+    }
+    .scanImg{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      /*padding-left: 15px;*/
+      img{
+        width:40px;
+        padding-left: 30px;
+      }
+    }
+    .title{
+      flex:2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span{
+        font-size: 36px!important;
+        color: #333333;
+        display: inline-block;
+      }
+      img{
+        width:55px;
+        height:55px;
+        display: inline-block;
+        margin-right: 10px;
+        /*<!--position: absolute;-->*/
+        /*<!--left:270px;-->*/
+        /*<!--top:15px;-->*/
+        border-radius: 50%;
+      }
+    }
+    .nav{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .rightWord{
+        font-size: 32px;
+        color: $mainColor;
       }
     }
   }

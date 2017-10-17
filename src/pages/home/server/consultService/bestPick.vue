@@ -29,33 +29,33 @@
       </div>
       <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
         <div>
-          <router-link tag="ul" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="border-1px" v-for="item in aboutConsult" :key="item.id">
+          <ul class="border-1px" v-for="item in aboutConsult" :key="item.id">
             <li >
               <div class="border-1px-dashed dashedPlace">
                 <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
               </div>
-              <div class="mainContent">
+              <router-link tag="div" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="mainContent">
                 <p>{{ item.consultInfo.consultContent }}</p>
                 <div>
                   <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
                 </div>
-              </div>
+              </router-link>
               <div class="ConsultRelate">
 
-                <span class="name"><span class="number"> 回答</span></span>
+                <span class="name"><span class="number"><img :src="item.userDocVo.docAvatar" alt="">{{item.userDocVo.docName}}回答</span></span>
                 <span class="money"> <span>看过</span>&nbsp;
                   <span v-if="item.consultInfo.readCount">{{ item.consultInfo.readCount }} </span>
                   <span v-else>0</span>&nbsp;
 
                   |
                   &nbsp;
-                  <img src="../../../../../static/img/zan_off.png" alt="">&nbsp;
+                  <img src="../../../../../static/img/zan_off.png" alt="" @click="upvote(item.consultInfo.id)">&nbsp;
                   <span v-if="item.consultInfo.praiseCount">{{ item.consultInfo.praiseCount }}</span>
                   <span v-else>0</span>
                 </span>
               </div>
             </li>
-          </router-link>
+          </ul>
           <div class="loadMore" v-if="loadingStatus">
             <span class="pullMore">
                <img src="../../../../../static/img/loading.gif" alt="">
@@ -137,6 +137,15 @@
           }
         })
       },
+      upvote(id){
+          console.log(id)
+          http("smarthos.consult.praise",{
+             token:localStorage.getItem('token'),
+            consultId:id
+          }).then((data)=>{
+              console.log(data)
+          })
+      }
     },
     components:{
       Scroll
@@ -222,6 +231,10 @@
             span.name {
               font-size: 28px;
               color: #999999;
+              img{
+                width:40px;
+                border-radius: 50%;
+              }
               .circle {
                 display: inline-block;
                 width: 10px;

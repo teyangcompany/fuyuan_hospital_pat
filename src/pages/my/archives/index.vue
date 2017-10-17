@@ -41,7 +41,7 @@
                             <h3>{{item.medicalHistory.createTime | Getdate}}</h3>
                             <div class="content">{{item.medicalHistory.medContent}}</div>
                             <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
-                                <li v-for="imgSrc of item.attaList">
+                                <li v-for="imgSrc in item.attaList">
                                     <img @load="$refs.wrapper.refresh()"
                                             :src="imgSrc.attaFileUrl"
                                             alt="">
@@ -215,6 +215,10 @@
                     font-size: 32px;
                 }
                 .text {
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
                     padding-right: 18px + 20px;
                     background-image: url(../../../../static/img/icon/arrow-right-grow.png);
                     @include backgroundImageSet(18px, 30px, right);
@@ -237,6 +241,11 @@
                     color: #333;
                 }
                 .content {
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    overflow: hidden;
+                   word-break: break-all;
                     margin-top: 20px;
                     color: #666666;
                     font-size: 28px;

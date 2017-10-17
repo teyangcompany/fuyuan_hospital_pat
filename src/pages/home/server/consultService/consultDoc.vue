@@ -442,7 +442,7 @@
             }).then((data)=>{
                 console.log(data)
               if(data.code == 0){
-                this.followList = data.userDocList
+                this.followList = data.list
               }else{
                   weui.alert(data.msg)
               }
@@ -456,7 +456,7 @@
             deptId:this.deptId
           }).then((data)=>{
             if(data.code == 0){
-              this.followList = data.userDocList
+              this.followList = data.list
             }else{
                 weui.alert(data.msg)
             }

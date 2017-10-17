@@ -18,14 +18,14 @@
                    {{serviceList[test].serveReadme}}
                 </p>
             </div>
-            <div class="agree">
-                <span>
-                    提交即表示同意
-                </span>
-                <span style="color: blue">
-                    浙二网络医学中心服务协议
-                </span>
-            </div>
+            <!--<div class="agree">-->
+                <!--<span>-->
+                    <!--提交即表示同意-->
+                <!--</span>-->
+                <!--<span style="color: blue">-->
+                    <!--浙二网络医学中心服务协议-->
+                <!--</span>-->
+            <!--</div>-->
             <div class="goNext mfb" @click.stop="goNext">
                 下一步
             </div>

@@ -56,14 +56,14 @@
             goConsultOffice(item){
                 console.log(item.deptCode,2222)
                 this.$router.push({
-                    path:'/consultOffice/'+item.deptCode,
+                    path:'/consultOffice/'+item.id,
                     query:{
                         officeName:item.deptName
                     }
                 })
             },
             getData(){
-                api('smarthos.system.stddeptgb.list',{
+                api('smarthos.system.stddept.list',{
                     "hasDept": true,
                     "hasDoc": true,
                     "deptLevel": 2

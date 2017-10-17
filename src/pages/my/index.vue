@@ -2,7 +2,7 @@
     <div class="page">
         <div class="wrapper" ref="main">
             <header class="relative center">
-                <div class="back absolute"></div>
+                <!--<div class="back absolute"></div>-->
                 我的
             </header>
             <div class="subheader flex">

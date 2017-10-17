@@ -26,7 +26,7 @@
                   <h3 v-if="item.userDoc">
                     <div class="name">{{item.userDoc.docName}}</div>
                     <div class="dept">{{item.userDoc.docTitle}}</div>
-                    <div class="time">{{item.userDoc.createTime | Todate}}</div>
+                    <div class="time">{{item.followMessage.createTime | Todate}}</div>
                   </h3>
                   <div class="content" v-if="item.userDoc">
                     {{item.followMessage.msgContent.substring(0,4)=='http'?'[图片]':item.followMessage.msgContent}}
@@ -81,7 +81,7 @@
 
     },
     methods: {
-      goDocChat(id){
+      goDocChat(id,docId){
         this.$router.push('docChat/'+id)
       },
       scrollToEnd(){

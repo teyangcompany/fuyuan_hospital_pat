@@ -53,8 +53,8 @@
         mixins:['mainHeightMixin'],
         data(){
             return {
-                patMobile:'13522365145',
-                patPassword:'111111',
+                patMobile:'17130049182',
+                patPassword:'123456',
                 current:''
             }
         },

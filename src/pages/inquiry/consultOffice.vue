@@ -120,6 +120,7 @@
             if(this.$route.query.officeName&&this.$route.params.id){
                 this.officeName=this.$route.query.officeName;
                 this.deptId=this.$route.params.id;
+                console.log(this.deptId)
                 sessionStorage.setItem('officeName',this.$route.query.officeName)
                 sessionStorage.setItem('deptId',this.$route.params.id)
                 this.officeName = sessionStorage.getItem('officeName')

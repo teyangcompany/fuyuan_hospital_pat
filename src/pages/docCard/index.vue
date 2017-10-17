@@ -14,13 +14,13 @@
 
                    </span>
 
-                    <span class="headerImg">
-                       <img src="../../../static/img/guan.png" alt="" @click="attention">
+                    <!--<span class="headerImg">-->
+                       <!--<img src="../../../static/img/guan.png" alt="" @click="attention">-->
 
-                       <span class="mfw">
-                           关注  &nbsp;&nbsp;
-                       </span>
-                   </span>
+                       <!--<span class="mfw">-->
+                           <!--关注  &nbsp;&nbsp;-->
+                       <!--</span>-->
+                   <!--</span>-->
                 </div>
                 <div class="teamDetail">
                         <ul>
@@ -59,8 +59,8 @@
             <div class="mfw onLine" @click="showService">
                 在线问诊
             </div>
-            <div class="mfw patient">
-                患者报道
+            <div class="mfw patient" @click="attention">
+                关注医生
             </div>
         </div>
         <seivice :docId="docId" ref="ser"></seivice>
@@ -110,9 +110,9 @@
                 }).then(res=>{
                     console.log(res,88888);
                     if(res.succ){
-                        alert('关注成功')
+                        weui.alert('关注成功')
                     }else {
-                        alert(res.msg)
+                        weui.alert(res.msg)
                     }
                 })
             },
@@ -226,7 +226,7 @@
         justify-content: space-around;
         align-items: center;
         padding: 10px 0;
-
+        margin-top: 15px;
     }
     .bar{
         padding-bottom: 20px;

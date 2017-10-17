@@ -3,7 +3,7 @@
  */
 import axios from "axios";
 let url = "http://test-zsyy-fep.hztywl.cn:6060/api";
-let spid = "1001";
+let spid = "1101";
 let random = "";
 for (let i = 0; i < 4; i++) {
   random += "1234567890".substr(Math.floor(Math.random() * 10), 1);
@@ -12,10 +12,10 @@ for (let i = 0; i < 4; i++) {
 
 
 let base = {
-  "channel": "3",
-  "format": "JSON",
+  "channel": "0",
+  // "format": "JSON",
   "oper": "127.0.0.1",
-  "random": "1234",
+  // "random": "1234",
   // "sign": "test",
   "spid": "1101"
 };

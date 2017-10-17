@@ -1,8 +1,19 @@
 <template>
   <div class="page">
-    <app-header :title="hosName" class="noflex">
-      <i slot="back"></i>
-    </app-header>
+    <!--<app-header :title="hosName" class="noflex">-->
+      <!--<i slot="back"></i>-->
+    <!--</app-header>-->
+    <div class="top_bar main_head border-1px">
+      <section class="goBack" @click="gohosList()">
+        <img src="../../../../../static/img/icon/arrow-left-black.png" alt="">
+      </section>
+      <section class="title">
+        <span class="word">{{hosName}}</span>
+      </section>
+      <section class="nav">
+
+      </section>
+    </div>
     <div class="wrapper main flex" ref="main">
       <div ref="left" class="maindept flex0">
         <ul>
@@ -13,7 +24,7 @@
       </div>
       <div ref="right" class="subdept flex0">
         <ul>
-          <router-link tag="li" :to="{path:'/home/server/book/doc',query:{depid:item.ksid,hosid:hosid}}" :key="index" v-for="(item,index) in subDept">{{item.ksmc}}</router-link>
+          <router-link tag="li" :to="{path:'/home/server/book/doc/expert',query:{depid:item.ksid,hosid:hosid,selected:item.ksmc,hosName:hosName}}" :key="index" v-for="(item,index) in subDept">{{item.ksmc}}</router-link>
         </ul>
       </div>
     </div>
@@ -88,6 +99,9 @@
       selectRoom(index){
           this.currentDept = index
         this.subDept = this.parentList[index].yyghYyksList
+      },
+      gohosList(){
+        this.$router.back(-1)
       }
     }
   };
@@ -125,6 +139,83 @@
       width: 750px - 240px;
       li {
         color: #333;
+      }
+    }
+  }
+  .top_bar{
+    position: relative;
+    background-color: white;
+    height: 88px;
+    line-height: 88px;
+    width:100%;
+    top:0;
+    display: flex;
+
+    /*z-index:160;*/
+
+    z-index:6;
+
+    section{
+      text-align: center;
+      .word{
+        font-size: 18px;
+        color: #333333;
+        font-family: PingFang SC;
+      }
+      span{
+        display: block;
+      }
+    }
+    .goBack{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      img{
+        height: 35px;
+        padding-left: 30px;
+      }
+    }
+    .scanImg{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      /*padding-left: 15px;*/
+      img{
+        width:40px;
+        padding-left: 30px;
+      }
+    }
+    .title{
+      flex:2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span{
+        font-size: 36px!important;
+        color: #333333;
+        display: inline-block;
+      }
+      img{
+        width:55px;
+        height:55px;
+        display: inline-block;
+        margin-right: 10px;
+        /*<!--position: absolute;-->*/
+        /*<!--left:270px;-->*/
+        /*<!--top:15px;-->*/
+        border-radius: 50%;
+      }
+    }
+    .nav{
+      flex:1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .rightWord{
+        font-size: 32px;
+        color: $mainColor;
       }
     }
   }
