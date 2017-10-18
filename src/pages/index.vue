@@ -210,7 +210,7 @@
                 padding: 6px;
               }
             }
-            @each $i in fast-consult, ask-doc {
+            @each $i in ask-doc, fast-consult{
               &.#{$i} {
                 background-image: url("../../static/img/index/#{$i}.png");
               }

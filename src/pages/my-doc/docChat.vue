@@ -9,7 +9,7 @@
             <div class="other" :class="{mysay:item.msgSenderType == 'PAT'}">
               <img :src="aboutUserInfo.userPat.patAvatar" alt="" v-if="item.msgSenderType == 'PAT'">
               <img :src="aboutUserInfo.userDocVO.docAvatar" alt="" v-else>
-              <span >{{item.createTime | Todate}} </span>
+              <span class="msgTime">{{item.createTime | Todate}} </span>
               <div class="whatsay">
                 <!--<p class="msgTime">{{item.createTime | Todate}}</p>-->
                 <div class="whatsay_svg">
@@ -17,7 +17,7 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#trigon-left"></use>
                   </svg>
                 </div>
-                <div class="whatsay_text" v-if="item.msgType == 'TEXT'">
+                <div class="whatsay_text" v-if="item.msgType == 'TEXT' || item.msgType == 'ARTICLE'">
                   {{ item.msgContent }}
                 </div>
                 <div class="whatsay_text" v-else-if="item.msgType == 'AUDIO'">
@@ -482,7 +482,7 @@
           display: inline-block;
           /*margin-left: 30px;*/
         }
-        span{
+        .msgTime{
           position: absolute;
           top:-45px;
           color: #999999;
@@ -515,7 +515,7 @@
             margin-left: 20px;
             max-width: 490px;
             background: #f5f5f5;
-            padding: 0.10rem 0.184rem;
+            padding: 0.15rem 0.184rem;
             border-radius: 10px;
             font-size: 28px;
             line-height: 48px;
@@ -538,9 +538,12 @@
         display: flex;
         margin-top: 60px;
         flex-direction: row-reverse;
-        span{
+        .msgTime{
+          width:217px;
+          /*text-align: right;*/
           position: absolute;
           top:-45px;
+          right:10px;
           color: #999999;
         }
         .say-time {

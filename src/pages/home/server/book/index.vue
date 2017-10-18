@@ -47,7 +47,11 @@
         api("smarthos.yygh.ApiHospitalService.areaHosList",{
 //          cityAreaId:"330100"
         }).then((data)=>{
-            this.hosList = data.list
+            if(data.code == 0){
+              this.hosList = data.list
+            }else{
+                weui.alert(data.msg)
+            }
             console.log(data)
         })
     },

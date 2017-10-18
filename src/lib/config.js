@@ -15,8 +15,8 @@ export default {
         {name: "my", value: "我的"}
     ],
     index_fast_nav: [
-        {name: "fast-consult", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
-        {name: "ask-doc", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/consultService/consultDoc"}
+        {name: "ask-doc", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
+        {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/consultService/consultDoc"}
     ],
     index_nav: [
         {name: "guide", value: "智能导诊",path: "/login"},

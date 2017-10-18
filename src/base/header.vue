@@ -40,7 +40,7 @@
   .top_bar{
     position: relative;
     background-color: white;
-    height: 88px;
+    height: 98px;
     line-height: 88px;
     width:100%;
     top:0;
