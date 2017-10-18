@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="version" content="<%=htmlWebpackPlugin.options.version%>">
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>復元医院患者版</title>
+    <script>
+      /*程序版本号*/
+      window.version = document.querySelector("meta[name='version']").content;
+      /*程序开始时间*/
+      window.appStartTime = new Date().getTime();
+      /*程序rem初始化*/
+      var remUnit = 100;     // 在px2rem中预设rem的值 即 1rem = ? px
+      var designWid = 750;  // 设计稿宽度
+      var winWid = window.innerWidth;
+      var bl = winWid / designWid;
+      window.rem2px = (bl * remUnit);
+      document.querySelector('html').style.fontSize = (window.rem2px) + 'px';
+    </script>
+
     <script src="static/lib/swiper/swiper-3.4.2.min.js"></script>
     <link rel="stylesheet" href="static/css/weui1.css"/>
     <link rel="stylesheet" href="static/lib/swiper/swiper-3.4.2.min.css">
