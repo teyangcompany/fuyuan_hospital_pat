@@ -8,7 +8,7 @@ import weui from './lib/wejs';
 import vuelidate from 'vuelidate'
 import Vuex from 'vuex'
 import store from './store/index'
- // import auth from './lib/auth'
+import auth from './lib/auth'
 Vue.use(Vuex)
 Vue.use(weui)
 Vue.use(vuelidate)
@@ -24,8 +24,8 @@ document.querySelector('html').style.fontSize = (bl * remUnit) + 'px';
 window.appStartTime = new Date().getTime();
 
 /* eslint-disable no-new */
- // auth(init);
-init()
+  auth(init);
+//init()
 function init() {
     new Vue({
         el: '#app',

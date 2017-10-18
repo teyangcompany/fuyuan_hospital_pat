@@ -2,6 +2,8 @@ var path = require('path')
 var config = require('../config')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+var pkg = require("../package.json");
+
 exports.assetsPath = function (_path) {
     var assetsSubDirectory = process.env.NODE_ENV === 'production'
         ? config.build.assetsSubDirectory
@@ -75,4 +77,8 @@ exports.styleLoaders = function (options) {
         })
     }
     return output
+}
+
+exports.getVersion = function () {
+  return pkg.version;
 }
