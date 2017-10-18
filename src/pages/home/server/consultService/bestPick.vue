@@ -191,8 +191,11 @@
           >div {
             display: flex;
             justify-content: space-between;
-            span.picConsult {
+            p.picConsult {
               font-size: 32px;
+              span{
+                border:1px dashed #999999;
+              }
             }
             span.consultTim {
               font-size: 28px;

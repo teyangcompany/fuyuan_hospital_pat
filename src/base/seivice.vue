@@ -8,7 +8,7 @@
         <div class="contain" >
             <div class="mfb">选择你需要的服务</div>
             <div class="serviceType">
-                <div class="imageText" :class="{active:test==index}" v-for="(item,index) of serviceList" @click.stop="getText(index)">
+                <div class="imageText" :class="{active:test==index}" v-for="(item,index) in serviceList" @click.stop="getText(index)">
                     <p class="mf">{{item.serveName}}</p>
                     <p class="col">{{item.servePrice}}</p>
                 </div>
@@ -83,9 +83,12 @@
                 this.test = index
             },
             goNext(){
-                this.$router.push({
+                console.log(this.serviceList[this.test].serveName)
+                if(this.serviceList[this.test].serveName == '图文问诊'){
+                  this.$router.push({
                     name:'imageInquiry'
-                })
+                  })
+                }
             }
         }
     }
@@ -132,7 +135,7 @@
     top:0;
     bottom:0;
     background: grey;
-    /*opacity: .6;*/
+    /*opacity: 0.6;*/
 }
     .wrap{
         display: flex;

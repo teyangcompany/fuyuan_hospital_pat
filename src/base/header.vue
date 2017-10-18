@@ -4,7 +4,7 @@
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
     <section class="title">
-      <img :src="waitImg" alt="">
+      <img :src="waitImg" alt="" v-if="path== '/docChat/:id'">
       <span class="word">{{title}}</span>
     </section>
     <section class="nav" @click="goDocCard">
@@ -14,6 +14,11 @@
 </template>
 <script>
   export default{
+    data(){
+       return{
+         path:"",
+       }
+    },
     props:{
       title:{
         type:String
@@ -25,12 +30,21 @@
 
       },
     },
+    mounted(){
+      this.path = this.$route.path
+      console.log(this.path)
+    },
     methods:{
       goBack(){
           this.$router.back(-1)
       },
       goDocCard(){
           this.$emit('on-docCard')
+      }
+    },
+    watch:{
+      "$route":function(){
+        this.path = this.$route.path
       }
     }
   }

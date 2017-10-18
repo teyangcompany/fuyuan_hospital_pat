@@ -10,6 +10,7 @@ import Home from "./home"
 import Account from "./account"
 import teamCard from "./teamCard"
 import inquiry from "./inquiry"
+import checkReport from './checkReport'
 
 Vue.use(Router)
 
@@ -31,7 +32,8 @@ export default new Router({
     ...Home,
   ...Account,
   ...teamCard,
-  ...inquiry
+  ...inquiry,
+  ...checkReport
   ]
 
 })

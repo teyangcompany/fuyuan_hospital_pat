@@ -130,6 +130,7 @@
 //         }
 //      },
       goPage(item) {
+         console.log(item)
         item.path && this.$router.push(item.path);
       },
       goMyRouter(item){
