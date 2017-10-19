@@ -1,7 +1,7 @@
 /**
  * Created by 李康飞 on 2017/9/28.
  */
-export const CACHE_PREFIX = "gjhlwyy_" + window.version + "_";
+export const CACHE_PREFIX = "fyyy_pat_" + window.version + "_";
 export const API_URL = {
   "localhost": {api: "//nethos.diandianys.com/api/app", socket: "//nethoswebsocket.diandianys.com",appid:"wxa49f90b4ff678ef2"},
   "nethosweb.diandianys.com": {api: "//nethos.diandianys.com/api/app", socekt: "//nethoswebsocket.diandianys.com",appid:"wxa49f90b4ff678ef2"},
