@@ -53,7 +53,7 @@
              * 列表的数据
              */
             data: {
-                type: Array,
+//                type: Array,
                 default: null
             },
             /**

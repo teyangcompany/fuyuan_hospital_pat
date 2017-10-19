@@ -110,7 +110,7 @@
 //        console.log(item)
         this.$router.push({
           path:'/home/server/book/confirmOrder',
-          query:{hosName:this.hosName,patnumid:this.patientAll[this.clickedIndex].numid,numTime:this.patientAll[this.clickedIndex].numtime,allInfo:this.allInfo,listIndex:this.listIndex,bookSort:this.bookSort}
+          query:{hosid:this.hosid,hosName:this.hosName,patnumid:this.patientAll[this.clickedIndex].numid,numTime:this.patientAll[this.clickedIndex].numtime,allInfo:this.allInfo,listIndex:this.listIndex,bookSort:this.bookSort}
         })
       },
       closeTime(){

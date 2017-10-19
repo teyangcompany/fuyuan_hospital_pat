@@ -9,6 +9,7 @@ import Home from "./home"
 import Account from "./account"
 import teamCard from "./teamCard"
 import inquiry from "./inquiry"
+import checkReport from './checkReport'
 
 Vue.use(Router)
 
@@ -28,9 +29,10 @@ const router = new Router({
     ...Health,
     ...My,
     ...Home,
-    ...Account,
-    ...teamCard,
-    ...inquiry
+  ...Account,
+  ...teamCard,
+  ...inquiry,
+  ...checkReport
   ]
 })
 

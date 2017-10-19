@@ -115,9 +115,9 @@
   import top from '../../../../components/app-header.vue'
   import patientToggle from '../../../../base/patientToggle.vue'
   import Dialog from '../../../../base/dialog'
-//  import bindSuccess from '../../../base/bindSuccess/bindSuccess'
-//  import bindFail from '../../../base/bindFail/bindFail'
-//  import VMask from '../../../base/mask'
+  import bindSuccess from '../../../../base/bindSuccess/bindSuccess'
+  import bindFail from '../../../../base/bindFail/bindFail'
+  import VMask from '../../../../base/mask'
   import Toast from '../../../../base/toast'
 //  import Alert from '../../../base/alert'
 //  import weui from 'weui.js'
@@ -143,7 +143,7 @@
         secondLine:"",
         bottomLine:"我知道了",
         description:"绑定成功，您的病案号是：",
-        failDes:"未查询到病案号",
+        failDes:"绑定失败",
         failDetail:"请保证该就诊人姓名、身份证号、手机和医院留的一致；如真实信息发生变化、请前往医院窗口修改",
         failDetailSecond:"若该就诊人未在医院建档，请前往医院窗口办理",
         failKnow:"我知道了",
@@ -173,7 +173,8 @@
         //平台患者id
         patid:"",
         //常用就诊人id
-        patvisitid:""
+        patvisitid:"",
+        hosid:""
       }
     },
     mounted(){
@@ -184,7 +185,7 @@
       })
     },
     created(){
-
+      this.hosid = this.$route.query.hosid
       this.patnumid = this.$route.query.patnumid
       this.numTime = this.$route.query.numTime
       this.allInfo = this.$route.query.allInfo
@@ -203,31 +204,6 @@
       console.log(this.allInfoArray,666666)
       console.log(this.bookSort)
 
-//      api("nethos.book.doc.info",{
-//        bookDocId: this.allInfoArray.bookDocId
-//      }).then((data)=>{
-//        if(data.code == 0){
-//          if(data.obj.docAvatar){
-//            this.docAvatar = data.obj.docAvatar
-//          }
-//        }else{
-////                weui.alert(data.msg)
-//        }
-//        console.log(data)
-//      })
-//      api("nethos.book.doc.list.scheme.list",{
-//        bookDeptId:this.bookDeptId,
-//        date:this.numTime.substr(0,10)
-//      }).then((data)=>{
-//        if(data.code == 0){
-//          this.selectedInfo = data.list
-//          console.log(data)
-//        }else{
-////                weui.alert(data.msg)
-//        }
-//      })
-
-
 //          this.selfInfo = data.obj
           http("smarthos.user.commpat.list",{
             token:localStorage.getItem('token'),
@@ -241,39 +217,6 @@
             }
           })
 
-
-
-
-
-//        api('nethos.pat.info.get',{
-//            token:localStorage.getItem("token")
-//        }).then((data)=>{
-//            console.log(data)
-//           if(data.code == 0){
-//             this.selfInfo = data.obj
-//             api("nethos.pat.compat.list",{
-//               token:localStorage.getItem("token"),
-//               patId:this.selfInfo.patId
-//             }).then((data)=>{
-//               this.compatInfo = data.list
-//               console.log("下面的data")
-//               console.log(data)
-//               if(data.code == 0){
-//                 //        获取验证码
-////                 api("nethos.book.captcha.generate",{
-////                   token:localStorage.getItem("token"),
-////                   compatId:this.compatInfo[this.index].compatId,
-////                   bookHosId:this.allInfoArray.bookHosId,
-////                   bookNumId: this.bookNumId,
-////                 }).then((data)=>{
-////                   this.verifyCode = data.obj.captcha
-////                   this.cid = data.obj.cid
-////                   console.log(data)
-////                 })
-//               }
-//             })
-//           }
-//        })
     },
     methods:{
       cancelDialog(){
@@ -285,10 +228,13 @@
       bindCard(){
         this.showDialog = false
         this.showToast = true
-        api("nethos.book.compat.bind",{
-          token:tokenCache.get(),
-          compatId:this.compatInfo[this.index].compatId,
+        http("smarthos.user.commpat.record.band",{
+          token:localStorage.getItem('token'),
+          commpatId:this.compatInfo[this.index].id,
+          bookHosId:this.hosid
         }).then((data)=>{
+            console.log(this.hosid)
+           console.log(this.compatInfo[this.index].id)
           this.alertStatus = data.msg
           this.showToast = false
           if(data.code == 0){
@@ -419,9 +365,9 @@
     components:{
 //      'VHeader':header,
       "VDialog":Dialog,
-//      bindSuccess,
-//      VMask,
-//      bindFail,
+      bindSuccess,
+      VMask,
+      bindFail,
       Toast,
       top,
       patientToggle

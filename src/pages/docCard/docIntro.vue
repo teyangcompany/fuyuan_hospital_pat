@@ -13,7 +13,7 @@
             </div>
             <div class="headerTro">
                 <span class="col"></span>
-                <span class="mfb">团队擅长</span>
+                <span class="mfb">医生擅长</span>
             </div>
             <div class="skilled">
                 <div :class="{text:active}" class="mfb skillText">
@@ -24,7 +24,7 @@
             </div>
             <div class="headerTro">
                 <span class="col"></span>
-                <span class="mfb">团队介绍</span>
+                <span class="mfb">医生介绍</span>
             </div>
             <div class="skilled">
                 <div :class="{text:isActive}" class="mfb skillText">
@@ -35,7 +35,7 @@
             </div>
             <div class="headerTro">
                 <span class="col"></span>
-                <span class="mfb">团队相册</span>
+                <span class="mfb">医生相册</span>
                 <span class="more mfc">查看更多</span>
             </div>
             <div class="docImg">
@@ -72,7 +72,7 @@
         },
         methods:{
             goTeam(){
-              this.$router.push('/teamCard/1')
+//              this.$router.push('/teamCard/1')
             },
             toggleArrow(){
                 this.active=!this.active

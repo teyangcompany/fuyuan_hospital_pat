@@ -23,7 +23,7 @@ export default {
         {name: "book", value: "预约挂号", path: "/home/server/book"},
         {name: "queuing", value: "排队叫号"},
         {name: "payment", value: "诊间支付"},
-        {name: "report", value: "查报告单"},
+        {name: "report", value: "查报告单",path:'/checkReport'},
         {name: "steward", value: "住院管家"},
         {name: "help", value: "就诊指南"},
         {name: "more", value: "更多",path:'/home/moreSel'}

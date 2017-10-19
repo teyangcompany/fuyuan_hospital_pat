@@ -285,7 +285,7 @@
                  weui.alert(data.msg)
              }
          })
-         http("smarthos.system.stddeptgb.list",{
+         http("smarthos.system.stddept.list",{
            hasDept:true,
            hasDoc:true,
            deptLevel:2
@@ -434,7 +434,7 @@
         this.childDetail = this.parentLevel[this.clickIndex].subDeptList
           console.log(item)
         if(this.arrow[index] == 0){
-            this.deptId = item.deptCode
+            this.deptId = item.id
             this.sortPick = item.deptName
             this.sortBy = ''
             http("smarthos.user.doc.search",{
@@ -450,10 +450,14 @@
         }
       },
       selectChild(index,item){
-        this.deptId = item.deptCode
+       console.log(item)
+        this.deptId = item.id
+        console.log(this.deptId)
         this.sortPick = item.deptName
           http("smarthos.user.doc.search",{
-            deptId:this.deptId
+            deptId:this.deptId,
+//            pageSize:10,
+//            pageNum:1,
           }).then((data)=>{
             if(data.code == 0){
               this.followList = data.list

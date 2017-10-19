@@ -1,0 +1,361 @@
+<template>
+  <transition name="slide">
+    <div>
+      <v-header :title="title" :rightTitle="rightTitle" @on-check="goCheck()" @on-index="goIndex()"></v-header>
+      <div class="hosTitle" @click="goHosList">
+          <p class="titleToggle"> <span>选择医院</span> <span class="hosTitleLeft"><span v-if="hosList">{{hosList[hosIndex].yymc}}</span><img src="../../../static/img/icon/arrow-right.png" alt=""> </span> </p>
+      </div>
+      <div class="usual" v-if="allPatient">
+        <div  class="usualLine">
+          <div class="usualCenter">
+            <ul >
+              <p class="patientToggle"> <span class="patientToggleLeft">就诊人信息</span> <span @click="goUsual()" class="change">切换就诊人</span></p>
+              <li>{{ allPatient[index].commpatName }} <span>&nbsp;&nbsp; {{allPatient[index].compatAge}} &nbsp;&nbsp;{{allPatient[index].commpatGender == 'M'? '男':'女'}}</span></li>
+              <li>身份证号： <span>{{ allPatient[index].commpatIdcard }}</span></li>
+              <li>电话号码：<span>{{allPatient[index].commpatMobile}}</span></li>
+              <li v-if="!(allPatient[index].compatMedicalRecord)">病&nbsp;&nbsp;案&nbsp;号：<span>暂未绑定病案号</span></li>
+              <li v-else>病&nbsp;&nbsp;案&nbsp;号：<span>{{ allPatient[index].compatMedicalRecord }}</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="checkList">
+        <div class="checkCenter">
+          <div class="weui-cells weuiMargin">
+            <a @click="goTest" class="weui-cell weui-cell_access" href="javascript:;">
+              <div class="weui-cell__bd">
+                <p>检验报告</p>
+              </div>
+              <div class="weui-cell__ft">
+              </div>
+            </a>
+            <a @click="goCheck" class="weui-cell weui-cell_access" href="javascript:;">
+              <div class="weui-cell__bd">
+                <p>检查报告</p>
+              </div>
+              <div class="weui-cell__ft">
+              </div>
+            </a>
+          </div>
+          <div class="warmTips">
+            <h3>温馨提示：</h3>
+            <p>1.检验报告：查看血常规、尿检等生化类报告单信息；</p>
+            <p>2.检查报告：查看CT、MRI（磁共振）、X光、B超等检查类报告单信息；</p>
+            <p>3.报告仅供参考，请以医院实际纸质报告为准。</p>
+          </div>
+        </div>
+      </div>
+      <v-dialog :dialogTitle="dialogTitle"
+                :dialogMain="dialogMain"
+                :dialogLeftFoot="dialogLeftFoot"
+                :dialogRightFoot="dialogRightFoot"
+                v-if="showDialog"
+                @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+      <div class="emptyHistory" v-if="fail">
+        <bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>
+      </div>
+      <div class="emptyHistory" v-if="successDisplay">
+        <bind-success :title="description" :illNumber="alertStatus" :failKnow="failKnow" @on-iSee="iSee()"></bind-success>
+      </div>
+      <toast v-if="showToast"></toast>
+      <v-mask v-if="fail || successDisplay"></v-mask>
+    </div>
+  </transition>
+</template>
+<script>
+  import header from '../../base/header'
+  import http from '../../lib/http'
+  import api from '../../lib/bookApi'
+  import Dialog from '../../base/dialog'
+//  import bindSuccess from '../../../base/bindSuccess/bindSuccess'
+//  import bindFail from '../../../base/bindFail/bindFail'
+//  import VMask from '../../../base/mask'
+  import Toast from '../../base/toast'
+//  import weui from 'weui.js'
+//  import {isLoginMixin} from "../../../lib/mixin"
+//  import {tokenCache} from '../../../lib/cache'
+  export default{
+//    mixins: [isLoginMixin],
+    data(){
+      return{
+        title:"查报告单",
+        rightTitle:"",
+        allPatient:"",
+        index:0,
+        hosIndex:0,
+        dialogTitle:"",
+        dialogMain:"该就诊人没有绑定病案号，无法执行该操作",
+        dialogLeftFoot:"取消",
+        dialogRightFoot:"去绑卡",
+        showDialog:false,
+        fail:false,
+        successDisplay:false,
+        showToast:false,
+        alertStatus:"",
+        description:"绑定成功，您的病案号是：",
+        failDes:"未查询到病案号",
+        failDetail:"请保证该就诊人姓名、身份证号、手机和医院留的一致；如真实信息发生变化、请前往医院窗口修改",
+        failDetailSecond:"若该就诊人未在医院建档，请前往医院窗口办理",
+        failKnow:"我知道了",
+        illNumber:"314324",
+        hosList:""
+      }
+    },
+    created(){
+
+      if(this.$route.query.index){
+        this.index = this.$route.query.index
+      }else{
+        this.index= 0
+      }
+      if(this.$route.query.pickedIndex){
+          this.hosIndex = this.$route.query.pickedIndex
+      }else{
+        this.hosIndex = 0
+      }
+      api("smarthos.yygh.ApiHospitalService.areaHosList",{
+      }).then((data)=>{
+        if(data.code == 0){
+          this.hosList = data.list
+        }else{
+          weui.alert(data.msg)
+        }
+        console.log(data)
+      })
+      http("smarthos.user.commpat.list",{
+        token:localStorage.getItem('token')
+      }).then((data)=>{
+         console.log(data)
+        if(data.code == 0){
+          this.allPatient=data.list
+        }else if(!(data.msg)){
+          weui.alert("网络错误，请稍后重试")
+        }else{
+          weui.alert(data.msg)
+        }
+//        this.changeName = this.allPatient[this.index].compatName
+//        this.changeID = this.allPatient[this.index].compatIdcard
+//        this.compatId = this.allPatient[this.index].compatId
+        console.log(data.list)
+      })
+    },
+    methods:{
+      cancelDialog(){
+        this.showDialog = false
+      },
+      bindCard(){
+        this.showDialog = false
+        this.showToast = true
+        api("nethos.book.compat.bind",{
+          token:tokenCache.get(),
+          compatId:this.allPatient[this.index].compatId
+        }).then((data)=>{
+          this.alertStatus = data.msg
+          this.showToast = false
+          if(data.code == 0){
+            this.fail = false
+            this.successDisplay = true
+          }else{
+            this.successDisplay = false
+            this.fail = true
+          }
+          console.log(data)
+        })
+      },
+      iSee(){
+        this.successDisplay = false
+        this.fail = false
+      },
+//      goCheck(){
+//        if(!(this.allPatient[this.index].compatMedicalRecord)){
+//          this.showDialog = true
+//        }else{
+//          this.$router.push({
+//            path:'/checkSortList',
+//            query:{specialIndex:this.index,patCard:this.allPatient[this.index].compatMedicalRecord,compatId:this.allPatient[this.index].compatId}
+//          })
+//        }
+//      },
+      goUsual(){
+        this.$router.push('/checkTogglePatient')
+      },
+      goHosList(){
+         this.$router.push({
+           path:"/hosList"
+         })
+      },
+      goTest(){
+          this.$router.push({
+            path: '/testReportDetail',
+            query: {hosId: this.hosList[this.hosIndex].yyid}
+          })
+      },
+      goCheck(){
+        this.$router.push({
+          path: '/checkReportDetail',
+          query:{hosId:this.hosList[this.hosIndex].yyid,patCard:this.allPatient[this.index].commpatIdcard}
+        })
+      },
+      goIndex(){
+//          this.$router.push('/myProfile/index')
+      }
+    },
+    components:{
+      "VHeader":header,
+      "VDialog":Dialog,
+//      bindSuccess,
+//      VMask,
+//      bindFail,
+      Toast
+    }
+  }
+</script>
+<style scoped lang="scss">
+  @import '../../common/common.scss';
+  .emptyHistory{
+    position: absolute;
+    width:100%;
+    height:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation:makeBigger 0.6s;
+    @keyframes makeBigger {
+      0%{
+        transform: scale(0.5);
+      }
+      25%{
+        transform: scale(0.9);
+      }
+      50%{
+        transform: scale(1.3);
+      }
+      75%{
+        transform: scale(0.9);
+      }
+      100%{
+        transform: scale(1.0);
+      }
+    }
+  }
+  .hosTitle{
+    width:100%;
+    background-color: #FFFFFF;
+    .titleToggle{
+      height:80px;
+      width:690px;
+      margin:0 auto;
+      line-height: 80px;
+      display: flex;
+      justify-content: space-between;
+      background-color: #FFFFFF;
+      span{
+        font-size: 32px;
+      }
+      .hosTitleLeft{
+        color: #999999;
+        display: flex;
+        align-items: center;
+        span{
+          padding-right: 10px;
+        }
+        img{
+          width:15px;
+
+        }
+      }
+    }
+  }
+  .usual{
+    width:100%;
+    height: 100%;
+    /*position: absolute;*/
+    /*top: 88px;*/
+    background-color: white;
+    .usualLine{
+      width:100%;
+      background-color: white;
+    }
+    .usualCenter{
+      width:690px;
+      margin:0 auto;
+      /*margin-top: 5px;*/
+      background-color: white;
+      ul{
+        margin:0;
+        padding:0;
+        margin-top: 10px;
+        .patientToggle{
+           padding-top: 15px;
+           padding-bottom: 15px;
+           display: flex;
+          justify-content: space-between;
+          .patientToggleLeft{
+            font-size: 32px;
+          }
+        }
+        li{
+          list-style-type: none;
+          height:80px;
+          line-height: 80px;
+          margin-top: 1px;
+          /*<!--background-color: $bgColor2;-->*/
+          font-size: 32px;
+          padding-left: 10px;
+          span{
+            font-size: 32px;
+            color: #999999;
+          }
+        }
+        li:first-child{
+          border-top-left-radius: 7px;
+          border-top-right-radius: 7px;
+        }
+        li:last-child{
+          border-bottom-left-radius: 7px;
+          border-bottom-right-radius: 7px;
+        }
+      }
+    }
+    span.change{
+      padding-left: 50px;
+      font-size: 32px;
+      color: $mainColor;
+    }
+  }
+  .checkList{
+    background-color: #FFFFFF;
+    .checkCenter{
+      width:690px;
+      margin: 0 auto;
+      .weuiMargin{
+        margin-top: 10px;
+        /*<!--background-color: $bgColor2;-->*/
+        border-radius: 7px;
+        p{
+          height:80px;
+          line-height: 80px;
+          font-size: 32px;
+        }
+      }
+      .warmTips{
+        margin-top: 30px;
+        h3,p{
+          font-size: 24px;
+          color: #666666;
+          font-weight: normal;
+          line-height: 36px;
+        }
+      }
+    }
+  }
+  .slide-enter-active,.slide-leave-active{
+    transition: all 0.3s;
+    opacity: 1;
+  }
+  .slide-enter,.slide-leave-to{
+    transform:  translate3d(100%,0,0);
+    opacity: 1;
+  }
+</style>

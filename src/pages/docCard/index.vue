@@ -25,7 +25,8 @@
                 <div class="teamDetail">
                         <ul>
                             <li class="row">
-                                <img class="myImg" :src="doc.docAvatar" alt="">
+                                <img class="myImg" :src="doc.docAvatar" alt="" v-if="doc.docAvatar">
+                                <img class="myImg" src="../../../static/img/doctorM.png" alt="" v-else>
                             </li>
                             <li class="row">
                                 <span class="mfw">{{doc.docName}}</span>
@@ -38,15 +39,15 @@
                             </li>
                             <li class="row">
                             <span class="mfw">
-                                粉丝&nbsp;&nbsp; 555&nbsp;&nbsp;&nbsp;&nbsp; 患者&nbsp;&nbsp; 9
-                                &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;8.5 >
+                                粉丝&nbsp;&nbsp; {{ doc.fansNum }}&nbsp;&nbsp;&nbsp;&nbsp; 服务&nbsp;&nbsp; {{ doc.serveNum }}
+                                &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} >
                             </span>
                             </li>
                         </ul>
                     </div>
             </div>
             <div class="navbar">
-                <div class="mfb pub" :class="item.name" v-for="(item,index) of bar" @click="selItem(index,item)">
+                <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
                     <span :class="{bar:index==num}">{{item.value}}</span>
                 </div>
             </div>
@@ -85,7 +86,8 @@
                 flag:false,
                 docId:"",
                 token:localStorage.getItem('token'),
-                doc:{}
+                doc:{},
+              docServeList:""
             }
         },
         created(){
@@ -124,6 +126,7 @@
                   console.log(res,22222);
                   if(res.succ){
                       this.doc = res.obj.doc;
+                      this.docServeList = res.obj.docServeList
                       sessionStorage.setItem('docName',res.obj.doc.docName)
                       console.log(this.$store.state.docObj,66666);
                       this.$store.commit('increment',res.obj.doc)
@@ -139,7 +142,11 @@
                 })
             },
             showService(){
-                this.$refs.ser.flag=true
+                if(this.docServeList.length != 0){
+                  this.$refs.ser.flag=true
+                }else{
+                    weui.alert("该医生尚未开通此服务")
+                }
             },
         }
     }
