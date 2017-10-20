@@ -21,7 +21,10 @@
     },
 
     created() {
-
+      /*window.socket = io("test-websocket-smarthos.hztywl.cn:6060");
+      window.socket.on('connect', function () {
+        console.log("socket成功")
+      });*/
     },
 
 
