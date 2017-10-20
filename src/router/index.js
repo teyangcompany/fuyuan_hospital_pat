@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-
+import {tokenCache} from "../lib/cache";
 
 import MyDoc from "./my-doc"
 import Health from "./health"
@@ -16,14 +15,14 @@ Vue.use(Router)
 
 
 /*路由懒加载*/
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
       component: () => import("../pages/login/index")
     }, {
       path: '/home',
-        name:"home",
+      name: "home",
       component: () => import("../pages/index")
     },
     ...MyDoc,
@@ -35,5 +34,21 @@ export default new Router({
   ...inquiry,
   ...checkReport
   ]
-
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.needLogin)) {
+    let token = tokenCache.get();
+    if (token) {
+      next();
+    } else {
+      //fromCache.set(to.fullPath)
+      next('/login');
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;
+

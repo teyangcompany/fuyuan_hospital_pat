@@ -2,6 +2,8 @@
  * Created by 李康飞 on 2017/9/21.
  */
 import {openidCache} from "./cache"
+import http from "./http"
+
 
 export default (cb) => {
   // .replace()

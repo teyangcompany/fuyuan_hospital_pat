@@ -7,6 +7,7 @@ export function makeRandom(length) {
   }
   return ret;
 }
+
 export function getAppid() {
   let hostname = url("hostname");
   let api_url = "";
@@ -19,4 +20,8 @@ export function getAppid() {
     api_url = API_URL[Object.keys(config.api_url)[0]].appid;
   }
   return api_url;
+}
+
+export function debug(...args) {
+  console.log.apply(console, args);
 }
