@@ -1,5 +1,6 @@
 import api from "./http"
 import {debug} from "./util";
+import config from "./config"
 
 export const mainHeightMixin = {
   mounted() {
@@ -42,7 +43,10 @@ export const isBindMixin = {
 export const jssdkMixin = {
   methods: {
     _getJSSDK() {
-      return api("smarthos.wechat.jsapiticket.get").then((res) => {
+      return api("smarthos.wechat.jsapiticket.get", {
+        appid: config.appid,
+        reqUrl: location.href.substr(0, location.href.indexOf("#"))
+      }).then((res) => {
         debug("jssdk", res);
         if (res.code == 0) {
           return res.obj;
