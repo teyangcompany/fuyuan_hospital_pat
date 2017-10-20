@@ -25,15 +25,15 @@
                     <div class="weui-cell__bd">
                         <p class="mfb">就诊人</p>
                     </div>
-                    <div class="weui-cell__ft mfb">李康飞 男</div>
+                    <div class="weui-cell__ft mfb" v-if="compatList">{{ compatList[0].commpatName }} {{ compatList[0].commpatGender == 'M' ? '男':'女' }}</div>
                 </a>
 
             </div>
-            <div class="weui-cells__title">病情描述</div>
+            <div class="weui-cells__title">病情资料</div>
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" placeholder="请输入描述" rows="3"></textarea>
+                        <textarea class="weui-textarea" placeholder="请详细描述患者的主要症状、持续时间、已经确诊的疾病和接诊医生的意见。（如有症状照片、病历、检查单:，可在下方上传）" rows="3"></textarea>
                         <div class="weui-textarea-counter"><span>0</span>/200</div>
                     </div>
                 </div>
@@ -55,9 +55,9 @@
 
             </upload-img>
         </div>
-        <sel-patient ref="patient">
-            <div slot="pat" class="myPat bor" v-for="item of 4">
-                李康飞
+        <sel-patient ref="patient" @on-addPatient="addPatient">
+            <div slot="pat" class="myPat bor" v-for="item in compatList">
+                {{ item.commpatName }}
             </div>
         </sel-patient>
     </div>
@@ -86,10 +86,19 @@
                 scrollHeight:'',
                 config: config,
                 picList: [],
+                compatList:""
             }
         },
         create(){
             this.scrollHeight = window.innerHeight-45
+        },
+        created(){
+            api("smarthos.user.commpat.list",{
+                 token:localStorage.getItem('token')
+            }).then((data)=>{
+                this.compatList = data.list
+                console.log(data)
+            })
         },
         mounted(){
             window.addEventListener('resize', function () {
@@ -103,6 +112,11 @@
         methods:{
             togglePatient(){
                 this.$refs.patient.flag = true;
+            },
+            addPatient(){
+               this.$router.push({
+                 path:"/my/addUser"
+               })
             },
             added(file) {
                 file.thumb().then(res => {

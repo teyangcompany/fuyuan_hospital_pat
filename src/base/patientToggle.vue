@@ -62,7 +62,7 @@
         this.$emit("activate",index);
       },
       addPat(){
-        this.$router.push("/add");
+        this.$router.push("/my/addUser");
       },
       close(){
         this.$emit("close");

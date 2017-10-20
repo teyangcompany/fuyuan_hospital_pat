@@ -14,7 +14,8 @@
         <span>正在很努力的加载中...</span>
       </div>
       <div v-else-if="commonRoom.length == 0" class="loading">
-        <tips></tips>
+        <!--<tips></tips>-->
+        暂无可预约的号源
       </div>
       <div class="contentWrap" ref="contentWrap">
         <div>

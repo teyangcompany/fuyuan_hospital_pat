@@ -8,7 +8,7 @@
             <div class="contain" >
                 <div class="selPeople bor mfc">选择就诊人</div>
                 <slot name="pat"></slot>
-                <div class="add ">添加就诊人</div>
+                <div class="add " @click="addPatient()">添加就诊人</div>
             </div>
             <div class="cancel">
 
@@ -44,6 +44,9 @@
             getText(index){
                 this.test = index
             },
+          addPatient(){
+                this.$emit('on-addPatient')
+          }
         }
     }
 </script>

@@ -4,8 +4,9 @@
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
     <section class="title">
-      <img :src="waitImg" alt="" v-if="path== '/docChat/:id'">
+      <!--<img :src="waitImg" alt="" >-->
       <span class="word">{{title}}</span>
+      <span v-if="path== nowPath && showMy" class="myDoc" >我的医生</span>
     </section>
     <section class="nav" @click="goDocCard">
       <span class="rightWord">{{rightTitle}}</span>
@@ -17,6 +18,7 @@
     data(){
        return{
          path:"",
+         nowPath:""
        }
     },
     props:{
@@ -26,12 +28,19 @@
       rightTitle:{
         type:String
       },
+      showMy:{
+        default:false
+      },
       waitImg:{
 
       },
     },
     mounted(){
       this.path = this.$route.path
+      this.id = this.$route.params.id
+      this.nowPath = `/docChat/${this.id}`
+      console.log(this.nowPath,555)
+      console.log(this.id)
       console.log(this.path)
     },
     methods:{
@@ -102,20 +111,20 @@
     align-items: center;
     justify-content: center;
   span{
-    font-size: 36px!important;
+    font-size: 36px;
     color: #333333;
     display: inline-block;
   }
-  img{
-    width:45px;
-    height:45px;
-    display: inline-block;
-    margin-right: 10px;
-    /*<!--position: absolute;-->*/
-    /*<!--left:270px;-->*/
-    /*<!--top:15px;-->*/
-    border-radius: 50%;
-  }
+   .myDoc{
+     font-size: 28px;
+     height:45px;
+     width:125px;
+     line-height: 45px;
+     border-radius: 7px;
+     border:1px solid #3d9bff;
+     color: #3d9bff;
+     margin-left: 20px;
+   }
   }
   .nav{
     flex:1;

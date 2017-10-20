@@ -53,6 +53,7 @@
 </template>
 <script>
   import http from '../../../../lib/http'
+  import {tokenCache} from '../../../../lib/cache'
   import {Getdate} from '../../../../lib/filter'
   export default{
       data(){
@@ -70,7 +71,7 @@
           this.consultId = this.$route.query.id
           console.log(this.consultId)
           http("smarthos.consult.details",{
-            token:localStorage.getItem('token'),
+            token:tokenCache.get(),
             consultId:this.consultId
           }).then((data)=>{
               if(data.code == 0){

@@ -14,11 +14,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="weui-cells__title">请输入密码</div>
+                    <div class="weui-cells__title">请输入验证码  <span @click="getCode()" style="color: #3d9bff;">获取验证码</span> </div>
                     <div class="weui-cells">
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
-                                <input v-model="patPassword" class="weui-input" type="password" placeholder="请输入"/>
+                                <input v-model="codeValue" class="weui-input" type="password" placeholder="请输入验证码"/>
                             </div>
                         </div>
                     </div>
@@ -53,8 +53,10 @@
         mixins:['mainHeightMixin'],
         data(){
             return {
-                patMobile:'13522365145',
-                patPassword:'111111',
+                patMobile:'',
+                codeValue:"",
+                cid:"",
+                patPassword:'',
                 current:''
             }
         },
@@ -68,7 +70,18 @@
 //                    this.$refs.bottom.scrollIntoView(true)
 //                }, 2);
 //            },
-
+            getCode(){
+                  api("smarthos.captcha.pat.wechat.bind",{
+                    mobile:this.patMobile
+                  }).then((data)=>{
+                    if(data.code == 0){
+                       this.cid = data.obj.cid
+                    }else{
+                        weui.alert(data.msg)
+                    }
+                    console.log(data)
+                  })
+            },
             forgetPassword(){
                 this.$router.push({
                     name:'forgetPassword',
@@ -83,26 +96,48 @@
                 })
             },
             login(){
-                this.$set(this.$data,'current','1')
-                var passWord = sha512(hex_md5(this.patPassword) + this.patPassword );
-                api('smarthos.user.pat.login',{
-                    "patMobile":this.patMobile,
-                    "patPassword":passWord
-                }).then(res=>{
-                    console.log(res,2222);
-                    if(res.succ){
-                        localStorage.setItem('token',res.token)
-                        localStorage.setItem('patAvatar',res.obj.pat.patAvatar)
-                        localStorage.setItem('commpat',JSON.stringify(res.obj.commpat))
-                        console.log(JSON.stringify(res.obj.commpat))
-                        this.$router.push({
+                api("smarthos.user.pat.wechat.bind",{
+                  openid:"oDrfHwrOF-p6DYrFhoeBiOKwKBlw",
+                  captcha:this.codeValue,
+                  cid:this.cid
+                }).then((data)=>{
+                  console.log(this.codeValue)
+                  console.log(this.cid)
+                  if(data.code == 0){
+                      this.$router.push({
+                        name:'home'
+                      })
+                    }else{
+                        weui.alert(data.msg)
+                         this.$router.push({
                             name:'home'
                         })
-                    }else {
-                        this.$weui.alert(res.msg)
                     }
-
                 })
+
+
+
+
+//                this.$set(this.$data,'current','1')
+//                var passWord = sha512(hex_md5(this.patPassword) + this.patPassword );
+//                api('smarthos.user.pat.login',{
+//                    "patMobile":this.patMobile,
+//                    "patPassword":passWord
+//                }).then(res=>{
+//                    console.log(res,2222);
+//                    if(res.succ){
+//                        localStorage.setItem('token',res.token)
+//                        localStorage.setItem('patAvatar',res.obj.pat.patAvatar)
+//                        localStorage.setItem('commpat',JSON.stringify(res.obj.commpat))
+//                        console.log(JSON.stringify(res.obj.commpat))
+//                        this.$router.push({
+//                            name:'home'
+//                        })
+//                    }else {
+//                        this.$weui.alert(res.msg)
+//                    }
+//
+//                })
 
 
 //          this.$router.push({

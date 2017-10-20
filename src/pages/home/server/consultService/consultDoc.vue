@@ -247,6 +247,7 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import Scroll from '../../../../base/scroll'
+  import {tokenCache} from '../../../../lib/cache'
   import http from '../../../../lib/http'
   export default{
     data(){
