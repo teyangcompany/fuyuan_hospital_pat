@@ -4,7 +4,7 @@
             <div slot="right" class="right absolute">返回</div>
         </top>
         <div class="wrap" @click="paySucc">
-            支付成功
+            微信支付
         </div>
     </div>
 </template>

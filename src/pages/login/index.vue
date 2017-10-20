@@ -75,7 +75,7 @@
           if (res.code == 0) {
             this.cid = res.obj.cid;
             this.captcha = res.obj.value;
-            if (res.obj.nextBiz) {
+            if (res.obj.nextBiz != "BIND") {
               this.$router.push({
                 path: "/register",
                 query: {

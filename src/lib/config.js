@@ -1,7 +1,7 @@
 export default {
     api_url: "//test-api-ywfy.hztywl.cn/app",
     base_params: {
-        channel: "23",
+        channel: "3",
         format: "JSON",
         oper: "127.0.0.1",
         random: "1234",
