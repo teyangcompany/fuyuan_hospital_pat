@@ -21,13 +21,6 @@
     },
 
     created() {
-//      http("smarthos.system.area.list", {}).then((res) => {
-//        console.log("111", res);
-//      });
-      window.socket = io("test-websocket-smarthos.hztywl.cn:6060");
-      window.socket.on('connect', function () {
-        console.log("socket成功")
-      });
 
     },
 
