@@ -13,19 +13,21 @@
                     <p class="col">{{item.servePrice}}</p>
                 </div>
             </div>
-            <div v-if="serviceList.length>0">
-                <p class="mfc">
-                   {{serviceList[test].serveReadme}}
-                </p>
-            </div>
-            <!--<div class="agree">-->
-                <!--<span>-->
-                    <!--提交即表示同意-->
-                <!--</span>-->
+            <!--<div v-if="serviceList.length>0">-->
+                <!--<p class="mfc">-->
+                   <!--{{serviceList[test].serveReadme}}-->
+                <!--</p>-->
+            <!--</div>-->
+            <div class="agree">
+                <div v-for="(item,index) in serviceList" v-if="(item.serveName == '图文问诊' || item.serveName == '图文咨询') && test==index">
+                    <span>1.您将支付{{ item.servePrice }}元，向医生发起一个图文咨询。</span><br/>
+                    <span>2.为珍惜您的咨询机会，请全部围绕病情进行沟通，避免无关内容。</span><br/>
+                    <span>3.医生工作繁忙，可能无法及时回复您的咨询，若医生48小时未回复，我们会为您自动退款。</span>
+                </div>
                 <!--<span style="color: blue">-->
                     <!--浙二网络医学中心服务协议-->
                 <!--</span>-->
-            <!--</div>-->
+            </div>
             <div class="goNext mfb" @click.stop="goNext">
                 下一步
             </div>
@@ -108,8 +110,9 @@
         font-size: 24px;
         color: grey;
         background: gainsboro;
-        text-align: center;
+        text-align: left;
         margin: 10px 0;
+        padding-left: 10px;
     }
     .col{
         color: orange;

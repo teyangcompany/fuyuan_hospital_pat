@@ -30,7 +30,9 @@
           <!--<div class="blank"></div>-->
           <!--<div class="blank border-1px"></div>-->
           <div class="list border-1px" v-if="commonNumDetail">
-            <p>{{ parentItem.ksmc }}<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> </p>
+            <p>{{ parentItem.ksmc }}
+              <!--<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> -->
+            </p>
           </div>
           <div class="list border-1px" v-for="(item,index) in parentItem.schemeList" @click="book(item,index)">
             <p class="specialBlack">{{ (item.schdate).substr(0,4) }}-{{ (item.schdate).substr(4,2) }}-{{ (item.schdate).substr(6) }} {{ weekNum[index] }} {{ item.ampm == '1'? '上午':'下午' }}
@@ -49,7 +51,9 @@
         <div class="blank"></div>
         <div class="blank border-1px"></div>
         <div class="list border-1px">
-          <p>科室介绍<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> </p>
+          <p>科室介绍
+            <!--<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> -->
+          </p>
         </div>
         <div class="deptDescription">
           <p>{{ deptDescription }}</p>

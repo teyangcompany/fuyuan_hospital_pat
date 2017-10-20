@@ -36,9 +36,12 @@
                     <div class="patImg">
                         <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
                     </div>
-                    <div>
-                        <span class="mfc">{{consultInfo.consulterName}}</span>
-                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp; {{consultInfo.replyCount}}条回复</span>
+                    <div class="createDiv">
+                        <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} 创建</span></span>
+                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp;
+                          <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
+                          <span v-else>暂无回复</span>
+                        </span>
                     </div>
                 </div>
                 <div class="answerList" v-for="item of arr" ref="lastItem">
@@ -110,7 +113,7 @@
             <p class="mfb reply">请等待医生回复</p>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='4'">
-            <span class="mfb evaluate bor">申请成为他的患者</span>
+            <span class="mfb evaluate bor">再次咨询</span>
             <span class="mfb evaluate">评价</span>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='6'">
@@ -123,7 +126,7 @@
     import BScroll from 'better-scroll'
     import editDiv from '../../components/editDiv.vue'
     import api from '../../lib/http'
-    import {goodTime} from '../../lib/filter'
+    import {goodTime,Getdate} from '../../lib/filter'
     import ajax from '../../lib/ajax'
     export default{
         components: {
@@ -150,7 +153,8 @@
             }
         },
         filters:{
-            goodTime
+            goodTime,
+          Getdate
         },
         mounted(){
             this.consultId = this.$route.params.id;
@@ -331,6 +335,21 @@
         padding: 20px;
         border-radius: 20px;
         border-bottom: 1px solid gainsboro;
+      .createDiv{
+        display: flex;
+        justify-content: space-between;
+        .create{
+          width:200px;
+          display: flex;
+          align-items: center;
+          img{
+            width:40px;
+            height:40px;
+            border-radius: 50%;
+            margin-right: 5px;
+          }
+        }
+      }
     }
     .print{
         float: right;

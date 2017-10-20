@@ -42,7 +42,7 @@
     border-radius: 12px;
     img{
       padding-top: 60px;
-      width: 170px;
+      width: 140px;
       height: 186px;
     }
     .title{

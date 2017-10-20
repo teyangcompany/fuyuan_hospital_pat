@@ -25,21 +25,22 @@
                        <div class="weui-cell__bd">
                            <p class="mfb">就诊人</p>
                        </div>
-                       <div class="weui-cell__ft mfb">{{userName}}</div>
+                       <div class="weui-cell__ft mfb">{{userName}} {{ userSex == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userAge.substr(6,4)}}</div>
                    </a>
                </div>
                <div class="weui-cell"v style="background: white">
-                   <div class="weui-cell__hd"><label class="weui-label">疾病名称</label></div>
+                   <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
                    <div class="weui-cell__bd">
-                       <input class="weui-input" v-model="illName" type="text" placeholder="没确定请不要填写"/>
+                       <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
                    </div>
+                  <img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">
                </div>
-               <div class="weui-cells__title">病情描述</div>
+               <div class="weui-cells__title">病情资料</div>
                <div class="weui-cells weui-cells_form">
                    <div class="weui-cell">
                        <div class="weui-cell__bd">
-                           <textarea v-model="illDescribe" class="weui-textarea" placeholder="请输入描述" rows="3"></textarea>
-                           <div class="weui-textarea-counter"><span>0</span>/200</div>
+                           <textarea v-model="illDescribe" id="myArea" @keyup="keypress()" class="weui-textarea" placeholder="请详细描述患者的主要症状、持续时间、已经确诊的疾病和接诊医生的意见。（如有症状照片、病历、检查单:，可在下方上传）" rows="3"></textarea>
+                           <div class="weui-textarea-counter"><span>{{ textLength }}</span>/500</div>
                        </div>
                    </div>
                </div>
@@ -60,7 +61,7 @@
 
                 </upload-img>
             </div>
-        <sel-patient ref="patient">
+        <sel-patient ref="patient" @on-addPatient="addPatient">
             <div slot="pat" class="myPat bor">
                 <div class="myPat bor" v-for="item of userList" @click="getUser(item)">
                     {{item.commpatName}}
@@ -94,12 +95,16 @@
                 picList: [],
                 userList:[],
                 userName:"",
+                userSex:"",
+                userAge:"",
                 userObj:{},
                 token:localStorage.getItem('token'),
                 docName:"",
                 docId:"",
                 illName:"",
                 illDescribe:"",
+                textLength:0,
+                text:"",
                 attaIdList:[]
             }
         },
@@ -120,12 +125,25 @@
             this.getData()
         },
         methods:{
+            keypress(){
+              this.text = document.getElementById("myArea").value
+              this.textLength = this.text.length
+              if(this.textLength > 500){
+                document.getElementById("myArea").value = this.text.substr(0,500)
+                weui.alert("问诊内容不能超过500个字")
+              }
+            },
             submit(){
-                console.log(this.picList,88888);
-                for(var i=0;i<this.picList.length;i++){
+                if(this.illDescribe == ''){
+                  weui.alert("问诊内容不可为空")
+                }else if(this.textLength > 500){
+                  weui.alert("问诊内容不能超过500个字")
+                }else{
+                  console.log(this.picList,88888);
+                  for(var i=0;i<this.picList.length;i++){
                     this.attaIdList.push(this.picList[i].imgId)
-                };
-                api('smarthos.consult.one2one.pic.issue',{
+                  };
+                  api('smarthos.consult.one2one.pic.issue',{
                     attaIdList:this.attaIdList,
                     token:this.token,
                     "consulterName":this.userName,
@@ -134,18 +152,24 @@
                     "consultContent":this.illDescribe,
                     "docId":this.docId,
                     "illnessName":this.illName
-                }).then(res=>{
+                  }).then(res=>{
                     console.log(res,3535535);
                     if(res.succ){
-                       this.$router.push({
-                           path:'oneConsult/'+res.obj.consultInfo.id
+                      this.$router.push({
+                        path:'oneConsult/'+res.obj.consultInfo.id
 
-                       })
+                      })
 
                     }else {
-                        alert(res.msg)
+                      alert(res.msg)
                     }
-                })
+                  })
+                }
+            },
+            addPatient(){
+              this.$router.push({
+                path:"/my/addUser"
+              })
             },
             getUser(item){
                 this.userObj = item;
@@ -166,6 +190,8 @@
                     console.log(res,66666)
                     if(res.succ){
                         this.userName = res.list[0].commpatName
+                        this.userSex =  res.list[0].commpatGender
+                        this.userAge =  res.list[0].commpatIdcard
                         this.userObj = res.list[0]
                         this.userList = res.list;
 
@@ -204,6 +230,16 @@
                 }
 
             },
+        },
+        watch:{
+          illDescribe(){
+            this.text = document.getElementById("myArea").value
+            this.textLength = this.text.length
+            if(this.textLength > 500){
+              document.getElementById("myArea").value = this.text.substr(0,500)
+              weui.alert("问诊内容不能超过500个字")
+            }
+          }
         }
     }
 </script>
@@ -220,6 +256,16 @@
       textarea{
         font-size: 30px;
       }
+    }
+    .illName{
+      text-align: right;
+      padding-right: 10px;
+    }
+    .illNameLabel{
+      width:200px!important;
+    }
+    .illArrow{
+      width:18px;
     }
     .myHeader{
         width: 100%;

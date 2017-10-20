@@ -38,8 +38,8 @@
         <ul  class="border-1px" key="item" v-for="item in aboutConsult" @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li >
             <div>
-              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">一对一图文<span> ¥{{ item.consultInfo.payFee }}</span></p>
-                <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">平台图文问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1" style="color: #2772FF;">待受理</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 2" style="color: #2772FF;">待处理</span>
@@ -70,6 +70,7 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
+  import {tokenCache} from '../../../../lib/cache'
   import {Getdate} from '../../../../lib/filter'
   export default{
     data(){
@@ -183,6 +184,7 @@
               token:localStorage.getItem('token'),
               statusList:['4']
             }).then((data)=>{
+              console.log(data)
               if(data.code == 0){
                 this.waitCommentLength = data.list.length
                 this.aboutConsult = data.list
@@ -246,11 +248,17 @@
             }
           }
           div.mainContent {
+            height:190px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             >div{
               margin-top: 10px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+
               img{
                 width: 22.5%;
                 height: 120px;

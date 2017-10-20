@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "./config"
-import {openidCache} from "./cache";
+
+import {openidCache} from './cache'
 
 export default function (service, options) {
   let baseParams = config.base_params;
@@ -11,9 +12,9 @@ export default function (service, options) {
     ...options
   };
 
-  let openid = openidCache.get();
-  if (openid) {
-    data.token = "OPENID_PAT_" + openid;
+  let openid = openidCache.get()
+  if(openid){
+    data.token = 'OPENID_PAT_'+ openid
   }
 
   let axiosConfig = {

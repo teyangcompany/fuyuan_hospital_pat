@@ -11,8 +11,8 @@
                     </div>
                     <div class="info flex1">
                         <h3>{{commpat.commpatName}}</h3>
-                        <div>姓名：&nbsp; {{commpat.commpatName}}</div>
-                        <p>{{commpat.commpatGender=='M'?'男':'女'}} &nbsp;&nbsp;&nbsp;23</p>
+                        <div>姓名：{{commpat.commpatName}}</div>
+                        <p v-if="commpat">{{commpat.commpatGender=='M'?'男':'女'}} {{ JSON.stringify(new Date()).substr(1,4)- commpat.commpatIdcard.substr(6,4) }}岁</p>
                     </div>
                 </div>
 
@@ -64,6 +64,7 @@
     import api from "../../../lib/http"
     import Scroll from "../../../base/scroll.vue"
     import {Getdate} from '../../../lib/filter'
+    import { tokenCache } from '../../../lib/cache'
     export default {
         data() {
             return {
@@ -74,7 +75,7 @@
                 scrollHeight: 0,
                 basicSituationForm: {},
                 token:localStorage.getItem('token'),
-                commpat:JSON.parse(localStorage.getItem('commpat')),
+                commpat:"",
                 list:[],
                 healthDetail:{},
                 patAvatar:localStorage.getItem('patAvatar')
@@ -94,6 +95,7 @@
         mounted() {
             this.getData();
             this.record();
+            this.getPersonInfo()
         },
         beforeDestroy() {
 
@@ -116,15 +118,23 @@
                     }
                 })
             },
+            getPersonInfo(){
+                api("smarthos.user.pat.get",{
+                    token:tokenCache.get()
+                }).then((data)=>{
+                    this.commpat = data.obj.commpat
+                    console.log(this.commpat,4444)
+                })
+            },
             getData(){
                 api('smarthos.medical.info.detail',{
-                    token:this.token
+                    token:tokenCache.get()
                 }).then(res=>{
-                    console.log(res,6666)
-                if(res.succ){
+                if(res.succ && res.obj){
                     this.$set(this.$data,'healthDetail',res.obj);
+                }else if(res.succ){
 
-                }else {
+                }else{
                     this.$weui.alert(res.msg)
                 }
             })

@@ -29,7 +29,11 @@
                     <div class="time">{{item.followMessage.createTime | Todate}}</div>
                   </h3>
                   <div class="content" v-if="item.userDoc">
-                    {{item.followMessage.msgContent.substring(0,4)=='http'?'[图片]':item.followMessage.msgContent}}
+                   <span v-if="item.followMessage.msgType=='ARTICLE'">[文章]</span>
+                   <span v-else-if="item.followMessage.msgType=='TEXT'">{{ item.followMessage.msgContent }}</span>
+                  <span v-else-if="item.followMessage.msgType=='PIC'">[图片]</span>
+                  <span v-else-if="item.followMessage.msgType=='AUDIO'">[语音消息]</span>
+                  <span v-else-if="item.followMessage.msgType=='VEDIO'">[视频消息]</span>
                   </div>
                 </div>
               </li>

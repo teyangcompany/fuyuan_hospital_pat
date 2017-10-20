@@ -1,6 +1,6 @@
 <template>
   <div class="chat">
-    <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" @on-docCard="goDocCard()"></v-header>
+    <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" @on-docCard="goDocCard()" :showMy="vipStatus"></v-header>
     <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="conversation"
             :listen-scroll="listenScroll" :probe-type="probeType">
       <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
@@ -17,8 +17,16 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#trigon-left"></use>
                   </svg>
                 </div>
-                <div class="whatsay_text" v-if="item.msgType == 'TEXT' || item.msgType == 'ARTICLE'">
-                  {{ item.msgContent }}
+                <div class="whatsay_text" v-if="item.msgType == 'TEXT'">
+                  {{ item.msgContent}}
+                </div>
+                <div class="whatsay_text articleSection" v-if="item.msgType == 'ARTICLE'" @click="goArticle(JSON.parse(item.msgContent).articleId)">
+                  <div>
+                    <span>文章标题：{{ JSON.parse(item.msgContent).title }}</span><br/>
+                    <span>作者： {{ JSON.parse(item.msgContent).author }}</span>
+                  </div>
+                  <span>  <img class="checkMore" src="../../../static/img/icon/arrow-right-grow.png" alt="">  </span>
+
                 </div>
                 <div class="whatsay_text" v-else-if="item.msgType == 'AUDIO'">
                   <audio autoplay="autoplay" controls="controls" :src="item.msgContent" alt=""></audio>
@@ -49,7 +57,7 @@
         </div>
         <div class="chatInput">
           <input type="text" id="forInput" maxlength="100" @blur="blured" @focus="focus()" ref="inputFocus"
-                 v-model="inputInfo" @input="whatInput" @keyup.enter="enterThing()">
+                 v-model="inputInfo" @input="whatInput">
         </div>
         <div class="chatSend">
           <div class="send" @click.prevent="send()" v-if="light">
@@ -67,6 +75,7 @@
     <div class="largePicArea" v-if="showLargePic">
       <img :src="largePic" alt="" @click="makeSmall">
     </div>
+    <v-mask v-if="showMask"></v-mask>
     <toast v-if="showToast"></toast>
   </div>
 </template>
@@ -77,6 +86,7 @@
 //  import dialog from '../../../base/dialog'
   import Toast from '../../base/toast'
   import {Todate} from '../../lib/filter'
+  import mask from '../../base/mask.vue'
 //  import consultPatAva from "../../../utils/consultPatAva"
 
 
@@ -107,7 +117,8 @@
         inter: "",
         aboutUserInfo:"",
         docId:"",
-        vipStatus:""
+        vipStatus:"",
+        showMask:false,
       }
     },
     filters:{
@@ -117,7 +128,8 @@
       "VHeader": header,
 //      "VDialog": dialog,
       Scroll,
-      Toast
+      Toast,
+      'VMask':mask
     },
     created() {
 
@@ -141,6 +153,7 @@
               this.title = data.obj.userDocVO.docName
               this.waitImg = data.obj.userDocVO.docAvatar
               this.vipStatus = data.obj.followDocpat.vipStatus
+
               this.docId = data.obj.userDocVO.id
 //              this.attachImg = data.obj.attaList
 //              this.title = this.aboutConsult.docName
@@ -196,6 +209,12 @@
 
     },
     methods: {
+      goArticle(id){
+         this.$router.push({
+           path:"/articleDetail",
+           query:{articleId:id}
+         })
+      },
       goDocCard(){
         this.$router.push('/docCard/'+this.docId)
       },
@@ -224,10 +243,12 @@
       },
       makeLarge(url) {
         this.largePic = url
+        this.showMask = true
         this.showLargePic = true
       },
       makeSmall() {
         this.showLargePic = false
+        this.showMask = false
       },
 
 
@@ -246,11 +267,11 @@
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
       },
-      enterThing() {
-        if (this.light) {
-          this.send()
-        }
-      },
+//      enterThing() {
+//        if (this.light) {
+//          this.send()
+//        }
+//      },
       send() {
         http("smarthos.follow.message.add", {
           token: localStorage.getItem('token'),
@@ -485,6 +506,7 @@
         .msgTime{
           position: absolute;
           top:-45px;
+          left:265px;
           color: #999999;
         }
         .whatsay {
@@ -521,6 +543,10 @@
             line-height: 48px;
             color: #333333;
             word-break: break-all;
+            .checkMore{
+              height: 24px;
+              width:16px;
+            }
             audio{
               width:200px;
             }
@@ -530,6 +556,13 @@
               margin-right: 5px;
               width: 110px;
               height: 110px;
+            }
+          }
+          .articleSection{
+              display: flex;
+            align-items: center;
+            div{
+              margin-right: 40px;
             }
           }
         }
@@ -543,7 +576,7 @@
           /*text-align: right;*/
           position: absolute;
           top:-45px;
-          right:10px;
+          right:265px;
           color: #999999;
         }
         .say-time {
@@ -567,6 +600,17 @@
             margin-right: 0.15rem;
             margin-left: 0;
             background: #9fe658;
+            .checkMore{
+              height: 24px;
+              width:16px;
+            }
+          }
+          .articleSection{
+            display: flex;
+            align-items: center;
+           div{
+               margin-right: 40px;
+            }
           }
         }
       }

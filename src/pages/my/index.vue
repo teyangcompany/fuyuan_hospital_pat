@@ -10,9 +10,9 @@
           src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1907944229,3898051778&fm=173&s=3A82C44C5402215940ED1C83030060D3&w=218&h=146&img.JPEG"
           alt=""></div>
         <div class="info flex1">
-          <h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0, 1)}}</h3>
+          <!--<h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0, 1)}}</h3>-->
           <div>姓名：{{patDetail.commpatName}}</div>
-          <p>{{patDetail.commpatGender == 'M' ? '男' : '女'}} 27岁 浙江杭州</p>
+          <p v-if="patDetail">{{patDetail.commpatGender == 'M' ? '男' : '女'}} {{ JSON.stringify(new Date()).substr(1,4)- patDetail.commpatIdcard.substr(6,4) }}岁</p>
         </div>
       </div>
 

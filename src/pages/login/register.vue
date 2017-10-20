@@ -3,7 +3,7 @@
     <!--<top>-->
     <!--<div class="middle big">注册</div>-->
     <!--</top>-->
-    <top class="noflex" title="注册" ref="header">
+    <top class="noflex" title="復元医院" ref="header">
       <i slot="back"></i>
     </top>
     <div>
@@ -34,28 +34,28 @@
         </div>
       </div>
       <span class="form-group__message" v-show="showPatPassWord">密码必须是8-20字母和数字组合</span>
-      <div class="weui-cells__title">请输入短信验证码</div>
-      <div class="weui-cells">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <input class="weui-input" v-model="captcha" type="number" placeholder="请输入"/>
-          </div>
-          <div class="weui-cell__ft">
-            <button v-show="!(msg>0)" class="weui-vcode-btn" @click="getCode">{{msg}}</button>
-            <button v-show="msg>0" class="weui-vcode-btn" @click="getCode">有效期{{msg}}s</button>
-          </div>
-        </div>
-      </div>
+      <!--<div class="weui-cells__title">请输入短信验证码</div>-->
+      <!--<div class="weui-cells">-->
+        <!--<div class="weui-cell">-->
+          <!--<div class="weui-cell__bd">-->
+            <!--<input class="weui-input" v-model="captcha" type="number" placeholder="请输入"/>-->
+          <!--</div>-->
+          <!--<div class="weui-cell__ft">-->
+            <!--<button v-show="!(msg>0)" class="weui-vcode-btn" @click="getCode">{{msg}}</button>-->
+            <!--<button v-show="msg>0" class="weui-vcode-btn" @click="getCode">有效期{{msg}}s</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
-    <label for="weuiAgree" class="weui-agree">
-      <input id="weuiAgree" type="checkbox" v-model="checkbox" class="weui-agree__checkbox"/>
-      <span class="weui-agree__text">
-                同意<a href="javascript:void(0);">《医药用户协议》</a>
-            </span>
-    </label>
+    <!--<label for="weuiAgree" class="weui-agree">-->
+      <!--<input id="weuiAgree" type="checkbox" v-model="checkbox" class="weui-agree__checkbox"/>-->
+      <!--<span class="weui-agree__text">-->
+                <!--&lt;!&ndash;同意<a href="javascript:void(0);">《医药用户协议》</a>&ndash;&gt;-->
+            <!--</span>-->
+    <!--</label>-->
 
     <div class="btn" @click="myDetail">
-      <a style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">下一步</a>
+      <a style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">完善信息</a>
     </div>
   </div>
 </template>
@@ -146,7 +146,9 @@
           openid: openidCache.get()
         }).then((res) => {
           if (res.code == 0) {
-            this.$router.push("/home");
+            this.$router.push({
+              name: 'home'
+            })
           } else {
             alert(res.msg)
           }

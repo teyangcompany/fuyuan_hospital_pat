@@ -35,34 +35,35 @@
                     </div>
                 </div>
                 <div v-show="num==1" class="wrap" v-for="item of 1">
-                    <div class="detail">
-                        <span class="mfb">王小仙名医团队</span>
-                        <span class="grade">9.5</span>
-                    </div>
-                    <div class="detail">
-                        <span class="mf">医院:</span>
-                        <span class="mfc">浙二医院</span>
-                    </div>
-                    <div class="detail">
-                        <span class="mf">科室:</span>
-                        <span class="mfc">眼科</span>
-                    </div>
-                    <div class="detail">
-                        <span class="mf">擅长:</span>
-                        <span class="mfc">各种针灸，不孕不育等等.....</span>
-                    </div>
-                    <div class="detail docDetail">
-                        <div class="doc" v-for="item of 4">
-                            <p><img class="doctorImg" src="../../../static/img/test.jpg" alt=""></p>
-                            <p> 王小仙</p>
-                        </div>
-                    </div>
+                  <div class="centerTip">
+                  该功能暂未开放，敬请期待
+                  </div>
+                    <!--<div class="detail">-->
+                        <!--<span class="mfb">王小仙名医团队</span>-->
+                        <!--<span class="grade">9.5</span>-->
+                    <!--</div>-->
+                    <!--<div class="detail">-->
+                        <!--<span class="mf">医院:</span>-->
+                        <!--<span class="mfc">浙二医院</span>-->
+                    <!--</div>-->
+                    <!--<div class="detail">-->
+                        <!--<span class="mf">科室:</span>-->
+                        <!--<span class="mfc">眼科</span>-->
+                    <!--</div>-->
+                    <!--<div class="detail">-->
+                        <!--<span class="mf">擅长:</span>-->
+                        <!--<span class="mfc">各种针灸，不孕不育等等.....</span>-->
+                    <!--</div>-->
+                    <!--<div class="detail docDetail">-->
+                        <!--<div class="doc" v-for="item of 4">-->
+                            <!--<p><img class="doctorImg" src="../../../static/img/test.jpg" alt=""></p>-->
+                            <!--<p> 王小仙</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </scroll>
 
-
-    </div>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -128,9 +129,16 @@
     }
     .wrapper{
         overflow: hidden;
-    }
-    .contain{
-
+        .wrap{
+            margin: 30px;
+          .centerTip{
+              margin-top: 430px;
+              font-size: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+        }
     }
     .navbar{
         flex:0 ;
@@ -170,9 +178,6 @@
     }
     .weui-cells{
         margin-top: 0;
-    }
-    .wrap{
-        margin: 30px;
     }
     .grade{
         display: inline-block;

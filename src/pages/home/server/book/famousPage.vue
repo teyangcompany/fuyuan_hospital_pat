@@ -32,7 +32,9 @@
         <div v-for="parentItem in deptSchemeList">
           <div class="blank border-1px"></div>
           <div class="list border-1px">
-            <p v-if="deptSchemeList.length != 0">{{ parentItem.ksmc }}<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> </p>
+            <p v-if="deptSchemeList.length != 0">{{ parentItem.ksmc }}
+              <!--<img src="../../../../../static/img/icon/arrow-right-grow.png" alt="">-->
+            </p>
           </div>
           <div class="list border-1px" v-if="parentItem.schemeList.length != 0" v-for="(item,index) in parentItem.schemeList" @click="book(item,index)">
             <p class="specialBlack">{{(item.schdate).substr(0,4) + '-'+ (item.schdate).substr(4,2) + '-'+ (item.schdate).substr(6)}} {{ weekNum[index]  }} {{ item.ampm == '1'? '上午':'下午' }}
@@ -55,7 +57,9 @@
         <!--</div>-->
         <div class="blank border-1px"></div>
         <div class="list border-1px">
-          <p>医生擅长<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> </p>
+          <p>医生擅长
+            <!--<img src="../../../../../static/img/icon/arrow-right-grow.png" alt=""> -->
+          </p>
         </div>
         <div class="goodAt">
           <p>{{ doctorInfo.goodat }}</p>

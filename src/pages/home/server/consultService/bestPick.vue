@@ -49,7 +49,8 @@
 
                   |
                   &nbsp;
-                  <img src="../../../../../static/img/zan_off.png" alt="" @click="upvote(item.consultInfo.id)">&nbsp;
+                  <img src="../../../../../static/img/zan_off.png" alt="" @click="upvote(item.consultInfo.id)" >&nbsp;
+                  <!--<img src="../../../../../static/img/zan.png" alt="">-->
                   <span v-if="item.consultInfo.praiseCount">{{ item.consultInfo.praiseCount }}</span>
                   <span v-else>0</span>
                 </span>
@@ -71,6 +72,7 @@
   import BScroll from 'better-scroll'
   import Scroll from '../../../../base/scroll'
   import http from '../../../../lib/http'
+  import {tokenCache} from '../../../../lib/cache'
   import {Getdate} from '../../../../lib/filter'
   export default{
     data(){
@@ -79,6 +81,8 @@
         pullup:true,
         loadingStatus:true,
         listPage:1,
+        createTime:"",
+        praiseStatus:false
       }
     },
     filters:{
@@ -86,7 +90,9 @@
     },
     created(){
       http("smarthos.consult.all.list.page",{
+//        token:localStorage.getItem('token'),
         token:localStorage.getItem('token'),
+//        token:"OPENID_PAT_oDrfHwrOF-p6DYrFhoeBiOKwKBlw",
         isChoice:true,
         pageSize:"10",
         pageNum:"1"
@@ -113,7 +119,7 @@
         this.listPage +=1;
         let that = this
         http("smarthos.consult.all.list.page",{
-          token:localStorage.getItem('token'),
+          token:tokenCache.get(),
           isChoice:true,
           pageNum:that.listPage,
           pageSize:"10"
@@ -141,8 +147,14 @@
           console.log(id)
           http("smarthos.consult.praise",{
              token:localStorage.getItem('token'),
-            consultId:id
+             consultId:id
           }).then((data)=>{
+              if(data.code == 0){
+//                  location.reload()
+//                  this.praiseStatus = true
+              }else{
+                  weui.alert(data.msg)
+              }
               console.log(data)
           })
       }
@@ -194,7 +206,9 @@
             p.picConsult {
               font-size: 32px;
               span{
-                border:1px dashed #999999;
+                border:1px dashed $mainColor;
+                padding:0px 5px 5px 5px;
+                color: $mainColor;
               }
             }
             span.consultTim {
