@@ -1,28 +1,28 @@
 <template>
   <div>
-    <top class="noflex" title="登录" ref="header">
-      <div slot="right" class="right absolute">测试</div>
+    <top class="noflex" title="復元医院" ref="header">
+      <!--<div slot="right" class="right absolute">测试</div>-->
     </top>
     <div class="wrapper" ref="main">
       <div>
         <div>
-          <div class="weui-cells__title">请输入手机号</div>
+          <div class="weui-cells__title phoneNumber">请输入手机号</div>
           <div class="weui-cells">
             <div class="weui-cell">
               <div class="weui-cell__bd">
-                <input v-model="patMobile" class="weui-input" type="number" placeholder="请输入"/>
+                <input v-model="patMobile" class="weui-input phoneNumber" type="number" placeholder="请输入"/>
               </div>
 
             </div>
           </div>
-          <div class="weui-cells__title">请输入验证码</div>
+          <div class="weui-cells__title phoneNumber">请输入验证码</div>
           <div class="weui-cells">
             <div class="weui-cell">
               <div class="weui-cell__bd">
-                <input v-model="captcha" class="weui-input" readonly placeholder="请输入"/>
+                <input v-model="captcha" class="weui-input phoneNumber" readonly placeholder="请输入"/>
               </div>
-              <div class="weui-cell__hd">
-                <a @click="sendCode">发送验证码</a>
+              <div class="weui-cell__hd sendBtn" @click="sendCode">
+                <button class="phoneNumber">发送验证码</button>
                 <!--
                 <send-code v-model="cid" @error="error" service="smarthos.captcha.pat.wechat.bind"
                            :mobile="patMobile"></send-code>-->
@@ -30,10 +30,10 @@
             </div>
           </div>
         </div>
-        <div class="btn" @click="bind">
-          <a :class="{active:current==1}" style="background: #30cfd0" href="javascript:;"
-             class="weui-btn weui-btn_primary">绑定</a>
-        </div>
+        <!--<div class="btn" @click="bind">-->
+          <!--&lt;!&ndash;<a :class="{active:current==1}" style="background: #30cfd0" href="javascript:;"&ndash;&gt;-->
+             <!--&lt;!&ndash;class="weui-btn weui-btn_primary">绑定</a>&ndash;&gt;-->
+        <!--</div>-->
         <div class="bottom">
           <!--<div class="register" @click="register">注册</div>-->
           <!--<div class="forget" @click="forgetPassword">忘记密码</div>-->
@@ -88,13 +88,16 @@
         console.log(msg);
       },
       sendCode() {
+        weui.alert("点击事件")
         api("smarthos.captcha.pat.wechat.bind", {
           mobile: this.patMobile
         }).then((res) => {
+            weui.alert("请求完成")
           if (res.code == 0) {
             this.cid = res.obj.cid;
             this.captcha = res.obj.value;
-            if (res.obj.nextBiz) {
+            console.log(res.obj.nextBiz,33333)
+            if (res.obj.nextBiz == 'REGISTER') {
               this.$router.push({
                 path: "/register",
                 query: {
@@ -104,7 +107,12 @@
                 }
               })
 
+            }else{
+                this.bind()
             }
+          }else{
+              weui.alert(data.msg)
+              weui.alert("出错了")
           }
         })
       },
@@ -117,7 +125,10 @@
         }).then((res) => {
           console.log(res);
           if (res.code != 0) {
-            alert(res.msg);
+           weui.alert(res.msg);
+            this.$router.push({
+              name: 'home'
+            })
           } else {
 
 
@@ -248,11 +259,27 @@
 </script>
 <style scoped lang='scss'>
   @import '../../common/common.scss';
-
+  .phoneNumber{
+    font-size: 32px;
+  }
   .active {
     background: gainsboro !important;
   }
-
+  .sendBtn{
+    width:170px;
+    height:60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height:70px;
+      width:170px;
+      border:none;
+      outline:medium;
+      color: white;
+      background-color: #3d9bff;
+    }
+  }
   .btn {
     width: 100%;
     box-sizing: border-box;

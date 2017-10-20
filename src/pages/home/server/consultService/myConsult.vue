@@ -39,7 +39,7 @@
           <li >
             <div>
               <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
-                <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1" style="color: #2772FF;">待受理</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 2" style="color: #2772FF;">待处理</span>
@@ -248,11 +248,17 @@
             }
           }
           div.mainContent {
+            height:190px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             >div{
               margin-top: 10px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+
               img{
                 width: 22.5%;
                 height: 120px;
