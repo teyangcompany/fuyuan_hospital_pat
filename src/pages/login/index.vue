@@ -31,8 +31,8 @@
           </div>
         </div>
         <!--<div class="btn" @click="bind">-->
-          <!--&lt;!&ndash;<a :class="{active:current==1}" style="background: #30cfd0" href="javascript:;"&ndash;&gt;-->
-             <!--&lt;!&ndash;class="weui-btn weui-btn_primary">绑定</a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a :class="{active:current==1}" style="background: #30cfd0" href="javascript:;"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="weui-btn weui-btn_primary">绑定</a>&ndash;&gt;-->
         <!--</div>-->
         <div class="bottom">
           <!--<div class="register" @click="register">注册</div>-->
@@ -44,25 +44,25 @@
 </template>
 <script type="text/ecmascript-6">
 
-//    import top from '../../components/app-header.vue'
-//    import {mainHeightMixin} from '../../lib/mixin'
-//    import config from '../../lib/config'
-//    import api from '../../lib/http'
-//    export default{
-//        components: {
-//            top
-//        },
-//        mixins:['mainHeightMixin'],
-//        data(){
-//            return {
-//                patMobile:'',
-//                codeValue:"",
-//                cid:"",
-//                patPassword:'',
-//                current:''
+  //    import top from '../../components/app-header.vue'
+  //    import {mainHeightMixin} from '../../lib/mixin'
+  //    import config from '../../lib/config'
+  //    import api from '../../lib/http'
+  //    export default{
+  //        components: {
+  //            top
+  //        },
+  //        mixins:['mainHeightMixin'],
+  //        data(){
+  //            return {
+  //                patMobile:'',
+  //                codeValue:"",
+  //                cid:"",
+  //                patPassword:'',
+  //                current:''
 
   import top from '../../components/app-header.vue'
-  import {mainHeightMixin} from '../../lib/mixin'
+  import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
   import config from '../../lib/config'
   import api from '../../lib/http'
   import {openidCache} from "../../lib/cache"
@@ -71,7 +71,7 @@
     components: {
       top
     },
-    mixins: ['mainHeightMixin'],
+    mixins: [mainHeightMixin, jssdkMixin],
     data() {
       return {
         patMobile: '',
@@ -79,6 +79,11 @@
         cid: "",
         captcha: ""
       }
+    },
+    created() {
+      this._getJSSDK().then((res) => {
+        console.log(res);
+      })
     },
     mounted() {
       //this.sendCode();
@@ -92,11 +97,10 @@
         api("smarthos.captcha.pat.wechat.bind", {
           mobile: this.patMobile
         }).then((res) => {
-            weui.alert("请求完成")
+          weui.alert("请求完成")
           if (res.code == 0) {
             this.cid = res.obj.cid;
             this.captcha = res.obj.value;
-            console.log(res.obj.nextBiz,33333)
             if (res.obj.nextBiz == 'REGISTER') {
               this.$router.push({
                 path: "/register",
@@ -107,12 +111,12 @@
                 }
               })
 
-            }else{
-                this.bind()
+            } else {
+              this.bind()
             }
-          }else{
-              weui.alert(data.msg)
-              weui.alert("出错了")
+          } else {
+            weui.alert(data.msg)
+            weui.alert("出错了")
           }
         })
       },
@@ -125,7 +129,7 @@
         }).then((res) => {
           console.log(res);
           if (res.code != 0) {
-           weui.alert(res.msg);
+            weui.alert(res.msg);
             this.$router.push({
               name: 'home'
             })
@@ -226,9 +230,6 @@
 //        })
 
 
-
-
-
 //                this.$set(this.$data,'current','1')
 //                var passWord = sha512(hex_md5(this.patPassword) + this.patPassword );
 //                api('smarthos.user.pat.login',{
@@ -254,32 +255,36 @@
 //          this.$router.push({
 //            name:'eyeIllness'
 //          })
-      }
+    }
   }
 </script>
 <style scoped lang='scss'>
   @import '../../common/common.scss';
-  .phoneNumber{
+
+  .phoneNumber {
     font-size: 32px;
   }
+
   .active {
     background: gainsboro !important;
   }
-  .sendBtn{
-    width:170px;
-    height:60px;
+
+  .sendBtn {
+    width: 170px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    button{
-      height:70px;
-      width:170px;
-      border:none;
-      outline:medium;
+    button {
+      height: 70px;
+      width: 170px;
+      border: none;
+      outline: medium;
       color: white;
       background-color: #3d9bff;
     }
   }
+
   .btn {
     width: 100%;
     box-sizing: border-box;

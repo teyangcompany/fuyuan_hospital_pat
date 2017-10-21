@@ -22,7 +22,6 @@
                 <span class="submit" @click="submit">
                       提交
                 </span>
-
             </div>
         </div>
     </div>
@@ -113,5 +112,6 @@
     .submit{
 
     }
+
 
 </style>

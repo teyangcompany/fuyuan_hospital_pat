@@ -2,8 +2,7 @@
  * Created by 李康飞 on 2017/9/21.
  */
 import {openidCache} from "./cache"
-import http from "./http"
-
+import config from "./config"
 
 export default (cb) => {
   // .replace()
@@ -21,7 +20,7 @@ export default (cb) => {
     else {
       let href = location.href;
       let redirect_uri = encodeURIComponent(href);
-      let APPID = "wx7d475d39a1ea1aa9";
+      let APPID = config.appid;
       //alert(`http://test-zheer-wx.hztywl.cn/dev_oauth2/?appid=${APPID}&callback=${redirect_uri}`);
       location.replace(`http://test-zheer-wx.hztywl.cn/oauth2/?appid=${APPID}&callback=${redirect_uri}`);
     }

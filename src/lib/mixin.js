@@ -1,5 +1,6 @@
 import api from "./http"
 import {debug} from "./util";
+import config from "./config"
 
 export const mainHeightMixin = {
   mounted() {
@@ -21,14 +22,32 @@ export const mainHeightMixin = {
  * **/
 export const isBindMixin = {
   data() {
-    return {
-
-    }
+    return {}
   },
   methods: {
     _isBind() {
       return api("smarthos.user.pat.get").then((res) => {
         debug("用户信息", res);
+        if (res.code == 0) {
+          return res.obj;
+        } else {
+          return false
+        }
+      })
+    }
+  }
+}
+/* *
+*
+* */
+export const jssdkMixin = {
+  methods: {
+    _getJSSDK() {
+      return api("smarthos.wechat.jsapiticket.get", {
+        appid: config.appid,
+        reqUrl: location.href.substr(0, location.href.indexOf("#"))
+      }).then((res) => {
+        debug("jssdk", res);
         if (res.code == 0) {
           return res.obj;
         } else {

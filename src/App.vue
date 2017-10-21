@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app" >
+  <div id="app">
 
     <transition :name="page">
       <router-view></router-view>
@@ -21,9 +21,10 @@
     },
 
     created() {
-//      http("smarthos.system.area.list", {}).then((res) => {
-//        console.log("111", res);
-//      });
+      /*window.socket = io("test-websocket-smarthos.hztywl.cn:6060");
+      window.socket.on('connect', function () {
+        console.log("socket成功")
+      });*/
     },
 
 
