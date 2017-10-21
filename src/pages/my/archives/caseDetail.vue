@@ -107,7 +107,7 @@
         showAllDialog:false
       }
     },
-    mounted(){
+    created(){
       var caseObj = this.$route.params.caseObj;
       console.log(caseObj,121212)
       this.$set(this.$data,'caseObj',caseObj)
@@ -116,7 +116,7 @@
       this.$set(this.$data,'id',caseObj.medicalHistory.id)
       this.$set(this.$data,'imgList',caseObj.attaList)
       this.$set(this.$data,'creatorName',caseObj.creatorName);
-      if(this.imgList.length>0){
+      if(this.imgList && this.imgList.length>0){
         for(var i=0;i<this.imgList.length;i++){
           this.imgId.push(this.imgList[i].id)
         }

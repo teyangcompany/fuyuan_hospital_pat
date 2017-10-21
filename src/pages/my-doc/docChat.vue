@@ -56,8 +56,7 @@
           <img src="../../../static/img/图片.png" alt="" @click="selectImg()">
         </div>
         <div class="chatInput">
-          <input type="text" id="forInput" maxlength="100" @blur="blured" @focus="focus()" ref="inputFocus"
-                 v-model="inputInfo" @input="whatInput">
+          <textarea type="text" id="forInput" maxlength="200" @blur="blured" @focus="focus()" ref="inputFocus" v-model="inputInfo" @input="whatInput"></textarea>
         </div>
         <div class="chatSend">
           <div class="send" @click.prevent="send()" v-if="light">
@@ -679,12 +678,14 @@
         width: 520px;
         margin-left: 30px;
         text-align: center;
-        input {
+        textarea {
           width: 520px;
-          height: 64px;
+          min-height: 64px;
           border: none;
           font-size: 32px;
           outline: medium;
+          word-break: break-all;
+          word-wrap:break-word;
           border-radius: 7px;
           background-color: rgb(243, 243, 243);
           border-bottom: 1px solid #e0e0e0;

@@ -9,21 +9,21 @@
                 <div class="weui-cells">
                     <a class="weui-cell weui-cell_access" href="javascript:;">
                         <div class="weui-cell__bd">
-                            <p>
+                            <router-link tag="p" to="/my/archives">
                                 <span  class="bf">患者资料： {{consultInfo.consulterName}}
                                     {{consultInfo.consulterGender='M'?'男':'女'}}
                                     {{consultInfo.consulterAge}}
                                 </span>
-                            </p>
+                            </router-link>
                         </div>
                         <div class="weui-cell__ft bfc"></div>
                     </a>
                     <a class="weui-cell weui-cell_access" href="javascript:;">
                         <div class="weui-cell__bd">
                             <p>
-                            <span class="bf">
-                                疾病名称：{{consultInfo.illnessName}}
-                            </span>
+                                <span class="bf">
+                                    疾病名称：{{consultInfo.illnessName}}
+                                </span>
                             </p>
                         </div>
                         <!--<div class="weui-cell__ft bfc"></div>-->

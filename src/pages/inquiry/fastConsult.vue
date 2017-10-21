@@ -33,7 +33,7 @@
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" placeholder="请详细描述患者的主要症状、持续时间、已经确诊的疾病和接诊医生的意见。（如有症状照片、病历、检查单:，可在下方上传）" rows="3"></textarea>
+                        <textarea class="weui-textarea" placeholder="请详细描述患者的主要症状、持续时间、已经确诊的疾病和接诊医生的意见。（如有症状照片、病历、检查单，可在下方上传）" rows="3"></textarea>
                         <div class="weui-textarea-counter"><span>0</span>/200</div>
                     </div>
                 </div>

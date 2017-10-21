@@ -35,7 +35,7 @@
                 this.$set(this.$data,'date','');
                 var $this = this;
                 this.$weui.datePicker({
-                    start: 2010,
+                    start: new Date(),
                     end: 2020,
                     onConfirm: function(result){
                         console.log(result,6666);

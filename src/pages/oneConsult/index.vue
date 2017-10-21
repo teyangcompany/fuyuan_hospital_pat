@@ -94,8 +94,8 @@
     </footer>
     <footer class="payButton"  v-else-if="consultInfo.consultStatus == '4'">
       <div class="payWrap border-1px-top">
-        <span class="border-1px-right" >再次咨询</span>
-        <span class="pay">评价</span>
+        <span class="border-1px-right" @click="consultAgain">再次咨询</span>
+        <span class="pay" @click="comment">评价</span>
       </div>
     </footer>
     <footer :class="{footshow:seeMore}" ref="footer" v-else>
@@ -273,6 +273,14 @@
           }
 //          console.log(this.attachImg)
         })
+      },
+      consultAgain(){
+          this.$router.push({
+            path:"/my/consultService/consultDoc"
+          })
+      },
+      comment(){
+        this.$router.push("/evaluate/"+this.consultId)
       },
       goArticle(id){
         this.$router.push({
@@ -814,6 +822,8 @@
     div.payWrap {
       width: 690px;
       margin: 0 auto;
+      display: flex;
+
       span{
         display: inline-block;
         width:340px;

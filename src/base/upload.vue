@@ -43,12 +43,16 @@
         methods: {
             change(e) {
                 let files = e.target.files;
-                this.queue = queue(1);
-                for (let i = 0; i < files.length; i++) {
+                if(files.length < 9){
+                  this.queue = queue(1);
+                  for (let i = 0; i < files.length; i++) {
                     let file = files[i];
                     this.added(file);
+                  }
+                  this.queue.awaitAll(this.awaitAll)
+                }else{
+                    weui.alert("最多可上传九张照片")
                 }
-                this.queue.awaitAll(this.awaitAll)
             },
             added(file) {
                 let fileObj = new fileClass(file);

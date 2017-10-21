@@ -26,7 +26,8 @@
                 <div class="info">
                   <h3 v-if="item.userDoc">
                     <div class="name">{{item.userDoc.docName}}</div>
-                    <div class="dept">{{item.userDoc.docTitle}}</div>
+                    <!--<div class="dept">{{item.userDoc.docTitle}}</div>-->
+                    <div class="dept">{{item.userDoc.deptName}}</div>
                     <div class="time">{{item.followMessage.createTime | Todate}}</div>
                   </h3>
                   <div class="content" v-if="item.userDoc">

@@ -111,6 +111,7 @@
                 })
             },
             goCaseDetail(item){
+                console.log(item)
                 this.$router.push({
                     name:'caseDetail',
                     params:{
@@ -261,32 +262,40 @@
                     font-size: 28px;
                 }
                 ol {
+                    height:180px;
                     overflow: hidden;
                     li {
                         padding-top: 20px;
                         float: left;
-                    }
-                    &.img.img1 {
-                        img {
-                            @include w_h(300px, 300px);
+                        text-align: center;
+                        img{
+                           width: 160px!important;
+                           height:160px;
+                           margin-right: 5px;
+                           margin-left: 7px;
                         }
                     }
-                    &.img.img2 {
-                        li + li {
-                            margin-left: 30px;
-                        }
-                        img {
-                            @include w_h(250px, 250px);
-                        }
-                    }
-                    &.img {
-                        li:nth-child(3n+2),li:nth-child(3n+3){
-                            margin-left: 20px;
-                        }
-                        img {
-                            @include w_h(218px, 218px);
-                        }
-                    }
+                    /*<!--&.img.img1 {-->*/
+                        /*<!--img {-->*/
+                            /*<!--@include w_h(300px, 300px);-->*/
+                        /*<!--}-->*/
+                    /*<!--}-->*/
+                    /*<!--&.img.img2 {-->*/
+                        /*<!--li + li {-->*/
+                            /*<!--margin-left: 30px;-->*/
+                        /*<!--}-->*/
+                        /*<!--img {-->*/
+                            /*<!--@include w_h(250px, 250px);-->*/
+                        /*<!--}-->*/
+                    /*<!--}-->*/
+                    /*<!--&.img {-->*/
+                        /*<!--li:nth-child(3n+2),li:nth-child(3n+3){-->*/
+                            /*<!--margin-left: 20px;-->*/
+                        /*<!--}-->*/
+                        /*<!--img {-->*/
+                            /*<!--@include w_h(218px, 218px);-->*/
+                        /*<!--}-->*/
+                    /*<!--}-->*/
                 }
             }
         }
