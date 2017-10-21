@@ -18,9 +18,10 @@
             <ul>
               <li v-if="list.length>0"  v-for="item in list" @click="goDocChat(item.followMessage.followId)">
                 <div class="ava">
-                  <img v-if="item.userDoc"
+                  <img v-if="item.userDoc.docAvatar"
                           :src="item.userDoc.docAvatar"
                           alt="">
+                  <img src="../../../static/img/doctorM.png" alt="" v-else>
                 </div>
                 <div class="info">
                   <h3 v-if="item.userDoc">

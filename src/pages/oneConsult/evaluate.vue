@@ -105,7 +105,7 @@
     .btn{
         width: 80%;
         margin: 100px auto;
-        background: blue;
+        background:  #3d9bff;
         color: white;
         padding: 20px;
         text-align: center;

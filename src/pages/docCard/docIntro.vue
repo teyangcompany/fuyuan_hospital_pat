@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="contain">
-            <div class="headerTro" @click="goTeam">
-                <span class="col"></span>
-                <span class="mfb">所属团队</span>
-                <span class="teamName">
-                    华佗名医团队 >
-                </span>
-            </div>
+            <!--<div class="headerTro" @click="goTeam">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">所属团队</span>-->
+                <!--<span class="teamName">-->
+                    <!--华佗名医团队 >-->
+                <!--</span>-->
+            <!--</div>-->
             <div class="skilled">
 
             </div>
@@ -86,7 +86,7 @@
 <style scoped lang='scss'>
     @import '../../common/common.scss';
 .contain{
-    margin: 60px 25px;
+    margin: 10px 25px;
 }
     .skillText{
         flex: 1;

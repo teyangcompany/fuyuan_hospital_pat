@@ -38,8 +38,8 @@
         <ul  class="border-1px" key="item" v-for="item in aboutConsult" @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li >
             <div>
-              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
-              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室问诊<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1" style="color: #2772FF;">待受理</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 2" style="color: #2772FF;">待处理</span>
@@ -54,12 +54,18 @@
                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
               </div>
             </div>
-            <div class="ConsultRelate" v-if="item.userDocVo">
-              <span class="name"><span class="number" >
-                <img :src="item.userDocVo.docAvatar" alt="">
-                <span>{{ item.userDocVo.docName }}</span>回答</span></span>
-              <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | Getdate}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
-              <span class="money" v-else>{{ item.consultInfo.createTime | Getdate}}创建 | 0条回复</span>
+            <div class="ConsultRelate">
+              <span class="name">
+                <span class="number" v-if="item.userDocVo">
+                  <img :src="item.userDocVo.docAvatar" alt="">
+                  <span>{{ item.userDocVo.docName }}</span>回答
+                </span>
+                <span class="number" v-else>
+                     暂无医生回答
+                </span>
+              </span>
+              <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | goodTime}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
+              <span class="money" v-else>{{ item.consultInfo.createTime | goodTime}}创建 | 0条回复</span>
             </div>
           </li>
         </ul>
@@ -71,7 +77,7 @@
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
   import {tokenCache} from '../../../../lib/cache'
-  import {Getdate} from '../../../../lib/filter'
+  import {Getdate,goodTime} from '../../../../lib/filter'
   export default{
     data(){
       return{
@@ -83,12 +89,14 @@
       }
     },
     filters:{
-      Getdate
+      Getdate,
+      goodTime
     },
     created(){
          http("smarthos.consult.my.list.page",{
-           token:localStorage.getItem('token')
+           token:tokenCache.get()
          }).then((data)=>{
+             console.log(data)
              if(data.code == 0){
                this.aboutConsult = data.list
              }else{
@@ -96,7 +104,7 @@
              }
          })
         http("smarthos.consult.my.list.page",{
-          token:localStorage.getItem('token'),
+          token:tokenCache.get(),
           statusList:['0']
         }).then((data)=>{
           if(data.code == 0){
@@ -107,7 +115,7 @@
           }
         })
         http("smarthos.consult.my.list.page",{
-          token:localStorage.getItem('token'),
+          token:tokenCache.get(),
           statusList:['3']
         }).then((data)=>{
           if(data.code == 0){
@@ -118,7 +126,7 @@
           }
         })
         http("smarthos.consult.my.list.page",{
-          token:localStorage.getItem('token'),
+          token:tokenCache.get(),
           statusList:['4']
         }).then((data)=>{
           if(data.code == 0){
@@ -248,7 +256,7 @@
             }
           }
           div.mainContent {
-            height:190px;
+            min-height:200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -270,6 +278,7 @@
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 2;
               overflow: hidden;
+              word-break: break-all;
               font-size: 30px;
               color: #888888;
               padding-top: 5px;

@@ -266,6 +266,9 @@
         pullup:true,
         listPage:1,
         searchContent:"",
+        orderByScore:false,
+        orderByNum:false,
+        orderByDocTitle:false,
         allRoom:[
           {
             deptName:"全部科室",
@@ -371,7 +374,12 @@
       },
       searchList(){
         http("smarthos.user.doc.search",{
+          deptId:"",
           keyWord:this.searchContent,
+          consultType:this.typePick,
+          orderByScore:this.orderByScore,
+          orderByNum:this.orderByNum,
+          orderByDocTitle:this.orderByDocTitle,
           pageSize:10,
           pageNum:1
         }).then((data)=>{
@@ -485,9 +493,17 @@
       },
       typePick(){
         this.sortBy = ''
+        this.searchList()
       },
       defaultPick(){
         this.sortBy = ''
+        if(this.defaultPick == "按好评排序"){
+              this.orderByScore = true
+        }else if(this.defaultPick == "按服务次数排序"){
+              this.orderByNum = true
+        }else if(this.defaultPick == "按职称排序"){
+              this.orderByDocTitle = true
+        }
       }
     }
   }

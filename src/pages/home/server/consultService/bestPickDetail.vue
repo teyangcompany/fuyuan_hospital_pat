@@ -10,7 +10,7 @@
          <ul class="border-1px">
            <li >
              <!--<div class="border-1px-dashed dashedPlace">-->
-               <!--<p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>-->
+             <!--<p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>-->
              <!--</div>-->
              <div class="mainContent">
                <p v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consultContent }}</p>
@@ -21,16 +21,62 @@
              <div class="ConsultRelate">
 
                <span class="name"><span class="number"><img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat"> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span></span></span>
-               <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | Getdate }}创建&nbsp;
-                  |
-                  &nbsp;
-                  <span v-if="detailInfo.consultInfo.replyCount">{{ detailInfo.consultInfo.replyCount }}条回复</span>
-                  <span v-else>0条回复</span>
-                </span>
+               <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | goodTime }}创建&nbsp;
+                |
+                &nbsp;
+                <span v-if="detailInfo.consultInfo.replyCount">{{ detailInfo.consultInfo.replyCount }}条回复</span>
+                <span v-else>0条回复</span>
+              </span>
              </div>
            </li>
          </ul>
        </div>
+      <scroll class="relateList" :data="detailInfo">
+         <div>
+           <div class="answerList" v-for="item in arr" ref="lastItem">
+             <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
+               <div class="docImg">
+                 <img :src="item.userDocVo.docAvatar" alt="">
+               </div>
+               <div class="docMsg">
+                 <p>
+                   <span class="mf">{{item.userDocVo.docName}}</span>
+                   <span class="mfc">{{item.userDocVo.docTitle}} {{ item.userDocVo.deptName }}</span>
+                 </p>
+                 <p>
+                   <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                 </p>
+               </div>
+             </div>
+             <div v-else class="patAnswer">
+               <div class="docImg">
+                 <img :src="item.userPat.patAvatar" alt="">
+               </div>
+               <div class="docMsg">
+                 <p>
+                   <span class="mf">{{item.userPat.patName}}</span>
+                   <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>
+                 </p>
+                 <p>
+                   <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                 </p>
+               </div>
+             </div>
+             <div v-if="item.consultMessage.replyContentType=='TEXT'">
+                        <span class="bf" >
+                            {{item.consultMessage.replyContent}}
+                        </span>
+             </div>
+             <div v-else-if="item.consultMessage.replyContentType=='PIC'">
+               <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeLarge(item.consultMessage.replyContent)">
+             </div>
+             <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
+               <span>语音需要转换格式</span>
+               <audio :src="item.consultMessage.replyContent"></audio>
+             </div>
+           </div>
+         </div>
+       </scroll>
        <div class="bottom">
           <div class="leftBottom border-1px-right" v-if="detailInfo.consultInfo">
             <span class="money">看过&nbsp; <span v-if="detailInfo.consultInfo.readCount">{{ detailInfo.consultInfo.readCount }}</span>
@@ -54,18 +100,24 @@
 <script>
   import http from '../../../../lib/http'
   import {tokenCache} from '../../../../lib/cache'
-  import {Getdate} from '../../../../lib/filter'
+  import Scroll from '../../../../base/scroll.vue'
+  import {Getdate,goodTime} from '../../../../lib/filter'
   export default{
       data(){
           return{
             consultId:"",
             detailInfo:"",
             largePicUrl:"",
-            showLargePic:false
+            showLargePic:false,
+            arr:[]
           }
       },
       filters:{
-        Getdate
+        Getdate,
+        goodTime
+      },
+      components:{
+        Scroll
       },
       created(){
           this.consultId = this.$route.query.id
@@ -77,6 +129,7 @@
               if(data.code == 0){
                 console.log(data)
                 this.detailInfo = data.obj
+                this.arr =  data.obj.consultMessage
               }else{
                   weui.alert(data.msg)
               }
@@ -102,6 +155,7 @@
   @import '../../../../common/common';
    .wrapPick{
      width:100%;
+     overflow: auto;
      background-color: #FFFFFF;
      .largePic{
        position: absolute;
@@ -115,6 +169,11 @@
        img{
          width:100%;
        }
+     }
+     .replyImg{
+       width: 150px;
+       height: 150px;
+       margin: 10px;
      }
      .topInfo{
        width: 690px;
@@ -212,6 +271,70 @@
          }
          li:nth-child(1){
            padding-top: 5px;
+         }
+       }
+     }
+     .relateList{
+       position: fixed;
+       top:300px;
+       bottom:100px;
+       left:0;
+       right:0;
+       overflow: hidden;
+       .answerList{
+         padding: 20px;
+         box-sizing: border-box;
+         background: white;
+         border-bottom: 1px solid gainsboro;
+         margin-top: 10px;
+         .patAnswer{
+           display: flex;
+           align-items: center;
+
+         }
+         .docImg{
+           img{
+             display: inline-block;
+             width: 80px;
+             height: 80px;
+             border-radius: 40px;
+             margin: 0 20px 0 0;
+
+           }
+         }
+         .patMusic{
+           position: relative;
+           margin-left: 80px;
+           margin-top: 20px;
+           width: 400px;
+           height: 80px;
+           img{
+             display: inline-block;
+             width: 400px;
+             height: 80px;
+           }
+         }
+         #music{
+           display: none;
+         }
+         .musicDate{
+           color: white;
+           position: absolute;
+           top:0;
+           right: 30px;
+           height: 80px;
+           line-height: 80px;
+         }
+         .musicImg{
+           position: absolute;
+           top:12px;
+           left: 30px;
+           height: 80px;
+           line-height: 80px;
+           img{
+             height: 48px;
+             width: 40px;
+           }
          }
        }
      }

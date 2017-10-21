@@ -2,6 +2,7 @@
     <div class="page">
         <top class="noflex" title="" ref="header">
             <i slot="back" @click="goBack"></i>
+          <div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>
         </top>
         <div class="wrapper" ref="Scroll" @click="closeCheckList">
             <div>
@@ -38,7 +39,7 @@
                     </div>
                     <div class="createDiv">
                         <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} 创建</span></span>
-                        <span class="date">{{userPat.createTime | goodTime}} &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="date">{{consultInfo.createTime | goodTime}}创建 |
                           <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
                           <span v-else>暂无回复</span>
                         </span>
@@ -52,10 +53,10 @@
                         <div class="docMsg">
                             <p>
                                 <span class="mf">{{item.userDocVo.docName}}</span>
-                                <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userDocVo.docTitle}}</span>
+                                <span class="mfc">{{item.userDocVo.docTitle}} {{ item.userDocVo.deptName }}</span>
                             </p>
                             <p>
-                                <span class="mfc">{{item.userDocVo.createTime | goodTime}}</span>
+                                <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
                             </p>
                         </div>
                     </div>
@@ -69,7 +70,7 @@
                                 <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userDocVo.patTitle}}</span>
                             </p>
                             <p>
-                                <span class="mfc">{{item.userDocVo.createTime | goodTime}}</span>
+                                <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
                             </p>
                         </div>
                     </div>
@@ -113,8 +114,8 @@
             <p class="mfb reply">请等待医生回复</p>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='4'">
-            <span class="mfb evaluate bor">再次咨询</span>
-            <span class="mfb evaluate">评价</span>
+            <span class="mfb evaluate bor" @click="consultAgain">再次咨询</span>
+            <span class="mfb evaluate" @click="comment">评价</span>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='6'">
             <p class="mfb reply ">申请成为他的患者</p>
@@ -188,6 +189,28 @@
                         alert(res.msg)
                     }
                 })
+            },
+           //结束咨询
+            closeConsult(){
+                  api("smarthos.consult.platform.pic.complete",{
+                       token:this.token,
+                       consultId:this.consultId
+                  }).then((data)=>{
+                      if(data.code == 0){
+                        this.getData()
+                      }else{
+                          weui.alert(data.msg)
+                      }
+                      console.log(data)
+                  })
+            },
+           //再次咨询
+            consultAgain(){
+                this.$router.push('/officeConsult')
+            },
+           //评价
+            comment(){
+               this.$router.push("/evaluate/"+this.consultId)
             },
             getData(){
               api('smarthos.consult.details',{
@@ -301,6 +324,9 @@
         bottom: 0;
         width: 100%;
         background: white;
+        display: flex;
+       align-items: center;
+
     }
     .reply{
         text-align: center;

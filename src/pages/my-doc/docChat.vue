@@ -44,7 +44,7 @@
       </section>
 
     </scroll>
-    <footer v-if="!vipStatus && vipStatus != ''" class="payButton" @click="goDocCard()">
+    <footer v-if="vipStatus == false" class="payButton" @click="goDocCard()">
        <div class="payWrap">
            <button>咨询医生</button>
        </div>

@@ -4,7 +4,7 @@
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
     <section class="title">
-      <!--<img :src="waitImg" alt="" >-->
+      <img :src="waitImg" alt="" v-if="path==oneConsultPath">
       <span class="word">{{title}}</span>
       <span v-if="path== nowPath && showMy" class="myDoc" >我的医生</span>
     </section>
@@ -18,7 +18,8 @@
     data(){
        return{
          path:"",
-         nowPath:""
+         nowPath:"",
+         oneConsultPath:""
        }
     },
     props:{
@@ -39,6 +40,7 @@
       this.path = this.$route.path
       this.id = this.$route.params.id
       this.nowPath = `/docChat/${this.id}`
+      this.oneConsultPath = `/oneConsult/${this.id}`
       console.log(this.nowPath,555)
       console.log(this.id)
       console.log(this.path)
@@ -110,11 +112,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  span{
-    font-size: 36px;
-    color: #333333;
-    display: inline-block;
-  }
+    img{
+      width:40px;
+      height:40px;
+      border-radius: 50%;
+    }
+    span{
+      font-size: 36px;
+      color: #333333;
+       margin-left: 5px;
+      display: inline-block;
+    }
    .myDoc{
      font-size: 28px;
      height:45px;

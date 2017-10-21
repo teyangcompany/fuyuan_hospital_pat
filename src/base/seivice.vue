@@ -86,7 +86,7 @@
             },
             goNext(){
                 console.log(this.serviceList[this.test].serveName)
-                if(this.serviceList[this.test].serveName == '图文问诊'){
+                if(this.serviceList[this.test].serveName == '图文问诊' || this.serviceList[this.test].serveName == '图文咨询'){
                   this.$router.push({
                     name:'imageInquiry'
                   })

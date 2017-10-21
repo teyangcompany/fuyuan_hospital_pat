@@ -25,10 +25,10 @@
         </ul>
       </div>
 
-      <div class="quit flex">
-        <div class="icon flex0"></div>
-        <div class="text flex0">退出登录</div>
-      </div>
+      <!--<div class="quit flex">-->
+        <!--<div class="icon flex0"></div>-->
+        <!--<div class="text flex0">退出登录</div>-->
+      <!--</div>-->
     </div>
     <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
   </div>
