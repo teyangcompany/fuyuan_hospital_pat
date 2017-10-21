@@ -84,7 +84,7 @@
   }
 </script>
 <style scoped lang='scss'>
-<<<<<<< HEAD
+
     @import '../../common/common.scss';
 .contain{
     margin: 10px 25px;
@@ -116,45 +116,44 @@
      display: inline-block;
        position: absolute;
         right: 30px;
-=======
-  @import '../../common/common.scss';
+  /*@import '../../common/common.scss';*/
 
-  .contain {
-    margin: 60px 25px;
-  }
->>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
+  /*.contain {*/
+    /*margin: 60px 25px;*/
+  /*}*/
 
-  .skillText {
-    flex: 1;
-  }
 
-  .teamName {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 75%;
-    color: #3b9dff;
-  }
+  /*.skillText {*/
+    /*flex: 1;*/
+  /*}*/
 
-  .headerTro {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    position: relative;
-  }
+  /*.teamName {*/
+    /*display: flex;*/
+    /*justify-content: flex-end;*/
+    /*align-items: center;*/
+    /*width: 75%;*/
+    /*color: #3b9dff;*/
+  /*}*/
 
-  .col {
-    display: inline-block;
-    width: 10px;
-    height: 30px;
-    background: #1885ff;
-    margin-right: 20px;
-  }
+  /*.headerTro {*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*width: 100%;*/
+    /*position: relative;*/
+  /*}*/
 
-  .more {
-    display: inline-block;
-    position: absolute;
-    right: 30px;
+  /*.col {*/
+    /*display: inline-block;*/
+    /*width: 10px;*/
+    /*height: 30px;*/
+    /*background: #1885ff;*/
+    /*margin-right: 20px;*/
+  /*}*/
+
+  /*.more {*/
+    /*display: inline-block;*/
+    /*position: absolute;*/
+    /*right: 30px;*/
 
   }
 

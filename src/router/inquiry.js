@@ -44,19 +44,19 @@ export default[
     component:()=>import("../pages/teamConsult/consuitDetail.vue")
   },
   {
-    path:"/consultService/whole",
+    path:"/my/consultService/whole",
     component:()=> import("../pages/home/server/consultService/whole.vue"),
     children:[
       {
-        path:"/consultService/myConsult",
+        path:"/my/consultService/myConsult",
         component:()=> import("../pages/home/server/consultService/myConsult.vue")
       },
       {
-        path:"/consultService/consultDoc",
+        path:"/my/consultService/consultDoc",
         component:()=> import("../pages/home/server/consultService/consultDoc.vue")
       },
       {
-        path:"/consultService/bestPick",
+        path:"/my/consultService/bestPick",
         component:()=> import("../pages/home/server/consultService/bestPick.vue")
       },
     ]

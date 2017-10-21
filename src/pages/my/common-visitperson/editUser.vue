@@ -23,7 +23,7 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf" >身份证号</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patIdcard.$error }">
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="number" v-model="patIdcard" placeholder="请输入身份证号"/>
+              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
             </div>
           </div>
         </div>
@@ -44,10 +44,11 @@
               <label  class="weui-label bf">性&nbsp;&nbsp;&nbsp;别</label>
             </div>
             <div class="weui-cell__bd">
-              <select class="weui-select bf" name="select2">
-                <option value="1">男</option>
-                <option value="2">女</option>
-              </select>
+              {{ gender == 'M'? '男':'女'  }}
+              <!--<select class="weui-select bf" name="select2">-->
+                <!--<option value="1">男</option>-->
+                <!--<option value="2">女</option>-->
+              <!--</select>-->
             </div>
           </div>
           <div class="weui-cell">
@@ -92,6 +93,7 @@
         mobile:'',
         patId:'',
         age:'',
+        gender:"",
         compatId:'',
         patDetail:{}
       }
@@ -101,6 +103,7 @@
       this.$set(this.$data,'patName',this.$route.params.item.commpatName);
       this.$set(this.$data,'patIdcard',this.$route.params.item.commpatIdcard);
       this.$set(this.$data,'mobile',this.$route.params.item.commpatMobile);
+      this.$set(this.$data,'gender',this.$route.params.item.commpatGender);
 //      this.$set(this.$data,'age',this.$route.params.item.compatAge);
       this.$set(this.$data,'compatId',this.$route.params.item.id);
     },
@@ -133,12 +136,11 @@
             "commpatIdcard": this.patIdcard
           }).then(res=>{
             if(res.succ){
-              this.$weui.alert('修改成功')
               this.$router.push({
-                name:'users'
+                path:"/my/common-visitperson"
               })
             }else {
-              this.$weui.alert('修改失败')
+              this.$weui.alert(res.msg)
             }
           })
         }

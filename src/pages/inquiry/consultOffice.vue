@@ -25,7 +25,7 @@
                     <div class="weui-cell__bd">
                         <p class="mfb">就诊人</p>
                     </div>
-                    <div class="weui-cell__ft mfb">{{userName}} {{ userSex == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userAge.substr(6,4)}}</div>
+                    <div class="weui-cell__ft mfb">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
                 </a>
 
             </div>
@@ -65,7 +65,7 @@
         </div>
         <sel-patient ref="patient" @on-addPatient="addPatient">
             <div  slot="pat">
-                <div class="myPat bor" v-for="item of userList" @click="getUser(item)">
+                <div class="myPat bor" v-for="(item,index) of userList" @click="getUser(item,index)">
                     {{item.commpatName}}
                 </div>
             </div>
@@ -108,6 +108,7 @@
                 attaIdList:[],
                 textLength:0,
                 text:"",
+                pickedIndex:0,
                 token:localStorage.getItem('token')
             }
         },
@@ -182,7 +183,9 @@
                 path:"/my/addUser"
               })
             },
-            getUser(item){
+            getUser(item,index){
+                console.log(index)
+                this.pickedIndex = index
                 this.userObj = item;
                 this.userName = item.commpatName
             },

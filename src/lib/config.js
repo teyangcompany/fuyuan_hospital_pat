@@ -17,7 +17,7 @@ export default {
   ],
   index_fast_nav: [
     {name: "ask-doc", value: "快速咨询", text: "快速询问医生", btn: "免费咨询", route: "/fastConsult"},
-    {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答", route: "/consultService/consultDoc"}
+    {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答", route: "my/consultService/consultDoc"}
   ],
   index_nav: [
     {name: "guide", value: "智能导诊", path: "/login"},
@@ -38,7 +38,7 @@ export default {
     {name: "wiki", value: "健康百科"}
   ],
   my_nav: [
-    {name: "my-consult", value: "我的咨询", path: "/officeConsult"},
+    {name: "my-consult", value: "我的咨询", path: "/consultService/myConsult"},
     {name: "my-book", value: "我的挂号", path: "/myRegistration"},
     {name: "common-visitperson", value: "常用就诊人", path: "/common-visitperson"},
     {name: "archives", value: "健康档案", path: "/archives"},
@@ -80,70 +80,70 @@ export default {
     }, {
       value: '问他的团队', print: '50元'
     },
-<<<<<<< HEAD
-    nav: [
-        {name: "home", value: "首页"},
-        {name: "my-doc", value: "我的医生"},
-        {name: "health", value: "健康"},
-        {name: "my", value: "我的"}
-    ],
-    index_fast_nav: [
-        {name: "ask-doc", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
-        {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/consultService/consultDoc"}
-    ],
-    index_nav: [
-        {name: "guide", value: "智能导诊",path: "/login"},
-        {name: "book", value: "预约挂号", path: "/home/server/book"},
-        {name: "queuing", value: "排队叫号"},
-        {name: "payment", value: "诊间支付"},
-        {name: "report", value: "查报告单",path:'/checkReport'},
-        {name: "steward", value: "住院管家"},
-        {name: "help", value: "就诊指南"},
-        {name: "more", value: "更多",path:'/home/moreSel'}
-    ],
-    my_doc_nav: [
-        {name: "follow", value: "关注医生", path:"/docList"},
-        {name: "circle", value: "医生圈"}
-    ],
-    health_nav: [
-        {name: "archives", value: "健康档案" ,router:'/my/archives'},
-        {name: "wiki", value: "健康百科"}
-    ],
-    my_nav: [
-        {name: "my-consult", value: "我的咨询",path:"/officeConsult"},
-        {name: "my-book", value: "我的挂号",path:"/myRegistration"},
-        {name: "common-visitperson", value: "常用就诊人",path:"/common-visitperson"},
-        {name: "archives", value: "健康档案", path: "/archives"},
-        {name: "wallet", value: "我的钱包"},
-        // {name: "account", value: "账户相关",path: "/accountAbout"},
-        {name: "about", value: "关于"}
-    ],
-    book_doc_nav: [
-        {name: "bypeople", value: "按专家预约"},
-        {name: "bytime", value: "按时间预约"}
-    ],
-    basic_situation: [
-        {name:"presentingComplaint",value:"所患疾病"},
-        {name:"pastHistory",value:"既往史"},
-        {name:"familyHistory",value:"家族史"},
-        {name:"allergyHistory",value:"过敏史"},
-    ] ,
-    basic_bar: [
-        {name:"",value:"简介","router":"intro"},
-        {name:"sel",value:"精选","router":"choiceness"},
-        {name:"",value:"动态","router":"dynamic"}
-    ],
-    doc_bar:[
-        {name:"",value:"简介","router":"docIntro"},
-        {name:"sel",value:"精选","router":"docChoiceness"},
-        {name:"",value:"动态","router":"docDynamic"}
-    ],
-    docList_bar:[
-        {name:"",value:"医生"},
-        {name:"",value:"团队"}
-    ],
-    basic_service:[
-=======
+// <<<<<<< HEAD
+//     nav: [
+//         {name: "home", value: "首页"},
+//         {name: "my-doc", value: "我的医生"},
+//         {name: "health", value: "健康"},
+//         {name: "my", value: "我的"}
+//     ],
+//     index_fast_nav: [
+//         {name: "ask-doc", value: "快速咨询", text: "快速询问医生", btn: "免费咨询",route:"/fastConsult"},
+//         {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答",route:"/consultService/consultDoc"}
+//     ],
+//     index_nav: [
+//         {name: "guide", value: "智能导诊",path: "/login"},
+//         {name: "book", value: "预约挂号", path: "/home/server/book"},
+//         {name: "queuing", value: "排队叫号"},
+//         {name: "payment", value: "诊间支付"},
+//         {name: "report", value: "查报告单",path:'/checkReport'},
+//         {name: "steward", value: "住院管家"},
+//         {name: "help", value: "就诊指南"},
+//         {name: "more", value: "更多",path:'/home/moreSel'}
+//     ],
+//     my_doc_nav: [
+//         {name: "follow", value: "关注医生", path:"/docList"},
+//         {name: "circle", value: "医生圈"}
+//     ],
+//     health_nav: [
+//         {name: "archives", value: "健康档案" ,router:'/my/archives'},
+//         {name: "wiki", value: "健康百科"}
+//     ],
+//     my_nav: [
+//         {name: "my-consult", value: "我的咨询",path:"/officeConsult"},
+//         {name: "my-book", value: "我的挂号",path:"/myRegistration"},
+//         {name: "common-visitperson", value: "常用就诊人",path:"/common-visitperson"},
+//         {name: "archives", value: "健康档案", path: "/archives"},
+//         {name: "wallet", value: "我的钱包"},
+//         // {name: "account", value: "账户相关",path: "/accountAbout"},
+//         {name: "about", value: "关于"}
+//     ],
+//     book_doc_nav: [
+//         {name: "bypeople", value: "按专家预约"},
+//         {name: "bytime", value: "按时间预约"}
+//     ],
+//     basic_situation: [
+//         {name:"presentingComplaint",value:"所患疾病"},
+//         {name:"pastHistory",value:"既往史"},
+//         {name:"familyHistory",value:"家族史"},
+//         {name:"allergyHistory",value:"过敏史"},
+//     ] ,
+//     basic_bar: [
+//         {name:"",value:"简介","router":"intro"},
+//         {name:"sel",value:"精选","router":"choiceness"},
+//         {name:"",value:"动态","router":"dynamic"}
+//     ],
+//     doc_bar:[
+//         {name:"",value:"简介","router":"docIntro"},
+//         {name:"sel",value:"精选","router":"docChoiceness"},
+//         {name:"",value:"动态","router":"docDynamic"}
+//     ],
+//     docList_bar:[
+//         {name:"",value:"医生"},
+//         {name:"",value:"团队"}
+//     ],
+    // basic_service:[
+// =======
   ],
   basic_text: [
     {
@@ -165,7 +165,7 @@ export default {
       name: '',
       value: "就医服务",
       list: [
->>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
+// >>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
         {
           name: 'book',
           value: "预约挂号",

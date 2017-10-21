@@ -6,9 +6,13 @@
         我的
       </header>
       <div class="subheader flex">
-        <div class="ava flex0"><img
-          src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1907944229,3898051778&fm=173&s=3A82C44C5402215940ED1C83030060D3&w=218&h=146&img.JPEG"
-          alt=""></div>
+        <div class="ava flex0" v-if="patAvatar">
+          <img :src="patAvatar" alt="">
+        </div>
+        <div class="ava flex0" v-else>
+          <img src="../../../static/img/pat.m.jpg" alt="" v-if="patDetail.commpatGender == 'M'">
+          <img src="../../../static/img/pat.f.jpg" alt="" v-else>
+        </div>
         <div class="info flex1">
           <!--<h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0, 1)}}</h3>-->
           <div>姓名：{{patDetail.commpatName}}</div>
@@ -46,7 +50,8 @@
       return {
         nav: config.my_nav,
         currentNav: 3,
-        patDetail: {}
+        patDetail: {},
+        patAvatar:""
       };
     },
     computed: {},
@@ -59,6 +64,7 @@
           this.$router.push("/login")
         } else {
           this.patDetail = res.commpat;
+          this.patAvatar = res.pat.patAvatar
         }
       });
     },

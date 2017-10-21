@@ -22,7 +22,7 @@
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <p class="bf">请输入病例详情</p>
+              <p class="bf">请输入病例详情 0/500</p>
             </div>
           </div>
         </div>

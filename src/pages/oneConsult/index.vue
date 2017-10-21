@@ -1,7 +1,8 @@
 <template>
   <div class="chat">
     <div ref="header">
-      <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg"  :showMy="vipStatus"></v-header>
+      <v-header :title="title" :rightTitle="overTitle" :waitImg="waitImg" v-if="consultInfo.consultStatus=='3'" @on-docCard="finishConsult"></v-header>
+      <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" v-else></v-header>
       <div class="weui-cells">
         <a class="weui-cell weui-cell_access" href="javascript:;">
           <div class="weui-cell__bd">
@@ -42,7 +43,7 @@
         </div>
       </div>
     </div>
-    <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="conversation main"
+    <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="main"
             :listen-scroll="listenScroll" :probe-type="probeType">
       <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
         <ul>
@@ -91,7 +92,13 @@
         <span class="pay" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
       </div>
     </footer>
-    <footer :class="{footshow:seeMore}" ref="footer" v-else="">
+    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '4'">
+      <div class="payWrap border-1px-top">
+        <span class="border-1px-right" >再次咨询</span>
+        <span class="pay">评价</span>
+      </div>
+    </footer>
+    <footer :class="{footshow:seeMore}" ref="footer" v-else>
       <section class="foot_top">
         <div class="picture">
           <input type="file" name="picture" id="upPicture" ref="picture" @change="onFileChange">
@@ -117,6 +124,12 @@
     <div class="largePicArea" v-if="showLargePic">
       <img :src="largePic" alt="" @click="makeSmall">
     </div>
+    <v-dialog @on-cancel="over" @on-download="overConsult" v-if="showOverConsult"
+              :dialogTitle="dialogOverTitle"
+              :dialogMain="dialogOverMain"
+              :dialogLeftFoot="dialogOverLeft"
+              :dialogRightFoot="dialogOverRight"
+    ></v-dialog>
     <v-mask v-if="showMask"></v-mask>
     <toast v-if="showToast"></toast>
   </div>
@@ -125,7 +138,7 @@
   import header from '../../base/header'
   import Scroll from '../../base/scroll'
   import http from '../../lib/http'
-  //  import dialog from '../../../base/dialog'
+    import dialog from '../../base/dialog'
   import Toast from '../../base/toast'
   import {Todate,goodTime} from '../../lib/filter'
   import mask from '../../base/mask.vue'
@@ -138,6 +151,7 @@
       return {
         title: "",
         rightTitle: "",
+        overTitle:"结束咨询",
         waitImg: "",
         seeMore: false,
         light: false,
@@ -159,11 +173,16 @@
         inter: "",
         aboutUserInfo:"",
         docId:"",
-        vipStatus:"",
+//        vipStatus:"",
         showMask:false,
         consultInfo:"",
         attaList:[],
-        userPat:""
+        userPat:"",
+        dialogOverTitle: "结束咨询",
+        dialogOverMain: "结束咨询后双方都无法继续回复。请酌情使用该功能",
+        dialogOverLeft: "取消",
+        dialogOverRight: "确定结束",
+        showOverConsult: false,
       }
     },
     filters:{
@@ -172,7 +191,7 @@
     },
     components: {
       "VHeader": header,
-//      "VDialog": dialog,
+      "VDialog": dialog,
       Scroll,
       Toast,
       'VMask':mask
@@ -184,6 +203,27 @@
       this.consultId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
+           this.getInitData()
+      })
+    },
+    mounted() {
+//      let o = document.getElementsByClassName("chat")[0];
+//      let h = o.offsetHeight;  //高度
+//      let content = h
+//      console.log(o)
+//      setTimeout(() => {
+//        if (this.$refs.slideList.offsetHeight > content - 10) {
+////                     console.log(that.$refs.slideList.offsetHeight)
+//          console.log("医生回复你了")
+//          this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+//        }
+//      }, 10)
+    },
+    watch: {
+
+    },
+    methods: {
+      getInitData(){
         http("smarthos.consult.details", {
           token: localStorage.getItem('token'),
           consultId:this.consultId
@@ -200,7 +240,7 @@
               this.aboutReplyMessage = data.obj.consultMessage
               this.title = data.obj.userDocVo.docName
               this.waitImg = data.obj.userDocVo.docAvatar
-              this.vipStatus = data.obj.followDocpat.vipStatus
+//              this.vipStatus = data.obj.followDocpat.vipStatus
 
 //              this.docId = data.obj.userDocVO.id
 //              this.attachImg = data.obj.attaList
@@ -210,14 +250,14 @@
               let o = document.getElementsByClassName("chat")[0];
               let h = o.offsetHeight;  //高度
               let content = h
-              console.log(o)
-
+              console.log(o,6666)
+              console.log(h)
 
               setTimeout(() => {
                 if (this.$refs.slideList.offsetHeight > content - 10) {
-                  this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight-390)
                   console.log(this.$refs.slideList.offsetHeight)
-                  console.log(content)
+//                  console.log(content)
                 }
               }, 300)
 
@@ -233,35 +273,31 @@
           }
 //          console.log(this.attachImg)
         })
-      })
-//      api("nethos.pat.info.get", {
-//        token: tokenCache.get()
-//      }).then((data) => {
-//        console.log(data)
-//      })
-    },
-    mounted() {
-      let o = document.getElementsByClassName("chat")[0];
-      let h = o.offsetHeight;  //高度
-      let content = h
-      console.log(o)
-      setTimeout(() => {
-        if (this.$refs.slideList.offsetHeight > content - 10) {
-//                     console.log(that.$refs.slideList.offsetHeight)
-          console.log("医生回复你了")
-          this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
-        }
-      }, 10)
-    },
-    watch: {
-
-    },
-    methods: {
+      },
       goArticle(id){
         this.$router.push({
           path:"/articleDetail",
           query:{articleId:id}
         })
+      },
+      over() {
+        this.showOverConsult = false
+      },
+      overConsult(){
+        this.showOverConsult = false
+         http("smarthos.consult.one2one.pic.complete",{
+             token:localStorage.getItem('token'),
+             consultId:this.consultId
+         }).then((data)=>{
+             if(data.code == 0){
+                 this.getInitData()
+             }else{
+                 weui.alert(data.msg)
+             }
+         })
+      },
+      finishConsult(){
+          this.showOverConsult = true
       },
 //      goDocCard(){
 //        this.$router.push('/docCard/'+this.docId)
@@ -342,11 +378,14 @@
           replyContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
+
+          this.getInitData()
+
           console.log(data,11111)
-          this.seeMore = false
+//          this.seeMore = false
           this.$nextTick(() => {
-            this.aboutReplyMessage.push(data.obj)
-            console.log(this.aboutReplyMessage)
+//            this.aboutReplyMessage.push(data.obj)
+//            console.log(this.aboutReplyMessage)
             let o = document.getElementsByClassName("chat")[0];
             let h = o.offsetHeight;  //高度
             let content = h
@@ -354,7 +393,7 @@
             setTimeout(() => {
               if (this.$refs.slideList.offsetHeight > content - 10) {
                 console.log(this.$refs.slideList.offsetHeight)
-                this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+                this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
               }
             }, 300)
           })
@@ -425,7 +464,7 @@
 
                       setTimeout(() => {
                         if (that.$refs.slideList.offsetHeight > content - 10) {
-                          that.$refs.conversation.scrollTo(0, content - that.$refs.slideList.offsetHeight - 80)
+                          that.$refs.main.scrollTo(0, content - that.$refs.slideList.offsetHeight - 80)
                           console.log(that.$refs.slideList.offsetHeight)
                           console.log(content)
                         }

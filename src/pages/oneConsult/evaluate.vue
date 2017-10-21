@@ -5,6 +5,7 @@
         </top>
         <div class="wrap">
             <div class="xing">
+               <p class="topWord">请您对本次问诊做出评价</p>
                 <label v-for="item,index of 5" class="eval" :class="{sel:num>index}" @click="num=index+1">&#xe64e;</label>
             </div>
             <div class="contain">
@@ -12,7 +13,7 @@
                 <div class="weui-cells weui-cells_form">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea v-model="evaluateContent" class="weui-textarea" placeholder="请输入文本" rows="3"></textarea>
+                            <textarea v-model="evaluateContent" class="weui-textarea" placeholder="您对医生的具体评价(可以不填)" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -94,6 +95,11 @@
     .xing{
         margin: 100px auto;
         text-align: center;
+        .topWord{
+          color: #333333;
+          font-size: 32px;
+          margin-bottom: 15px;
+        }
     }
     .eval{
         padding: 5px;

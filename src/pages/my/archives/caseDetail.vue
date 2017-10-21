@@ -4,7 +4,7 @@
       <!--<div class="middle big">病例详情</div>-->
       <!--<span slot="right" class="step" @click="save">保存</span>-->
     <!--</top>-->
-    <top title="病例详情" class="noflex">
+    <top title="病历详情" class="noflex">
       <i slot="back"></i>
       <div slot="right" class="right absolute" @click="save">
         保存
@@ -53,10 +53,15 @@
           </upload-img>
         </div>
         <div class="btn">
-          <div class="text mfc">{{date |  Todate}} &nbsp;&nbsp;由{{creatorName}}添加</div>
+          <div class="text mfc">{{date |  getDay}} &nbsp;&nbsp;由{{creatorName}}添加</div>
           <a @click="deleteCase" style="background: #ff8588" href="javascript:;" class="weui-btn weui-btn_primary">删除</a>
         </div>
-
+        <v-dialog @on-cancel="closeAll" @on-download="closeAllCancel" v-if="showAllDialog"
+                  :dialogTitle="dialogTitle"
+                  :dialogMain="dialogMain"
+                  :dialogLeftFoot="dialogLeftFoot"
+                  :dialogRightFoot="dialogRightFoot"
+        ></v-dialog>
 
   </div>
 </template>
@@ -66,19 +71,21 @@
   import date from "../../../base/date.vue"
   import top from "../../../components/app-header.vue"
   import config from "../../../lib/config"
-  import {Getdate,Todate} from '../../../lib/filter'
+  import Dialog from '../../../base/dialog.vue'
+  import {Getdate,Todate,getDay} from '../../../lib/filter'
   import api from '../../../lib/http'
   export default{
     components: {
       top,
       Upload,
       date,
-      uploadImg
+      uploadImg,
+      "VDialog":Dialog
     },
     filters:{
       Todate,
-      Getdate
-
+      Getdate,
+      getDay
     },
     data(){
       return {
@@ -92,7 +99,12 @@
         creatorName:'',
         picList: [],
         config: config,
-        time:""
+        time:"",
+        dialogTitle: "删除",
+        dialogMain: "确定删除此条记录",
+        dialogLeftFoot: "取消",
+        dialogRightFoot: "删除",
+        showAllDialog:false
       }
     },
     mounted(){
@@ -109,7 +121,7 @@
           this.imgId.push(this.imgList[i].id)
         }
       };
-       this.time =  Getdate(this.date);
+       this.time =  getDay(this.date);
     },
     methods:{
       getDate(val){
@@ -137,6 +149,13 @@
         })
       },
       deleteCase(){
+          this.showAllDialog = true
+      },
+      closeAll(){
+        this.showAllDialog = false
+      },
+      closeAllCancel(){
+        this.showAllDialog = false
         api("smarthos.medical.history.delete",{
           id:this.id,
           token:this.token

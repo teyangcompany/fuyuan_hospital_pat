@@ -34,20 +34,13 @@
           </div>
         </div>
       </div>
-      <div class="wrapMy">
+      <div class="wrapMy" v-if="aboutConsult.length != 0">
         <ul class="border-1px" key="item" v-for="item in aboutConsult"
             @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li>
             <div>
-<<<<<<< HEAD
               <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
               <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
-=======
-              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">
-                医生问诊<span> {{ item.consultInfo.payFee | consultPrice }}</span></p>
-              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">
-                科室问诊<span> {{ item.consultInfo.payFee | consultPrice }}</span></p>
->>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1"
                     style="color: #2772FF;">待受理</span>
@@ -68,7 +61,6 @@
                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
               </div>
             </div>
-<<<<<<< HEAD
             <div class="ConsultRelate">
               <span class="name">
                 <span class="number" v-if="item.userDocVo">
@@ -81,19 +73,12 @@
               </span>
               <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | goodTime}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
               <span class="money" v-else>{{ item.consultInfo.createTime | goodTime}}创建 | 0条回复</span>
-=======
-            <div class="ConsultRelate" v-if="item.userDocVo">
-              <span class="name"><span class="number">
-                <img :src="item.userDocVo.docAvatar" alt="">
-                <span>{{ item.userDocVo.docName }}</span>回答</span></span>
-              <span class="money"
-                    v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | Getdate}}创建 | {{ item.consultInfo.replyCount
-                }}条回复</span>
-              <span class="money" v-else>{{ item.consultInfo.createTime | Getdate}}创建 | 0条回复</span>
->>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
             </div>
           </li>
         </ul>
+      </div>
+      <div class="emptyHistory" v-else>
+            <span>暂无咨询记录</span>
       </div>
     </div>
   </div>
@@ -106,7 +91,7 @@
   export default{
     data(){
       return{
-          aboutConsult:"",
+          aboutConsult:[],
           sortBy:"all",
           waitPayLength:"",
           doingLength:"",
@@ -118,6 +103,7 @@
       goodTime
     },
     created(){
+         this.chooseType(this.sortBy)
          http("smarthos.consult.my.list.page",{
            token:tokenCache.get()
          }).then((data)=>{
@@ -168,7 +154,10 @@
     methods: {
       goDetail(type, id) {
         if (type == 'PLATFORMPIC') {
-          this.$router.push('/consuitDetail/' + id)
+          this.$router.push({
+            path:'/consuitDetail/' + id,
+            query:{sortBy:this.sortBy}
+          })
         } else {
           this.$router.push('/oneConsult/' + id)
         }
@@ -251,6 +240,20 @@
   }
 
   .toggle {
+    .emptyHistory{
+      position: absolute;
+      top: 170px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      span{
+        font-size: 32px;
+      }
+    }
     .wrapMy {
       position: absolute;
       top: 170px;
@@ -284,11 +287,7 @@
             }
           }
           div.mainContent {
-<<<<<<< HEAD
             min-height:200px;
-=======
-            height: 190px;
->>>>>>> d56939535f39208731cd8a486cfdcccfa0f1b0ca
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -412,7 +411,7 @@
     display: flex;
     width: 100%;
     height: 80px;
-    position: fixed;
+    position: absolute;
     top: 180px;
     z-index: 100;
     line-height: 80px;

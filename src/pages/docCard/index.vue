@@ -60,8 +60,9 @@
             <div class="mfw onLine" @click="showService">
                 在线问诊
             </div>
-            <div class="mfw patient" @click="attention">
-                关注医生
+            <div class="mfw patient">
+              <span @click="attention" >关注医生</span>
+              <!--<span @click="attention">取消关注</span>-->
             </div>
         </div>
         <seivice :docId="docId" ref="ser"></seivice>
@@ -87,7 +88,8 @@
                 docId:"",
                 token:localStorage.getItem('token'),
                 doc:{},
-              docServeList:""
+              docServeList:"",
+              isFollow:false
             }
         },
         created(){
@@ -106,17 +108,31 @@
               this.$router.go(-1)
             },
             attention(){
-                api('smarthos.follow.docpat.add',{
+                if(!(this.isFollow)){
+                  api('smarthos.follow.docpat.add',{
                     token:this.token,
                     docId:this.docId
-                }).then(res=>{
+                  }).then(res=>{
                     console.log(res,88888);
                     if(res.succ){
-                        weui.alert('关注成功')
+                      this.isFollow = true
                     }else {
-                        weui.alert(res.msg)
+                      weui.alert(res.msg)
                     }
-                })
+                  })
+                }else{
+                  api('smarthos.follow.cancel',{
+                    token:this.token,
+                    docId:this.docId
+                  }).then(res=>{
+                    console.log(res,88888);
+                    if(res.succ){
+                      this.isFollow = false
+                    }else {
+                      weui.alert(res.msg)
+                    }
+                  })
+                }
             },
             getData(){
               api('smarthos.user.doc.card.get',{

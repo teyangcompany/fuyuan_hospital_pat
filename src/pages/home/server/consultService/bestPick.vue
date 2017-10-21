@@ -82,7 +82,8 @@
         loadingStatus:true,
         listPage:1,
         createTime:"",
-        praiseStatus:false
+        praiseStatus:false,
+        clickLikes:0
       }
     },
     filters:{
@@ -150,6 +151,7 @@
              consultId:id
           }).then((data)=>{
               if(data.code == 0){
+                  this.clickLikes = data.obj.praiseCount + 1
 //                  location.reload()
 //                  this.praiseStatus = true
               }else{

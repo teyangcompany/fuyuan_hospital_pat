@@ -23,7 +23,7 @@
             <div class="weui-cell">
               <div class="weui-cell__hd"><label class="weui-label bf" >身份证号</label></div>
               <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patIdcard.$error }">
-                <input  @input="$v.patIdcard.$touch()"   class="weui-input" type="number" v-model="patIdcard" placeholder="请输入身份证号"/>
+                <input  @input="$v.patIdcard.$touch()"   class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@
       methods:{
         showRemind(){
           this.$weui.dialog({
-            content: '若该患者曾前往浙二就诊过，最好填写在浙二留的手机号 若该手机号不再使用，可以前往医院修改，或者直接填写真实的本人使用的手机号',
+            content: '若该患者曾前往復元医院就诊过，最好填写在復元医院留的手机号 若该手机号不再使用，可以前往医院修改，或者直接填写真实的本人使用的手机号',
             buttons: [{
               label: '确定',
               type: 'primary'
@@ -161,12 +161,11 @@
             }).then(res=>{
               console.log(res,232323);
               if(res.succ){
-                alert('添加成功')
                this.$router.push({
-                 name:'users'
+                 path:"/my/common-visitperson"
                })
               }else{
-                alert(res.msg)
+                weui.alert(res.msg)
               }
             })
           }

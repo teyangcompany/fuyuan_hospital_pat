@@ -17,8 +17,11 @@
                 <date :time="time" @getDate="getDate">
 
                 </date>
-                <li class="form-item form-item-input flex">
-                    <div class="label flex0">请输入病历详情</div>
+                <li class="form-item form-item-input flex illDetail">
+                    <div class="label flex0">
+                      <span>请输入病历详情</span>
+                      <span>0/500</span>
+                    </div>
                 </li>
                 <li class="form-item form-item-text">
                     <div class="textarea flex1">
@@ -87,7 +90,7 @@
             console.log(212121132)
             var day2 = new Date();
             day2.setTime(day2.getTime());
-            var month = day2.getMonth()+1>10?day2.getMonth()+1:'0'+(day2.getMonth()+1);
+            var month = day2.getMonth()+1>=10?day2.getMonth()+1:'0'+(day2.getMonth()+1);
             var day = day2.getDate()>10?day2.getDate():'0'+day2.getDate();
             this.time = day2.getFullYear()+"-" + month + "-" + day;
         },
@@ -207,5 +210,11 @@
             background-color: #ff8588;
         }
     }
-
+    .illDetail{
+         div{
+           width:690px;
+           display: flex;
+           justify-content: space-between;
+         }
+    }
 </style>

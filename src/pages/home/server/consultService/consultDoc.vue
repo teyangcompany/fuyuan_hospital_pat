@@ -37,7 +37,7 @@
                     <polygon points="0,3 10,3 5,8"/>
                   </svg>
               </span>
-              <span v-else>{{ typePick }}
+              <span v-else>{{ sortName }}
                   <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
                     <polygon points="0,3 10,3 5,8"/>
                   </svg>
@@ -102,7 +102,7 @@
                   <p>全部问诊形式</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" class="weui-check" name="radio3" id="x31" value="全部问诊形式" v-model="typePick"/>
+                  <input type="radio" class="weui-check" name="radio3" id="x31" value="" v-model="typePick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
@@ -111,7 +111,7 @@
                   <p>图文问诊</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" name="radio3" class="weui-check" id="x32" value="图文问诊" v-model="typePick"/>
+                  <input type="radio" name="radio3" class="weui-check" id="x32" value="CONSULT_PIC" v-model="typePick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
@@ -120,7 +120,7 @@
                   <p>电话问诊</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" name="radio3" class="weui-check" id="x33" value="电话问诊" v-model="typePick"/>
+                  <input type="radio" name="radio3" class="weui-check" id="x33" value="CONSULT_PHONE" v-model="typePick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
@@ -129,19 +129,19 @@
                   <p>视频问诊</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" name="radio3" class="weui-check" id="x34" value="视频问诊" v-model="typePick"/>
+                  <input type="radio" name="radio3" class="weui-check" id="x34" value="CONSULT_VIDEO" v-model="typePick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
-              <label class="weui-cell weui-check__label" for="x35">
-                <div class="weui-cell__bd">
-                  <p>团队问诊</p>
-                </div>
-                <div class="weui-cell__ft">
-                  <input type="radio" name="radio3" class="weui-check" id="x35" value="团队问诊" v-model="typePick"/>
-                  <span class="weui-icon-checked"></span>
-                </div>
-              </label>
+              <!--<label class="weui-cell weui-check__label" for="x35">-->
+                <!--<div class="weui-cell__bd">-->
+                  <!--<p>团队问诊</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                  <!--<input type="radio" name="radio3" class="weui-check" id="x35" value="团队问诊" v-model="typePick"/>-->
+                  <!--<span class="weui-icon-checked"></span>-->
+                <!--</div>-->
+              <!--</label>-->
             </div>
             <!--<li>全部问诊形式</li>-->
             <!--<li>视频问诊</li>-->
@@ -200,7 +200,7 @@
         <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
       </transition>
       <scroll class="teamList" :data="followList" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
-        <div>
+        <div v-if="followList.length != 0">
           <ul class="border-1px" v-for="item in followList">
             <div @click="goDocCard(item.id)">
               <li class="teamLi">
@@ -212,7 +212,14 @@
                 </div>
                 <div class="cancelIntro">
                   <div>
-                    <p><span><span class="followName">{{ item.docName }}</span> <span class="myDoctor">团队成员</span></span><span class="commentValue">{{ item.docScoure }}分</span> </p>
+                    <p>
+                      <span>
+                        <span class="followName">{{ item.docName }}</span>
+                        <span class="myDoctor"></span>
+                      </span>
+                      <span class="commentValue" v-if="item.docScoure">{{ item.docScoure }}分</span>
+                      <span class="commentValue" v-else>暂无评价</span>
+                    </p>
                     <p>{{ item.deptName }} {{ item.docTitle }}</p>
                     <p>{{ item.hosName }}</p>
                   </div>
@@ -237,6 +244,9 @@
             </span>
           </div>
         </div>
+        <div v-else class="emptyHistory">
+          <span>暂未搜索到相关结果</span>
+        </div>
       </scroll>
       <div class="directConsult border-1px-top" @click="goOffice">
         <p>直接咨询科室</p>
@@ -254,6 +264,7 @@
       return{
         sortBy:'',
         typePick:"",
+        sortName:"",
         defaultPick:"",
         followList:[],
         parentLevel:"",
@@ -347,7 +358,12 @@
         this.listPage +=1;
         let that = this
         http("smarthos.user.doc.search",{
+          deptId:this.deptId,
           keyWord:this.searchContent,
+          consultType:this.typePick,
+          orderByScore:this.orderByScore,
+          orderByNum:this.orderByNum,
+          orderByDocTitle:this.orderByDocTitle,
           pageNum:that.listPage,
           pageSize:"10"
         }).then((data)=>{
@@ -374,7 +390,7 @@
       },
       searchList(){
         http("smarthos.user.doc.search",{
-          deptId:"",
+          deptId:this.deptId,
           keyWord:this.searchContent,
           consultType:this.typePick,
           orderByScore:this.orderByScore,
@@ -447,7 +463,14 @@
             this.sortPick = item.deptName
             this.sortBy = ''
             http("smarthos.user.doc.search",{
-              deptId:this.deptId
+              deptId:this.deptId,
+              keyWord:this.searchContent,
+              consultType:this.typePick,
+              orderByScore:this.orderByScore,
+              orderByNum:this.orderByNum,
+              orderByDocTitle:this.orderByDocTitle,
+              pageSize:10,
+              pageNum:1
             }).then((data)=>{
                 console.log(data)
               if(data.code == 0){
@@ -465,8 +488,13 @@
         this.sortPick = item.deptName
           http("smarthos.user.doc.search",{
             deptId:this.deptId,
-//            pageSize:10,
-//            pageNum:1,
+            keyWord:this.searchContent,
+            consultType:this.typePick,
+            orderByScore:this.orderByScore,
+            orderByNum:this.orderByNum,
+            orderByDocTitle:this.orderByDocTitle,
+            pageSize:10,
+            pageNum:1,
           }).then((data)=>{
             if(data.code == 0){
               this.followList = data.list
@@ -494,15 +522,38 @@
       typePick(){
         this.sortBy = ''
         this.searchList()
+        if(this.typePick == 'CONSULT_PHONE'){
+           this.sortName = "电话问诊"
+        }else if(this.typePick == 'CONSULT_PIC'){
+          this.sortName = "图文问诊"
+        }else if(this.typePick == 'CONSULT_VIDEO'){
+          this.sortName = "视频问诊"
+        }else if(this.typePick == ''){
+          this.sortName = "全部问诊形式"
+        }
       },
       defaultPick(){
         this.sortBy = ''
-        if(this.defaultPick == "按好评排序"){
+        if(this.defaultPick == "默认排序"){
+          this.orderByScore = false
+          this.orderByNum = false
+          this.orderByDocTitle = false
+          this.searchList()
+        }else if(this.defaultPick == "按好评排序"){
               this.orderByScore = true
+              this.orderByNum = false
+              this.orderByDocTitle = false
+              this.searchList()
         }else if(this.defaultPick == "按服务次数排序"){
               this.orderByNum = true
+              this.orderByScore = false
+              this.orderByDocTitle = false
+          this.searchList()
         }else if(this.defaultPick == "按职称排序"){
               this.orderByDocTitle = true
+              this.orderByNum = false
+              this.orderByScore = false
+          this.searchList()
         }
       }
     }
@@ -789,6 +840,19 @@
     right:0;
     left:0;
     overflow: auto;
+    .emptyHistory{
+      position: absolute;
+      top: 0px;
+      bottom:90px;
+      right:0;
+      left:0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span{
+        font-size: 36px;
+      }
+    }
     ul{
       padding:0;
       margin:0;

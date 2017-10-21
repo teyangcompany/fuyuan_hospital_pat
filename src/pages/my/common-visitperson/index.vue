@@ -8,18 +8,23 @@
         </app-header>
         <div class="wrapper list" ref="main">
             <left-del displacement="1.2" tag="ul" class="part" :key="1"  v-for="item in list" >
-                <ul class="flex" @click="goEditUser(item.id,item)">
-                    <li class="left-part flex0 info">
+                <ul class="flex">
+                    <li class="left-part flex0 info" @click="goEditUser(item.id,item)">
                         <dl class="flex">
-                            <dt class="flex0">{{item.commpatName}} {{item.commpatGender=='M'?'男':'女'}}</dt>
+                            <dt class="flex0">{{item.commpatName}} {{item.commpatGender=='M'?'男':'女'}} {{ JSON.stringify(new Date()).substr(1,4)- item.commpatIdcard.substr(6,4)  }}岁 </dt>
+                        </dl>
+                        <dl class="flex">
+                          <dt class="flex0">手机号:</dt>
+                          <dd class="flex1">{{item.commpatMobile}}</dd>
                         </dl>
                         <dl class="flex">
                             <dt class="flex0">身份证:</dt>
                             <dd class="flex1">{{item.commpatIdcard}}</dd>
                         </dl>
                         <dl class="flex">
-                            <dt class="flex0">手机号:</dt>
-                            <dd class="flex1">{{item.commpatMobile}}</dd>
+                          <dt class="flex0">病案号:</dt>
+                          <dd class="flex1" v-if="item.compatMedicalRecord">{{item.compatMedicalRecord}}</dd>
+                          <dd class="flex1" v-else>暂未绑定病案号</dd>
                         </dl>
                     </li>
                     <li class="del-part flex0 del" @click="del(item.id)"></li>
@@ -66,9 +71,13 @@
                 })
             },
             addUser(){
-              this.$router.push({
-                  name:'addUser'
-              })
+               if(this.list.length == 5){
+                    weui.alert("最多可以绑定5个就诊人")
+               }else{
+                 this.$router.push({
+                   name:'addUser'
+                 })
+               }
             },
             getData(){
                 api('smarthos.user.commpat.list',{
@@ -110,7 +119,7 @@
         background-color: white;
     }
 
-    $hei: 200px;
+    $hei: 260px;
     .list {
         padding-top: 20px;
         .part + .part {
