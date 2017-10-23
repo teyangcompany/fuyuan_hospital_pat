@@ -7,26 +7,162 @@
     <!--</div>-->
     <div class="toggle">
       <div class="tab border-1px myTab">
-        <div class="tab-item">
+        <div class="tab-item" :class="{choose_type:sortBy == 'displaySort'}">
           <div class="tab_item_container" @click="chooseType('displaySort')">
             <span>全部科室</span>
           </div>
         </div>
-        <div class="tab-item">
+        <div class="tab-item" :class="{choose_type:sortBy == 'displayType'}">
           <div class="tab_item_container" @click="chooseType('displayType')">
             <div class="tab_item_border">
               <span>全部病种</span>
             </div>
           </div>
         </div>
-        <div class="tab-item">
-          <div class="tab_item_container" @click="chooseType('displayType')">
+        <div class="tab-item" :class="{choose_type:sortBy == 'displayDefault'}">
+          <div class="tab_item_container" @click="chooseType('displayDefault')">
             <div class="tab_item_border">
               <span>默认排序</span>
             </div>
           </div>
         </div>
       </div>
+      <transition name="showlist">
+        <div class="dropType allRoom" v-show="sortBy == 'displaySort'" >
+          <div class="wrapWhole" >
+            <div class="wrapMenu" ref="wrapMenu">
+              <ul>
+                <li v-for="(item,index) in parentLevel" @click="selectParent(item,index)" :class="{category_active:clickIndex == index}">
+                  <span> {{ item.deptName }}</span>
+                  <img v-if="arrow[index] == '1'" src="../../../../../static/img/icon/arrow-right-grow.png" alt="">
+                </li>
+              </ul>
+            </div>
+            <div class="wrapContent" ref="wrapContent">
+              <ul>
+                <div class="weui-cells weui-cells_radio weuiMargin" >
+                  <label class="weui-cell weui-check__label"  v-for="(item,index) in childDetail" @touchend="selectChild(index,item)">
+                    <div class="weui-cell__bd">
+                      <p>{{ item.deptName }}</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input type="radio" class="weui-check" name="radio1"  :value="item.deptName " v-model="sortPick"/>
+                      <span class="weui-icon-checked"></span>
+                    </div>
+                  </label>
+                </div>
+                <!--<li v-for="item in childDetail">{{ item.deptName }}</li>-->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <transition name="showlist">
+        <div class="dropType" v-show="sortBy == 'displayType'">
+          <ul >
+            <div class="weui-cells weui-cells_radio weuiMargin">
+              <label class="weui-cell weui-check__label">
+                <div class="weui-cell__bd">
+                  <p>全部病种</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" class="weui-check" name="radio3"  value="" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" v-for="item in illNameList" v-if="illNameList.length != 0">
+                <div class="weui-cell__bd">
+                  <p v-if="item.illnessName">{{item.illnessName}}</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio3" class="weui-check"  value="CONSULT_PIC" v-model="typePick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <!--<label class="weui-cell weui-check__label" for="x33">-->
+                <!--<div class="weui-cell__bd">-->
+                  <!--<p>电话问诊</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                  <!--<input type="radio" name="radio3" class="weui-check" id="x33" value="CONSULT_PHONE" v-model="typePick"/>-->
+                  <!--<span class="weui-icon-checked"></span>-->
+                <!--</div>-->
+              <!--</label>-->
+              <!--<label class="weui-cell weui-check__label" for="x34">-->
+                <!--<div class="weui-cell__bd">-->
+                  <!--<p>视频问诊</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                  <!--<input type="radio" name="radio3" class="weui-check" id="x34" value="CONSULT_VIDEO" v-model="typePick"/>-->
+                  <!--<span class="weui-icon-checked"></span>-->
+                <!--</div>-->
+              <!--</label>-->
+              <!--<label class="weui-cell weui-check__label" for="x35">-->
+              <!--<div class="weui-cell__bd">-->
+              <!--<p>团队问诊</p>-->
+              <!--</div>-->
+              <!--<div class="weui-cell__ft">-->
+              <!--<input type="radio" name="radio3" class="weui-check" id="x35" value="团队问诊" v-model="typePick"/>-->
+              <!--<span class="weui-icon-checked"></span>-->
+              <!--</div>-->
+              <!--</label>-->
+            </div>
+            <!--<li>全部问诊形式</li>-->
+            <!--<li>视频问诊</li>-->
+            <!--<li>图文问诊</li>-->
+          </ul>
+
+        </div>
+      </transition>
+      <transition name="showlist">
+        <div class="dropType" v-show="sortBy == 'displayDefault'">
+          <ul >
+            <!--<li>默认排序</li>-->
+            <!--<li>按好评排</li>-->
+            <div class="weui-cells weui-cells_radio weuiMargin">
+              <label class="weui-cell weui-check__label" for="x41">
+                <div class="weui-cell__bd">
+                  <p>默认排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" class="weui-check" name="radio4" id="x41" value="默认排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x42">
+                <div class="weui-cell__bd">
+                  <p>按点赞排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio4" class="weui-check" id="x42" value="按好评排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <label class="weui-cell weui-check__label" for="x43">
+                <div class="weui-cell__bd">
+                  <p>按浏览次数排序</p>
+                </div>
+                <div class="weui-cell__ft">
+                  <input type="radio" name="radio4" class="weui-check" id="x43" value="按服务次数排序" v-model="defaultPick"/>
+                  <span class="weui-icon-checked"></span>
+                </div>
+              </label>
+              <!--<label class="weui-cell weui-check__label" for="x44">-->
+                <!--<div class="weui-cell__bd">-->
+                  <!--<p>按职称排序</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                  <!--<input type="radio" name="radio4" class="weui-check" id="x44" value="按职称排序" v-model="defaultPick"/>-->
+                  <!--<span class="weui-icon-checked"></span>-->
+                <!--</div>-->
+              <!--</label>-->
+            </div>
+          </ul>
+        </div>
+      </transition>
+      <transition name="showcover">
+        <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
+      </transition>
       <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
         <div>
           <ul class="border-1px" v-for="item in aboutConsult" :key="item.id">
@@ -83,7 +219,22 @@
         listPage:1,
         createTime:"",
         praiseStatus:false,
-        clickLikes:0
+        clickLikes:0,
+        parentLevel:"",
+        childDetail:null,
+        arrow:[],
+        sortBy:'',
+        typePick:"",
+        sortPick:"",
+        defaultPick:"",
+        sortName:"",
+        clickIndex:0,
+        illNameList:[],
+        allRoom:[
+          {
+            deptName:"全部科室",
+          }
+        ],
       }
     },
     filters:{
@@ -106,6 +257,32 @@
         }
         console.log(data)
       })
+//      ***********************************************************************************
+      http("smarthos.system.choice.stddept.list",{
+        hasDept:true,
+        hasDoc:true,
+        deptLevel:2
+      }).then((data)=>{
+        if(data.code == 0){
+          console.log(data,9999)
+          this.parentLevel = data.list
+          this.parentLevel = this.allRoom.concat(this.parentLevel)
+          this.childDetail = this.parentLevel[this.clickIndex].subDeptList
+          this.parentLevel.forEach(item =>{
+            if (item.hasOwnProperty("subDeptList")) {
+              this.arrow.push('1')
+            }else{
+              this.arrow.push('0')
+            }
+          })
+        }else{
+          weui.alert(data.msg)
+        }
+
+      })
+
+
+
     },
     mounted(){
 //      this.getDate()
@@ -159,13 +336,124 @@
               }
               console.log(data)
           })
+      },
+      _initWrapMenu(){
+        if(this.displaySort = true){
+          this.wrapWholeScroll = new BScroll(this.$refs.wrapMenu,{
+            click:true
+          })
+        }else{
+          return
+        }
+      },
+      _initWrapContent(){
+        if(this.displaySort = true){
+          this.wrapWholeScroll = new BScroll(this.$refs.wrapContent,{
+            click:true
+          })
+        }else{
+          return
+        }
+      },
+      hideCover(){
+        this.sortBy = ''
+      },
+      chooseType(type){
+        if(this.sortBy !== type){
+          this.sortBy = type
+          if(type == 'displaySort'){
+            this.$nextTick(() => {
+              this._initWrapMenu()
+              this._initWrapContent()
+            });
+          }else if(type == 'displayType'){
+              if(this.illNameList.length == 0){
+                  weui.alert("无可选疾病")
+              }
+          }
+        }else{
+          this.sortBy = ''
+        }
+      },
+      selectParent(item,index){
+        this.clickIndex = index
+        this.childDetail = this.parentLevel[this.clickIndex].subDeptList
+        console.log(item,123456)
+        console.log(index,123456)
+        console.log(this.arrow[0],123456)
+        console.log(item.id,56789)
+        if(this.arrow[index] == 0){
+          this.deptId = item.id
+          this.sortPick = item.deptName
+          this.sortBy = ''
+
+          http("smarthos.consult.choice.illness",{
+            stdDeptId:this.deptId
+          }).then((data)=>{
+            this.illNameList = data.list
+            console.log(data)
+          })
+
+          http("smarthos.consult.all.list.page",{
+            token:localStorage.getItem('token'),
+            isChoice:true,
+//            stdDeptId:this.deptId,
+//            illnessName:"",
+            pageSize:10,
+            pageNum:1
+          }).then((data)=>{
+            console.log(data,1256)
+            if(data.code == 0){
+              this.aboutConsult = data.list
+            }else{
+              weui.alert(data.msg)
+            }
+          })
+        }
+      },
+      selectChild(index,item){
+        console.log(item)
+        this.deptId = item.id
+        console.log(this.deptId)
+        this.sortPick = item.deptName
+        http("smarthos.consult.choice.illness",{
+          stdDeptId:this.deptId
+        }).then((data)=>{
+            this.illNameList = data.list
+            console.log(data)
+        })
+        http("smarthos.consult.all.list.page",{
+          token:localStorage.getItem('token'),
+          isChoice:true,
+          stdDeptId:this.deptId,
+          illnessName:"",
+          pageSize:10,
+          pageNum:1,
+        }).then((data)=>{
+          console.log(data)
+          if(data.code == 0){
+            this.aboutConsult = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+//            console.log(data)
+        })
       }
     },
     components:{
       Scroll
     },
     watch:{
-
+      childDetail(){
+        this.$nextTick(()=>{
+          setTimeout(()=>{
+            this._initWrapContent()
+          },20)
+        })
+      },
+      sortPick(){
+        this.sortBy = ''
+      },
     }
   }
 </script>
@@ -377,6 +665,16 @@
     .tab-item:last-child{
       border-right: none;
     }
+    .choose_type{
+      span{
+        color: $mainColor;
+      }
+      .sort_icon{
+        transform: rotate(180deg);
+        transition: 0.3s;
+        fill:$mainColor;
+      }
+    }
   }
   .myTab{
     top:90px;
@@ -384,11 +682,20 @@
   .dropType{
     position: fixed;
     z-index:70;
-    top: 260px;
+    top: 170px;
     width:100%;
     text-align: center;
     /*background-color: #0BB20C;*/
     background-color: white;
+    .weuiMargin{
+      margin: 0;
+      p{
+        font-size: 32px;
+        height: 70px;
+        line-height: 70px;
+        color: #333333;
+      }
+    }
     li{
       list-style-type: none;
       height: 80px;

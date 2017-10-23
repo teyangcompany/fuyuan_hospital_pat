@@ -42,25 +42,31 @@
                 num:0,
                 consultId:"",
                 token:localStorage.getItem('token'),
-                evaluateContent:""
+                evaluateContent:"",
+                consultType:""
             }
         },
         mounted(){
             this.consultId=this.$route.params.id
+            this.consultType = this.$route.query.consultType
+            console.log(this.consultType)
         },
         methods:{
             submit(){
-                api('smarthos.consult.one2one.pic.evaluate',{
-                    evaluateContent:this.evaluateContent,
+                api('smarthos.system.comment.add',{
+                    content:this.evaluateContent,
                     token:this.token,
-                    evaluateScore:this.num*2,
-                    consultId:this.consultId
+                    score:this.num*2,
+                    sysModuleType:"CONSULT",
+                    moudleId:this.consultId,
+                    consultInfoType:this.consultType
                 }).then(res=>{
                     console.log(res,6666);
                     if(res.succ){
-
+                        weui.alert("评价成功")
+                        this.$router.push('/my/consultService/myConsult')
                     }else {
-                        alert(res.msg)
+                        weui.alert(res.msg)
                     }
                 })
             }

@@ -20,12 +20,12 @@
                 <li class="form-item form-item-input flex illDetail">
                     <div class="label flex0">
                       <span>请输入病历详情</span>
-                      <span>0/500</span>
+                      <span>{{ textLength }}/500</span>
                     </div>
                 </li>
                 <li class="form-item form-item-text">
                     <div class="textarea flex1">
-                        <textarea v-model="text" placeholder="请输入"></textarea>
+                        <textarea v-model="description" @keyup="keypress()" id="myArea" placeholder="请输入"></textarea>
                     </div>
                 </li>
                 <upload-img :picList="picList">
@@ -67,7 +67,8 @@
                 picList: [],
                 config: config,
                 time:"",
-                text:'',
+                description:'',
+                textLength:0,
                 token:localStorage.getItem('token')
             };
         },
@@ -98,6 +99,14 @@
 
         },
         methods: {
+            keypress(){
+              this.text = document.getElementById("myArea").value
+              this.textLength = this.text.length
+              if(this.textLength > 500){
+                document.getElementById("myArea").value = this.text.substr(0,500)
+                weui.alert("字数不能超过500")
+              }
+            },
             getDate(val){
               this.time = val
             },
@@ -129,27 +138,45 @@
 
             },
             save(){
-                console.log(this.picList);
-                var arr = []
-                for(var i=0;i<this.picList.length;i++){
+                if(this.description == ''){
+                    weui.alert("病历详情内容不能为空")
+                }else if(this.textLength >500){
+                    weui.alert("最多可输入500个字")
+                }else if(this.picList.length == 0){
+                    weui.alert("请先上传相关病历图片")
+                }else{
+                  console.log(this.picList);
+                  var arr = []
+                  for(var i=0;i<this.picList.length;i++){
                     arr.push(this.picList[i].imgId)
-                };
-                api('smarthos.medical.history.add',{
+                  };
+                  api('smarthos.medical.history.add',{
                     "medicalTime":this.time,
-                    "medContent":this.text,
+                    "medContent":this.description,
                     "token":this.token,
                     "attaList":arr
-                }).then(res=>{
+                  }).then(res=>{
                     console.log(res,6666)
                     if(res.succ){
-                        this.$router.push({
-                            name:'healthRecord'
-                        })
+                      this.$router.push({
+                        name:'healthRecord'
+                      })
                     }else {
-                        this.$weui.alert(res.msg)
+                      this.$weui.alert(res.msg)
                     }
-                })
+                  })
+                }
             },
+        },
+        watch:{
+          description(){
+            this.text = document.getElementById("myArea").value
+            this.textLength = this.text.length
+            if(this.textLength > 500){
+              document.getElementById("myArea").value = this.text.substr(0,500)
+              weui.alert("字数不能超过500")
+            }
+          }
         }
     };
 </script>

@@ -183,6 +183,6 @@
 
 <style scoped lang="scss">
 .scrol{
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 </style>

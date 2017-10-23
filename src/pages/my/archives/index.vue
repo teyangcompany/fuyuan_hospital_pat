@@ -6,8 +6,12 @@
         <scroll class="wrapper" :height="scrollHeight" :data="list" ref="wrapper">
             <div>
                 <div class="patinfo flex">
-                    <div class="ava flex0">
+                    <div class="ava flex0" v-if="patAvatar">
                         <img :src="patAvatar" alt="">
+                    </div>
+                    <div class="ava flex0" v-else>
+                      <img src="../../../../static/img/pat.m.jpg" alt="" v-if="commpat.commpatGender=='M'">
+                      <img src="../../../../static/img/pat.f.jpg" alt="" v-else>
                     </div>
                     <div class="info flex1">
                         <h3>{{commpat.commpatName}}</h3>
@@ -37,12 +41,13 @@
 
                 <div class="record">
                     <ul>
-                        <li v-for="(item,i) in list" @click="goCaseDetail(item)">
+                        <li v-for="(item,i) in list">
                             <h3>{{item.medicalHistory.createTime | getDay}}</h3>
-                            <div class="content">{{item.medicalHistory.medContent}}</div>
+                            <div class="content" @click="goCaseDetail(item)">{{item.medicalHistory.medContent}}</div>
                             <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
                                 <li v-for="imgSrc in item.attaList">
                                     <img @load="$refs.wrapper.refresh()"
+                                          @click="makeLarge(imgSrc)"
                                             :src="imgSrc.attaFileUrl"
                                             alt="">
                                 </li>
@@ -55,6 +60,10 @@
         <div class="add-medical-record noflex">
             <router-link tag="a" to="/my/archives/save-record/add" class="block">添加诊疗记录</router-link>
         </div>
+        <div class="largePic" v-if="showLarge">
+          <img :src="largePicUrl" alt="" @click="makeSmall">
+        </div>
+        <v-mask v-if="showLarge"></v-mask>
     </div>
 </template>
 
@@ -62,6 +71,7 @@
     import AppHeader from "../../../components/app-header.vue"
     import config from "../../../lib/config"
     import api from "../../../lib/http"
+    import mask from '../../../base/mask.vue'
     import Scroll from "../../../base/scroll.vue"
     import {getDay} from '../../../lib/filter'
     import { tokenCache } from '../../../lib/cache'
@@ -78,7 +88,9 @@
                 commpat:"",
                 list:[],
                 healthDetail:{},
-                patAvatar:localStorage.getItem('patAvatar')
+                largePicUrl:"",
+                showLarge:false,
+                patAvatar:""
             };
         },
         filters:{
@@ -87,7 +99,8 @@
         computed: {},
         components: {
             Scroll,
-            AppHeader
+            AppHeader,
+            "VMask":mask
         },
         created() {
             this.scrollHeight = window.innerHeight - 45 - (window.rem2px * (0.94 + 0.3 + 0.3));
@@ -101,6 +114,14 @@
 
         },
         methods: {
+            makeLarge(imgSrc){
+                this.showLarge = true
+                this.largePicUrl = imgSrc.attaFileUrl
+                console.log(imgSrc)
+            },
+            makeSmall(){
+                this.showLarge = false
+            },
             goDetail(name){
                 console.log(name,7777)
                 this.$router.push({
@@ -123,6 +144,7 @@
                 api("smarthos.user.pat.get",{
                     token:tokenCache.get()
                 }).then((data)=>{
+                    this.patAvatar = data.obj.pat.patAvatar
                     this.commpat = data.obj.commpat
                     console.log(this.commpat,4444)
                 })
@@ -162,7 +184,20 @@
     .wrapper {
         overflow: hidden;
     }
-
+    .largePic{
+      position: absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      right:0;
+      z-index:10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img{
+        width:100%;
+      }
+    }
     .add-medical-record {
         padding: (750px - 690px)/2 0;
         a {
@@ -262,7 +297,7 @@
                     font-size: 28px;
                 }
                 ol {
-                    height:180px;
+                    /*height:180px;*/
                     overflow: hidden;
                     li {
                         padding-top: 20px;

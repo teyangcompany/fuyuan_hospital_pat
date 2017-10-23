@@ -21,7 +21,7 @@
                   <img v-if="item.userDoc.docAvatar"
                           :src="item.userDoc.docAvatar"
                           alt="">
-                  <img src="../../../static/img/doctorM.png" alt="" v-else>
+                  <img src="../../../static/img/doctorM.png" alt="" v-if="!(item.userDoc.docAvatar) || item.userDoc.docAvatar == ''">
                 </div>
                 <div class="info">
                   <h3 v-if="item.userDoc">

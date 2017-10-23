@@ -95,17 +95,19 @@
         age:'',
         gender:"",
         compatId:'',
-        patDetail:{}
+        patDetail:{},
+        itemInfo:""
       }
     },
     mounted(){
-      console.log(this.$route.params.item,565656)
-      this.$set(this.$data,'patName',this.$route.params.item.commpatName);
-      this.$set(this.$data,'patIdcard',this.$route.params.item.commpatIdcard);
-      this.$set(this.$data,'mobile',this.$route.params.item.commpatMobile);
-      this.$set(this.$data,'gender',this.$route.params.item.commpatGender);
+//      console.log(this.$route.query.item,565656)
+      this.itemInfo = JSON.parse(this.$route.query.item)
+      this.$set(this.$data,'patName',this.itemInfo.commpatName);
+      this.$set(this.$data,'patIdcard',this.itemInfo.commpatIdcard);
+      this.$set(this.$data,'mobile',this.itemInfo.commpatMobile);
+      this.$set(this.$data,'gender',this.itemInfo.commpatGender);
 //      this.$set(this.$data,'age',this.$route.params.item.compatAge);
-      this.$set(this.$data,'compatId',this.$route.params.item.id);
+      this.$set(this.$data,'compatId',this.itemInfo.id);
     },
     methods:{
       getAge(){
@@ -118,8 +120,9 @@
       editPhone(){
         this.$router.push({
           name:'editPhone',
-          params:{
-            compatId:this.compatId
+          query:{
+            compatId:this.compatId,
+            item:JSON.stringify(this.$route.query.item)
           }
         })
       },

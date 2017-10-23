@@ -199,8 +199,8 @@
       <transition name="showcover">
         <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
       </transition>
-      <scroll class="teamList" :data="followList" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
-        <div v-if="followList.length != 0">
+      <scroll class="teamList" :data="followList" :pullup="pullup"  @scrollToEnd="scrollToEnd()" v-if="followList.length != 0">
+        <div >
           <ul class="border-1px" v-for="item in followList">
             <div @click="goDocCard(item.id)">
               <li class="teamLi">
@@ -244,10 +244,10 @@
             </span>
           </div>
         </div>
-        <div v-else class="emptyHistory">
-          <span>暂未搜索到相关结果</span>
-        </div>
       </scroll>
+      <div v-else class="emptyHistory">
+        <span>暂未搜索到相关结果</span>
+      </div>
       <div class="directConsult border-1px-top" @click="goOffice">
         <p>直接咨询科室</p>
       </div>
@@ -833,6 +833,19 @@
       }
     }
   }
+  .emptyHistory{
+    position: absolute;
+    top: 0px;
+    bottom:90px;
+    right:0;
+    left:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+      font-size: 36px;
+    }
+  }
   .teamList{
     position: fixed;
     top: 260px;
@@ -840,19 +853,6 @@
     right:0;
     left:0;
     overflow: auto;
-    .emptyHistory{
-      position: absolute;
-      top: 0px;
-      bottom:90px;
-      right:0;
-      left:0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      span{
-        font-size: 36px;
-      }
-    }
     ul{
       padding:0;
       margin:0;

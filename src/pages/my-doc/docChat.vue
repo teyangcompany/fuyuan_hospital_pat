@@ -8,7 +8,9 @@
           <li v-for="item in aboutReplyMessage" ref="chatLi">
             <div class="other" :class="{mysay:item.msgSenderType == 'PAT'}">
               <img :src="aboutUserInfo.userPat.patAvatar" alt="" v-if="item.msgSenderType == 'PAT'">
-              <img :src="aboutUserInfo.userDocVO.docAvatar" alt="" v-else>
+              <img :src="aboutUserInfo.userDocVO.docAvatar" alt="" v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar">
+              <img src="../../../static/img/doctorM.png" alt="" v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar == ''">
+              <img src="../../../static/img/doctorM.png" alt="" v-else-if="item.msgSenderType != 'PAT' && !(aboutUserInfo.userDocVO.docAvatar)">
               <span class="msgTime">{{item.createTime | Todate}} </span>
               <div class="whatsay">
                 <!--<p class="msgTime">{{item.createTime | Todate}}</p>-->

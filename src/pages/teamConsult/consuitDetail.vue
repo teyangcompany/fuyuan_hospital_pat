@@ -38,15 +38,15 @@
                         <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
                     </div>
                     <div class="createDiv">
-                        <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} 创建</span></span>
-                        <span class="date">{{consultInfo.createTime | goodTime}}创建 |
+                        <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
+                        <span class="date">{{consultInfo.createTime | goodTime}} |
                           <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
                           <span v-else>暂无回复</span>
                         </span>
                     </div>
                 </div>
-                <div class="answerList" v-for="item of arr" ref="lastItem">
-                    <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
+                <div class="answerList" v-for="item in arr" ref="lastItem">
+                    <div class="patAnswer" v-if="item.consultMessage.replierType == 'DOC'">
                         <div class="docImg">
                             <img :src="item.userDocVo.docAvatar" alt="">
                         </div>
@@ -62,12 +62,12 @@
                     </div>
                     <div v-else class="patAnswer">
                         <div class="docImg">
-                            <img :src="item.userDocVo.patAvatar" alt="">
+                            <img :src="item.userPat.patAvatar" alt="">
                         </div>
                         <div class="docMsg">
                             <p>
-                                <span class="mf">{{item.userDocVo.patName}}</span>
-                                <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userDocVo.patTitle}}</span>
+                                <span class="mf">{{item.userPat.patName}}</span>
+                                <!--<span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>-->
                             </p>
                             <p>
                                 <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
@@ -111,7 +111,17 @@
                 </div>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='2'">
-            <p class="mfb reply">请等待医生回复</p>
+            <p class="mfb reply">请等待医生回复，24小时未回复自动退款</p>
+        </div>
+        <div class="btn" v-show="consultInfo.consultStatus=='-1'">
+           <div>
+             <p class="mfb reply">问诊已取消</p>
+             <p class="mfb reply">如有退款将在7~10个工作日返回您的支付账户</p>
+           </div>
+        </div>
+        <div class="btn" v-show="consultInfo.consultStatus=='0'">
+          <span class="mfb evaluate bor" @click="cancelConsult">取消申请</span>
+          <span class="mfb evaluate" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='4'">
             <span class="mfb evaluate bor" @click="consultAgain">再次咨询</span>
@@ -210,7 +220,28 @@
             },
            //评价
             comment(){
-               this.$router.push("/evaluate/"+this.consultId)
+               this.$router.push({
+                 path:"/evaluate/"+this.consultId,
+                 query:{consultType:this.consultInfo.consultType}
+               })
+            },
+            //付款
+            goPay(){
+              this.$router.push('/pay/'+this.consultId)
+            },
+            //取消申请
+            cancelConsult(){
+                 api("smarthos.consult.pic.cancel",{
+                   token:localStorage.getItem('token'),
+                   consultId:this.consultId
+                 }).then((data)=>{
+                     if(data.code == 0){
+                       this.getData()
+                     }else{
+                         weui.alert(data.msg)
+                     }
+                     console.log(data)
+                 })
             },
             getData(){
               api('smarthos.consult.details',{
@@ -326,12 +357,23 @@
         background: white;
         display: flex;
        align-items: center;
-
+       div{
+         width:100%;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           p{
+             height:50px;
+             margin-bottom: 20px;
+             text-align: center;
+           }
+       }
     }
     .reply{
         text-align: center;
         height: 80px;
         line-height: 80px;
+        margin:0 auto;
     }
     .page{
         display: flex;

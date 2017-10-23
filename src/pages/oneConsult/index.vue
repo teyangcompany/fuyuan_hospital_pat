@@ -1,51 +1,49 @@
 <template>
   <div class="chat">
-    <div ref="header">
       <v-header :title="title" :rightTitle="overTitle" :waitImg="waitImg" v-if="consultInfo.consultStatus=='3'" @on-docCard="finishConsult"></v-header>
       <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" v-else></v-header>
-      <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="javascript:;">
-          <div class="weui-cell__bd">
-            <p>
+      <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="main"
+            :listen-scroll="listenScroll" :probe-type="probeType">
+      <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
+        <div class="weui-cells">
+          <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+              <p>
                                 <span  class="bf">患者资料： {{consultInfo.consulterName}}
                                     {{consultInfo.consulterGender == 'M'?'男':'女'}}
                                     {{consultInfo.consulterAge}}
                                 </span>
-            </p>
-          </div>
-          <div class="weui-cell__ft bfc"></div>
-        </a>
-        <a class="weui-cell weui-cell_access" href="javascript:;">
-          <div class="weui-cell__bd">
-            <p>
+              </p>
+            </div>
+            <div class="weui-cell__ft bfc"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+              <p>
             <span class="bf">
                 疾病名称：{{consultInfo.illnessName}}
             </span>
-            </p>
-          </div>
-          <div class="weui-cell__ft bfc"></div>
-        </a>
+              </p>
+            </div>
+            <div class="weui-cell__ft bfc"></div>
+          </a>
 
-      </div>
-      <div class="contain">
-        <div>
-          <span class="bf">{{consultInfo.consultContent}}</span>
         </div>
-        <div class="patImg">
-          <img v-for="item in attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
-        </div>
-        <div class="createDiv">
-          <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} 创建</span></span>
-          <span class="date">{{consultInfo.createTime | goodTime}}创建 |
+        <div class="contain">
+          <div>
+            <span class="bf">{{consultInfo.consultContent}}</span>
+          </div>
+          <div class="patImg">
+            <img v-for="item in attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
+          </div>
+          <div class="createDiv">
+            <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
+            <span class="date">{{consultInfo.createTime | goodTime}} |
               <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
               <span v-else>暂无回复</span>
           </span>
+          </div>
         </div>
-      </div>
-    </div>
-    <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="main"
-            :listen-scroll="listenScroll" :probe-type="probeType">
-      <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
         <ul>
           <li v-for="item in aboutReplyMessage" ref="chatLi">
             <div class="other" :class="{mysay:item.consultMessage.replierType == 'PAT'}">
@@ -86,10 +84,30 @@
       </section>
 
     </scroll>
-    <footer class="payButton"  v-if="!(consultInfo.payStatus)">
+    <footer class="payButton"  v-if="consultInfo.consultStatus == '0'">
       <div class="payWrap border-1px-top">
         <span class="border-1px-right" @click="cancelApply()">取消申请</span>
         <span class="pay" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
+      </div>
+    </footer>
+    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '1' || consultInfo.consultStatus == '2'">
+      <div class="payWrap border-1px-top">
+
+      </div>
+    </footer>
+    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '6'">
+      <div class="payWrap border-1px-top" @click="consultAgain">
+         <div class="consultAgain">
+           <p>再次咨询</p>
+         </div>
+      </div>
+    </footer>
+    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '-1'">
+      <div class="payWrap border-1px-top">
+         <div>
+           <p>问诊已取消</p>
+           <p>如有退款将在7~10个工作日返回您的支付账户</p>
+         </div>
       </div>
     </footer>
     <footer class="payButton"  v-else-if="consultInfo.consultStatus == '4'">
@@ -98,7 +116,7 @@
         <span class="pay" @click="comment">评价</span>
       </div>
     </footer>
-    <footer :class="{footshow:seeMore}" ref="footer" v-else>
+    <footer :class="{footshow:seeMore}" ref="footer" v-else-if="consultInfo.consultStatus == '3'">
       <section class="foot_top">
         <div class="picture">
           <input type="file" name="picture" id="upPicture" ref="picture" @change="onFileChange">
@@ -170,7 +188,7 @@
         largePic: "",
         showToast: false,
         messageLength: "",
-        inter: "",
+        inter:"",
         aboutUserInfo:"",
         docId:"",
 //        vipStatus:"",
@@ -255,7 +273,7 @@
 
               setTimeout(() => {
                 if (this.$refs.slideList.offsetHeight > content - 10) {
-                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight-390)
+                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight-80)
                   console.log(this.$refs.slideList.offsetHeight)
 //                  console.log(content)
                 }
@@ -280,7 +298,10 @@
           })
       },
       comment(){
-        this.$router.push("/evaluate/"+this.consultId)
+        this.$router.push({
+          path:"/evaluate/"+this.consultId,
+          query:{consultType:this.consultInfo.consultType}
+        })
       },
       goArticle(id){
         this.$router.push({
@@ -349,12 +370,12 @@
         this.showAllDialog = false
       },
       cancelApply(){
-          http("smarthos.consult.one2one.pic.complete",{
+          http("smarthos.consult.pic.cancel",{
             token:localStorage.getItem('token'),
             consultId:this.consultId
           }).then((data)=>{
               if(data.code == 0){
-                  console.log(data)
+                this.getInitData()
               }else{
                   weui.alert(data.msg)
               }
@@ -381,33 +402,37 @@
       send() {
         http("smarthos.consult.one2one.pic.reply", {
           token: localStorage.getItem('token'),
-          consultId: this.consultId,
+          consultId:this.consultId,
           replyContentType:"TEXT",
           replyContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
+          if(data.code == 0){
+            this.getInitData()
 
-          this.getInitData()
-
-          console.log(data,11111)
+            console.log(data,11111)
 //          this.seeMore = false
-          this.$nextTick(() => {
+            this.$nextTick(() => {
 //            this.aboutReplyMessage.push(data.obj)
 //            console.log(this.aboutReplyMessage)
-            let o = document.getElementsByClassName("chat")[0];
-            let h = o.offsetHeight;  //高度
-            let content = h
-            console.log(o)
-            setTimeout(() => {
-              if (this.$refs.slideList.offsetHeight > content - 10) {
-                console.log(this.$refs.slideList.offsetHeight)
-                this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
-              }
-            }, 300)
-          })
+              let o = document.getElementsByClassName("chat")[0];
+              let h = o.offsetHeight;  //高度
+              let content = h
+              console.log(o)
+              setTimeout(() => {
+                if (this.$refs.slideList.offsetHeight > content - 10) {
+                  console.log(this.$refs.slideList.offsetHeight)
+                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+                }
+              }, 300)
+            })
+          }else{
+              weui.alert(data.msg)
+          }
         })
         this.inputInfo = ''
         this.light = false
+        this.blured()
       },
       selectImg(e) {
         this.$refs.picture.click()
@@ -437,61 +462,17 @@
           }).then((data) => {
             console.log(data)
             that.attaFileUrl = data.obj.attaFileUrl
-            http("smarthos.follow.message.add", {
+            http("smarthos.consult.one2one.pic.reply", {
               token: localStorage.getItem('token'),
-              followId: that.followId,
-              msgContent: that.attaFileUrl,
-              msgType: "PIC"
+              consultId:that.consultId,
+              replyContentType:"PIC",
+              replyContent:that.attaFileUrl,
             }).then((data) => {
 
-              console.log(data)
+              console.log(data,666)
 //              location.reload()
               if (data.code == 0) {
-//                location.reload()
-
-
-                http("smarthos.follow.message.detail.list", {
-                  token: localStorage.getItem('token'),
-                  followId: that.followId,
-                }).then((data) => {
-                  console.log(data)
-                  that.showToast = false
-                  if (data.code == 0) {
-                    that.$nextTick(() => {
-
-                      that.aboutReplyMessage = data.list
-
-                      console.log(this.aboutReplyMessage)
-
-
-                      let o = document.getElementsByClassName("chat")[0];
-                      let h = o.offsetHeight;  //高度
-                      let content = h
-                      console.log(o)
-
-
-                      setTimeout(() => {
-                        if (that.$refs.slideList.offsetHeight > content - 10) {
-                          that.$refs.main.scrollTo(0, content - that.$refs.slideList.offsetHeight - 80)
-                          console.log(that.$refs.slideList.offsetHeight)
-                          console.log(content)
-                        }
-                      }, 300)
-
-
-                    })
-                  } else if (!(data.msg)) {
-                    weui.alert("网络错误，请稍后重试")
-                    console.log("错误的data")
-                    console.log(data)
-                    console.log("上面是错误的data")
-                  } else {
-                    weui.alert(data.msg)
-                  }
-//          console.log(this.attachImg)
-                })
-
-
+              that.getInitData()
               } else {
                 weui.alert(data.msg)
               }
@@ -515,10 +496,14 @@
         }, 500)
 
       },
-      blured() {
-//          this.$refs.footer.style.bottom=-160 + 'px'
+      blured(){
         clearInterval(this.inter)
-      },
+      }
+//      blured() {
+////          this.$refs.footer.style.bottom=-160 + 'px'
+//        clearInterval(document.getElementsByClassName("foot_top")[0].scrollIntoView())
+//        clearInterval(this.inter)
+//      },
 //      consultPatAva
     },
   }
@@ -612,8 +597,12 @@
   }
   .weui-cells{
     margin-top: 0;
+    position: relative;
+    z-index:10000;
   }
   .contain{
+    position: relative;
+    z-index:1000;
     background: white;
     box-sizing: border-box;
     padding: 20px;
@@ -647,9 +636,9 @@
     /*padding-top: 50px;*/
     /*overflow: auto;*/
     /*height: 500px;*/
-    /*position: absolute;*/
-    /*top: 718px;*/
-    /*bottom: 80px;*/
+    position: absolute;
+    top: 100px;
+    bottom: 80px;
     flex: 1;
     overflow: hidden;
     /*overflow: auto;*/
@@ -823,7 +812,21 @@
       width: 690px;
       margin: 0 auto;
       display: flex;
-
+      div{
+        margin: 0 auto;
+        p{
+          text-align: center;
+          font-size: 32px;
+        }
+      }
+      .consultAgain{
+        height:80px;
+        p{
+          height:80px;
+          line-height: 80px;
+          font-size: 32px;
+        }
+      }
       span{
         display: inline-block;
         width:340px;
@@ -851,8 +854,8 @@
   footer {
     width: 100%;
     /*height: 200px;*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
+    position: absolute;
+    bottom: 0;
     -webkit-user-select: auto;
     background-color: white;
     .foot_top {

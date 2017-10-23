@@ -1,38 +1,38 @@
 <template>
     <div class="wrapPick">
-       <div class="topInfo border-1px">
-            <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
-       </div>
-       <div class="topInfo border-1px">
-           <p>疾病名称: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</span> </p>
-       </div>
-       <div class="detailList">
-         <ul class="border-1px">
-           <li >
-             <!--<div class="border-1px-dashed dashedPlace">-->
-             <!--<p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>-->
-             <!--</div>-->
-             <div class="mainContent">
-               <p v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consultContent }}</p>
-               <div>
-                 <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in detailInfo.attaList" @click="makeLarge(secondItem.attaFileUrl)">
-               </div>
-             </div>
-             <div class="ConsultRelate">
+      <scroll class="relateList" :data="detailInfo" ref="main">
+         <div>
+           <div class="topInfo border-1px">
+             <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
+           </div>
+           <div class="topInfo border-1px">
+             <p>疾病名称: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</span> </p>
+           </div>
+           <div class="detailList">
+             <ul class="border-1px">
+               <li >
+                 <!--<div class="border-1px-dashed dashedPlace">-->
+                 <!--<p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>-->
+                 <!--</div>-->
+                 <div class="mainContent">
+                   <p v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consultContent }}</p>
+                   <div>
+                     <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in detailInfo.attaList" @click="makeLarge(secondItem.attaFileUrl)">
+                   </div>
+                 </div>
+                 <div class="ConsultRelate">
 
-               <span class="name"><span class="number"><img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat"> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span></span></span>
-               <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | goodTime }}创建&nbsp;
+                   <span class="name"><span class="number"><img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat"> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span></span></span>
+                   <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | goodTime }}&nbsp;
                 |
                 &nbsp;
                 <span v-if="detailInfo.consultInfo.replyCount">{{ detailInfo.consultInfo.replyCount }}条回复</span>
                 <span v-else>0条回复</span>
               </span>
-             </div>
-           </li>
-         </ul>
-       </div>
-      <scroll class="relateList" :data="detailInfo">
-         <div>
+                 </div>
+               </li>
+             </ul>
+           </div>
            <div class="answerList" v-for="item in arr" ref="lastItem">
              <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
                <div class="docImg">
@@ -77,7 +77,7 @@
            </div>
          </div>
        </scroll>
-       <div class="bottom">
+       <div class="bottom" ref="footer">
           <div class="leftBottom border-1px-right" v-if="detailInfo.consultInfo">
             <span class="money">看过&nbsp; <span v-if="detailInfo.consultInfo.readCount">{{ detailInfo.consultInfo.readCount }}</span>
               <span v-else>0</span>
@@ -101,6 +101,7 @@
   import http from '../../../../lib/http'
   import {tokenCache} from '../../../../lib/cache'
   import Scroll from '../../../../base/scroll.vue'
+//  import {mainHeightMixin} from '../../../../lib/mixin'
   import {Getdate,goodTime} from '../../../../lib/filter'
   export default{
       data(){
@@ -112,6 +113,7 @@
             arr:[]
           }
       },
+
       filters:{
         Getdate,
         goodTime
@@ -275,12 +277,13 @@
        }
      }
      .relateList{
-       position: fixed;
-       top:300px;
+       position: absolute;
+       top:0px;
        bottom:100px;
        left:0;
        right:0;
-       overflow: hidden;
+       background-color: #FFFFFF;
+       overflow: auto;
        .answerList{
          padding: 20px;
          box-sizing: border-box;

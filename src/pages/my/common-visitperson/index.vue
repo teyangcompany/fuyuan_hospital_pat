@@ -64,9 +64,9 @@
                 console.log(212121)
                 this.$router.push({
                     name:'editUser',
-                    params:{
+                    query:{
                         id:id,
-                        item:item
+                        item:JSON.stringify(item)
                     }
                 })
             },

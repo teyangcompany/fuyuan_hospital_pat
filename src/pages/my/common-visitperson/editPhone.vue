@@ -60,7 +60,8 @@
         showError:false,
         commpatId:'',
         msg:'获取验证码',
-        flag:true
+        flag:true,
+        item:""
       }
     },
     validations: {
@@ -70,8 +71,10 @@
       }
     },
     mounted(){
-      this.$set(this.$data,'commpatId',this.$route.params.compatId)
-      console.log(this.$route.params,222221111)
+//      console.log(this.$route.query.item,565656)
+      this.item = this.$route.query.item
+      this.$set(this.$data,'commpatId',this.$route.query.compatId)
+//      console.log(this.$route.query,222221111)
     },
     methods:{
       showRemind(){
