@@ -950,9 +950,12 @@
         section:nth-child(2){
           margin-top: 15px;
           display: flex;
+          width:690px;
+          word-wrap: break-word;
+          word-break: break-all;
           >div{
-            flex:1;
-            
+            /*flex:1;*/
+            display: block;
             p{
               width: 280px;
               border:1px solid #999999;
