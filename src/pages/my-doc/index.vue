@@ -4,44 +4,45 @@
       <div class="right absolute" slot="right">找医生</div>
     </app-header>
     <scroll :height="scrollHeight" :data="list">
-        <div class="wrapper">
-          <div class="nav">
-            <ul>
-              <li v-for="item in nav" :class="[item.name]" @click="goPath(item.path)">
-                <div class="icon"></div>
-                <div class="text">{{item.value}}</div>
-              </li>
-            </ul>
-          </div>
-          <div class="title">最新消息</div>
-          <div class="list">
-            <ul>
-              <li v-if="list.length>0"  v-for="item in list" @click="goDocChat(item.followMessage.followId)">
-                <div class="ava">
-                  <img v-if="item.userDoc.docAvatar"
-                          :src="item.userDoc.docAvatar"
-                          alt="">
-                  <img src="../../../static/img/doctorM.png" alt="" v-if="!(item.userDoc.docAvatar) || item.userDoc.docAvatar == ''">
-                </div>
-                <div class="info">
-                  <h3 v-if="item.userDoc">
-                    <div class="name">{{item.userDoc.docName}}</div>
-                    <!--<div class="dept">{{item.userDoc.docTitle}}</div>-->
-                    <div class="dept">{{item.userDoc.deptName}}</div>
-                    <div class="time">{{item.followMessage.createTime | Todate}}</div>
-                  </h3>
-                  <div class="content" v-if="item.userDoc">
-                   <span v-if="item.followMessage.msgType=='ARTICLE'">[文章]</span>
-                   <span v-else-if="item.followMessage.msgType=='TEXT'">{{ item.followMessage.msgContent }}</span>
+      <div class="wrapper">
+        <div class="nav">
+          <ul>
+            <li v-for="item in nav" :class="[item.name]" @click="goPath(item.path)">
+              <div class="icon"></div>
+              <div class="text">{{item.value}}</div>
+            </li>
+          </ul>
+        </div>
+        <div class="title">最新消息</div>
+        <div class="list">
+          <ul>
+            <li v-if="list.length>0" v-for="item in list" @click="goDocChat(item.followMessage.followId)">
+              <div class="ava">
+                <img v-if="item.userDoc.docAvatar"
+                     :src="item.userDoc.docAvatar"
+                     alt="">
+                <img src="../../../static/img/doctorM.png" alt=""
+                     v-if="!(item.userDoc.docAvatar) || item.userDoc.docAvatar == ''">
+              </div>
+              <div class="info">
+                <h3 v-if="item.userDoc">
+                  <div class="name">{{item.userDoc.docName}}</div>
+                  <!--<div class="dept">{{item.userDoc.docTitle}}</div>-->
+                  <div class="dept">{{item.userDoc.deptName}}</div>
+                  <div class="time">{{item.followMessage.createTime | Todate}}</div>
+                </h3>
+                <div class="content" v-if="item.userDoc">
+                  <span v-if="item.followMessage.msgType=='ARTICLE'">[文章]</span>
+                  <span v-else-if="item.followMessage.msgType=='TEXT'">{{ item.followMessage.msgContent }}</span>
                   <span v-else-if="item.followMessage.msgType=='PIC'">[图片]</span>
                   <span v-else-if="item.followMessage.msgType=='AUDIO'">[语音消息]</span>
                   <span v-else-if="item.followMessage.msgType=='VEDIO'">[视频消息]</span>
-                  </div>
                 </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
     </scroll>
 
     <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
@@ -51,7 +52,8 @@
 <script type="text/ecmascript-6">
   import AppFooter from "../../components/app-footer.vue"
   import AppHeader from "../../components/app-header.vue"
-  import {mainHeightMixin} from "../../lib/mixin"
+  import {fromCache} from "../../lib/cache"
+  import {mainHeightMixin, isBindMixin} from "../../lib/mixin"
   import config from "../../lib/config"
   import api from '../../lib/http'
   import {Todate} from '../../lib/filter'
@@ -62,17 +64,26 @@
       return {
         currentNav: 1,
         nav: config.my_doc_nav,
-        token:localStorage.getItem('token'),
-        list:[],
-        scrollHeight:""
+        token: localStorage.getItem('token'),
+        list: [],
+        scrollHeight: ""
       };
     },
-    filters:{
+    mixins: [isBindMixin],
+    filters: {
       Todate
     },
-    created(){
-      this.scrollHeight = window.innerHeight-60-45;
-      console.log(this.scrollHeight,99999)
+    created() {
+      this._isBind().then((res) => {
+        if (res === false) {
+          fromCache.set(this.$route.fullPath);
+          this.$router.push("/login")
+        }
+      });
+
+
+      this.scrollHeight = window.innerHeight - 60 - 45;
+      console.log(this.scrollHeight, 99999)
     },
     computed: {},
     components: {
@@ -87,26 +98,23 @@
 
     },
     methods: {
-      goDocChat(id,docId){
-        this.$router.push('docChat/'+id)
+      goDocChat(id, docId) {
+        this.$router.push('docChat/' + id)
       },
-      scrollToEnd(){
+      scrollToEnd() {
         console.log(21212121)
       },
-      getData(){
-        api('smarthos.follow.message.last.list',{
-          token:this.token,
-
-        }).then(res=>{
-          console.log(res,2222222);
-          if(res.succ){
+      getData() {
+        api('smarthos.follow.message.last.list', {}).then(res => {
+          console.log(res, 2222222);
+          if (res.succ) {
             this.list = res.list;
-          }else {
+          } else {
             alert(res.msg)
           }
         })
       },
-      goPath(path){
+      goPath(path) {
         this.$router.push(path)
       },
     }

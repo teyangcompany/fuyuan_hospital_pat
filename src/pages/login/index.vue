@@ -43,30 +43,11 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-
-  //    import top from '../../components/app-header.vue'
-  //    import {mainHeightMixin} from '../../lib/mixin'
-  //    import config from '../../lib/config'
-  //    import api from '../../lib/http'
-  //    export default{
-  //        components: {
-  //            top
-  //        },
-  //        mixins:['mainHeightMixin'],
-  //        data(){
-  //            return {
-  //                patMobile:'',
-  //                codeValue:"",
-  //                cid:"",
-  //                patPassword:'',
-  //                current:''
-
   import top from '../../components/app-header.vue'
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
   import config from '../../lib/config'
   import api from '../../lib/http'
   import {openidCache} from "../../lib/cache"
-
   export default {
     components: {
       top
@@ -96,7 +77,7 @@
         }).then((res) => {
           if (res.code == 0) {
             this.cid = res.obj.cid;
-            this.captcha = res.obj.value;
+            this.captcha = res.obj.value ? res.obj.value : "";
             if (res.obj.nextBiz == 'REGISTER') {
               this.$router.push({
                 path: "/register",
@@ -106,7 +87,6 @@
                   mobile: this.patMobile
                 }
               })
-
             } else {
               this.bind()
             }

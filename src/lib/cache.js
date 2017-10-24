@@ -1,7 +1,6 @@
 import storage from "good-storage";
 import {CACHE_PREFIX} from "./config1"
 
-const HISTORY_CACHE_KEY = "__history__";
 const OPENID_KEY = CACHE_PREFIX + "openid_";
 export const openidCache = {
   get() {
@@ -31,6 +30,19 @@ export const userCache = {
     storage.set(WX_USER_KEY, value);
   }
 }
+
+const FROM_CACHE_KEY = CACHE_PREFIX + "user_";
+export const fromCache = {
+  get() {
+    return storage.session.get(FROM_CACHE_KEY, null);
+  },
+  set(value) {
+    storage.session.set(FROM_CACHE_KEY, value);
+  }
+}
+
+
+const HISTORY_CACHE_KEY = "__history__";
 export const historyCache = {
   get() {
     return storage.session.get(HISTORY_CACHE_KEY, []);
