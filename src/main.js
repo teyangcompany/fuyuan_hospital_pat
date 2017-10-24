@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import "weui"
 import weui from './lib/wejs';
 import vuelidate from 'vuelidate'
 import Vuex from 'vuex'

@@ -71,7 +71,7 @@
     components: {
       top
     },
-    mixins: [mainHeightMixin, jssdkMixin],
+    mixins: [mainHeightMixin],
     data() {
       return {
         patMobile: '',
@@ -81,9 +81,7 @@
       }
     },
     created() {
-      this._getJSSDK().then((res) => {
-        console.log(res);
-      })
+
     },
     mounted() {
       //this.sendCode();

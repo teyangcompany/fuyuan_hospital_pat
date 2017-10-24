@@ -38,17 +38,38 @@ export const isBindMixin = {
   }
 }
 /* *
-*
+*jssdk
 * */
 export const jssdkMixin = {
+  data() {
+    return {
+      jssdkConfig: null
+    }
+  },
+  created() {
+    this._wxConfig();
+  },
   methods: {
+    _wxConfig() {
+      let ret = this._getJSSDK();
+      if (ret && ret.appId) {
+        wx.config(ret);
+      } else {
+        ret.then((res) => {
+          wx.config(res);
+        })
+      }
+    },
     _getJSSDK() {
+      if (this.jssdkConfig) {
+        return this.jssdkConfig
+      }
       return api("smarthos.wechat.jsapiticket.get", {
         appid: config.appid,
         reqUrl: location.href.substr(0, location.href.indexOf("#"))
       }).then((res) => {
-        debug("jssdk", res);
         if (res.code == 0) {
+          this.jssdkConfig = res.obj;
           return res.obj;
         } else {
           return false
