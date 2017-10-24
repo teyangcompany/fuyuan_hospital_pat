@@ -39,8 +39,8 @@
             @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li>
             <div>
-              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
-              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室咨询<span> ¥{{ item.consultInfo.payFee }}</span></p>
+              <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生咨询<span> {{ item.consultInfo.payFee | consultPrice }}</span></p>
+              <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室咨询<span> {{ item.consultInfo.payFee |consultPrice }}</span></p>
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 1"
                     style="color: #2772FF;">待受理</span>
@@ -86,6 +86,7 @@
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import http from '../../../../lib/http'
+  import { consultPrice } from '../../../../lib/filter'
   import {tokenCache} from '../../../../lib/cache'
   import {Getdate,goodTime} from '../../../../lib/filter'
   export default{
@@ -100,7 +101,8 @@
     },
     filters:{
       Getdate,
-      goodTime
+      goodTime,
+      consultPrice
     },
     created(){
          this.chooseType(this.sortBy)

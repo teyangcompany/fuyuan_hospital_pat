@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <app-header title="预约挂号" class="noflex">
-      <i slot="back"></i>
+      <!--<i slot="back"></i>-->
       <div class="right absolute" slot="right">
         <router-link tag="span" to="/my/myRegistration">我的挂号</router-link>
       </div>

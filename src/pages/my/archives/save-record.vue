@@ -58,7 +58,7 @@
     import AppHeader from "../../../components/app-header.vue"
     import config from "../../../lib/config"
     import api from "../../../lib/http"
-
+    import {jssdkMixin} from '../../../lib/mixin'
     export default {
         data() {
             return {
@@ -138,12 +138,10 @@
 
             },
             save(){
-                if(this.description == ''){
-                    weui.alert("病历详情内容不能为空")
+                if(this.description == '' && this.picList.length == 0){
+                    weui.alert("请先完善病历相关信息")
                 }else if(this.textLength >500){
                     weui.alert("最多可输入500个字")
-                }else if(this.picList.length == 0){
-                    weui.alert("请先上传相关病历图片")
                 }else{
                   console.log(this.picList);
                   var arr = []

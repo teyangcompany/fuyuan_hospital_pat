@@ -15,7 +15,7 @@
                                 </span>
               </p>
             </div>
-            <div class="weui-cell__ft bfc"></div>
+            <!--<div class="weui-cell__ft bfc"></div>-->
           </a>
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
@@ -25,7 +25,7 @@
             </span>
               </p>
             </div>
-            <div class="weui-cell__ft bfc"></div>
+            <!--<div class="weui-cell__ft bfc"></div>-->
           </a>
 
         </div>
@@ -86,7 +86,7 @@
     </scroll>
     <footer class="payButton"  v-if="consultInfo.consultStatus == '0'">
       <div class="payWrap border-1px-top">
-        <span class="border-1px-right" @click="cancelApply()">取消申请</span>
+        <span class="border-1px-right" @click="cancelConsult()">取消申请</span>
         <span class="pay" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
       </div>
     </footer>
@@ -150,6 +150,12 @@
               :dialogLeftFoot="dialogOverLeft"
               :dialogRightFoot="dialogOverRight"
     ></v-dialog>
+    <v-dialog :dialogTitle="dialogTitle"
+              :dialogMain="dialogMain"
+              :dialogLeftFoot="dialogLeftFoot"
+              :dialogRightFoot="dialogRightFoot"
+              v-if="showDialog"
+              @on-cancel="cancelDialog" @on-download="cancelApply"></v-dialog>
     <v-mask v-if="showMask"></v-mask>
     <toast v-if="showToast"></toast>
   </div>
@@ -204,6 +210,11 @@
         dialogOverLeft: "取消",
         dialogOverRight: "确定结束",
         showOverConsult: false,
+        dialogTitle:"取消申请",
+        dialogMain:"确定取消申请",
+        dialogLeftFoot:"取消",
+        dialogRightFoot:"确定",
+        showDialog:false
       }
     },
     filters:{
@@ -366,13 +377,17 @@
         this.showLargePic = false
         this.showMask = false
       },
-
-
-
       closeAll() {
         this.showAllDialog = false
       },
+      cancelConsult(){
+         this.showDialog = true
+      },
+      cancelDialog(){
+        this.showDialog = false
+      } ,
       cancelApply(){
+        this.showDialog = false
           http("smarthos.consult.pic.cancel",{
             token:localStorage.getItem('token'),
             consultId:this.consultId

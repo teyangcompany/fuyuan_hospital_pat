@@ -16,7 +16,7 @@
                                 </span>
                             </router-link>
                         </div>
-                        <div class="weui-cell__ft bfc"></div>
+                        <!--<div class="weui-cell__ft bfc"></div>-->
                     </a>
                     <a class="weui-cell weui-cell_access" href="javascript:;">
                         <div class="weui-cell__bd">
@@ -130,6 +130,18 @@
         <div class="btn" v-show="consultInfo.consultStatus=='6'">
             <p class="mfb reply ">申请成为他的患者</p>
         </div>
+        <v-dialog @on-cancel="over" @on-download="overConsult" v-if="showOverConsult"
+                  :dialogTitle="dialogOverTitle"
+                  :dialogMain="dialogOverMain"
+                  :dialogLeftFoot="dialogOverLeft"
+                  :dialogRightFoot="dialogOverRight"
+        ></v-dialog>
+       <v-dialog :dialogTitle="dialogTitle"
+                :dialogMain="dialogMain"
+                :dialogLeftFoot="dialogLeftFoot"
+                :dialogRightFoot="dialogRightFoot"
+                v-if="showDialog"
+                @on-cancel="cancelDialog" @on-download="cancelApply"></v-dialog>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -139,10 +151,12 @@
     import api from '../../lib/http'
     import {goodTime,Getdate} from '../../lib/filter'
     import ajax from '../../lib/ajax'
+    import dialog from '../../base/dialog.vue'
     export default{
         components: {
             top,
-            editDiv
+            editDiv,
+            "VDialog":dialog
         },
         data(){
             return {
@@ -160,7 +174,17 @@
                 consultInfo:{},
                 userPat:{},
                 noReadReplyCount:Number,
-                replyContentType:"TEXT"
+                replyContentType:"TEXT",
+                showOverConsult:false,
+                dialogOverTitle: "结束咨询",
+                dialogOverMain: "结束咨询后双方都无法继续回复。请酌情使用该功能",
+                dialogOverLeft: "取消",
+                dialogOverRight: "确定结束",
+                dialogTitle:"取消申请",
+                dialogMain:"确定取消申请",
+                dialogLeftFoot:"取消",
+                dialogRightFoot:"确定",
+                showDialog:false
             }
         },
         filters:{
@@ -202,17 +226,24 @@
             },
            //结束咨询
             closeConsult(){
-                  api("smarthos.consult.platform.pic.complete",{
-                       token:this.token,
-                       consultId:this.consultId
-                  }).then((data)=>{
-                      if(data.code == 0){
-                        this.getData()
-                      }else{
-                          weui.alert(data.msg)
-                      }
-                      console.log(data)
-                  })
+                 this.showOverConsult = true
+            },
+            over(){
+              this.showOverConsult = false
+            },
+            overConsult(){
+              this.showOverConsult = false
+              api("smarthos.consult.platform.pic.complete",{
+                token:this.token,
+                consultId:this.consultId
+              }).then((data)=>{
+                if(data.code == 0){
+                  this.getData()
+                }else{
+                  weui.alert(data.msg)
+                }
+                console.log(data)
+              })
             },
            //再次咨询
             consultAgain(){
@@ -234,17 +265,24 @@
             },
             //取消申请
             cancelConsult(){
-                 api("smarthos.consult.pic.cancel",{
-                   token:localStorage.getItem('token'),
-                   consultId:this.consultId
-                 }).then((data)=>{
-                     if(data.code == 0){
-                       this.getData()
-                     }else{
-                         weui.alert(data.msg)
-                     }
-                     console.log(data)
-                 })
+                 this.showDialog = true
+            },
+            cancelDialog(){
+              this.showDialog = false
+            },
+            cancelApply(){
+              this.showDialog = false
+              api("smarthos.consult.pic.cancel",{
+                token:localStorage.getItem('token'),
+                consultId:this.consultId
+              }).then((data)=>{
+                if(data.code == 0){
+                  this.getData()
+                }else{
+                  weui.alert(data.msg)
+                }
+                console.log(data)
+              })
             },
             getData(){
               api('smarthos.consult.details',{

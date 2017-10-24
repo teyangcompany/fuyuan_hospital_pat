@@ -11,7 +11,7 @@
           <div class="imageText" :class="{active:test==index}" v-for="(item,index) in serviceList"
                @click.stop="getText(index)">
             <p class="mf">{{item.serveName}}</p>
-            <p class="col">{{item.servePrice | consultPrice}}</p>
+            <p class="col">{{item.servePrice | consultPrice}}元</p>
           </div>
         </div>
         <!--<div v-if="serviceList.length>0">-->
@@ -59,14 +59,13 @@
     },
 
     mounted() {
-      console.log(this.id, 99999);
+//      console.log(this.id, 99999);
 
       api('smarthos.user.doc.serve.list', {
 //                token:this.token,
-
                 docId:this.id
             }).then(res=>{
-                console.log(res,11111);
+//                console.log(res,11111);
                 if(res.succ){
                     var obj = res.obj;
                     obj.appointmentOutpatientConsultServe.serveName?this.serviceList.push(obj.appointmentOutpatientConsultServe):"";
@@ -74,7 +73,7 @@
                     obj.phoneConsultServe.serveName?this.serviceList.push(obj.phoneConsultServe):"";
                     obj.picConsultServe.serveName?this.serviceList.push(obj.picConsultServe):"";
                     obj.videoConsultServe.serveName?this.serviceList.push(obj.videoConsultServe):"";
-                    console.log(this.serviceList,123456789)
+//                    console.log(this.serviceList,123456789)
                 }else {
                     alert(res.msg)
                 }

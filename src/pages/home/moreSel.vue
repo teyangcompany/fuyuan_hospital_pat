@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <top class="noflex" title="" ref="header">
-            <i slot="back"></i>
+            <!--<i slot="back"></i>-->
         </top>
         <scroll :height="scrollHeight">
             <div class="wrap">

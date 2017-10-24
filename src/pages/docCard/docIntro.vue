@@ -65,7 +65,7 @@
     },
     mounted() {
       setTimeout(() => {
-        console.log(this.$store.state.docObj, 66666666);
+//        console.log(this.$store.state.docObj, 66666666);
         this.docObj = this.$store.state.docObj
       }, 500)
 

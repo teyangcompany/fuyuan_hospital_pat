@@ -231,7 +231,7 @@
                 </section>
                 <section v-if="item.userDocServes">
                   <div v-for="subItem in item.userDocServes">
-                    <p>{{ subItem.serveName }}{{ subItem.servePrice }}元</p>
+                    <p>{{ subItem.serveName }}{{ subItem.servePrice | consultPrice }}元</p>
                   </div>
                 </section>
               </li>
@@ -259,6 +259,7 @@
   import Scroll from '../../../../base/scroll'
   import {tokenCache} from '../../../../lib/cache'
   import http from '../../../../lib/http'
+  import { consultPrice } from '../../../../lib/filter'
   export default{
     data(){
       return{
@@ -287,6 +288,9 @@
           }
         ],
       }
+    },
+    filters:{
+      consultPrice
     },
     created(){
          http("smarthos.user.doc.search",{
@@ -719,7 +723,7 @@
       button{
         border:none;
         outline: medium;
-        width:90px;
+        width:120px;
         height: 60px;
         margin-left: 20px;
         font-size: 32px;
@@ -731,7 +735,7 @@
       position: absolute;
       width: 30px;
       top:30px;
-      left: 80px;
+      left: 60px;
     }
   }
   .tab{
@@ -957,7 +961,7 @@
             /*flex:1;*/
             display: block;
             p{
-              width: 280px;
+              width: 240px;
               border:1px solid #999999;
               color: #999999;
               display: flex;

@@ -61,8 +61,8 @@
                 在线问诊
             </div>
             <div class="mfw patient">
-              <span @click="attention" >关注医生</span>
-              <!--<span @click="attention">取消关注</span>-->
+              <span @click="attention" v-if="!isFollow">关注医生</span>
+              <span @click="attention" v-else>取消关注</span>
             </div>
         </div>
         <seivice :docId="docId" ref="ser"></seivice>
@@ -99,7 +99,7 @@
 
             sessionStorage.setItem('docId',this.$route.params.id);
 
-            console.log(this.docId,3333)
+//            console.log(this.docId,3333)
             this.getData()
 
         },
@@ -113,7 +113,7 @@
                     token:this.token,
                     docId:this.docId
                   }).then(res=>{
-                    console.log(res,88888);
+//                    console.log(res,88888);
                     if(res.succ){
                       this.isFollow = true
                     }else {
@@ -121,14 +121,15 @@
                     }
                   })
                 }else{
-                  api('smarthos.follow.cancel',{
+                  api('smarthos.follow.docpat.delete',{
                     token:this.token,
                     docId:this.docId
                   }).then(res=>{
-                    console.log(res,88888);
+//                    console.log(res,88888);
                     if(res.succ){
                       this.isFollow = false
                     }else {
+                      weui.alert("123")
                       weui.alert(res.msg)
                     }
                   })
@@ -144,8 +145,11 @@
                       this.doc = res.obj.doc;
                       this.docServeList = res.obj.docServeList
                       sessionStorage.setItem('docName',res.obj.doc.docName)
-                      console.log(this.$store.state.docObj,66666);
+//                      console.log(this.$store.state.docObj,66666);
                       this.$store.commit('increment',res.obj.doc)
+                      if(res.obj.followDocpat){
+                           this.isFollow = true
+                      }
                   }else {
                       alert(res.msg)
                   }

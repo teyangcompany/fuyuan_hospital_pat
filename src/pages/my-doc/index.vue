@@ -1,19 +1,23 @@
 <template>
   <div class="page">
-    <app-header class="noflex" title="我的医生" ref="header">
-      <div class="right absolute" slot="right">找医生</div>
-    </app-header>
-    <scroll :height="scrollHeight" :data="list">
+    <div class="myDoc">
+      <app-header class="noflex" title="我的医生" ref="header">
+        <div class="right absolute" slot="right">找医生</div>
+      </app-header>
+    </div>
+    <div class="nav">
+      <ul>
+        <li v-for="item in nav" :class="[item.name]" @click="goPath(item.path)">
+          <div class="icon"></div>
+          <div class="text">{{item.value}}</div>
+        </li>
+      </ul>
+    </div>
+    <div class="forTitle">
+      <div class="title">最新消息</div>
+    </div>
+    <scroll  :data="list" class="scrollArea">
         <div class="wrapper">
-          <div class="nav">
-            <ul>
-              <li v-for="item in nav" :class="[item.name]" @click="goPath(item.path)">
-                <div class="icon"></div>
-                <div class="text">{{item.value}}</div>
-              </li>
-            </ul>
-          </div>
-          <div class="title">最新消息</div>
           <div class="list">
             <ul>
               <li v-if="list.length>0"  v-for="item in list" @click="goDocChat(item.followMessage.followId)">
@@ -43,8 +47,9 @@
           </div>
         </div>
     </scroll>
-
-    <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
+    <div class="bottomAssist">
+      <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
+    </div>
   </div>
 </template>
 
@@ -71,7 +76,7 @@
       Todate
     },
     created(){
-      this.scrollHeight = window.innerHeight-60-45;
+//      this.scrollHeight = window.innerHeight-60-45;
       console.log(this.scrollHeight,99999)
     },
     computed: {},
@@ -115,8 +120,33 @@
 
 <style scoped lang="scss">
   @import "../../common/common.scss";
-
+  .scrollArea{
+    position: absolute;
+    top:270px;
+    bottom:110px;
+    left:0;
+    right:0;
+    z-index:0;
+  }
+  .bottomAssist{
+      position: fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      z-index:200;
+  }
+  .myDoc{
+      position: relative;
+      z-index:888;
+  }
+  .forTitle{
+     position: relative;
+     z-index:1000;
+     background-color: #f5f5f5;
+  }
   .nav {
+    position: relative;
+    z-index:100;
     ul {
       background-color: white;
       display: flex;
