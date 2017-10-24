@@ -40,12 +40,12 @@
                   <span v-else-if="item.followMessage.msgType=='PIC'">[图片]</span>
                   <span v-else-if="item.followMessage.msgType=='AUDIO'">[语音消息]</span>
                   <span v-else-if="item.followMessage.msgType=='VEDIO'">[视频消息]</span>
-                  </div>
                 </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
     </scroll>
     <div class="bottomAssist">
       <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
@@ -56,7 +56,8 @@
 <script type="text/ecmascript-6">
   import AppFooter from "../../components/app-footer.vue"
   import AppHeader from "../../components/app-header.vue"
-  import {mainHeightMixin} from "../../lib/mixin"
+  import {fromCache} from "../../lib/cache"
+  import {mainHeightMixin, isBindMixin} from "../../lib/mixin"
   import config from "../../lib/config"
   import api from '../../lib/http'
   import {Todate} from '../../lib/filter'
@@ -67,17 +68,29 @@
       return {
         currentNav: 1,
         nav: config.my_doc_nav,
-        token:localStorage.getItem('token'),
-        list:[],
-        scrollHeight:""
+        token: localStorage.getItem('token'),
+        list: [],
+        scrollHeight: ""
       };
     },
-    filters:{
+    mixins: [isBindMixin],
+    filters: {
       Todate
     },
-    created(){
-//      this.scrollHeight = window.innerHeight-60-45;
-      console.log(this.scrollHeight,99999)
+
+
+
+    created() {
+      this._isBind().then((res) => {
+        if (res === false) {
+          fromCache.set(this.$route.fullPath);
+          this.$router.push("/login")
+        }
+      });
+
+//      this.scrollHeight = window.innerHeight - 60 - 45;
+//      console.log(this.scrollHeight, 99999)
+
     },
     computed: {},
     components: {
@@ -92,26 +105,23 @@
 
     },
     methods: {
-      goDocChat(id,docId){
-        this.$router.push('docChat/'+id)
+      goDocChat(id, docId) {
+        this.$router.push('docChat/' + id)
       },
-      scrollToEnd(){
+      scrollToEnd() {
         console.log(21212121)
       },
-      getData(){
-        api('smarthos.follow.message.last.list',{
-          token:this.token,
-
-        }).then(res=>{
-          console.log(res,2222222);
-          if(res.succ){
+      getData() {
+        api('smarthos.follow.message.last.list', {}).then(res => {
+          console.log(res, 2222222);
+          if (res.succ) {
             this.list = res.list;
-          }else {
+          } else {
             alert(res.msg)
           }
         })
       },
-      goPath(path){
+      goPath(path) {
         this.$router.push(path)
       },
     }

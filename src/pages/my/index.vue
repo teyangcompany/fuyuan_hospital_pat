@@ -16,7 +16,8 @@
         <div class="info flex1">
           <!--<h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0, 1)}}</h3>-->
           <div>姓名：{{patDetail.commpatName}}</div>
-          <p v-if="patDetail">{{patDetail.commpatGender == 'M' ? '男' : '女'}} {{ JSON.stringify(new Date()).substr(1,4)- patDetail.commpatIdcard.substr(6,4) }}岁</p>
+          <p v-if="patDetail">
+            {{patDetail.commpatGender | getGender}} {{ patDetail.commpatIdcard | getAge}}岁</p>
         </div>
       </div>
 
@@ -30,8 +31,8 @@
       </div>
 
       <!--<div class="quit flex">-->
-        <!--<div class="icon flex0"></div>-->
-        <!--<div class="text flex0">退出登录</div>-->
+      <!--<div class="icon flex0"></div>-->
+      <!--<div class="text flex0">退出登录</div>-->
       <!--</div>-->
     </div>
     <app-footer class="noflex" :currentNav="currentNav" ref="footer"></app-footer>
@@ -43,15 +44,18 @@
   import config from "../../lib/config"
   import {mainHeightMixin, isBindMixin} from "../../lib/mixin"
   import api from '../../lib/http'
+  import {getGender, getAge} from "../../lib/filter"
+  import {debug} from "../../lib/util"
 
   export default {
+    filters: {getGender, getAge},
     mixins: [mainHeightMixin, isBindMixin],
     data() {
       return {
         nav: config.my_nav,
         currentNav: 3,
         patDetail: {},
-        patAvatar:""
+        patAvatar: ""
       };
     },
     computed: {},

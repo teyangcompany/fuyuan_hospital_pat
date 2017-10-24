@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!--<div class="topNav">-->
-      <!--<p class="listP" style="border-bottom: 2px solid blue">找医生</p>-->
-      <!--<p class="listP">精选</p>-->
-      <!--<router-link tag="p" to="/my/home/server/consultService/myConsult" class="listP">我的</router-link>-->
-    <!--</div>-->
     <div class="toggle" style="display: block;">
       <div class="searchArea">
         <div class="inputWrap">
@@ -297,7 +292,6 @@
            pageSize:10,
            pageNum:1
          }).then((data)=>{
-           console.log(data,66666)
            this.loadingStatus = false
              if(data.code == 0){
                  this.followList = data.list
@@ -311,7 +305,6 @@
            deptLevel:2
          }).then((data)=>{
              if(data.code == 0){
-               console.log(data,9999)
                this.parentLevel = data.list
                this.parentLevel = this.allRoom.concat(this.parentLevel)
                this.childDetail = this.parentLevel[this.clickIndex].subDeptList
