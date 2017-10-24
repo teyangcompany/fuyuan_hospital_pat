@@ -33,16 +33,16 @@
                 <div class="mfb" :class="{arrow:isActive,arrow1:!isActive}" @click="toggleArrow1">
                 </div>
             </div>
-            <div class="headerTro">
-                <span class="col"></span>
-                <span class="mfb">医生相册</span>
-                <span class="more mfc">查看更多</span>
-            </div>
-            <div class="docImg">
-                <div class="teamImg" v-for="item of 3">
-                    <img class="teamTitle" src="../../../static/img/test.jpg" alt="">
-                </div>
-            </div>
+            <!--<div class="headerTro">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">医生相册</span>-->
+                <!--<span class="more mfc">查看更多</span>-->
+            <!--</div>-->
+            <!--<div class="docImg">-->
+                <!--<div class="teamImg" v-for="item of 3">-->
+                    <!--<img class="teamTitle" src="../../../static/img/test.jpg" alt="">-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
   </div>
 </template>

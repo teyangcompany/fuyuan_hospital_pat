@@ -93,11 +93,9 @@
         console.log(msg);
       },
       sendCode() {
-        weui.alert("点击事件")
         api("smarthos.captcha.pat.wechat.bind", {
           mobile: this.patMobile
         }).then((res) => {
-          weui.alert("请求完成")
           if (res.code == 0) {
             this.cid = res.obj.cid;
             this.captcha = res.obj.value;
@@ -116,7 +114,6 @@
             }
           } else {
             weui.alert(data.msg)
-            weui.alert("出错了")
           }
         })
       },

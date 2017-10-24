@@ -25,7 +25,7 @@
                        <div class="weui-cell__bd">
                            <p class="mfb">就诊人</p>
                        </div>
-                       <div class="weui-cell__ft mfb">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
+                       <div class="weui-cell__ft mfb" v-if="userList">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
                    </a>
                </div>
                <div class="weui-cell"v style="background: white">
@@ -106,11 +106,16 @@
                 textLength:0,
                 text:"",
                 pickedIndex:0,
-                attaIdList:[]
+                attaIdList:[],
+                fee:""
             }
         },
         create(){
+
             this.scrollHeight = window.innerHeight-45
+        },
+        created(){
+             this.fee = this.$route.query.fee
         },
         mounted(){
             window.addEventListener('resize', function () {
@@ -156,11 +161,16 @@
                   }).then(res=>{
                     console.log(res,3535535);
                     if(res.succ){
-                      this.$router.push({
-                        path:'oneConsult/'+res.obj.consultInfo.id
-
-                      })
-
+                        if(this.fee == 0){
+                            this.$router.push({
+                              path:'oneConsult/'+res.obj.consultInfo.id,
+                            })
+                        }else{
+                          this.$router.push({
+                            path:'pay/'+res.obj.consultInfo.id,
+                            query:{fee:this.fee}
+                          })
+                        }
                     }else {
                       alert(res.msg)
                     }

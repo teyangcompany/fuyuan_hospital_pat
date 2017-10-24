@@ -111,7 +111,7 @@
                 </div>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='2'">
-            <p class="mfb reply">请等待医生回复，24小时未回复自动退款</p>
+            <p class="mfb reply">请等待医生回复，48小时未回复自动退款</p>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='-1'">
            <div>
@@ -227,7 +227,10 @@
             },
             //付款
             goPay(){
-              this.$router.push('/pay/'+this.consultId)
+              this.$router.push({
+                path:'/pay/'+this.consultId,
+                query:{paySort:'dept',fee:this.consultInfo.payFee}
+              })
             },
             //取消申请
             cancelConsult(){

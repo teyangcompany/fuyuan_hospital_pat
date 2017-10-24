@@ -92,7 +92,9 @@
     </footer>
     <footer class="payButton"  v-else-if="consultInfo.consultStatus == '1' || consultInfo.consultStatus == '2'">
       <div class="payWrap border-1px-top">
-
+        <!--<div class="consultAgain">-->
+          <!--<p>请等待医生回复，48小时未回复自动退款</p>-->
+        <!--</div>-->
       </div>
     </footer>
     <footer class="payButton"  v-else-if="consultInfo.consultStatus == '6'">
@@ -196,6 +198,7 @@
         consultInfo:"",
         attaList:[],
         userPat:"",
+        paySort:"",
         dialogOverTitle: "结束咨询",
         dialogOverMain: "结束咨询后双方都无法继续回复。请酌情使用该功能",
         dialogOverLeft: "取消",
@@ -382,7 +385,10 @@
           })
       },
       goPay(){
-        this.$router.push('/pay/'+this.consultId)
+        this.$router.push({
+          path:'/pay/'+this.consultId,
+          query:{paySort:'one',fee:this.consultInfo.payFee}
+        })
       },
       whatInput() {
         if (this.inputInfo.replace(/\s+/g, "") == '') {
@@ -808,10 +814,12 @@
   footer.payButton {
     margin-bottom: 10px;
     width: 100%;
+    height:80px;
     div.payWrap {
       width: 690px;
       margin: 0 auto;
       display: flex;
+      background-color: #FFFFFF;
       div{
         margin: 0 auto;
         p{

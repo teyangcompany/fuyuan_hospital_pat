@@ -276,6 +276,7 @@
         loadingStatus:true,
         pullup:true,
         listPage:1,
+        preventRepeatRequest:false,
         searchContent:"",
         orderByScore:false,
         orderByNum:false,
@@ -350,7 +351,8 @@
 //             })
 //           },
       scrollToEnd(){
-        if (this.preventRepeatRequest) {
+
+        if (this.preventRepeatRequest || this.followList.length <10) {
           return
         }
         this.loadingStatus = true
@@ -389,6 +391,7 @@
         this.$router.push('/officeConsult')
       },
       searchList(){
+        this.sortBy = ''
         http("smarthos.user.doc.search",{
           deptId:this.deptId,
           keyWord:this.searchContent,
@@ -509,6 +512,22 @@
       Scroll
     },
     watch:{
+      searchContent(){
+          if(this.searchContent == ''){
+            http("smarthos.user.doc.search",{
+              pageSize:10,
+              pageNum:1
+            }).then((data)=>{
+              console.log(data,66666)
+              this.loadingStatus = false
+              if(data.code == 0){
+                this.followList = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }
+      },
       childDetail(){
           this.$nextTick(()=>{
               setTimeout(()=>{
@@ -700,7 +719,7 @@
       button{
         border:none;
         outline: medium;
-        width:70px;
+        width:90px;
         height: 60px;
         margin-left: 20px;
         font-size: 32px;
@@ -933,8 +952,9 @@
           display: flex;
           >div{
             flex:1;
+            
             p{
-              width: 210px;
+              width: 280px;
               border:1px solid #999999;
               color: #999999;
               display: flex;
