@@ -26,7 +26,7 @@
         components: {
             top
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 illName:"",

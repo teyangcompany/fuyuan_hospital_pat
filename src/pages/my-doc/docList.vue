@@ -77,7 +77,7 @@
             top,
             scroll
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 num:0,

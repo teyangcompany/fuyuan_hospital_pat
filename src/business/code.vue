@@ -5,7 +5,9 @@
 </template>
 
 <script>
-    import validate from "lmw-validate";
+    import validate from "../lib/validate";
+
+    import http from "../lib/http"
 
     export default {
         props: {
@@ -62,7 +64,13 @@
                     return
                 }
 
-                this.$emit("input", '11');
+                http(this.service, {mobile: this.mobile}).then((res) => {
+                    if (res.code == 0) {
+                        this.$emit("input", res.obj.cid);
+                    }
+                    this.$emit("result", res);
+                })
+
                 this._countdown();
             },
             _countdown() {

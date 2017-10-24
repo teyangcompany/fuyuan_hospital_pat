@@ -39,7 +39,7 @@
             top,
            Toast
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 num:0,

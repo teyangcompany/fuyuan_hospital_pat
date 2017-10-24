@@ -30,7 +30,7 @@
             top,
             scroll
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 selList:config.basic_more,

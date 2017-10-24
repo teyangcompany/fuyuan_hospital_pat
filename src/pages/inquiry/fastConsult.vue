@@ -80,7 +80,7 @@
             uploadImg,
             selPatient
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 scrollHeight:'',

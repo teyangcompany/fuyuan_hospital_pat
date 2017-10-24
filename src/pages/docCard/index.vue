@@ -6,7 +6,7 @@
                     <span class="back" @click="goBack">
                         <img src="../../../static/img/back.png" alt="">
                     </span>
-                   <span class="headerImg">
+                    <span class="headerImg">
                        <img src="../../../static/img/share.png" alt="">
                        <span class="mfw">
                              分享
@@ -15,36 +15,37 @@
                    </span>
 
                     <!--<span class="headerImg">-->
-                       <!--<img src="../../../static/img/guan.png" alt="" @click="attention">-->
+                    <!--<img src="../../../static/img/guan.png" alt="" @click="attention">-->
 
-                       <!--<span class="mfw">-->
-                           <!--关注  &nbsp;&nbsp;-->
-                       <!--</span>-->
-                   <!--</span>-->
+                    <!--<span class="mfw">-->
+                    <!--关注  &nbsp;&nbsp;-->
+                    <!--</span>-->
+                    <!--</span>-->
                 </div>
                 <div class="teamDetail">
-                        <ul>
-                            <li class="row">
-                                <img class="myImg" :src="doc.docAvatar" alt="" v-if="doc.docAvatar">
-                                <img class="myImg" src="../../../static/img/doctorM.png" alt="" v-else>
-                            </li>
-                            <li class="row">
-                                <span class="mfw">{{doc.docName}}</span>
-                                <span class="famous" v-show="doc.famous">名医</span>
-                            </li>
-                            <li class="row">
+                    <ul>
+                        <li class="row">
+                            <img class="myImg" :src="doc.docAvatar" alt="" v-if="doc.docAvatar">
+                            <img class="myImg" src="../../../static/img/doctorM.png" alt="" v-else>
+                        </li>
+                        <li class="row">
+                            <span class="mfw">{{doc.docName}}</span>
+                            <span class="famous" v-show="doc.famous">名医</span>
+                        </li>
+                        <li class="row">
                             <span class="mfw">
                                 {{doc.hosName}} &nbsp;&nbsp;&nbsp; {{doc.deptName}}&nbsp;&nbsp; {{doc.docTitle}}
                             </span>
-                            </li>
-                            <li class="row">
+                        </li>
+                        <li class="row">
                             <span class="mfw">
-                                粉丝&nbsp;&nbsp; {{ doc.fansNum }}&nbsp;&nbsp;&nbsp;&nbsp; 服务&nbsp;&nbsp; {{ doc.serveNum }}
+                                粉丝&nbsp;&nbsp; {{ doc.fansNum }}&nbsp;&nbsp;&nbsp;&nbsp; 服务&nbsp;&nbsp; {{ doc.serveNum
+                                }}
                                 &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} >
                             </span>
-                            </li>
-                        </ul>
-                    </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="navbar">
                 <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
@@ -61,8 +62,8 @@
                 在线问诊
             </div>
             <div class="mfw patient">
-              <span @click="attention" v-if="!isFollow">关注医生</span>
-              <span @click="attention" v-else>取消关注</span>
+                <span @click="attention" v-if="!isFollow">关注医生</span>
+                <span @click="attention" v-else>取消关注</span>
             </div>
         </div>
         <seivice :docId="docId" ref="ser"></seivice>
@@ -74,97 +75,98 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
-    export default{
+
+    export default {
         components: {
             top,
             seivice
         },
-        mixins: ['mainHeightMixin'],
-        data(){
+        mixins: [mainHeightMixin],
+        data() {
             return {
-                bar:config.doc_bar,
-                num:0,
-                flag:false,
-                docId:"",
-                token:localStorage.getItem('token'),
-                doc:{},
-              docServeList:"",
-              isFollow:false
+                bar: config.doc_bar,
+                num: 0,
+                flag: false,
+                docId: "",
+                token: localStorage.getItem('token'),
+                doc: {},
+                docServeList: "",
+                isFollow: false
             }
         },
-        created(){
+        created() {
             this.docId = this.$route.params.id;
         },
-        mounted(){
+        mounted() {
 
-            sessionStorage.setItem('docId',this.$route.params.id);
+            sessionStorage.setItem('docId', this.$route.params.id);
 
 //            console.log(this.docId,3333)
             this.getData()
 
         },
-        methods:{
-            goBack(){
-              this.$router.go(-1)
+        methods: {
+            goBack() {
+                this.$router.go(-1)
             },
-            attention(){
-                if(!(this.isFollow)){
-                  api('smarthos.follow.docpat.add',{
-                    token:this.token,
-                    docId:this.docId
-                  }).then(res=>{
+            attention() {
+                if (!(this.isFollow)) {
+                    api('smarthos.follow.docpat.add', {
+                        token: this.token,
+                        docId: this.docId
+                    }).then(res => {
 //                    console.log(res,88888);
-                    if(res.succ){
-                      this.isFollow = true
-                    }else {
-                      weui.alert(res.msg)
-                    }
-                  })
-                }else{
-                  api('smarthos.follow.docpat.delete',{
-                    token:this.token,
-                    docId:this.docId
-                  }).then(res=>{
+                        if (res.succ) {
+                            this.isFollow = true
+                        } else {
+                            weui.alert(res.msg)
+                        }
+                    })
+                } else {
+                    api('smarthos.follow.docpat.delete', {
+                        token: this.token,
+                        docId: this.docId
+                    }).then(res => {
 //                    console.log(res,88888);
-                    if(res.succ){
-                      this.isFollow = false
-                    }else {
-                      weui.alert("123")
-                      weui.alert(res.msg)
-                    }
-                  })
+                        if (res.succ) {
+                            this.isFollow = false
+                        } else {
+                            weui.alert("123")
+                            weui.alert(res.msg)
+                        }
+                    })
                 }
             },
-            getData(){
-              api('smarthos.user.doc.card.get',{
-                  token:this.token,
-                  docId:this.docId
-              }).then(res=>{
-                  console.log(res,22222);
-                  if(res.succ){
-                      this.doc = res.obj.doc;
-                      this.docServeList = res.obj.docServeList
-                      sessionStorage.setItem('docName',res.obj.doc.docName)
+            getData() {
+                api('smarthos.user.doc.card.get', {
+                    token: this.token,
+                    docId: this.docId
+                }).then(res => {
+                    console.log(res, 22222);
+                    if (res.succ) {
+                        this.doc = res.obj.doc;
+                        this.docServeList = res.obj.docServeList
+                        sessionStorage.setItem('docName', res.obj.doc.docName)
 //                      console.log(this.$store.state.docObj,66666);
-                      this.$store.commit('increment',res.obj.doc)
-                      if(res.obj.followDocpat){
-                           this.isFollow = true
-                      }
-                  }else {
-                      alert(res.msg)
-                  }
-              })
-            },
-            selItem(index,item){
-                this.num=index;
-                this.$router.push({
-                    name:item.router
+                        this.$store.commit('increment', res.obj.doc)
+                        if (res.obj.followDocpat) {
+                            this.isFollow = true
+                        }
+                    } else {
+                        alert(res.msg)
+                    }
                 })
             },
-            showService(){
-                if(this.docServeList.length != 0){
-                  this.$refs.ser.flag=true
-                }else{
+            selItem(index, item) {
+                this.num = index;
+                this.$router.push({
+                    name: item.router
+                })
+            },
+            showService() {
+                if (this.docServeList.length != 0) {
+                    this.$refs.ser.flag = true
+                } else {
                     weui.alert("该医生尚未开通此服务")
                 }
             },
@@ -173,23 +175,27 @@
 </script>
 <style scoped lang='scss'>
     @import '../../common/common.scss';
-    .page{
+
+    .page {
         display: flex;
         flex-direction: column;
         overflow: hidden;
         flex: 1;
         background: white;
     }
-    .wrapper{
+
+    .wrapper {
         overflow: scroll;
     }
-    .myHeader{
+
+    .myHeader {
         width: 100%;
         padding: 0px 30px;
         position: absolute;
         top: 30px;;
     }
-    .famous{
+
+    .famous {
         display: inline-block;
         width: 70px;
         height: 30px;
@@ -201,22 +207,25 @@
         margin-left: 30px;
         border-radius: 5px;
     }
-    .headerImg{
+
+    .headerImg {
         float: right;
-    img{
-        width: 30px;
-        height: 30px;
+        img {
+            width: 30px;
+            height: 30px;
+        }
     }
-    }
-    .back{
+
+    .back {
         width: 25px;
         height: 40px;
-    img{
-        width: 25px;
-        height: 40px;
+        img {
+            width: 25px;
+            height: 40px;
+        }
     }
-    }
-    .teamImg{
+
+    .teamImg {
         position: relative;
         width: 100%;
         height: 520px;
@@ -225,7 +234,8 @@
         background-position: center center;
         background-repeat: no-repeat;
     }
-    .teamBottom{
+
+    .teamBottom {
         position: absolute;
         left: 0px;
         bottom: 0px;
@@ -236,17 +246,20 @@
         background-position: center center;
         background-repeat: no-repeat;
     }
-    .teamDetail{
+
+    .teamDetail {
         /*margin-top: 80px;*/
         padding-top: 130px;
     }
-    .row{
+
+    .row {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 5px 0;
     }
-    .navbar{
+
+    .navbar {
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -255,40 +268,47 @@
         padding: 10px 0;
         margin-top: 15px;
     }
-    .bar{
+
+    .bar {
         padding-bottom: 20px;
         border-bottom: 1px solid #2772ff;
         color: #2772ff;
     }
-    .sel{
+
+    .sel {
         border-right: 1px solid gainsboro;
         border-left: 1px solid gainsboro;
         padding: 0 88px;
     }
-    .btn{
+
+    .btn {
         width: 100%;
         height: 100px;
-       /*display: flex;*/
-       line-height: 100px;
+        /*display: flex;*/
+        line-height: 100px;
         text-align: center;
     }
-    .myImg{
+
+    .myImg {
         width: 180px;
         height: 180px;
         border-radius: 90px;
         margin-bottom: 30px;
     }
-    .patient{
+
+    .patient {
         background: #ffc750;
         width: 33.3333%;
         float: left;
     }
-    .registration{
+
+    .registration {
         background: #f58377;
         width: 33.3333%;
         float: left;
     }
-    .onLine{
+
+    .onLine {
         background: #2772ff;
         width: 33.3333%;
         float: left;
