@@ -68,7 +68,7 @@
       bottom:0;
       left:0;
       width:100%;
-      z-index:997;
+      z-index:1000000;
       border-top:1px solid rgb(204,204,204);
       /*height: 94px;;*/
     background-color: white;

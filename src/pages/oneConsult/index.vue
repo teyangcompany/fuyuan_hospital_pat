@@ -1,21 +1,22 @@
 <template>
   <div class="chat">
-      <v-header :title="title" :rightTitle="overTitle" :waitImg="waitImg" v-if="consultInfo.consultStatus=='3'" @on-docCard="finishConsult"></v-header>
-      <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" v-else></v-header>
-      <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="main"
+    <v-header :title="title" :rightTitle="overTitle" :waitImg="waitImg" v-if="consultInfo.consultStatus=='3'"
+              @on-docCard="finishConsult"></v-header>
+    <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" v-else></v-header>
+    <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="main"
             :listen-scroll="listenScroll" :probe-type="probeType">
       <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
         <div class="weui-cells">
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
               <p>
-                                <span  class="bf">患者资料： {{consultInfo.consulterName}}
-                                    {{consultInfo.consulterGender == 'M'?'男':'女'}}
+                                <span class="bf">患者资料： {{consultInfo.consulterName}}
+                                    {{consultInfo.consulterGender == 'M' ? '男' : '女'}}
                                     {{consultInfo.consulterAge}}
                                 </span>
               </p>
             </div>
-            <div class="weui-cell__ft bfc"></div>
+            <!--<div class="weui-cell__ft bfc"></div>-->
           </a>
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
@@ -25,7 +26,7 @@
             </span>
               </p>
             </div>
-            <div class="weui-cell__ft bfc"></div>
+            <!--<div class="weui-cell__ft bfc"></div>-->
           </a>
 
         </div>
@@ -34,7 +35,8 @@
             <span class="bf">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
-            <img v-for="item in attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
+            <img v-for="item in attaList" :src="item.attaFileUrl" alt=""
+                 @click.stop="bigImg(item.attaFileUrl)">
           </div>
           <div class="createDiv">
             <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
@@ -60,7 +62,8 @@
                 <div class="whatsay_text" v-if="item.consultMessage.replyContentType == 'TEXT'">
                   {{ item.consultMessage.replyContent}}
                 </div>
-                <div class="whatsay_text articleSection" v-if="item.consultMessage.replyContentType == 'ARTICLE'" @click="goArticle(JSON.parse(item.msgContent).articleId)">
+                <div class="whatsay_text articleSection" v-if="item.consultMessage.replyContentType == 'ARTICLE'"
+                     @click="goArticle(JSON.parse(item.msgContent).articleId)">
                   <div>
                     <span>文章标题：{{ JSON.parse(item.consultMessage.replyContent).title }}</span><br/>
                     <span>作者： {{ JSON.parse(item.consultMessage.replyContent).author }}</span>
@@ -71,7 +74,8 @@
                 <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'AUDIO'">
                   <audio autoplay="autoplay" controls="controls" :src="item.consultMessage.replyContent" alt=""></audio>
                 </div>
-                <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'PIC'" @click="makeLarge(item.msgContent)">
+                <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'PIC'"
+                     @click="makeLarge(item.msgContent)">
                   <img :src="item.consultMessage.replyContent" alt="">
                 </div>
               </div>
@@ -84,33 +88,35 @@
       </section>
 
     </scroll>
-    <footer class="payButton"  v-if="consultInfo.consultStatus == '0'">
+    <footer class="payButton" v-if="consultInfo.consultStatus == '0'">
       <div class="payWrap border-1px-top">
-        <span class="border-1px-right" @click="cancelApply()">取消申请</span>
+        <span class="border-1px-right" @click="cancelConsult()">取消申请</span>
         <span class="pay" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
       </div>
     </footer>
-    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '1' || consultInfo.consultStatus == '2'">
+    <footer class="payButton" v-else-if="consultInfo.consultStatus == '1' || consultInfo.consultStatus == '2'">
       <div class="payWrap border-1px-top">
-
+        <!--<div class="consultAgain">-->
+        <!--<p>请等待医生回复，48小时未回复自动退款</p>-->
+        <!--</div>-->
       </div>
     </footer>
-    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '6'">
+    <footer class="payButton" v-else-if="consultInfo.consultStatus == '6'">
       <div class="payWrap border-1px-top" @click="consultAgain">
-         <div class="consultAgain">
-           <p>再次咨询</p>
-         </div>
+        <div class="consultAgain">
+          <p>再次咨询</p>
+        </div>
       </div>
     </footer>
-    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '-1'">
+    <footer class="payButton" v-else-if="consultInfo.consultStatus == '-1'">
       <div class="payWrap border-1px-top">
-         <div>
-           <p>问诊已取消</p>
-           <p>如有退款将在7~10个工作日返回您的支付账户</p>
-         </div>
+        <div>
+          <p>问诊已取消</p>
+          <p>如有退款将在7~10个工作日返回您的支付账户</p>
+        </div>
       </div>
     </footer>
-    <footer class="payButton"  v-else-if="consultInfo.consultStatus == '4'">
+    <footer class="payButton" v-else-if="consultInfo.consultStatus == '4'">
       <div class="payWrap border-1px-top">
         <span class="border-1px-right" @click="consultAgain">再次咨询</span>
         <span class="pay" @click="comment">评价</span>
@@ -148,6 +154,12 @@
               :dialogLeftFoot="dialogOverLeft"
               :dialogRightFoot="dialogOverRight"
     ></v-dialog>
+    <v-dialog :dialogTitle="dialogTitle"
+              :dialogMain="dialogMain"
+              :dialogLeftFoot="dialogLeftFoot"
+              :dialogRightFoot="dialogRightFoot"
+              v-if="showDialog"
+              @on-cancel="cancelDialog" @on-download="cancelApply"></v-dialog>
     <v-mask v-if="showMask"></v-mask>
     <toast v-if="showToast"></toast>
   </div>
@@ -156,20 +168,18 @@
   import header from '../../base/header'
   import Scroll from '../../base/scroll'
   import http from '../../lib/http'
-    import dialog from '../../base/dialog'
+  import dialog from '../../base/dialog'
   import Toast from '../../base/toast'
-  import {Todate,goodTime} from '../../lib/filter'
+  import {Todate, goodTime} from '../../lib/filter'
   import mask from '../../base/mask.vue'
-  import {mainHeightMixin} from '../../lib/mixin'
-  //  import consultPatAva from "../../../utils/consultPatAva"
-
+  import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
 
   export default {
     data() {
       return {
         title: "",
         rightTitle: "",
-        overTitle:"结束咨询",
+        overTitle: "结束咨询",
         waitImg: "",
         seeMore: false,
         light: false,
@@ -180,7 +190,7 @@
         aboutReplyMessage: [],
         attachImg: "",
         sendContent: "",
-        attaFileUrl:"",
+        attaFileUrl: "",
 //        推送时得到的
         pushConsultId: "",
         returnInfo: "",
@@ -188,22 +198,29 @@
         largePic: "",
         showToast: false,
         messageLength: "",
-        inter:"",
-        aboutUserInfo:"",
-        docId:"",
+        inter: "",
+        aboutUserInfo: "",
+        docId: "",
 //        vipStatus:"",
-        showMask:false,
-        consultInfo:"",
-        attaList:[],
-        userPat:"",
+        showMask: false,
+        consultInfo: "",
+        attaList: [],
+        userPat: "",
+        paySort: "",
         dialogOverTitle: "结束咨询",
         dialogOverMain: "结束咨询后双方都无法继续回复。请酌情使用该功能",
         dialogOverLeft: "取消",
         dialogOverRight: "确定结束",
         showOverConsult: false,
+        dialogTitle: "取消申请",
+        dialogMain: "确定取消申请",
+        dialogLeftFoot: "取消",
+        dialogRightFoot: "确定",
+        showDialog: false
       }
     },
-    filters:{
+    mixins: [jssdkMixin],
+    filters: {
       Todate,
       goodTime
     },
@@ -212,16 +229,15 @@
       "VDialog": dialog,
       Scroll,
       Toast,
-      'VMask':mask
+      'VMask': mask
     },
     created() {
-
       this.listenScroll = true
       this.probeType = 3
       this.consultId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
-           this.getInitData()
+        this.getInitData()
       })
     },
     mounted() {
@@ -237,16 +253,24 @@
 //        }
 //      }, 10)
     },
-    watch: {
-
-    },
+    watch: {},
     methods: {
-      getInitData(){
+      bigImg(img) {
+        let urls = [];
+        this.attaList.forEach((res) => {
+          urls.push(res.attaFileUrl)
+        });
+        wx.previewImage({
+          current: img,
+          urls: urls
+        })
+      },
+      getInitData() {
         http("smarthos.consult.details", {
           token: localStorage.getItem('token'),
-          consultId:this.consultId
+          consultId: this.consultId
         }).then((data) => {
-          console.log(data,7777)
+          console.log(data, 7777)
 //          this.messageLength = data.obj.messageList.length
           this.showToast = false
           if (data.code == 0) {
@@ -268,12 +292,12 @@
               let o = document.getElementsByClassName("chat")[0];
               let h = o.offsetHeight;  //高度
               let content = h
-              console.log(o,6666)
+              console.log(o, 6666)
               console.log(h)
 
               setTimeout(() => {
                 if (this.$refs.slideList.offsetHeight > content - 10) {
-                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight-80)
+                  this.$refs.main.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
                   console.log(this.$refs.slideList.offsetHeight)
 //                  console.log(content)
                 }
@@ -292,45 +316,42 @@
 //          console.log(this.attachImg)
         })
       },
-      consultAgain(){
-          this.$router.push({
-            path:"/my/consultService/consultDoc"
-          })
-      },
-      comment(){
+      consultAgain() {
         this.$router.push({
-          path:"/evaluate/"+this.consultId,
-          query:{consultType:this.consultInfo.consultType}
+          path: "/my/consultService/consultDoc"
         })
       },
-      goArticle(id){
+      comment() {
         this.$router.push({
-          path:"/articleDetail",
-          query:{articleId:id}
+          path: "/evaluate/" + this.consultId,
+          query: {consultType: this.consultInfo.consultType}
+        })
+      },
+      goArticle(id) {
+        this.$router.push({
+          path: "/articleDetail",
+          query: {articleId: id}
         })
       },
       over() {
         this.showOverConsult = false
       },
-      overConsult(){
+      overConsult() {
         this.showOverConsult = false
-         http("smarthos.consult.one2one.pic.complete",{
-             token:localStorage.getItem('token'),
-             consultId:this.consultId
-         }).then((data)=>{
-             if(data.code == 0){
-                 this.getInitData()
-             }else{
-                 weui.alert(data.msg)
-             }
-         })
+        http("smarthos.consult.one2one.pic.complete", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId
+        }).then((data) => {
+          if (data.code == 0) {
+            this.getInitData()
+          } else {
+            weui.alert(data.msg)
+          }
+        })
       },
-      finishConsult(){
-          this.showOverConsult = true
+      finishConsult() {
+        this.showOverConsult = true
       },
-//      goDocCard(){
-//        this.$router.push('/docCard/'+this.docId)
-//      },
       goDown() {
         this.seeMore = false
       },
@@ -355,34 +376,45 @@
         this.showLargePic = true
       },
       makeLarge(url) {
-        this.largePic = url
+        wx.previewImage({
+          current: img,
+          urls: [img]
+        })
+        /*this.largePic = url
         this.showMask = true
-        this.showLargePic = true
+        this.showLargePic = true*/
       },
       makeSmall() {
         this.showLargePic = false
         this.showMask = false
       },
-
-
-
       closeAll() {
         this.showAllDialog = false
       },
-      cancelApply(){
-          http("smarthos.consult.pic.cancel",{
-            token:localStorage.getItem('token'),
-            consultId:this.consultId
-          }).then((data)=>{
-              if(data.code == 0){
-                this.getInitData()
-              }else{
-                  weui.alert(data.msg)
-              }
-          })
+      cancelConsult() {
+        this.showDialog = true
       },
-      goPay(){
-        this.$router.push('/pay/'+this.consultId)
+      cancelDialog() {
+        this.showDialog = false
+      },
+      cancelApply() {
+        this.showDialog = false
+        http("smarthos.consult.pic.cancel", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId
+        }).then((data) => {
+          if (data.code == 0) {
+            this.getInitData()
+          } else {
+            weui.alert(data.msg)
+          }
+        })
+      },
+      goPay() {
+        this.$router.push({
+          path: '/pay/' + this.consultId,
+          query: {paySort: 'one', fee: this.consultInfo.payFee}
+        })
       },
       whatInput() {
         if (this.inputInfo.replace(/\s+/g, "") == '') {
@@ -394,23 +426,18 @@
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
       },
-//      enterThing() {
-//        if (this.light) {
-//          this.send()
-//        }
-//      },
       send() {
         http("smarthos.consult.one2one.pic.reply", {
           token: localStorage.getItem('token'),
-          consultId:this.consultId,
-          replyContentType:"TEXT",
+          consultId: this.consultId,
+          replyContentType: "TEXT",
           replyContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
-          if(data.code == 0){
+          if (data.code == 0) {
             this.getInitData()
 
-            console.log(data,11111)
+            console.log(data, 11111)
 //          this.seeMore = false
             this.$nextTick(() => {
 //            this.aboutReplyMessage.push(data.obj)
@@ -426,8 +453,8 @@
                 }
               }, 300)
             })
-          }else{
-              weui.alert(data.msg)
+          } else {
+            weui.alert(data.msg)
           }
         })
         this.inputInfo = ''
@@ -455,8 +482,8 @@
         reader.onload = function () {
           that.previewImg.push(this.result)
           http("smarthos.system.file.upload.image.base64", {
-            module:"FOLLOW",
-            fileType:"IMAGE",
+            module: "FOLLOW",
+            fileType: "IMAGE",
             base64: this.result,
             fileName: fileName
           }).then((data) => {
@@ -464,15 +491,15 @@
             that.attaFileUrl = data.obj.attaFileUrl
             http("smarthos.consult.one2one.pic.reply", {
               token: localStorage.getItem('token'),
-              consultId:that.consultId,
-              replyContentType:"PIC",
-              replyContent:that.attaFileUrl,
+              consultId: that.consultId,
+              replyContentType: "PIC",
+              replyContent: that.attaFileUrl,
             }).then((data) => {
 
-              console.log(data,666)
+              console.log(data, 666)
 //              location.reload()
               if (data.code == 0) {
-              that.getInitData()
+                that.getInitData()
               } else {
                 weui.alert(data.msg)
               }
@@ -482,7 +509,7 @@
       },
       hideKeyBoard() {
         this.seeMore = false
-        document.getElementById('forInput').blur()
+        document.getElementById('forInput') && document.getElementById('forInput').blur()
       },
       upMore() {
 //        this.seeMore = !this.seeMore
@@ -496,15 +523,9 @@
         }, 500)
 
       },
-      blured(){
+      blured() {
         clearInterval(this.inter)
       }
-//      blured() {
-////          this.$refs.footer.style.bottom=-160 + 'px'
-//        clearInterval(document.getElementsByClassName("foot_top")[0].scrollIntoView())
-//        clearInterval(this.inter)
-//      },
-//      consultPatAva
     },
   }
 </script>
@@ -537,31 +558,25 @@
     }
   }
 
-
-
-
-
-
-
-
-
-  .evaluate{
+  .evaluate {
     display: inline-block;
     width: 49%;
     text-align: center;
     height: 80px;
     line-height: 80px;
   }
-  .bor{
+
+  .bor {
     border-right: 1px solid gainsboro;
   }
 
-  .replyImg{
+  .replyImg {
     width: 150px;
     height: 150px;
     margin: 10px;
   }
-  .btn{
+
+  .btn {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -571,66 +586,73 @@
     align-items: center;
 
   }
-  .reply{
+
+  .reply {
     text-align: center;
     height: 80px;
     line-height: 80px;
   }
-  .page{
+
+  .page {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
-  .wrapper{
+
+  .wrapper {
     position: fixed;
     left: 0;
     right: 0;
     top: 88px;
-    bottom:100px;
+    bottom: 100px;
 
   }
+
   .step {
     padding-right: 5px;
     color: #3CC51F;
     box-sizing: border-box;
-    font-size: 16px;/*no*/
+    font-size: 16px; /*no*/
   }
-  .weui-cells{
+
+  .weui-cells {
     margin-top: 0;
     position: relative;
-    z-index:10000;
+    z-index: 10000;
   }
-  .contain{
+
+  .contain {
     position: relative;
-    z-index:1000;
+    z-index: 1000;
     background: white;
     box-sizing: border-box;
     padding: 20px;
     border-radius: 20px;
     border-bottom: 1px solid gainsboro;
-    .patImg{
-        img{
-          width:160px;
-          height:160px;
-          margin-right: 17px;
-        }
+    .patImg {
+      img {
+        width: 160px;
+        height: 160px;
+        margin-right: 17px;
+      }
     }
-    .createDiv{
+    .createDiv {
       display: flex;
       justify-content: space-between;
-      .create{
-        width:200px;
+      .create {
+        width: 200px;
         display: flex;
         align-items: center;
-        img{
-          width:40px;
-          height:40px;
+        img {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           margin-right: 5px;
         }
       }
     }
   }
+
   .conversation {
     width: 100%;
     /*padding-top: 50px;*/
@@ -651,9 +673,11 @@
     /*margin-top: 10px;*/
     /*}*/
   }
-  .assistScroll{
-    height:65px;
+
+  .assistScroll {
+    height: 65px;
   }
+
   .conversationList {
     width: 100%;
     /*overflow: auto;*/
@@ -677,7 +701,7 @@
       .other {
         width: 690px;
         display: flex;
-        margin:0 auto;
+        margin: 0 auto;
         margin-top: 60px;
         justify-content: flex-start;
         /*padding-top: 25px;*/
@@ -691,10 +715,10 @@
           display: inline-block;
           /*margin-left: 30px;*/
         }
-        .msgTime{
+        .msgTime {
           position: absolute;
-          top:-45px;
-          left:265px;
+          top: -45px;
+          left: 265px;
           color: #999999;
         }
         .whatsay {
@@ -731,12 +755,12 @@
             line-height: 48px;
             color: #333333;
             word-break: break-all;
-            .checkMore{
+            .checkMore {
               height: 24px;
-              width:16px;
+              width: 16px;
             }
-            audio{
-              width:200px;
+            audio {
+              width: 200px;
             }
             img {
               border-radius: 0;
@@ -746,10 +770,10 @@
               height: 110px;
             }
           }
-          .articleSection{
+          .articleSection {
             display: flex;
             align-items: center;
-            div{
+            div {
               margin-right: 40px;
             }
           }
@@ -759,12 +783,12 @@
         display: flex;
         margin-top: 60px;
         flex-direction: row-reverse;
-        .msgTime{
-          width:217px;
+        .msgTime {
+          width: 217px;
           /*text-align: right;*/
           position: absolute;
-          top:-45px;
-          right:265px;
+          top: -45px;
+          right: 265px;
           color: #999999;
         }
         .say-time {
@@ -788,15 +812,15 @@
             margin-right: 0.15rem;
             margin-left: 0;
             background: #9fe658;
-            .checkMore{
+            .checkMore {
               height: 24px;
-              width:16px;
+              width: 16px;
             }
           }
-          .articleSection{
+          .articleSection {
             display: flex;
             align-items: center;
-            div{
+            div {
               margin-right: 40px;
             }
           }
@@ -808,29 +832,31 @@
   footer.payButton {
     margin-bottom: 10px;
     width: 100%;
+    height: 80px;
     div.payWrap {
       width: 690px;
       margin: 0 auto;
       display: flex;
-      div{
+      background-color: #FFFFFF;
+      div {
         margin: 0 auto;
-        p{
+        p {
           text-align: center;
           font-size: 32px;
         }
       }
-      .consultAgain{
-        height:80px;
-        p{
-          height:80px;
+      .consultAgain {
+        height: 80px;
+        p {
+          height: 80px;
           line-height: 80px;
           font-size: 32px;
         }
       }
-      span{
+      span {
         display: inline-block;
-        width:340px;
-        height:80px;
+        width: 340px;
+        height: 80px;
         line-height: 80px;
         text-align: center;
         font-size: 32px;
@@ -943,49 +969,6 @@
     transition: all .2s;
   }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <!--<template>-->
@@ -1102,370 +1085,236 @@
 <!--</style>-->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!--<template>-->
-    <!--<div>-->
-        <!--<top class="noflex" :title="title" ref="header">-->
-            <!--<i slot="back"></i>-->
-            <!--<div @click="finishConsult(consultInfo.consultStatus)" slot="right" class="right absolute" v-show="consultMessage.length>0&&(consultInfo.consultStatus=='3'||consultInfo.consultStatus=='4')">-->
-                <!--{{consultInfo.consultStatus=='3'?'结束咨询':'去评价'}}-->
-            <!--</div>-->
-        <!--</top>-->
+<!--<div>-->
+<!--<top class="noflex" :title="title" ref="header">-->
+<!--<i slot="back"></i>-->
+<!--<div @click="finishConsult(consultInfo.consultStatus)" slot="right" class="right absolute" v-show="consultMessage.length>0&&(consultInfo.consultStatus=='3'||consultInfo.consultStatus=='4')">-->
+<!--{{consultInfo.consultStatus=='3'?'结束咨询':'去评价'}}-->
+<!--</div>-->
+<!--</top>-->
 
-        <!--<div class="state" v-if="consultInfo.consultStatus=='3'&&consultMessage.length==0">-->
-            <!--等待医生回复-->
-        <!--</div>-->
-        <!--<div class="state" v-else>-->
-            <!--{{consultInfo.consultStatus | state}}-->
-        <!--</div>-->
-        <!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='1'||consultInfo.consultStatus=='2'">&ndash;&gt;-->
-            <!--&lt;!&ndash;{{consultInfo.consultStatus=='1'?'待受理':'待处理'}}&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='3'||consultInfo.consultStatus=='4'">&ndash;&gt;-->
-            <!--&lt;!&ndash;{{consultInfo.consultStatus=='3'?'进行中':'待评价'}}&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='6'">&ndash;&gt;-->
-            <!--&lt;!&ndash;已结束&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--<chat :chatObj="consultInfo" :chatList="consultMessage" :attaList="attaList" :userObj="userObj" @send="send"></chat>-->
-        <!--<div class="btns" @click="goPay" v-show="consultInfo.consultStatus=='0'">-->
-            <!--去付款-->
-        <!--</div>-->
-        <!--<div class="finish" v-show="consultInfo.consultStatus=='4'||consultInfo.consultStatus=='6'">-->
-            <!--<p class="mfc">该咨询已经结束，无法追问</p>-->
-            <!--<p class="mfc" style="color: blue">申请成为他的患者</p>-->
-        <!--</div>-->
+<!--<div class="state" v-if="consultInfo.consultStatus=='3'&&consultMessage.length==0">-->
+<!--等待医生回复-->
+<!--</div>-->
+<!--<div class="state" v-else>-->
+<!--{{consultInfo.consultStatus | state}}-->
+<!--</div>-->
+<!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='1'||consultInfo.consultStatus=='2'">&ndash;&gt;-->
+<!--&lt;!&ndash;{{consultInfo.consultStatus=='1'?'待受理':'待处理'}}&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='3'||consultInfo.consultStatus=='4'">&ndash;&gt;-->
+<!--&lt;!&ndash;{{consultInfo.consultStatus=='3'?'进行中':'待评价'}}&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="state" v-show="consultInfo.consultStatus=='6'">&ndash;&gt;-->
+<!--&lt;!&ndash;已结束&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--<chat :chatObj="consultInfo" :chatList="consultMessage" :attaList="attaList" :userObj="userObj" @send="send"></chat>-->
+<!--<div class="btns" @click="goPay" v-show="consultInfo.consultStatus=='0'">-->
+<!--去付款-->
+<!--</div>-->
+<!--<div class="finish" v-show="consultInfo.consultStatus=='4'||consultInfo.consultStatus=='6'">-->
+<!--<p class="mfc">该咨询已经结束，无法追问</p>-->
+<!--<p class="mfc" style="color: blue">申请成为他的患者</p>-->
+<!--</div>-->
 
-    <!--</div>-->
+<!--</div>-->
 <!--</template>-->
 <!--<script type="text/ecmascript-6">-->
-    <!--import top from '../../components/app-header.vue'-->
-    <!--import {mainHeightMixin} from '../../lib/mixin'-->
-    <!--import config from '../../lib/config'-->
-    <!--import api from '../../lib/http'-->
-    <!--import scroll from '../../base/scroll.vue'-->
-    <!--import chat from '../../business/onChat.vue'-->
-    <!--import {state} from '../../lib/filter'-->
-    <!--export default{-->
-        <!--components: {-->
-            <!--top,-->
-            <!--scroll,-->
-            <!--chat-->
-        <!--},-->
-        <!--filters:{-->
-          <!--state-->
-        <!--},-->
-        <!--data(){-->
-            <!--return {-->
-                <!--consultId:"",-->
-                <!--token:localStorage.getItem('token'),-->
-                <!--chatObj:{},-->
-                <!--scrollHeight:'',-->
-                <!--userObj:{},-->
-                <!--consultInfo:{},-->
-                <!--attaList:[],-->
-                <!--title:'',-->
-                <!--consultMessage:[],-->
-                <!--replyContentType:"TEXT",-->
-                <!--replyContent:""-->
+<!--import top from '../../components/app-header.vue'-->
+<!--import {mainHeightMixin} from '../../lib/mixin'-->
+<!--import config from '../../lib/config'-->
+<!--import api from '../../lib/http'-->
+<!--import scroll from '../../base/scroll.vue'-->
+<!--import chat from '../../business/onChat.vue'-->
+<!--import {state} from '../../lib/filter'-->
+<!--export default{-->
+<!--components: {-->
+<!--top,-->
+<!--scroll,-->
+<!--chat-->
+<!--},-->
+<!--filters:{-->
+<!--state-->
+<!--},-->
+<!--data(){-->
+<!--return {-->
+<!--consultId:"",-->
+<!--token:localStorage.getItem('token'),-->
+<!--chatObj:{},-->
+<!--scrollHeight:'',-->
+<!--userObj:{},-->
+<!--consultInfo:{},-->
+<!--attaList:[],-->
+<!--title:'',-->
+<!--consultMessage:[],-->
+<!--replyContentType:"TEXT",-->
+<!--replyContent:""-->
 
-            <!--}-->
-        <!--},-->
-        <!--created(){-->
-          <!--this.scrollHeight = window.innerHeight-45-40-40-->
-        <!--},-->
-        <!--mounted(){-->
-            <!--this.consultId = this.$route.params.id-->
-            <!--this.getData()-->
-        <!--},-->
-        <!--methods:{-->
-            <!--finishConsult(state){-->
-                <!--if(state=='3'){-->
-                    <!--api('smarthos.consult.one2one.pic.complete',{-->
-                        <!--token:this.token,-->
-                        <!--consultId:this.consultId-->
-                    <!--}).then(res=>{-->
-                        <!--console.log(res,258963);-->
-                        <!--if(res.succ){-->
-                            <!--this.getData()-->
-                        <!--}else {-->
-                            <!--alert(res.msg)-->
-                        <!--}-->
-                    <!--})-->
-                <!--}else {-->
-                    <!--this.$router.push('/evaluate/'+this.consultId)-->
-                <!--}-->
+<!--}-->
+<!--},-->
+<!--created(){-->
+<!--this.scrollHeight = window.innerHeight-45-40-40-->
+<!--},-->
+<!--mounted(){-->
+<!--this.consultId = this.$route.params.id-->
+<!--this.getData()-->
+<!--},-->
+<!--methods:{-->
+<!--finishConsult(state){-->
+<!--if(state=='3'){-->
+<!--api('smarthos.consult.one2one.pic.complete',{-->
+<!--token:this.token,-->
+<!--consultId:this.consultId-->
+<!--}).then(res=>{-->
+<!--console.log(res,258963);-->
+<!--if(res.succ){-->
+<!--this.getData()-->
+<!--}else {-->
+<!--alert(res.msg)-->
+<!--}-->
+<!--})-->
+<!--}else {-->
+<!--this.$router.push('/evaluate/'+this.consultId)-->
+<!--}-->
 
-            <!--},-->
-            <!--getData(){-->
-                <!--api('smarthos.consult.details',{-->
-                    <!--token:this.token,-->
-                    <!--consultId:this.consultId-->
-                <!--}).then(res=>{-->
-                    <!--console.log(res,55555);-->
-                    <!--if(res.succ){-->
-                        <!--this.chatObj = res.obj;-->
-                        <!--this.userObj = res.obj.userPat-->
-                        <!--this.consultInfo = res.obj.consultInfo-->
-                        <!--this.attaList = res.obj.attaList-->
-                        <!--this.title = res.obj.userDocVo.docName;-->
-                        <!--res.obj.consultMessage?this.consultMessage = res.obj.consultMessage:this.consultMessage=[]-->
-                    <!--}else {-->
-                        <!--alert(res.msg)-->
-                    <!--}-->
-                <!--})-->
-            <!--},-->
-            <!--send(value){-->
-                <!--if(value.msgType){-->
-                    <!--this.replyContentType=value.msgType-->
-                    <!--this.replyContent = value.url-->
-                <!--}else {-->
-                    <!--this.replyContent = value-->
-                <!--}-->
-                <!--api('smarthos.consult.one2one.pic.reply',{-->
-                    <!--token:this.token,-->
-                    <!--consultId:this.consultId,-->
-                    <!--replyContent:this.replyContent,-->
-                    <!--replyContentType:this.replyContentType-->
-                <!--}).then(res=>{-->
-                    <!--console.log(res,8888);-->
-                    <!--if(res.succ){-->
-                        <!--this.getData()-->
-                    <!--}else {-->
-                        <!--alert(res.msg)-->
-                    <!--}-->
-                <!--})-->
-            <!--},-->
-            <!--goPay(){-->
-                <!--this.$router.push('/pay/'+this.consultId)-->
-            <!--}-->
-        <!--}-->
-    <!--}-->
+<!--},-->
+<!--getData(){-->
+<!--api('smarthos.consult.details',{-->
+<!--token:this.token,-->
+<!--consultId:this.consultId-->
+<!--}).then(res=>{-->
+<!--console.log(res,55555);-->
+<!--if(res.succ){-->
+<!--this.chatObj = res.obj;-->
+<!--this.userObj = res.obj.userPat-->
+<!--this.consultInfo = res.obj.consultInfo-->
+<!--this.attaList = res.obj.attaList-->
+<!--this.title = res.obj.userDocVo.docName;-->
+<!--res.obj.consultMessage?this.consultMessage = res.obj.consultMessage:this.consultMessage=[]-->
+<!--}else {-->
+<!--alert(res.msg)-->
+<!--}-->
+<!--})-->
+<!--},-->
+<!--send(value){-->
+<!--if(value.msgType){-->
+<!--this.replyContentType=value.msgType-->
+<!--this.replyContent = value.url-->
+<!--}else {-->
+<!--this.replyContent = value-->
+<!--}-->
+<!--api('smarthos.consult.one2one.pic.reply',{-->
+<!--token:this.token,-->
+<!--consultId:this.consultId,-->
+<!--replyContent:this.replyContent,-->
+<!--replyContentType:this.replyContentType-->
+<!--}).then(res=>{-->
+<!--console.log(res,8888);-->
+<!--if(res.succ){-->
+<!--this.getData()-->
+<!--}else {-->
+<!--alert(res.msg)-->
+<!--}-->
+<!--})-->
+<!--},-->
+<!--goPay(){-->
+<!--this.$router.push('/pay/'+this.consultId)-->
+<!--}-->
+<!--}-->
+<!--}-->
 <!--</script>-->
 <!--<style scoped lang='scss'>-->
-    <!--@import '../../common/common.scss';-->
+<!--@import '../../common/common.scss';-->
 <!--.btns{-->
-    <!--position: fixed;-->
-    <!--left: 0;-->
-    <!--bottom: 0;-->
-    <!--width: 100%;-->
-    <!--height: 80px;-->
-    <!--line-height: 80px;-->
-    <!--text-align: center;-->
-    <!--background: indianred;-->
-    <!--color: white;-->
+<!--position: fixed;-->
+<!--left: 0;-->
+<!--bottom: 0;-->
+<!--width: 100%;-->
+<!--height: 80px;-->
+<!--line-height: 80px;-->
+<!--text-align: center;-->
+<!--background: indianred;-->
+<!--color: white;-->
 <!--}-->
-    <!--.state{-->
-        <!--width: 100%;-->
-        <!--height: 80px;-->
-        <!--line-height: 80px;-->
-        <!--text-align: center;-->
-        <!--background: gainsboro;-->
-    <!--}-->
-    <!--.titles{-->
-        <!--width: 80px;-->
-        <!--height: 80px;-->
-        <!--box-sizing: border-box;-->
-        <!--border-radius: 40px;-->
-    <!--}-->
+<!--.state{-->
+<!--width: 100%;-->
+<!--height: 80px;-->
+<!--line-height: 80px;-->
+<!--text-align: center;-->
+<!--background: gainsboro;-->
+<!--}-->
+<!--.titles{-->
+<!--width: 80px;-->
+<!--height: 80px;-->
+<!--box-sizing: border-box;-->
+<!--border-radius: 40px;-->
+<!--}-->
 
 <!--.talk{-->
-    <!--margin-top: 20px;-->
+<!--margin-top: 20px;-->
 <!--}-->
 
 
+<!--.com {-->
+<!--width: 400px;-->
+<!--min-height: 50px;-->
+<!--line-height: 50px;-->
+<!--height: auto;-->
+<!--position: relative;-->
+<!--background: lawngreen;-->
+<!--border-radius: 10px;-->
+<!--float: right;-->
+<!--word-wrap:break-word;-->
+<!--word-break:break-all;-->
+<!--padding: 14px 10px;-->
+<!--box-sizing: border-box;-->
 
-    <!--.com {-->
-        <!--width: 400px;-->
-        <!--min-height: 50px;-->
-        <!--line-height: 50px;-->
-        <!--height: auto;-->
-        <!--position: relative;-->
-        <!--background: lawngreen;-->
-        <!--border-radius: 10px;-->
-        <!--float: right;-->
-        <!--word-wrap:break-word;-->
-        <!--word-break:break-all;-->
-        <!--padding: 14px 10px;-->
-        <!--box-sizing: border-box;-->
+<!--}-->
 
-    <!--}-->
+<!--.patImg{-->
+<!--width: 120px;-->
+<!--height: 120px;-->
+<!--padding: 3px 5px;-->
+<!--}-->
 
-    <!--.patImg{-->
-        <!--width: 120px;-->
-        <!--height: 120px;-->
-        <!--padding: 3px 5px;-->
-    <!--}-->
-
-    <!--.com:after {-->
-        <!--content: '';-->
-        <!--width: 0;-->
-        <!--height: 0;-->
-        <!--position: absolute;-->
-        <!--top: 10px;-->
-        <!--right: 24px;-->
-        <!--border: solid 16px;-->
-        <!--border-color:  transparent lawngreen transparent transparent;-->
-        <!--font-size: 0;-->
-    <!--}-->
+<!--.com:after {-->
+<!--content: '';-->
+<!--width: 0;-->
+<!--height: 0;-->
+<!--position: absolute;-->
+<!--top: 10px;-->
+<!--right: 24px;-->
+<!--border: solid 16px;-->
+<!--border-color:  transparent lawngreen transparent transparent;-->
+<!--font-size: 0;-->
+<!--}-->
 
 
-    <!--.rightMsg{-->
-        <!--overflow: hidden;-->
-    <!--}-->
+<!--.rightMsg{-->
+<!--overflow: hidden;-->
+<!--}-->
 
-    <!--.floatRight{-->
-        <!--float: right;-->
-        <!--height: auto;-->
-        <!--margin-bottom: 20px;-->
-        <!--margin-left: 5px;-->
-    <!--}-->
+<!--.floatRight{-->
+<!--float: right;-->
+<!--height: auto;-->
+<!--margin-bottom: 20px;-->
+<!--margin-left: 5px;-->
+<!--}-->
 
-    <!--.floatImg{-->
-        <!--float: right;-->
-    <!--}-->
+<!--.floatImg{-->
+<!--float: right;-->
+<!--}-->
 
 <!--.finish{-->
-    <!--position: fixed;-->
-    <!--left: 0;-->
-    <!--bottom: 0;-->
-    <!--width: 100%;-->
-    <!--padding: 20px;-->
-    <!--text-align: center;-->
-    <!--background: white;-->
+<!--position: fixed;-->
+<!--left: 0;-->
+<!--bottom: 0;-->
+<!--width: 100%;-->
+<!--padding: 20px;-->
+<!--text-align: center;-->
+<!--background: white;-->
 <!--}-->
-
-
-
 
 
 <!--</style>-->

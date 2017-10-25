@@ -32,7 +32,7 @@
             top,
             scroll
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         filters:{
             Todate
         },

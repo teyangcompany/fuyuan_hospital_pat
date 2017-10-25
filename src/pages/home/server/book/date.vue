@@ -63,8 +63,8 @@
                 </div>
                 <div class="cancelIntro">
                   <div>
-                    <span class="chatDoctor"></span> <span class="doctorTitle">{{ item.ysxm }}</span>
-                    <p class="oneLine">{{ item.yymc }}</p>
+                    <span class="chatDoctor"></span> <span class="doctorTitle">{{ item.ysxm }} {{ item.yszc }}</span>
+                    <p class="oneLine">擅长：{{ item.goodat }}</p>
                     <p style="color: #333333;">{{ single.schdate.substr(0,4) }}-{{  single.schdate.substr(4,2) }}-{{  single.schdate.substr(6) }} <span style="color: #3d9bff"> {{ single.ampm == '1'? '上午':'下午' }}</span> 专家</p>
                   </div>
                 </div>
@@ -245,6 +245,7 @@
           isPb:"0",
           date:this.completeTimeArray[this.selected]
         }).then((data)=>{
+           console.log(data)
           if(data.code == 0){
             this.commonRoom = data.list
           }else if(!(data.msg)){

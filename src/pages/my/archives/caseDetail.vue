@@ -23,15 +23,16 @@
           <date :time="time" @getDate="getDate"></date>
           <div class="weui-cells">
             <div class="weui-cell">
-              <div class="weui-cell__bd">
+              <div class="weui-cell__bd wordLimit">
                 <p class="bf">请输入病历详情</p>
+                <p>{{ textLength }}/500</p>
               </div>
             </div>
           </div>
           <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
               <div class="weui-cell__bd">
-                <textarea class="weui-textarea" v-model="caseText" placeholder="请输入文本" rows="3"></textarea>
+                <textarea class="weui-textarea" @keyup="keypress()" id="myArea" v-model="caseText" placeholder="请输入文本" rows="3"></textarea>
               </div>
             </div>
           </div>
@@ -100,6 +101,8 @@
         picList: [],
         config: config,
         time:"",
+        textLength:0,
+        text:"",
         dialogTitle: "删除",
         dialogMain: "确定删除此条记录",
         dialogLeftFoot: "取消",
@@ -123,7 +126,25 @@
       };
        this.time =  getDay(this.date);
     },
+    watch:{
+      caseText(){
+        this.text = document.getElementById("myArea").value
+        this.textLength = this.text.length
+        if(this.textLength > 500){
+          document.getElementById("myArea").value = this.text.substr(0,500)
+          weui.alert("字数不能超过500")
+        }
+      }
+    },
     methods:{
+      keypress(){
+        this.text = document.getElementById("myArea").value
+        this.textLength = this.text.length
+        if(this.textLength > 500){
+          document.getElementById("myArea").value = this.text.substr(0,500)
+          weui.alert("字数不能超过500")
+        }
+      },
       getDate(val){
         this.time = val
       },
@@ -210,6 +231,10 @@
 
   .weui-cells{
     margin-top: 0;
+    .wordLimit{
+       display: flex;
+       justify-content: space-between;
+    }
   }
   .addImg{
     box-sizing: border-box;

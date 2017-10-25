@@ -9,20 +9,47 @@
       <div class="tab border-1px myTab">
         <div class="tab-item" :class="{choose_type:sortBy == 'displaySort'}">
           <div class="tab_item_container" @click="chooseType('displaySort')">
-            <span>全部科室</span>
+            <span v-if="sortPick == ''">全部科室
+              <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                <polygon points="0,3 10,3 5,8"/>
+              </svg>
+            </span>
+            <span  v-else>{{ sortPick }}
+              <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                <polygon points="0,3 10,3 5,8"/>
+              </svg>
+          </span>
           </div>
         </div>
         <div class="tab-item" :class="{choose_type:sortBy == 'displayType'}">
-          <div class="tab_item_container" @click="chooseType('displayType')">
+          <div class="tab_item_container">
             <div class="tab_item_border">
-              <span>全部病种</span>
+              <span @click="chooseType('displayType')" v-if="typePick == ''">全部病种
+                <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                  <polygon points="0,3 10,3 5,8"/>
+                </svg>
+              </span>
+              <span @click="chooseType('displayType')" v-else>{{ typePick }}
+                <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                  <polygon points="0,3 10,3 5,8"/>
+                </svg>
+              </span>
             </div>
           </div>
         </div>
         <div class="tab-item" :class="{choose_type:sortBy == 'displayDefault'}">
-          <div class="tab_item_container" @click="chooseType('displayDefault')">
+          <div class="tab_item_container">
             <div class="tab_item_border">
-              <span>默认排序</span>
+              <span @click="chooseType('displayDefault')" v-if="defaultPick == ''">默认排序
+                <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                  <polygon points="0,3 10,3 5,8"/>
+                </svg>
+              </span>
+              <span @click="chooseType('displayDefault')" v-else>{{ defaultPick }}
+                <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
+                  <polygon points="0,3 10,3 5,8"/>
+                </svg>
+              </span>
             </div>
           </div>
         </div>
@@ -58,60 +85,31 @@
         </div>
       </transition>
       <transition name="showlist">
-        <div class="dropType" v-show="sortBy == 'displayType'">
-          <ul >
-            <div class="weui-cells weui-cells_radio weuiMargin">
-              <label class="weui-cell weui-check__label">
-                <div class="weui-cell__bd">
-                  <p>全部病种</p>
+        <div class="dropType allIllName" v-show="sortBy == 'displayType'">
+          <div ref="allIll" class="illWhole">
+              <ul >
+                <div class="weui-cells weui-cells_radio weuiMargin">
+                  <label class="weui-cell weui-check__label">
+                    <div class="weui-cell__bd">
+                      <p>全部病种</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input type="radio" class="weui-check" name="radio3"  value="" v-model="typePick"/>
+                      <span class="weui-icon-checked"></span>
+                    </div>
+                  </label>
+                  <label class="weui-cell weui-check__label" v-for="item in illNameList" v-if="illNameList.length != 0">
+                    <div class="weui-cell__bd">
+                      <p v-if="item.illnessName" class="illNameList">{{item.illnessName}}</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input type="radio" name="radio3" class="weui-check"  :value="item.illnessName" v-model="typePick"/>
+                      <span class="weui-icon-checked"></span>
+                    </div>
+                  </label>
                 </div>
-                <div class="weui-cell__ft">
-                  <input type="radio" class="weui-check" name="radio3"  value="" v-model="typePick"/>
-                  <span class="weui-icon-checked"></span>
-                </div>
-              </label>
-              <label class="weui-cell weui-check__label" v-for="item in illNameList" v-if="illNameList.length != 0">
-                <div class="weui-cell__bd">
-                  <p v-if="item.illnessName">{{item.illnessName}}</p>
-                </div>
-                <div class="weui-cell__ft">
-                  <input type="radio" name="radio3" class="weui-check"  value="CONSULT_PIC" v-model="typePick"/>
-                  <span class="weui-icon-checked"></span>
-                </div>
-              </label>
-              <!--<label class="weui-cell weui-check__label" for="x33">-->
-                <!--<div class="weui-cell__bd">-->
-                  <!--<p>电话问诊</p>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__ft">-->
-                  <!--<input type="radio" name="radio3" class="weui-check" id="x33" value="CONSULT_PHONE" v-model="typePick"/>-->
-                  <!--<span class="weui-icon-checked"></span>-->
-                <!--</div>-->
-              <!--</label>-->
-              <!--<label class="weui-cell weui-check__label" for="x34">-->
-                <!--<div class="weui-cell__bd">-->
-                  <!--<p>视频问诊</p>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__ft">-->
-                  <!--<input type="radio" name="radio3" class="weui-check" id="x34" value="CONSULT_VIDEO" v-model="typePick"/>-->
-                  <!--<span class="weui-icon-checked"></span>-->
-                <!--</div>-->
-              <!--</label>-->
-              <!--<label class="weui-cell weui-check__label" for="x35">-->
-              <!--<div class="weui-cell__bd">-->
-              <!--<p>团队问诊</p>-->
-              <!--</div>-->
-              <!--<div class="weui-cell__ft">-->
-              <!--<input type="radio" name="radio3" class="weui-check" id="x35" value="团队问诊" v-model="typePick"/>-->
-              <!--<span class="weui-icon-checked"></span>-->
-              <!--</div>-->
-              <!--</label>-->
-            </div>
-            <!--<li>全部问诊形式</li>-->
-            <!--<li>视频问诊</li>-->
-            <!--<li>图文问诊</li>-->
-          </ul>
-
+              </ul>
+          </div>
         </div>
       </transition>
       <transition name="showlist">
@@ -134,7 +132,7 @@
                   <p>按点赞排序</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" name="radio4" class="weui-check" id="x42" value="按好评排序" v-model="defaultPick"/>
+                  <input type="radio" name="radio4" class="weui-check" id="x42" value="按点赞排序" v-model="defaultPick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
@@ -143,7 +141,7 @@
                   <p>按浏览次数排序</p>
                 </div>
                 <div class="weui-cell__ft">
-                  <input type="radio" name="radio4" class="weui-check" id="x43" value="按服务次数排序" v-model="defaultPick"/>
+                  <input type="radio" name="radio4" class="weui-check" id="x43" value="按浏览次数排序" v-model="defaultPick"/>
                   <span class="weui-icon-checked"></span>
                 </div>
               </label>
@@ -299,6 +297,9 @@
         http("smarthos.consult.all.list.page",{
           token:tokenCache.get(),
           isChoice:true,
+          stdDeptId:this.deptId,
+          illnessName:this.typePick,
+          sort:this.sortName,
           pageNum:that.listPage,
           pageSize:"10"
         }).then((data)=>{
@@ -321,6 +322,25 @@
           }
         })
       },
+      sort(){
+        http("smarthos.consult.all.list.page",{
+          token:localStorage.getItem('token'),
+          isChoice:true,
+          stdDeptId:this.deptId,
+          illnessName:this.typePick,
+          sort:this.sortName,
+          pageSize:10,
+          pageNum:1,
+        }).then((data)=>{
+          console.log(data)
+          if(data.code == 0){
+            this.aboutConsult = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+//            console.log(data)
+        })
+      },
       upvote(id){
           console.log(id)
           http("smarthos.consult.praise",{
@@ -338,22 +358,35 @@
           })
       },
       _initWrapMenu(){
-        if(this.displaySort = true){
+//        if(this.displaySort == true){
           this.wrapWholeScroll = new BScroll(this.$refs.wrapMenu,{
             click:true
           })
-        }else{
-          return
-        }
+          console.log(this.wrapWholeScroll)
+//        }else{
+//          return
+//        }
       },
       _initWrapContent(){
-        if(this.displaySort = true){
+//        if(this.displaySort == true){
           this.wrapWholeScroll = new BScroll(this.$refs.wrapContent,{
             click:true
           })
-        }else{
-          return
-        }
+//        }else{
+//          return
+//        }
+      },
+      illWrap(){
+//          if(this.displayType == true){
+            this.$nextTick(()=>{
+              setTimeout(()=>{
+                this.illScroll = new BScroll(this.$refs.allIll,{
+                  click:true
+                })
+                console.log(this.illScroll)
+              },200)
+            })
+//          }
       },
       hideCover(){
         this.sortBy = ''
@@ -367,9 +400,9 @@
               this._initWrapContent()
             });
           }else if(type == 'displayType'){
-              if(this.illNameList.length == 0){
-                  weui.alert("无可选疾病")
-              }
+//              if(this.illNameList.length == 0){
+//                  weui.alert("无可选疾病")
+//              }
           }
         }else{
           this.sortBy = ''
@@ -393,22 +426,6 @@
             this.illNameList = data.list
             console.log(data)
           })
-
-          http("smarthos.consult.all.list.page",{
-            token:localStorage.getItem('token'),
-            isChoice:true,
-//            stdDeptId:this.deptId,
-//            illnessName:"",
-            pageSize:10,
-            pageNum:1
-          }).then((data)=>{
-            console.log(data,1256)
-            if(data.code == 0){
-              this.aboutConsult = data.list
-            }else{
-              weui.alert(data.msg)
-            }
-          })
         }
       },
       selectChild(index,item){
@@ -419,24 +436,14 @@
         http("smarthos.consult.choice.illness",{
           stdDeptId:this.deptId
         }).then((data)=>{
-            this.illNameList = data.list
+            if(data.code == 0){
+//              this._initWrapMenu()
+              this.illNameList = data.list
+              this.sort()
+            }else{
+              weui.alert(data.msg)
+            }
             console.log(data)
-        })
-        http("smarthos.consult.all.list.page",{
-          token:localStorage.getItem('token'),
-          isChoice:true,
-          stdDeptId:this.deptId,
-          illnessName:"",
-          pageSize:10,
-          pageNum:1,
-        }).then((data)=>{
-          console.log(data)
-          if(data.code == 0){
-            this.aboutConsult = data.list
-          }else{
-            weui.alert(data.msg)
-          }
-//            console.log(data)
         })
       }
     },
@@ -451,8 +458,30 @@
           },20)
         })
       },
+      typePick(){
+        this.sortBy = ''
+//        this.illWrap()
+        this.sort()
+      },
+      illNameList(){
+
+      },
+      defaultPick(){
+        this.sortBy = ''
+           if(this.defaultPick == '默认排序'){
+               this.sortName = ""
+               this.sort()
+           }else if(this.defaultPick == '按点赞排序'){
+               this.sortName = "PRAISE_COUNT.DESC"
+               this.sort()
+           }else if(this.defaultPick == '按浏览次数排序'){
+               this.sortName = "READ_COUNT.DESC"
+               this.sort()
+           }
+      },
       sortPick(){
         this.sortBy = ''
+        this.sort()
       },
     }
   }
@@ -657,7 +686,10 @@
       flex:1;
       text-align: center;
       span{
-        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
         font-size: 32px;
         color: rgb(77,85,93);
       }
@@ -754,6 +786,20 @@
         }
       }
     }
+  }
+  .allIllName{
+      height: 300px;
+      overflow: auto;
+      .illWhole{
+        height: 300px;
+        overflow: auto;
+        .illNameList{
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          overflow: hidden;
+        }
+      }
   }
   .teamList{
     position: fixed;

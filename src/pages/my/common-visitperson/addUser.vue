@@ -96,12 +96,16 @@
               captcha:'',
               cid:'',
               msg:'获取验证码',
-              flag:true
+              flag:true,
+              patientListLength:""
             }
         },
         mounted(){
 
         },
+       created(){
+           this.getPatientList()
+       },
       methods:{
         showRemind(){
           this.$weui.dialog({
@@ -111,6 +115,14 @@
               type: 'primary'
             }]
           });
+        },
+        getPatientList(){
+           api("smarthos.user.commpat.list",{
+             token:localStorage.getItem('token')
+           }).then((data)=>{
+               this.patientListLength = data.list.length
+               console.log(this.patientListLength)
+           })
         },
         getCode(){
 
@@ -145,7 +157,9 @@
           }
         },
         goAddUser(){
-          if(this.$v.patName.$invalid){
+          if(this.patientListLength == 5){
+              weui.alert("最多可以绑定五个就诊人")
+          }else if(this.$v.patName.$invalid){
             this.$set(this.$data,'showNameError',true)
           }else if(this.$v.patIdcard.$invalid){
             this.$set(this.$data,'showCd',true)

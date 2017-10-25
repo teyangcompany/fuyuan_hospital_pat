@@ -226,7 +226,7 @@
                 </section>
                 <section v-if="item.userDocServes">
                   <div v-for="subItem in item.userDocServes">
-                    <p>{{ subItem.serveName }}{{ subItem.servePrice }}元</p>
+                    <p>{{ subItem.serveName }}{{ subItem.servePrice | consultPrice }}元</p>
                   </div>
                 </section>
               </li>
@@ -254,6 +254,7 @@
   import Scroll from '../../../../base/scroll'
   import {tokenCache} from '../../../../lib/cache'
   import http from '../../../../lib/http'
+  import { consultPrice } from '../../../../lib/filter'
   export default{
     data(){
       return{
@@ -271,6 +272,7 @@
         loadingStatus:true,
         pullup:true,
         listPage:1,
+        preventRepeatRequest:false,
         searchContent:"",
         orderByScore:false,
         orderByNum:false,
@@ -281,6 +283,9 @@
           }
         ],
       }
+    },
+    filters:{
+      consultPrice
     },
     created(){
          http("smarthos.user.doc.search",{
@@ -343,7 +348,8 @@
 //             })
 //           },
       scrollToEnd(){
-        if (this.preventRepeatRequest) {
+
+        if (this.preventRepeatRequest || this.followList.length <10) {
           return
         }
         this.loadingStatus = true
@@ -382,6 +388,7 @@
         this.$router.push('/officeConsult')
       },
       searchList(){
+        this.sortBy = ''
         http("smarthos.user.doc.search",{
           deptId:this.deptId,
           keyWord:this.searchContent,
@@ -502,6 +509,22 @@
       Scroll
     },
     watch:{
+      searchContent(){
+          if(this.searchContent == ''){
+            http("smarthos.user.doc.search",{
+              pageSize:10,
+              pageNum:1
+            }).then((data)=>{
+              console.log(data,66666)
+              this.loadingStatus = false
+              if(data.code == 0){
+                this.followList = data.list
+              }else{
+                weui.alert(data.msg)
+              }
+            })
+          }
+      },
       childDetail(){
           this.$nextTick(()=>{
               setTimeout(()=>{
@@ -693,7 +716,7 @@
       button{
         border:none;
         outline: medium;
-        width:70px;
+        width:120px;
         height: 60px;
         margin-left: 20px;
         font-size: 32px;
@@ -705,7 +728,7 @@
       position: absolute;
       width: 30px;
       top:30px;
-      left: 80px;
+      left: 60px;
     }
   }
   .tab{
@@ -924,10 +947,14 @@
         section:nth-child(2){
           margin-top: 15px;
           display: flex;
+          width:690px;
+          word-wrap: break-word;
+          word-break: break-all;
           >div{
-            flex:1;
+            /*flex:1;*/
+            display: block;
             p{
-              width: 210px;
+              width: 240px;
               border:1px solid #999999;
               color: #999999;
               display: flex;

@@ -25,6 +25,7 @@
                 </span>
             </div>
         </div>
+        <toast v-if="showToast"></toast>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -32,18 +33,21 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
+    import Toast from '../../base/toast.vue'
     export default{
         components: {
-            top
+            top,
+           Toast
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 num:0,
                 consultId:"",
                 token:localStorage.getItem('token'),
                 evaluateContent:"",
-                consultType:""
+                consultType:"",
+                showToast:false
             }
         },
         mounted(){
@@ -53,6 +57,7 @@
         },
         methods:{
             submit(){
+                this.showToast = true
                 api('smarthos.system.comment.add',{
                     content:this.evaluateContent,
                     token:this.token,
@@ -62,6 +67,7 @@
                     consultInfoType:this.consultType
                 }).then(res=>{
                     console.log(res,6666);
+                   this.showToast = false
                     if(res.succ){
                         weui.alert("评价成功")
                         this.$router.push('/my/consultService/myConsult')

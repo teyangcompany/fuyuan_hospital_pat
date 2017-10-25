@@ -228,7 +228,7 @@
       bindCard(){
         this.showDialog = false
         this.showToast = true
-        http("smarthos.user.commpat.record.band",{
+        http("smarthos.user.commpat.record.bind",{
           token:localStorage.getItem('token'),
           commpatId:this.compatInfo[this.index].id,
           bookHosId:this.hosid

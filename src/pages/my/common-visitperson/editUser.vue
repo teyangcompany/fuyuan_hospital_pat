@@ -43,7 +43,7 @@
             <div class="weui-cell__hd">
               <label  class="weui-label bf">性&nbsp;&nbsp;&nbsp;别</label>
             </div>
-            <div class="weui-cell__bd">
+            <div class="weui-cell__bd ">
               {{ gender == 'M'? '男':'女'  }}
               <!--<select class="weui-select bf" name="select2">-->
                 <!--<option value="1">男</option>-->

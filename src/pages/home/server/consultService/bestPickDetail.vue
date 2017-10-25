@@ -1,6 +1,6 @@
 <template>
     <div class="wrapPick">
-      <scroll class="relateList" :data="detailInfo" ref="main">
+      <scroll class="relateList" :data="detailInfo"  ref="main">
          <div>
            <div class="topInfo border-1px">
              <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
@@ -92,9 +92,9 @@
                 问这个医生
           </div>
        </div>
-      <div class="largePic" v-if="showLargePic" @click="makeSmall">
-        <img :src="largePicUrl" alt="">
-      </div>
+        <div class="largePic" v-if="showLargePic" @click="makeSmall">
+          <img :src="largePicUrl" alt="">
+        </div>
     </div>
 </template>
 <script>
@@ -157,8 +157,8 @@
   @import '../../../../common/common';
    .wrapPick{
      width:100%;
-     overflow: auto;
-     background-color: #FFFFFF;
+     /*overflow: auto;*/
+     /*background-color: #FFFFFF;*/
      .largePic{
        position: absolute;
        top:0;
@@ -177,166 +177,168 @@
        height: 150px;
        margin: 10px;
      }
-     .topInfo{
-       width: 690px;
-       margin:0 auto;
-       height: 80px;
-       line-height: 80px;
-       background-color: #FFFFFF;
-       p{
-         font-size: 32px;
-       }
-     }
-     .detailList{
-       ul {
-         margin-top: 5px;
-         li {
-           width: 690px;
-           /*height: 166px;*/
-           border-radius: 7px;
-           background-color:white;
-           list-style-type: none;
-           margin: 0 auto;
-           padding: 0px 8px 8px 8px;
-           >div {
-             display: flex;
-             justify-content: space-between;
-             span.picConsult {
-               font-size: 32px;
-             }
-             span.consultTim {
-               font-size: 28px;
-               color: #F07818;
-             }
-           }
-           .dashedPlace{
-             margin-top: 5px;
-             padding-bottom: 10px;
-           }
-           div.mainContent {
-             display: flex;
-             flex-direction: column;
-             justify-content: center;
-             >div{
-               margin-top: 10px;
-               img{
-                 width: 22.5%;
-                 height: 120px;
-                 margin-left: 15px;
-               }
-             }
-             p {
-               display: -webkit-box;
-               -webkit-box-orient: vertical;
-               -webkit-line-clamp: 2;
-               overflow: hidden;
-               font-size: 30px;
-               color: #888888;
-               padding-top: 5px;
-               /*background-color: #E64340;*/
-             }
-           }
-           div.ConsultRelate {
-             margin-top: 5px;
-             span.name {
-               font-size: 28px;
-               color: #999999;
-               .circle {
-                 display: inline-block;
-                 width: 10px;
-                 height: 10px;
-                 margin-right: 3px;
-                 background-color: red;
-                 border-radius: 50%;
-               }
-               .number{
-                 display: flex;
-                 align-items: center;
-                 img{
-                   width: 34px;
-                   height: 34px;
-                   border-radius: 50%;
-                   margin-right: 5px;
-                 }
-               }
-             }
-             span.money {
-               font-size: 26px;
-               color: #999999;
-               display: flex;
-               align-items: center;
-               img{
-                 width: 36px;
-               }
-             }
-           }
-         }
-         li:nth-child(1){
-           padding-top: 5px;
-         }
-       }
-     }
      .relateList{
-       position: absolute;
+       position: fixed;
        top:0px;
        bottom:100px;
        left:0;
        right:0;
        background-color: #FFFFFF;
-       overflow: auto;
-       .answerList{
-         padding: 20px;
-         box-sizing: border-box;
-         background: white;
-         border-bottom: 1px solid gainsboro;
-         margin-top: 10px;
-         .patAnswer{
-           display: flex;
-           align-items: center;
-
-         }
-         .docImg{
-           img{
-             display: inline-block;
-             width: 80px;
-             height: 80px;
-             border-radius: 40px;
-             margin: 0 20px 0 0;
-
+       overflow: hidden;
+       div{
+         .topInfo{
+           width: 690px;
+           margin:0 auto;
+           height: 80px;
+           line-height: 80px;
+           background-color: #FFFFFF;
+           p{
+             font-size: 32px;
            }
          }
-         .patMusic{
-           position: relative;
-           margin-left: 80px;
-           margin-top: 20px;
-           width: 400px;
-           height: 80px;
-           img{
-             display: inline-block;
+         .detailList{
+           ul {
+             margin-top: 5px;
+             li {
+               width: 690px;
+               /*height: 166px;*/
+               border-radius: 7px;
+               background-color:white;
+               list-style-type: none;
+               margin: 0 auto;
+               padding: 0px 8px 8px 8px;
+               >div {
+                 display: flex;
+                 justify-content: space-between;
+                 span.picConsult {
+                   font-size: 32px;
+                 }
+                 span.consultTim {
+                   font-size: 28px;
+                   color: #F07818;
+                 }
+               }
+               .dashedPlace{
+                 margin-top: 5px;
+                 padding-bottom: 10px;
+               }
+               div.mainContent {
+                 display: flex;
+                 flex-direction: column;
+                 justify-content: center;
+                 >div{
+                   margin-top: 10px;
+                   img{
+                     width: 22.5%;
+                     height: 120px;
+                     margin-left: 15px;
+                   }
+                 }
+                 p {
+                   /*display: -webkit-box;*/
+                   /*-webkit-box-orient: vertical;*/
+                   /*-webkit-line-clamp: 2;*/
+                   /*overflow: hidden;*/
+                   font-size: 30px;
+                   color: #888888;
+                   padding-top: 5px;
+                   /*background-color: #E64340;*/
+                 }
+               }
+               div.ConsultRelate {
+                 margin-top: 5px;
+                 span.name {
+                   font-size: 28px;
+                   color: #999999;
+                   .circle {
+                     display: inline-block;
+                     width: 10px;
+                     height: 10px;
+                     margin-right: 3px;
+                     background-color: red;
+                     border-radius: 50%;
+                   }
+                   .number{
+                     display: flex;
+                     align-items: center;
+                     img{
+                       width: 34px;
+                       height: 34px;
+                       border-radius: 50%;
+                       margin-right: 5px;
+                     }
+                   }
+                 }
+                 span.money {
+                   font-size: 26px;
+                   color: #999999;
+                   display: flex;
+                   align-items: center;
+                   img{
+                     width: 36px;
+                   }
+                 }
+               }
+             }
+             li:nth-child(1){
+               padding-top: 5px;
+             }
+           }
+         }
+         .answerList{
+           padding: 20px;
+           box-sizing: border-box;
+           background: white;
+           border-bottom: 1px solid gainsboro;
+           margin-top: 10px;
+           .patAnswer{
+             display: flex;
+             align-items: center;
+
+           }
+           .docImg{
+             img{
+               display: inline-block;
+               width: 80px;
+               height: 80px;
+               border-radius: 40px;
+               margin: 0 20px 0 0;
+
+             }
+           }
+           .patMusic{
+             position: relative;
+             margin-left: 80px;
+             margin-top: 20px;
              width: 400px;
              height: 80px;
+             img{
+               display: inline-block;
+               width: 400px;
+               height: 80px;
+             }
            }
-         }
-         #music{
-           display: none;
-         }
-         .musicDate{
-           color: white;
-           position: absolute;
-           top:0;
-           right: 30px;
-           height: 80px;
-           line-height: 80px;
-         }
-         .musicImg{
-           position: absolute;
-           top:12px;
-           left: 30px;
-           height: 80px;
-           line-height: 80px;
-           img{
-             height: 48px;
-             width: 40px;
+           #music{
+             display: none;
+           }
+           .musicDate{
+             color: white;
+             position: absolute;
+             top:0;
+             right: 30px;
+             height: 80px;
+             line-height: 80px;
+           }
+           .musicImg{
+             position: absolute;
+             top:12px;
+             left: 30px;
+             height: 80px;
+             line-height: 80px;
+             img{
+               height: 48px;
+               width: 40px;
+             }
            }
          }
        }
