@@ -190,6 +190,8 @@
         goAddUser(){
           if(this.patientListLength == 5){
               weui.alert("最多可以绑定五个就诊人")
+          }else if(this.patName == ''){
+            weui.alert("请填写您的真实姓名")
           }else if(this.$v.patName.$invalid){
             this.$set(this.$data,'showNameError',true)
           }else if(this.$v.patIdcard.$invalid){

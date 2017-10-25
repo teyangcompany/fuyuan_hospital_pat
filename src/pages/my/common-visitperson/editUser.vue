@@ -15,7 +15,8 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patName.$error }">
-              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名"/>
+              <input  @blur="$v.patName.$touch()" readonly class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-if="itemInfo.self"/>
+              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-else/>
             </div>
           </div>
           <span class="form-group__message bf" v-if="!$v.patName.minLength&&showNameError">姓名至少2位</span>
@@ -23,13 +24,21 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf" >身份证号</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patIdcard.$error }">
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
+              <input @blur="getAge"  @input="$v.patIdcard.$touch()" readonly  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-if="itemInfo.self"/>
+              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-else/>
             </div>
           </div>
         </div>
         <span class="form-group__message bf" v-if="!$v.patIdcard.cd&&showCd">请输入正确的身份证号</span>
         <div class="weui-cells">
-          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone">
+          <a class="weui-cell weui-cell_access" href="javascript:;"  v-if="itemInfo.self">
+            <div class="weui-cell__bd">
+              <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+          </a>
+          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone" v-else>
             <div class="weui-cell__bd">
               <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
             </div>
@@ -59,14 +68,48 @@
               {{ parseInt(patIdcard.substr(16,1)) % 2 == 1 ? '男':'女'  }}
             </div>
           </div>
-          <div class="weui-cell">
+          <div class="weui-cell" @click="toggleArea">
+            <div class="weui-cell__hd">
+              <label  class="weui-label bf">所在地区</label>
+            </div>
+            <div class="weui-cell__bd bf" v-if="result">
+                {{ result.province.name }} {{ result.city.name == '市辖区' || result.city.name == '县' ? '': result.city.name }} {{ result.area.name == '市辖区' ? '': result.area.name }}
+            </div>
+            <div class="weui-cell__bd bf" v-else>
+                {{ itemInfo.areaName }}
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+          </div>
+          <div class="weui-cell" @click="toggleRelation">
             <div class="weui-cell__hd"><label class="weui-label bf relationShip">与本人的关系</label></div>
             <div class="weui-cell__bd">
-              <input class="weui-input relationInput" type="text" v-model="relationInfo"  placeholder="本人"/>
+                 <p class="relationRight">{{ compatInfo[clickIndex] }}</p>
+            </div>
+          </div>
+          <div class="hosNumber">
+            <p>医院账号</p>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__hd">
+              <label  class="weui-label bf">浙二医院</label>
+            </div>
+            <div class="weui-cell__bd bf" >
+
+            </div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__hd">
+              <label  class="weui-label bf hos">长兴人民医院</label>
+            </div>
+            <div class="weui-cell__bd bf" >
+
             </div>
           </div>
         </div>
       </div>
+      <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
+      <relation-toggle :patList="compatInfo" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></relation-toggle>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -74,11 +117,15 @@
   import { required, minLength, alphaNum, maxLength} from 'vuelidate/lib/validators'
   import cd from '../../../lib/regex'
   import api from '../../../lib/http'
+  import relationToggle from '../../../base/relationToggle.vue'
   import {mainHeightMixin} from "../../../lib/mixin"
+  import vueArea from 'vue-area'
 //  var token  = localStorage.getItem('token')
   export default{
     components: {
-      top
+      top,
+      vueArea,
+      relationToggle
     },
     mixins: [mainHeightMixin],
     validations: {
@@ -105,7 +152,13 @@
         compatId:'',
         patDetail:{},
         itemInfo:"",
-        relationInfo:""
+        relationInfo:"",
+        showPat:false,
+        compatInfo:['本人','父母','配偶','子女','亲戚','朋友','其他'],
+        clickIndex:0,
+        patOption:"",
+        result: null,
+        show: false
       }
     },
     mounted(){
@@ -121,6 +174,26 @@
 
     },
     methods:{
+      areaResult: function(show, result){
+        this.show = show
+        this.result = result
+        console.log(this.show)
+        console.log(this.result)
+      },
+      toggleRelation(){
+            this.showPat = true
+      },
+      check(index){
+          this.clickIndex = index
+        this.showPat = false
+          console.log(index)
+      },
+      closePatient(){
+        this.showPat = false
+      },
+      toggleArea(){
+            this.show = true
+      },
       getAge(){
         var date = new Date;
         var year = date.getFullYear();
@@ -147,7 +220,9 @@
             "token":this.token,
             "commpatId":this.compatId,
             "commpatName":this.patName,
-            "commpatIdcard":this.patIdcard
+            "commpatIdcard":this.patIdcard,
+            relationship:this.compatInfo[this.clickIndex],
+//            areaCode:itemInfo.areaCode ? '':'',
           }).then(res=>{
               console.log(res)
             if(res.succ){
@@ -221,7 +296,28 @@
   .relationShip{
     width:130px;/*no*/
   }
+  .relationRight{
+    width:400px;
+    text-align: right;
+  }
   .relationInput{
       text-align: right;
   }
+  .hosNumber{
+    width: 100%;
+    background-color:#f5f5f5;
+    margin:0 auto;
+    height: 80px;
+    p{
+      width:690px;
+      margin:0 auto;
+      font-size: 28px;
+      height:80px;
+      line-height: 80px;
+    }
+  }
+  .hos{
+    width:400px;
+  }
+
 </style>

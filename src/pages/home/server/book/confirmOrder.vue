@@ -112,7 +112,7 @@
     </div>
     <patient-toggle :patList="compatInfo" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>
     <toast v-if="showToast"></toast>
-    <v-mask v-if="fail || successDisplay"></v-mask>
+    <v-mask v-if="fail || successDisplay || createDisplay"></v-mask>
     <alert v-if="showAlert" @on-iKnow="iKnow" :secondLine="secondLine" :bottomLine="bottomLine"></alert>
   </div>
 </template>
@@ -238,6 +238,19 @@
 
     },
     methods:{
+      getPatient(){
+        http("smarthos.user.commpat.list",{
+          token:localStorage.getItem('token'),
+//            patId:this.selfInfo.patId
+        }).then((data)=>{
+          if(data.code == 0){
+            this.compatInfo = data.list
+            console.log(data,555555555555)
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
       cancelDialog(){
         this.showDialog = false
       },
@@ -249,6 +262,7 @@
         this.fail = false
       },
       iSeeCreate(){
+        this.getPatient()
         this.createDisplay = false
       },
       _initSuccessScroll(){

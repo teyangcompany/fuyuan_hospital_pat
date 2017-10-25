@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <top class="noflex" title="" ref="header">
-            <i slot="back" @click="goBack"></i>
+            <!--<i slot="back" @click="goBack"></i>-->
           <div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>
         </top>
         <div class="wrapper" ref="Scroll" @click="closeCheckList">
@@ -38,7 +38,12 @@
                         <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
                     </div>
                     <div class="createDiv">
-                        <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
+                        <span class="mfc create">
+                          <img :src="userPat.patAvatar" alt="" v-if="userPat.patAvatar">
+                          <img src="../../../static/img/pat.f.jpg" alt="" v-else-if="!(userPat.patAvatar) && userPat.patGender != 'M'">
+                          <img src="../../../static/img/pat.m.jpg" alt="" v-else>
+                          <span v-if="consultInfo.consulterName">{{consultInfo.consulterName.substr(0,1)}}** </span>
+                        </span>
                         <span class="date">{{consultInfo.createTime | goodTime}} |
                           <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
                           <span v-else>暂无回复</span>
@@ -48,7 +53,8 @@
                 <div class="answerList" v-for="item in arr" ref="lastItem">
                     <div class="patAnswer" v-if="item.consultMessage.replierType == 'DOC'">
                         <div class="docImg">
-                            <img :src="item.userDocVo.docAvatar" alt="">
+                            <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
+                            <img src="../../../static/img/doctorM.png" alt="" v-else>
                         </div>
                         <div class="docMsg">
                             <p>
@@ -62,11 +68,13 @@
                     </div>
                     <div v-else class="patAnswer">
                         <div class="docImg">
-                            <img :src="item.userPat.patAvatar" alt="">
+                            <img :src="item.userPat.patAvatar" alt="" v-if="item.userPat.patAvatar">
+                            <img src="../../../static/img/pat.m.jpg" alt="" v-else-if="!(item.userPat.patAvatar) && item.userPat.patGender == 'M'">
+                           <img src="../../../static/img/pat.f.jpg" alt="" v-else>
                         </div>
                         <div class="docMsg">
                             <p>
-                                <span class="mf">{{item.userPat.patName}}</span>
+                                <span class="mf" v-if="item.userPat.patName">{{item.userPat.patName.substr(0,1)}}**</span>
                                 <!--<span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>-->
                             </p>
                             <p>
@@ -91,17 +99,17 @@
         </div>
         <div v-show="consultInfo.consultStatus=='3'"  class="bottom">
                 <div class="robot-room-wirte yk-box yk-cell">
-                    <div class="talkImg">
-                        <img src="../../../static/img/talk.png" alt="" @click="setType">
-                    </div>
-                    <div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">
-                       {{msg}}
-                    </div>
+                    <!--<div class="talkImg">-->
+                        <!--<img src="../../../static/img/talk.png" alt="" @click="setType">-->
+                    <!--</div>-->
+                    <!--<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">-->
+                       <!--{{msg}}-->
+                    <!--</div>-->
                     <div class="yk-cell-bd mr10" v-show="type=='text'">
                         <edit-div :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
                     </div>
                     <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
-                    <button v-show="text.length" class="send-btn" @click="send">发送</button>
+                    <button v-show="text != ''" class="send-btn" @click="send">发送</button>
                 </div>
                 <div  class="checkList" v-show="checkList">
                     <div class="upload">
@@ -110,7 +118,7 @@
                     </div>
                 </div>
         </div>
-        <div class="btn" v-show="consultInfo.consultStatus=='2'">
+        <div class="btn" v-show="consultInfo.consultStatus=='1' || consultInfo.consultStatus=='2'">
             <p class="mfb reply">请等待医生回复，48小时未回复自动退款</p>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='-1'">
@@ -127,8 +135,8 @@
             <span class="mfb evaluate bor" @click="consultAgain">再次咨询</span>
             <span class="mfb evaluate" @click="comment">评价</span>
         </div>
-        <div class="btn" v-show="consultInfo.consultStatus=='6'">
-            <p class="mfb reply ">申请成为他的患者</p>
+        <div class="btn" v-show="consultInfo.consultStatus=='6'" @click="consultAgain">
+            <p class="mfb reply ">再次咨询</p>
         </div>
         <v-dialog @on-cancel="over" @on-download="overConsult" v-if="showOverConsult"
                   :dialogTitle="dialogOverTitle"
@@ -196,13 +204,15 @@
             this.consultId = this.$route.params.id;
             this.getData()
             this.getInitChat()
-            this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
-            this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
+//            this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
+//            this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
             this.scroll = new BScroll(this.$refs.Scroll,{
                 click:true,
                 probeType: 1,
                 bounce: true
             });
+        },
+        watch:{
         },
         methods:{
             //显示大图
@@ -327,7 +337,9 @@
               })
             },
             goBack(){
-              this.$router.go(-1)
+              this.$router.push({
+                path:"/my/consultService/myConsult"
+              })
             },
             send(){
                 console.log(this.text,22222);
@@ -340,7 +352,7 @@
                 }).then(res=>{
                     if(res.succ){
                         console.log(res,598976);
-//                        this.getData();
+                        this.getData();
                         this.getInitChat()
                         this.$set(this.$data,'clean',!this.clean);
                         this.text=''
@@ -351,35 +363,36 @@
 
 
             },
-            startRecord(){
-                this.time= new Date();
-                this.$set(this.$data,'msg','松开结束')
-                this.$refs.recordButton.style.background = 'gainsboro'
-
-            },
-            stopRecord(){
-                this.$set(this.$data,'msg','按住录音');
-                this.$refs.recordButton.style.background = 'white'
-                var interval = new Date()-this.time  ;
-                if (interval<500){
-                   alert("录制时间过短");
-                    return;
-                }
-
-            },
-            setType(event){
-                console.log(event.target,9999);
-                if(this.type=='text'){
-                    this.type='audio';
-                    event.target.src=' ./static/img/chat.png'
-                }else {
-                    this.type='text';
-                    event.target.src='./static/img/talk.png'
-                }
-
-            },
+//            startRecord(){
+//                this.time= new Date();
+//                this.$set(this.$data,'msg','松开结束')
+//                this.$refs.recordButton.style.background = 'gainsboro'
+//
+//            },
+//            stopRecord(){
+//                this.$set(this.$data,'msg','按住录音');
+//                this.$refs.recordButton.style.background = 'white'
+//                var interval = new Date()-this.time  ;
+//                if (interval<500){
+//                   alert("录制时间过短");
+//                    return;
+//                }
+//
+//            },
+//            setType(event){
+//                console.log(event.target,9999);
+//                if(this.type=='text'){
+//                    this.type='audio';
+//                    event.target.src=' ./static/img/chat.png'
+//                }else {
+//                    this.type='text';
+//                    event.target.src='./static/img/talk.png'
+//                }
+//
+//            },
             showCheckList(){
-                this.$set(this.$data,'checkList',true)
+                this.checkList = ! this.checkList
+//                this.$set(this.$data,'checkList',true)
             },
             closeCheckList(){
                 this.$set(this.$data,'checkList',false)

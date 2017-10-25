@@ -42,10 +42,10 @@
         </div>
 
         <div class="record">
-          <ul>
-            <li v-for="(item,i) in list">
+          <ul >
+            <li v-for="(item,i) in list" @click="goCaseDetail(item)">
               <h3>{{item.medicalHistory.createTime | getDay}}</h3>
-              <div class="content" @click="goCaseDetail(item)">{{item.medicalHistory.medContent}}</div>
+              <div class="content">{{item.medicalHistory.medContent}}</div>
               <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
                 <li v-for="imgSrc in item.attaList">
                   <img @load="$refs.wrapper.refresh()"
@@ -119,7 +119,8 @@
 
     },
     methods: {
-      makeLarge(img, arr) {
+      makeLarge(img,arr) {
+//        console.log(res)
         let urls = [];
         arr.forEach((res) => {
           urls.push(res.attaFileUrl);
@@ -155,8 +156,9 @@
         api("smarthos.user.pat.get", {
           token: tokenCache.get()
         }).then((data) => {
+          console.log(data)
           this.patAvatar = data.obj.pat.patAvatar
-          this.commpat = data.obj.commpat
+          this.commpat = data.obj.userCommonPatVo
           console.log(this.commpat, 4444)
         })
       },

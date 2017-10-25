@@ -59,6 +59,7 @@
             submit(){
                 this.showToast = true
                 if(this.num == 0){
+                  this.showToast = false
                     weui.alert("您还未对该医生做出评价")
                 }else{
                     api('smarthos.system.comment.add',{

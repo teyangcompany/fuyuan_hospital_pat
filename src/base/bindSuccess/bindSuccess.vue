@@ -38,7 +38,7 @@
     border-radius: 12px;
     img{
       padding-top: 60px;
-      width: 160px;
+      width: 130px;
       height: 186px;
     }
     p{

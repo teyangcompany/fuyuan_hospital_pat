@@ -11,7 +11,6 @@
                        <span class="mfw">
                              分享
                        </span>
-
                    </span>
 
                     <!--<span class="headerImg">-->
@@ -66,6 +65,12 @@
                 <span @click="attention" v-else>取消关注</span>
             </div>
         </div>
+        <div class="alertArea" v-if="showAndroid">
+           <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic">
+        </div>
+        <div class="alertArea" v-if="showIos">
+          <img src="../../../static/img/ios引导.png" alt="" @click="hidePic">
+        </div>
         <seivice :docId="docId" ref="ser"></seivice>
     </div>
 </template>
@@ -92,7 +97,9 @@
                 token: localStorage.getItem('token'),
                 doc: {},
                 docServeList: "",
-                isFollow: false
+                isFollow: false,
+              showAndroid:false,
+              showIos:false
             }
         },
         created() {
@@ -114,9 +121,25 @@
         },
         methods: {
             share(){
-               this.$router.push({
-                 path:"/share"
-               })
+              let UA = window.navigator.userAgent.toLocaleLowerCase();
+              if (/iphone/.test(UA)) {
+                window.device = "iphone";
+              }
+              if (/android/.test(UA)) {
+                window.device = "android";
+              }
+              if (window.device == "iphone") {
+                this.showIos = true
+              }else{
+                this.showAndroid = true
+              }
+//               this.$router.push({
+//                 path:"/share"
+//               })
+            },
+            hidePic(){
+              this.showIos = false
+              this.showAndroid = false
             },
             goBack() {
                 this.$router.go(-1)
@@ -130,6 +153,7 @@
 //                    console.log(res,88888);
                         if (res.succ) {
                             this.isFollow = true
+                            weui.alert("关注成功")
                         } else {
                             weui.alert(res.msg)
                         }
@@ -142,6 +166,7 @@
 //                    console.log(res,88888);
                         if (res.succ) {
                             this.isFollow = false
+                            weui.alert("已取消关注")
                         } else {
                             weui.alert(res.msg)
                         }
@@ -192,13 +217,26 @@
 </script>
 <style scoped lang='scss'>
     @import '../../common/common.scss';
-
     .page {
         display: flex;
         flex-direction: column;
         overflow: hidden;
         flex: 1;
         background: white;
+        .alertArea{
+          position: absolute;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
+          z-index:10000;
+          img{
+            position: absolute;
+            z-index: 10000;
+            width:100%;
+            height:100%;
+          }
+        }
     }
 
     .wrapper {
@@ -209,6 +247,7 @@
         width: 100%;
         padding: 0px 30px;
         position: absolute;
+        z-index:0;
         top: 30px;;
     }
 

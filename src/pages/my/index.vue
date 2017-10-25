@@ -67,7 +67,7 @@
         if (res === false) {
           this.$router.push("/login")
         } else {
-          this.patDetail = res.commpat;
+          this.patDetail = res.userCommonPatVo;
           this.patAvatar = res.pat.patAvatar
         }
       });

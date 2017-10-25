@@ -7,7 +7,7 @@
             </div>
         </app-header>
         <div class="wrapper list" ref="main">
-            <left-del displacement="1.2" tag="ul" class="part" :key="1"  v-for="item in list" >
+            <left-del displacement="0" tag="ul" class="part" :key="1"  v-for="item in list" >
                 <ul class="flex">
                     <li class="left-part flex0 info" @click="goEditUser(item.id,item)">
                         <dl class="flex">
@@ -23,7 +23,7 @@
                         </dl>
                         <dl class="flex">
                           <dt class="flex0">病案号:</dt>
-                          <dd class="flex1" v-if="item.compatMedicalRecord">{{item.compatMedicalRecord}}</dd>
+                          <dd class="flex1" v-if="item.userCommonPatRecords.length != 0">{{item.userCommonPatRecords[0].compatRecord}}</dd>
                           <dd class="flex1" v-else>暂未绑定病案号</dd>
                         </dl>
                     </li>
@@ -157,10 +157,11 @@
 
     .info {
         background-color: #f5fbfb;
-        @include w_h(750px - $commonSpace*2, $hei);
+        @include w_h(750px - $commonSpace*6.7, $hei);
         border-radius: 20px;
         padding: 30px;
-        background-image: url("../../../../static/img/icon/arrow-right-grow.png");
+        background-image: url("../../../../static/img/delete.png");
+        /*background-image: url("../../../../static/img/icon/arrow-right-grow.png");*/
         @include backgroundImageSet(18px, 30px, 750px - $commonSpace*2 -30px - 18px);
         dl + dl {
             /*margin-top: 20px;*/
@@ -181,8 +182,9 @@
     .del {
         margin-left: 20px;
         @include w_h(100px, $hei);
-        background-color: #f4888c;
-        background-image: url(../../../../static/img/icon/delete.png);
+        /*background-color: #f4888c;*/
+        background-color: #f5fbfb;
+        background-image: url(../../../../static/img/delete.png);
         @include backgroundImageSet(46px, 46px);
         border-radius: 20px;
     }

@@ -272,6 +272,7 @@
              consultId:this.consultId,
 
            }).then((data)=>{
+               console.log(data,333)
                if(data.code == 0){
                  this.aboutReplyMessage = data.list
                }else{

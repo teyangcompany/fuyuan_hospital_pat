@@ -42,7 +42,7 @@
     border-radius: 12px;
     img{
       padding-top: 60px;
-      width: 160px;
+      width: 130px;
       height: 186px;
     }
     p{
@@ -55,12 +55,16 @@
       color: #FAAC79;
       margin-top: 60px;
     }
+    p.secondLine{
+        margin-top: 20px;
+      color: #999999;
+    }
     p.des{
       width:450px;
       height:80px;
       margin:0 auto;
       line-height: 80px;
-      margin-top: 100px;
+      margin-top: 50px;
       font-size: 36px;
       color: white;
       border-radius: 10px;
