@@ -38,7 +38,7 @@
             top,
             scroll
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 heightX:50,

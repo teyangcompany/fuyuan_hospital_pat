@@ -19,7 +19,7 @@
             top
         },
         props:["time"],
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 date:""

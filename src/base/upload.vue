@@ -67,9 +67,7 @@
                 }
                 let xhr = new XMLHttpRequest();
                 xhr.open("POST", this.server);
-
                 xhr.setRequestHeader("sign", "test");
-
                 xhr.onreadystatechange = (res) => {
                     if (xhr.readyState == 4) {
                         if (xhr.status == 200) {
@@ -89,7 +87,6 @@
                 xhr.onerror = (error) => {
                     throw error;
                 };
-
                 xhr.send(form);
             },
             awaitAll(error, res) {

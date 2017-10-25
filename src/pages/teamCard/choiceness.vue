@@ -96,7 +96,7 @@
         components: {
             top
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin],
         data(){
             return {
                 active:true,
