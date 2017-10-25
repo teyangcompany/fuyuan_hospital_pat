@@ -14,7 +14,9 @@
                     <div class="weui-cells" v-for="item of docList" @click="goDocCard(item.userDocVO.id)">
                         <a class="weui-cell weui-cell_access" href="javascript:;">
                             <div class="weui-cell__hd">
-                                <img :src="item.userDocVO.docAvatar" alt="" class="docImg"></div>
+                                <img :src="item.userDocVO.docAvatar" alt="" class="docImg" v-if="item.userDocVO.docAvatar">
+                               <img src="../../../static/img/doctorM.png" alt="" class="docImg" v-if="!(item.userDocVO.docAvatar) || item.userDocVO.docAvatar == ''">
+                            </div>
                             <div class="weui-cell__bd">
                                 <p class="mfb">
                                     <span class="mfb">{{item.userDocVO.docName}}</span>

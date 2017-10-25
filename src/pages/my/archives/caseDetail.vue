@@ -54,7 +54,7 @@
           </upload-img>
         </div>
         <div class="btn">
-          <div class="text mfc">{{date |  getDay}} &nbsp;&nbsp;由{{creatorName}}添加</div>
+          <div class="text mfc">{{createTime |  getDay}} &nbsp;&nbsp;由{{creatorName}}添加</div>
           <a @click="deleteCase" style="background: #ff8588" href="javascript:;" class="weui-btn weui-btn_primary">删除</a>
         </div>
         <v-dialog @on-cancel="closeAll" @on-download="closeAllCancel" v-if="showAllDialog"
@@ -103,6 +103,7 @@
         time:"",
         textLength:0,
         text:"",
+        createTime:"",
         dialogTitle: "删除",
         dialogMain: "确定删除此条记录",
         dialogLeftFoot: "取消",
@@ -114,7 +115,8 @@
       var caseObj = this.$route.params.caseObj;
       console.log(caseObj,121212)
       this.$set(this.$data,'caseObj',caseObj)
-      this.$set(this.$data,'date',caseObj.medicalHistory.createTime)
+      this.$set(this.$data,'createTime',caseObj.medicalHistory.createTime)
+      this.$set(this.$data,'date',caseObj.medicalHistory.medicalTime)
       this.$set(this.$data,'caseText',caseObj.medicalHistory.medContent)
       this.$set(this.$data,'id',caseObj.medicalHistory.id)
       this.$set(this.$data,'imgList',caseObj.attaList)
@@ -146,6 +148,7 @@
         }
       },
       getDate(val){
+        console.log(val)
         this.time = val
       },
       save(){

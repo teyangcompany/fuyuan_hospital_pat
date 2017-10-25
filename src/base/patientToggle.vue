@@ -48,6 +48,7 @@
     },
     mounted(){
       this.path = this.$route.path
+      console.log(this.path)
     },
     methods:{
       _initPatient(){
@@ -62,7 +63,13 @@
         this.$emit("activate",index);
       },
       addPat(){
-        this.$router.push("/my/addUser");
+        if(this.path == '/home/server/book/confirmOrder'){
+          this.$router.push({
+            path:"/my/addUser",
+            query:{num:"1"}
+          });
+        }
+
       },
       close(){
         this.$emit("close");

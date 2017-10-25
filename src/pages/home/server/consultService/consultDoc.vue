@@ -719,7 +719,7 @@
         width:120px;
         height: 60px;
         margin-left: 20px;
-        font-size: 32px;
+        font-size: 28px;
         color: $mainColor;
         background-color: #FFFFFF;
       }

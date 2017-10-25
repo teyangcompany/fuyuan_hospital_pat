@@ -31,11 +31,13 @@
                 flag:false,
                 list:config.basic_service,
                 textList:config.basic_text,
-                test:0
+                test:0,
+                path:""
             }
         },
         mounted(){
-
+          this.path = this.$route.path
+          console.log(this.path)
         },
         methods:{
             close(){
@@ -45,8 +47,13 @@
                 this.test = index
             },
           addPatient(){
-                this.$emit('on-addPatient')
+                this.$emit('on-addPatient',this.path)
           }
+        },
+        watch:{
+          "$route":function(){
+            this.path = this.$route.path
+          },
         }
     }
 </script>

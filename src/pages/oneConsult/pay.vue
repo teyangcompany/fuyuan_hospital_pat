@@ -6,7 +6,7 @@
     <div class="payInfo">
       <div class="paySum border-1px">
         <span>订单金额</span>
-        <span>￥{{ fee }}</span>
+        <span>{{ fee | consultPrice }}</span>
       </div>
       <p class="border-1px payMethod">支付方式:</p>
       <div class="payBy border-1px">
@@ -34,6 +34,7 @@
 <script type="text/ecmascript-6">
   import top from '../../components/app-header.vue'
   import {mainHeightMixin} from '../../lib/mixin'
+  import { consultPrice } from '../../lib/filter'
   import config from '../../lib/config'
   import api from '../../lib/http'
 
@@ -48,6 +49,9 @@
         paySort:"",
         fee:""
       }
+    },
+    filters:{
+      consultPrice
     },
     mounted() {
       this.id = this.$route.params.id;

@@ -75,6 +75,7 @@
         api("smarthos.captcha.pat.wechat.bind", {
           mobile: this.patMobile
         }).then((res) => {
+            console.log(res)
           if (res.code == 0) {
             this.cid = res.obj.cid;
             this.captcha = res.obj.value ? res.obj.value : "";
@@ -91,7 +92,7 @@
               this.bind()
             }
           } else {
-            weui.alert(data.msg)
+            weui.alert(res.msg)
           }
         })
       },

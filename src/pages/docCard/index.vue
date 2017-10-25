@@ -71,7 +71,7 @@
 <script type="text/ecmascript-6">
     import top from '../../components/app-header.vue'
     import seivice from '../../base/seivice.vue'
-    import {mainHeightMixin} from '../../lib/mixin'
+    import {mainHeightMixin,isBindMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
     export default{
@@ -79,7 +79,7 @@
             top,
             seivice
         },
-        mixins: ['mainHeightMixin'],
+        mixins: [mainHeightMixin,isBindMixin],
         data(){
             return {
                 bar:config.doc_bar,
@@ -94,6 +94,12 @@
         },
         created(){
             this.docId = this.$route.params.id;
+            this._isBind().then((res) => {
+              if (res === false) {
+                fromCache.set(this.$route.fullPath);
+                this.$router.push("/login")
+              }
+            });
         },
         mounted(){
 
@@ -140,7 +146,7 @@
                   token:this.token,
                   docId:this.docId
               }).then(res=>{
-                  console.log(res,22222);
+//                  console.log(res,22222);
                   if(res.succ){
                       this.doc = res.obj.doc;
                       this.docServeList = res.obj.docServeList
