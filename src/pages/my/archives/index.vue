@@ -44,12 +44,12 @@
         <div class="record">
           <ul>
             <li v-for="(item,i) in list">
-              <h3>{{item.medicalHistory.medicalTime | getDay}}</h3>
+              <h3>{{item.medicalHistory.createTime | getDay}}</h3>
               <div class="content" @click="goCaseDetail(item)">{{item.medicalHistory.medContent}}</div>
               <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
                 <li v-for="imgSrc in item.attaList">
                   <img @load="$refs.wrapper.refresh()"
-                       @click="makeLarge(imgSrc, item.attaList)"
+                       @click="makeLarge(imgSrc)"
                        :src="imgSrc.attaFileUrl"
                        alt="">
                 </li>

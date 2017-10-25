@@ -2,7 +2,7 @@
   <div class="page">
     <div class="myDoc">
       <app-header class="noflex" title="我的医生" ref="header">
-        <div class="right absolute" slot="right">找医生</div>
+        <div class="right absolute" slot="right" @click="lookFor">找医生</div>
       </app-header>
     </div>
     <div class="nav">
@@ -105,6 +105,11 @@
 
     },
     methods: {
+      lookFor(){
+        this.$router.push({
+            path:"/my/consultService/consultDoc"
+        })
+      },
       goDocChat(id, docId) {
         this.$router.push('docChat/' + id)
       },

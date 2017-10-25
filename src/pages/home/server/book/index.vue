@@ -29,7 +29,7 @@
 <script>
   import AppHeader from "../../../../components/app-header.vue"
   import api from '../../../../lib/bookApi'
-
+  import {isBindMixin} from '../../../../lib/mixin'
   export default {
     data() {
       return {
@@ -40,10 +40,17 @@
     components: {
       AppHeader
     },
+    mixins: [isBindMixin],
     mounted() {
 
     },
     created(){
+      this._isBind().then((res) => {
+        if (res === false) {
+          fromCache.set(this.$route.fullPath);
+          this.$router.push("/login")
+        }
+      });
         api("smarthos.yygh.ApiHospitalService.areaHosList",{
 //          cityAreaId:"330100"
         }).then((data)=>{

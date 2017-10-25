@@ -72,7 +72,7 @@
 <script type="text/ecmascript-6">
     import top from '../../components/app-header.vue'
     import seivice from '../../base/seivice.vue'
-    import {mainHeightMixin} from '../../lib/mixin'
+    import {mainHeightMixin,isBindMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
 
@@ -81,8 +81,9 @@
             top,
             seivice
         },
-        mixins: [mainHeightMixin],
-        data() {
+        mixins: [mainHeightMixin,isBindMixin],
+        data(){
+
             return {
                 bar: config.doc_bar,
                 num: 0,
@@ -96,6 +97,12 @@
         },
         created() {
             this.docId = this.$route.params.id;
+            this._isBind().then((res) => {
+              if (res === false) {
+                fromCache.set(this.$route.fullPath);
+                this.$router.push("/login")
+              }
+            });
         },
         mounted() {
 
@@ -137,16 +144,18 @@
                     })
                 }
             },
-            getData() {
-                api('smarthos.user.doc.card.get', {
-                    token: this.token,
-                    docId: this.docId
-                }).then(res => {
-                    console.log(res, 22222);
-                    if (res.succ) {
-                        this.doc = res.obj.doc;
-                        this.docServeList = res.obj.docServeList
-                        sessionStorage.setItem('docName', res.obj.doc.docName)
+
+            getData(){
+              api('smarthos.user.doc.card.get',{
+                  token:this.token,
+                  docId:this.docId
+              }).then(res=>{
+//                  console.log(res,22222);
+                  if(res.succ){
+                      this.doc = res.obj.doc;
+                      this.docServeList = res.obj.docServeList
+                      sessionStorage.setItem('docName',res.obj.doc.docName)
+
 //                      console.log(this.$store.state.docObj,66666);
                         this.$store.commit('increment', res.obj.doc)
                         if (res.obj.followDocpat) {

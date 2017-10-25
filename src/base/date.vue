@@ -35,12 +35,12 @@
                 this.$set(this.$data,'date','');
                 var $this = this;
                 this.$weui.datePicker({
-                    start: new Date(),
-                    end: 2020,
+                    start:2001 ,
+                    end: new Date(),
                     onConfirm: function(result){
                         console.log(result,6666);
                         for(var i=0;i<result.length;i++){
-                            $this.date+=result[i].value+'-'
+                            $this.date+= ( parseInt(result[i].value) < 10 ?  '0' + result[i].value :result[i].value)+'-'
                         };
                         var s =  $this.date
                         $this.$set($this.$data,'date', s.substring(0,s.length-1));

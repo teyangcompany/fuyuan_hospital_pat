@@ -39,22 +39,30 @@
         </div>
 
         <div class="weui-cells weui-cells_form">
-          <div class="weui-cell weui-cell_select weui-cell_select-after">
-            <div class="weui-cell__hd">
-              <label  class="weui-label bf">性&nbsp;&nbsp;&nbsp;别</label>
+          <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label bf">年&nbsp;&nbsp;&nbsp;龄</label></div>
+            <div class="weui-cell__bd bf" v-if="age != ''">
+              {{age}}
             </div>
-            <div class="weui-cell__bd ">
-              {{ gender == 'M'? '男':'女'  }}
-              <!--<select class="weui-select bf" name="select2">-->
-                <!--<option value="1">男</option>-->
-                <!--<option value="2">女</option>-->
-              <!--</select>-->
+            <div class="weui-cell__bd bf" v-else>
+              {{JSON.stringify(new Date()).substr(1,4) - patIdcard.substr(6,4)}}
             </div>
           </div>
           <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label bf">年&nbsp;&nbsp;&nbsp;龄</label></div>
-            <div class="weui-cell__bd bf">
-              {{age}}
+            <div class="weui-cell__hd">
+              <label  class="weui-label bf">性&nbsp;&nbsp;&nbsp;别</label>
+            </div>
+            <div class="weui-cell__bd bf" v-if="gender != ''">
+              {{ gender == 'M'? '男':'女'  }}
+            </div>
+            <div class="weui-cell__bd bf" v-else>
+              {{ parseInt(patIdcard.substr(16,1)) % 2 == 1 ? '男':'女'  }}
+            </div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label bf relationShip">与本人的关系</label></div>
+            <div class="weui-cell__bd">
+              <input class="weui-input relationInput" type="text" v-model="relationInfo"  placeholder="本人"/>
             </div>
           </div>
         </div>
@@ -96,18 +104,21 @@
         gender:"",
         compatId:'',
         patDetail:{},
-        itemInfo:""
+        itemInfo:"",
+        relationInfo:""
       }
     },
     mounted(){
 //      console.log(this.$route.query.item,565656)
       this.itemInfo = JSON.parse(this.$route.query.item)
+      console.log(this.itemInfo)
       this.$set(this.$data,'patName',this.itemInfo.commpatName);
       this.$set(this.$data,'patIdcard',this.itemInfo.commpatIdcard);
       this.$set(this.$data,'mobile',this.itemInfo.commpatMobile);
       this.$set(this.$data,'gender',this.itemInfo.commpatGender);
-//      this.$set(this.$data,'age',this.$route.params.item.compatAge);
+//      this.$set(this.$data,'initAge',this.$route.params.item.compatAge);
       this.$set(this.$data,'compatId',this.itemInfo.id);
+
     },
     methods:{
       getAge(){
@@ -133,11 +144,12 @@
           this.$set(this.$data,'showCd',true)
         } else {
           api('smarthos.user.commpat.infomation.modify',{
-            "token": this.token,
-            "commpatId": this.compatId,
-            "commpatName": this.patName,
-            "commpatIdcard": this.patIdcard
+            "token":this.token,
+            "commpatId":this.compatId,
+            "commpatName":this.patName,
+            "commpatIdcard":this.patIdcard
           }).then(res=>{
+              console.log(res)
             if(res.succ){
               this.$router.push({
                 path:"/my/common-visitperson"
@@ -205,7 +217,11 @@
   }
   .weui-label{
     width: 80px;/*no*/
-
   }
-
+  .relationShip{
+    width:130px;/*no*/
+  }
+  .relationInput{
+      text-align: right;
+  }
 </style>

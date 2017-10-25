@@ -190,10 +190,14 @@
                     })
                 }
             },
-            addPatient() {
+            addPatient(path){
+              if(path == '/imageInquiry'){
                 this.$router.push({
-                    path: "/my/addUser"
+                  path:"/my/addUser",
+                  query:{num:'2'}
                 })
+              }
+
             },
             getUser(item, index) {
                 this.pickedIndex = index

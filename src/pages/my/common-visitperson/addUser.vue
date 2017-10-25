@@ -26,6 +26,12 @@
                 <input  @input="$v.patIdcard.$touch()"   class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
               </div>
             </div>
+            <div class="weui-cell" v-if="showAge">
+              <div class="weui-cell__hd"><label class="weui-label bf">年&nbsp;&nbsp;&nbsp;龄</label></div>
+              <div class="weui-cell__bd bf">
+                    {{ JSON.stringify(new Date()).substr(1,4)- nowAge }}
+              </div>
+            </div>
           </div>
           <span class="form-group__message bf" v-if="!$v.patIdcard.cd&&showCd">请输入正确的身份证号</span>
 
@@ -97,6 +103,9 @@
               cid:'',
               msg:'获取验证码',
               flag:true,
+              num:"",
+              showAge:false,
+              nowAge:"",
               patientListLength:""
             }
         },
@@ -104,8 +113,19 @@
 
         },
        created(){
+            this.num = this.$route.query.num
            this.getPatientList()
        },
+      watch:{
+        patIdcard(){
+            if(this.patIdcard.substr(10) != ''){
+                this.nowAge = this.patIdcard.substr(6,4)
+                this.showAge = true
+            }else{
+              this.showAge = false
+            }
+        }
+      },
       methods:{
         showRemind(){
           this.$weui.dialog({
@@ -175,9 +195,17 @@
             }).then(res=>{
               console.log(res,232323);
               if(res.succ){
-               this.$router.push({
-                 path:"/my/common-visitperson"
-               })
+               if(this.num = 1){
+                   this.$router.back(-1)
+               }else if(this.num = 2){
+                 this.$router.back(-1)
+               }else if(this.num = 3){
+                 this.$router.back(-1)
+               }else{
+                 this.$router.push({
+                   path:"/my/common-visitperson"
+                 })
+               }
               }else{
                 weui.alert(res.msg)
               }

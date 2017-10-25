@@ -59,26 +59,36 @@
     },
 
     mounted() {
-//      console.log(this.id, 99999);
-
-      api('smarthos.user.doc.serve.list', {
-//                token:this.token,
-                docId:this.id
-            }).then(res=>{
+      api('smarthos.user.doc.card.get',{
+        token:this.token,
+        docId:this.docId
+      }).then(res=>{
+                  console.log(res,22222);
+        if(res.succ){
+          this.serviceList = res.obj.docServeList
+          console.log(this.serviceList)
+        }else {
+          alert(res.msg)
+        }
+      })
+//      api('smarthos.user.doc.serve.list', {
+////                token:this.token,
+//                docId:this.id
+//            }).then(res=>{
 //                console.log(res,11111);
-                if(res.succ){
-                    var obj = res.obj;
-                    obj.appointmentOutpatientConsultServe.serveName?this.serviceList.push(obj.appointmentOutpatientConsultServe):"";
-                    obj.bookServe.serveName?this.serviceList.push(obj.bookServe):"";
-                    obj.phoneConsultServe.serveName?this.serviceList.push(obj.phoneConsultServe):"";
-                    obj.picConsultServe.serveName?this.serviceList.push(obj.picConsultServe):"";
-                    obj.videoConsultServe.serveName?this.serviceList.push(obj.videoConsultServe):"";
-//                    console.log(this.serviceList,123456789)
-                }else {
-                    alert(res.msg)
-                }
-
-            })
+//                if(res.succ){
+//                    var obj = res.obj;
+//                    obj.appointmentOutpatientConsultServe.serveName?this.serviceList.push(obj.appointmentOutpatientConsultServe):"";
+//                    obj.bookServe.serveName?this.serviceList.push(obj.bookServe):"";
+//                    obj.phoneConsultServe.serveName?this.serviceList.push(obj.phoneConsultServe):"";
+//                    obj.picConsultServe.serveName?this.serviceList.push(obj.picConsultServe):"";
+//                    obj.videoConsultServe.serveName?this.serviceList.push(obj.videoConsultServe):"";
+////                    console.log(this.serviceList,123456789)
+//                }else {
+//                    alert(res.msg)
+//                }
+//
+//            })
         },
         methods:{
             close(){

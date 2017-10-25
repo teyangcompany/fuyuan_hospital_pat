@@ -121,7 +121,7 @@
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='0'">
           <span class="mfb evaluate bor" @click="cancelConsult">取消申请</span>
-          <span class="mfb evaluate" @click="goPay">付款¥{{ consultInfo.payFee }}</span>
+          <span class="mfb evaluate" @click="goPay">付款{{ consultInfo.payFee | consultPrice}}元</span>
         </div>
         <div class="btn" v-show="consultInfo.consultStatus=='4'">
             <span class="mfb evaluate bor" @click="consultAgain">再次咨询</span>
@@ -149,7 +149,7 @@
     import BScroll from 'better-scroll'
     import editDiv from '../../components/editDiv.vue'
     import api from '../../lib/http'
-    import {goodTime,Getdate} from '../../lib/filter'
+    import {goodTime,Getdate,consultPrice} from '../../lib/filter'
     import ajax from '../../lib/ajax'
     import dialog from '../../base/dialog.vue'
     export default{
@@ -189,7 +189,8 @@
         },
         filters:{
             goodTime,
-          Getdate
+          Getdate,
+          consultPrice
         },
         mounted(){
             this.consultId = this.$route.params.id;
