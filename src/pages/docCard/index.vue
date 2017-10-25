@@ -6,7 +6,7 @@
                     <span class="back" @click="goBack">
                         <img src="../../../static/img/back.png" alt="">
                     </span>
-                    <span class="headerImg">
+                    <span class="headerImg" @click="share">
                        <img src="../../../static/img/share.png" alt="">
                        <span class="mfw">
                              分享
@@ -113,6 +113,11 @@
 
         },
         methods: {
+            share(){
+               this.$router.push({
+                 path:"/share"
+               })
+            },
             goBack() {
                 this.$router.go(-1)
             },
@@ -138,7 +143,6 @@
                         if (res.succ) {
                             this.isFollow = false
                         } else {
-                            weui.alert("123")
                             weui.alert(res.msg)
                         }
                     })
@@ -162,7 +166,11 @@
                             this.isFollow = true
                         }
                     } else {
-                        alert(res.msg)
+                        if(res.msg == '医患关系不存在'){
+
+                        }else{
+                          alert(res.msg)
+                        }
                     }
                 })
             },

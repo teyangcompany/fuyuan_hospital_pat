@@ -63,7 +63,7 @@
     bottom:0;
     left:0;
     right:0;
-    height:660px;
+    height:800px;
     display:flex;
     flex-direction:column;
   }

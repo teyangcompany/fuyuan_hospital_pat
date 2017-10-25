@@ -19,8 +19,8 @@
                 </div>
 
             </div>
-            <div class="btn">
-                <span class="submit" @click="submit">
+            <div class="btn" @click="submit">
+                <span class="submit">
                       提交
                 </span>
             </div>
@@ -58,23 +58,27 @@
         methods:{
             submit(){
                 this.showToast = true
-                api('smarthos.system.comment.add',{
-                    content:this.evaluateContent,
-                    token:this.token,
-                    score:this.num*2,
-                    sysModuleType:"CONSULT",
-                    moudleId:this.consultId,
-                    consultInfoType:this.consultType
-                }).then(res=>{
-                    console.log(res,6666);
-                   this.showToast = false
-                    if(res.succ){
-                        weui.alert("评价成功")
-                        this.$router.push('/my/consultService/myConsult')
-                    }else {
-                        weui.alert(res.msg)
-                    }
-                })
+                if(this.num == 0){
+                    weui.alert("您还未对该医生做出评价")
+                }else{
+                    api('smarthos.system.comment.add',{
+                        content:this.evaluateContent,
+                        token:this.token,
+                        score:this.num*2,
+                        sysModuleType:"CONSULT",
+                        moudleId:this.consultId,
+                        consultInfoType:this.consultType
+                    }).then(res=>{
+                        console.log(res,6666);
+                       this.showToast = false
+                        if(res.succ){
+                            weui.alert("评价成功")
+                            this.$router.push('/my/consultService/myConsult')
+                        }else {
+                            weui.alert(res.msg)
+                        }
+                    })
+                }
             }
         }
     }

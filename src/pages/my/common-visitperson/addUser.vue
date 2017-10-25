@@ -32,6 +32,12 @@
                     {{ JSON.stringify(new Date()).substr(1,4)- nowAge }}
               </div>
             </div>
+            <div class="weui-cell" v-if="showGender">
+              <div class="weui-cell__hd"><label class="weui-label bf">性&nbsp;&nbsp;&nbsp;别</label></div>
+              <div class="weui-cell__bd bf">
+                {{ parseInt(patIdcard.substr(16,1)) % 2 == 1 ? '男':'女' }}
+              </div>
+            </div>
           </div>
           <span class="form-group__message bf" v-if="!$v.patIdcard.cd&&showCd">请输入正确的身份证号</span>
 
@@ -105,6 +111,7 @@
               flag:true,
               num:"",
               showAge:false,
+              showGender:false,
               nowAge:"",
               patientListLength:""
             }
@@ -118,11 +125,15 @@
        },
       watch:{
         patIdcard(){
-            if(this.patIdcard.substr(10) != ''){
-                this.nowAge = this.patIdcard.substr(6,4)
-                this.showAge = true
+
+            if(this.patIdcard.substr(16,1) != ''){
+              this.nowAge = this.patIdcard.substr(6,4)
+              this.showAge = true
+                console.log(this.patIdcard.substr(16),666)
+              this.showGender = true
             }else{
               this.showAge = false
+              this.showGender = false
             }
         }
       },

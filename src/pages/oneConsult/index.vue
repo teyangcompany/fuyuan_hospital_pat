@@ -238,6 +238,7 @@
       this.showToast = true
       this.$nextTick(() => {
            this.getInitData()
+           this.getInitChat()
       })
     },
     mounted() {
@@ -257,6 +258,19 @@
 
     },
     methods: {
+      getInitChat(){
+           http("smarthos.consult.message.list.page",{
+             token:localStorage.getItem('token'),
+             consultId:this.consultId,
+
+           }).then((data)=>{
+               if(data.code == 0){
+                 this.aboutReplyMessage = data.list
+               }else{
+                   weui.alert(data.msg)
+               }
+           })
+      },
       getInitData(){
         http("smarthos.consult.details", {
           token: localStorage.getItem('token'),
@@ -271,7 +285,6 @@
               this.attaList = data.obj.attaList;
               this.consultInfo = data.obj.consultInfo
               this.aboutUserInfo = data.obj
-              this.aboutReplyMessage = data.obj.consultMessage
               this.title = data.obj.userDocVo.docName
               this.waitImg = data.obj.userDocVo.docAvatar
 //              this.vipStatus = data.obj.followDocpat.vipStatus
@@ -430,8 +443,9 @@
           replyContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
+            console.log(data)
           if(data.code == 0){
-            this.getInitData()
+            this.getInitChat()
 
             console.log(data,11111)
 //          this.seeMore = false
