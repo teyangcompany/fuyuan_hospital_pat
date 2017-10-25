@@ -179,8 +179,6 @@
   import { consultPrice } from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
 
-
-
   export default {
     data() {
       return {

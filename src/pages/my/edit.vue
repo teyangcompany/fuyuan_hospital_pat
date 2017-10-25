@@ -6,9 +6,15 @@
     <div class="main" ref="main">
       <div class="weui-cells weui-cells_form">
         <div class="weui-cell">
-          <div class="weui-cell__hd"><label class="weui-label">qq</label></div>
+          <div class="weui-cell__hd"><label class="weui-label">身份证</label></div>
           <div class="weui-cell__bd">
-            <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入qq号">
+            <input class="weui-input" type="text" placeholder="请输入身份证号">
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+          <div class="weui-cell__bd">
+            <input class="weui-input" type="text" placeholder="请输入姓名">
           </div>
         </div>
       </div>
