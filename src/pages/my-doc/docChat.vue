@@ -1,6 +1,7 @@
 <template>
   <div class="chat">
-    <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" @on-docCard="goDocCard()" :showMy="vipStatus"></v-header>
+    <v-header :title="title" :rightTitle="rightTitle" :waitImg="waitImg" @on-docCard="goDocCard()"
+              :showMy="vipStatus"></v-header>
     <scroll class="conversation" :data="aboutReplyMessage" @click="goDown()" ref="conversation"
             :listen-scroll="listenScroll" :probe-type="probeType">
       <section class="conversationList" ref="slideList" @touchstart.prevent="hideKeyBoard()">
@@ -8,9 +9,12 @@
           <li v-for="item in aboutReplyMessage" ref="chatLi">
             <div class="other" :class="{mysay:item.msgSenderType == 'PAT'}">
               <img :src="aboutUserInfo.userPat.patAvatar" alt="" v-if="item.msgSenderType == 'PAT'">
-              <img :src="aboutUserInfo.userDocVO.docAvatar" alt="" v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar">
-              <img src="../../../static/img/doctorM.png" alt="" v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar == ''">
-              <img src="../../../static/img/doctorM.png" alt="" v-else-if="item.msgSenderType != 'PAT' && !(aboutUserInfo.userDocVO.docAvatar)">
+              <img :src="aboutUserInfo.userDocVO.docAvatar" alt=""
+                   v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar">
+              <img src="../../../static/img/doctorM.png" alt=""
+                   v-else-if="item.msgSenderType != 'PAT' && aboutUserInfo.userDocVO.docAvatar == ''">
+              <img src="../../../static/img/doctorM.png" alt=""
+                   v-else-if="item.msgSenderType != 'PAT' && !(aboutUserInfo.userDocVO.docAvatar)">
               <span class="msgTime">{{item.createTime | Todate}} </span>
               <div class="whatsay">
                 <!--<p class="msgTime">{{item.createTime | Todate}}</p>-->
@@ -22,7 +26,8 @@
                 <div class="whatsay_text" v-if="item.msgType == 'TEXT'">
                   {{ item.msgContent}}
                 </div>
-                <div class="whatsay_text articleSection" v-if="item.msgType == 'ARTICLE'" @click="goArticle(JSON.parse(item.msgContent).articleId)">
+                <div class="whatsay_text articleSection" v-if="item.msgType == 'ARTICLE'"
+                     @click="goArticle(JSON.parse(item.msgContent).articleId)">
                   <div>
                     <span>文章标题：{{ JSON.parse(item.msgContent).title }}</span><br/>
                     <span>作者： {{ JSON.parse(item.msgContent).author }}</span>
@@ -47,9 +52,9 @@
 
     </scroll>
     <footer v-if="vipStatus == false" class="payButton" @click="goDocCard()">
-       <div class="payWrap">
-           <button>咨询医生</button>
-       </div>
+      <div class="payWrap">
+        <button>咨询医生</button>
+      </div>
     </footer>
     <footer :class="{footshow:seeMore}" ref="footer" v-else>
       <section class="foot_top">
@@ -58,7 +63,8 @@
           <img src="../../../static/img/图片.png" alt="" @click="selectImg()">
         </div>
         <div class="chatInput">
-          <textarea type="text" id="forInput" maxlength="200" @blur="blured" @focus="focus()" ref="inputFocus" v-model="inputInfo" @input="whatInput"></textarea>
+          <textarea type="text" id="forInput" maxlength="200" @blur="blured" @focus="focus()" ref="inputFocus"
+                    v-model="inputInfo" @input="whatInput"></textarea>
         </div>
         <div class="chatSend">
           <div class="send" @click.prevent="send()" v-if="light">
@@ -84,12 +90,12 @@
   import header from '../../base/header'
   import Scroll from '../../base/scroll'
   import http from '../../lib/http'
-//  import dialog from '../../../base/dialog'
+  //  import dialog from '../../../base/dialog'
   import Toast from '../../base/toast'
   import {Todate} from '../../lib/filter'
   import mask from '../../base/mask.vue'
-//  import consultPatAva from "../../../utils/consultPatAva"
-
+  //  import consultPatAva from "../../../utils/consultPatAva"
+  import {jssdkMixin} from "../../lib/mixin"
 
   export default {
     data() {
@@ -97,7 +103,7 @@
         title: "",
         rightTitle: "医生名片",
         waitImg: "",
-        followId:"",
+        followId: "",
         seeMore: false,
         light: false,
         inputInfo: "",
@@ -107,7 +113,7 @@
         aboutReplyMessage: [],
         attachImg: "",
         sendContent: "",
-        attaFileUrl:"",
+        attaFileUrl: "",
 //        推送时得到的
         pushConsultId: "",
         returnInfo: "",
@@ -116,13 +122,14 @@
         showToast: false,
         messageLength: "",
         inter: "",
-        aboutUserInfo:"",
-        docId:"",
-        vipStatus:"",
-        showMask:false,
+        aboutUserInfo: "",
+        docId: "",
+        vipStatus: "",
+        showMask: false,
       }
     },
-    filters:{
+    mixins: [jssdkMixin],
+    filters: {
       Todate
     },
     components: {
@@ -130,7 +137,7 @@
 //      "VDialog": dialog,
       Scroll,
       Toast,
-      'VMask':mask
+      'VMask': mask
     },
     created() {
 
@@ -201,7 +208,6 @@
       let o = document.getElementsByClassName("chat")[0];
       let h = o.offsetHeight;  //高度
       let content = h
-      console.log(o)
       setTimeout(() => {
         if (this.$refs.slideList.offsetHeight > content - 10) {
 //                     console.log(that.$refs.slideList.offsetHeight)
@@ -210,18 +216,16 @@
         }
       }, 10)
     },
-    watch: {
-
-    },
+    watch: {},
     methods: {
-      goArticle(id){
-         this.$router.push({
-           path:"/articleDetail",
-           query:{articleId:id}
-         })
+      goArticle(id) {
+        this.$router.push({
+          path: "/articleDetail",
+          query: {articleId: id}
+        })
       },
-      goDocCard(){
-        this.$router.push('/docCard/'+this.docId)
+      goDocCard() {
+        this.$router.push('/docCard/' + this.docId)
       },
       goDown() {
         this.seeMore = false
@@ -246,22 +250,19 @@
         this.largePic = item.url
         this.showLargePic = true
       },
-      makeLarge(url) {
-        this.largePic = url
-        this.showMask = true
-        this.showLargePic = true
+      makeLarge(img) {
+        wx.previewImage({
+          current: img,
+          urls: [img]
+        })
       },
       makeSmall() {
         this.showLargePic = false
         this.showMask = false
       },
-
-
-
       closeAll() {
         this.showAllDialog = false
       },
-
       whatInput() {
         if (this.inputInfo.replace(/\s+/g, "") == '') {
           this.light = false
@@ -272,16 +273,11 @@
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
       },
-//      enterThing() {
-//        if (this.light) {
-//          this.send()
-//        }
-//      },
       send() {
         http("smarthos.follow.message.add", {
           token: localStorage.getItem('token'),
           followId: this.followId,
-          msgType:"TEXT",
+          msgType: "TEXT",
           msgContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
@@ -326,8 +322,8 @@
         reader.onload = function () {
           that.previewImg.push(this.result)
           http("smarthos.system.file.upload.image.base64", {
-            module:"FOLLOW",
-            fileType:"IMAGE",
+            module: "FOLLOW",
+            fileType: "IMAGE",
             base64: this.result,
             fileName: fileName
           }).then((data) => {
@@ -346,7 +342,7 @@
 //                location.reload()
 
 
-               http("smarthos.follow.message.detail.list", {
+                http("smarthos.follow.message.detail.list", {
                   token: localStorage.getItem('token'),
                   followId: that.followId,
                 }).then((data) => {
@@ -468,9 +464,11 @@
     /*margin-top: 10px;*/
     /*}*/
   }
-  .assistScroll{
-    height:65px;
+
+  .assistScroll {
+    height: 65px;
   }
+
   .conversationList {
     width: 100%;
     /*overflow: auto;*/
@@ -494,7 +492,7 @@
       .other {
         width: 690px;
         display: flex;
-        margin:0 auto;
+        margin: 0 auto;
         margin-top: 60px;
         justify-content: flex-start;
         /*padding-top: 25px;*/
@@ -508,10 +506,10 @@
           display: inline-block;
           /*margin-left: 30px;*/
         }
-        .msgTime{
+        .msgTime {
           position: absolute;
-          top:-45px;
-          left:265px;
+          top: -45px;
+          left: 265px;
           color: #999999;
         }
         .whatsay {
@@ -548,12 +546,12 @@
             line-height: 48px;
             color: #333333;
             word-break: break-all;
-            .checkMore{
+            .checkMore {
               height: 24px;
-              width:16px;
+              width: 16px;
             }
-            audio{
-              width:200px;
+            audio {
+              width: 200px;
             }
             img {
               border-radius: 0;
@@ -563,10 +561,10 @@
               height: 110px;
             }
           }
-          .articleSection{
-              display: flex;
+          .articleSection {
+            display: flex;
             align-items: center;
-            div{
+            div {
               margin-right: 40px;
             }
           }
@@ -576,12 +574,12 @@
         display: flex;
         margin-top: 60px;
         flex-direction: row-reverse;
-        .msgTime{
-          width:217px;
+        .msgTime {
+          width: 217px;
           /*text-align: right;*/
           position: absolute;
-          top:-45px;
-          right:265px;
+          top: -45px;
+          right: 265px;
           color: #999999;
         }
         .say-time {
@@ -605,16 +603,16 @@
             margin-right: 0.15rem;
             margin-left: 0;
             background: #9fe658;
-            .checkMore{
+            .checkMore {
               height: 24px;
-              width:16px;
+              width: 16px;
             }
           }
-          .articleSection{
+          .articleSection {
             display: flex;
             align-items: center;
-           div{
-               margin-right: 40px;
+            div {
+              margin-right: 40px;
             }
           }
         }
@@ -691,7 +689,7 @@
           font-size: 32px;
           outline: medium;
           word-break: break-all;
-          word-wrap:break-word;
+          word-wrap: break-word;
           border-radius: 7px;
           background-color: rgb(243, 243, 243);
           border-bottom: 1px solid #e0e0e0;
@@ -740,87 +738,44 @@
 </style>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!--<template>-->
-    <!--<div class="page">-->
-        <!--<app-header class="noflex" title="李冰" ref="header">-->
-            <!--<i slot="back"></i>-->
-            <!--&lt;!&ndash;<div class="right absolute" slot="right">找医生</div>&ndash;&gt;-->
-        <!--</app-header>-->
+<!--<div class="page">-->
+<!--<app-header class="noflex" title="李冰" ref="header">-->
+<!--<i slot="back"></i>-->
+<!--&lt;!&ndash;<div class="right absolute" slot="right">找医生</div>&ndash;&gt;-->
+<!--</app-header>-->
 
-            <!--<div class="wraps">-->
-                <!--<chat :chatObj="chatObj" :chatList='chatList' @send="send"></chat>-->
-            <!--</div>-->
+<!--<div class="wraps">-->
+<!--<chat :chatObj="chatObj" :chatList='chatList' @send="send"></chat>-->
+<!--</div>-->
 
 
-    <!--</div>-->
+<!--</div>-->
 <!--</template>-->
 <!--<script type="text/ecmascript-6">-->
-    <!--import appHeader from '../../components/app-header.vue'-->
-    <!--import chat from '../../business/chat.vue'-->
-    <!--import api from '../../lib/http'-->
-    <!--export default{-->
-        <!--components: {-->
-            <!--appHeader,-->
-            <!--chat,-->
-        <!--},-->
-        <!--data(){-->
-            <!--return {-->
-                <!--followId:"",-->
-                <!--token:localStorage.getItem('token'),-->
-                <!--chatObj:{},-->
-                <!--chatList:[],-->
-                <!--scrollHeight:'',-->
-                <!--msgContent:"",-->
-                <!--msgType:""-->
-            <!--}-->
-        <!--},-->
+<!--import appHeader from '../../components/app-header.vue'-->
+<!--import chat from '../../business/chat.vue'-->
+<!--import api from '../../lib/http'-->
+<!--export default{-->
+<!--components: {-->
+<!--appHeader,-->
+<!--chat,-->
+<!--},-->
+<!--data(){-->
+<!--return {-->
+<!--followId:"",-->
+<!--token:localStorage.getItem('token'),-->
+<!--chatObj:{},-->
+<!--chatList:[],-->
+<!--scrollHeight:'',-->
+<!--msgContent:"",-->
+<!--msgType:""-->
+<!--}-->
+<!--},-->
 
-        <!--mounted(){-->
-            <!--this.followId = this.$route.params.id;-->
-            <!--this.getData();-->
+<!--mounted(){-->
+<!--this.followId = this.$route.params.id;-->
+<!--this.getData();-->
 <!--//            window.addEventListener('resize', function () {-->
 <!--//                if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {-->
 <!--//                    window.setTimeout(function () {-->
@@ -828,70 +783,70 @@
 <!--//                    }, 800);-->
 <!--//                }-->
 <!--//            });-->
-        <!--},-->
-        <!--methods:{-->
-            <!--send(value){-->
-                <!--console.log(value,33333);-->
-                <!--if(value.url){-->
-                    <!--this.msgContent = value.url;-->
-                    <!--this.msgType = value.msgType;-->
-                <!--}else {-->
-                    <!--this.msgContent = value;-->
-                    <!--this.msgType = "TEXT";-->
-                <!--}-->
-                <!--api('smarthos.follow.message.add',{-->
-                    <!--"token": this.token,-->
-                    <!--"followId": this.followId,-->
-                    <!--"msgContent":this.msgContent,-->
-                    <!--"msgType": this.msgType-->
-                <!--}).then(res=>{-->
-                    <!--console.log(res,444444);-->
-                    <!--if(res.succ){-->
-                        <!--this.getData()-->
-                    <!--}else {-->
-                        <!--alert(res.msg)-->
-                    <!--}-->
-                <!--})-->
-            <!--},-->
-            <!--getData(){-->
-                <!--api('smarthos.follow.message.detail.list',{-->
-                    <!--token:this.token,-->
-                    <!--followId:this.followId-->
-                <!--}).then(res=>{-->
-                    <!--console.log(res,55555);-->
-                    <!--if(res.succ){-->
-                        <!--this.chatObj = res.obj;-->
-                        <!--this.chatList = res.list;-->
-                    <!--}else {-->
-                        <!--alert(res.msg)-->
-                    <!--}-->
-                <!--})-->
-            <!--},-->
-            <!--over(){-->
-                <!--this.$router.push({-->
-                    <!--name:'myPatient'-->
-                <!--})-->
-            <!--},-->
+<!--},-->
+<!--methods:{-->
+<!--send(value){-->
+<!--console.log(value,33333);-->
+<!--if(value.url){-->
+<!--this.msgContent = value.url;-->
+<!--this.msgType = value.msgType;-->
+<!--}else {-->
+<!--this.msgContent = value;-->
+<!--this.msgType = "TEXT";-->
+<!--}-->
+<!--api('smarthos.follow.message.add',{-->
+<!--"token": this.token,-->
+<!--"followId": this.followId,-->
+<!--"msgContent":this.msgContent,-->
+<!--"msgType": this.msgType-->
+<!--}).then(res=>{-->
+<!--console.log(res,444444);-->
+<!--if(res.succ){-->
+<!--this.getData()-->
+<!--}else {-->
+<!--alert(res.msg)-->
+<!--}-->
+<!--})-->
+<!--},-->
+<!--getData(){-->
+<!--api('smarthos.follow.message.detail.list',{-->
+<!--token:this.token,-->
+<!--followId:this.followId-->
+<!--}).then(res=>{-->
+<!--console.log(res,55555);-->
+<!--if(res.succ){-->
+<!--this.chatObj = res.obj;-->
+<!--this.chatList = res.list;-->
+<!--}else {-->
+<!--alert(res.msg)-->
+<!--}-->
+<!--})-->
+<!--},-->
+<!--over(){-->
+<!--this.$router.push({-->
+<!--name:'myPatient'-->
+<!--})-->
+<!--},-->
 
-        <!--}-->
-    <!--}-->
+<!--}-->
+<!--}-->
 <!--</script>-->
 <!--<style scoped  lang='scss'>-->
-    <!--@import '../../common/common.scss';-->
+<!--@import '../../common/common.scss';-->
 <!--.page{-->
-    <!--display: flex;-->
-    <!--flex-direction: column;-->
-    <!--overflow: hidden;-->
-    <!--flex: 1;-->
+<!--display: flex;-->
+<!--flex-direction: column;-->
+<!--overflow: hidden;-->
+<!--flex: 1;-->
 <!--}-->
-    <!--.wraps{-->
-        <!--display: flex;-->
-        <!--flex: 1;-->
-        <!--overflow: scroll;-->
-    <!--}-->
-    <!--.step {-->
-        <!--padding-right: 5px;-->
-        <!--color: #3CC51F;-->
-        <!--box-sizing: border-box;-->
-    <!--}-->
+<!--.wraps{-->
+<!--display: flex;-->
+<!--flex: 1;-->
+<!--overflow: scroll;-->
+<!--}-->
+<!--.step {-->
+<!--padding-right: 5px;-->
+<!--color: #3CC51F;-->
+<!--box-sizing: border-box;-->
+<!--}-->
 <!--</style>-->
