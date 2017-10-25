@@ -9,12 +9,12 @@
                 <div class="weui-cells">
                     <a class="weui-cell weui-cell_access" href="javascript:;">
                         <div class="weui-cell__bd">
-                            <router-link tag="p" to="/my/archives">
+                            <p>
                                 <span  class="bf">患者资料： {{consultInfo.consulterName}}
                                     {{consultInfo.consulterGender='M'?'男':'女'}}
                                     {{consultInfo.consulterAge}}
                                 </span>
-                            </router-link>
+                            </p>
                         </div>
                         <!--<div class="weui-cell__ft bfc"></div>-->
                     </a>
@@ -195,6 +195,7 @@
         mounted(){
             this.consultId = this.$route.params.id;
             this.getData()
+            this.getInitChat()
             this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
             this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
             this.scroll = new BScroll(this.$refs.Scroll,{
@@ -285,6 +286,19 @@
                 console.log(data)
               })
             },
+            getInitChat(){
+                  api("smarthos.consult.message.list.page",{
+                    token:localStorage.getItem('token'),
+                    consultId:this.consultId,
+                  }).then((data)=>{
+                      if(data.code == 0){
+                        this.arr = data.list
+                        console.log(data)
+                      }else{
+                        weui.alert(data.msg)
+                      }
+                  })
+            },
             getData(){
               api('smarthos.consult.details',{
                   token:this.token,
@@ -326,7 +340,8 @@
                 }).then(res=>{
                     if(res.succ){
                         console.log(res,598976);
-                        this.getData();
+//                        this.getData();
+                        this.getInitChat()
                         this.$set(this.$data,'clean',!this.clean);
                         this.text=''
                     }else {

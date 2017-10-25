@@ -148,14 +148,14 @@
                 this.textLength = this.text.length
                 if (this.textLength > 500) {
                     document.getElementById("myArea").value = this.text.substr(0, 500)
-                    weui.alert("问诊内容不能超过500个字")
+                    weui.alert("病情资料不能超过500个字")
                 }
             },
             submit() {
                 if (this.illDescribe == '') {
-                    weui.alert("问诊内容不可为空")
+                    weui.alert("病情资料不可为空")
                 } else if (this.textLength > 500) {
-                    weui.alert("问诊内容不能超过500个字")
+                    weui.alert("病情资料不能超过500个字")
                 } else {
                     console.log(this.picList, 88888);
                     for (var i = 0; i < this.picList.length; i++) {
@@ -265,7 +265,7 @@
                 this.textLength = this.text.length
                 if (this.textLength > 500) {
                     document.getElementById("myArea").value = this.text.substr(0, 500)
-                    weui.alert("问诊内容不能超过500个字")
+                    weui.alert("病情资料不能超过500个字")
                 }
             }
         }

@@ -48,5 +48,8 @@ export default[
   },
 ]
 },
-
+  {
+    path:"/share",
+    component:()=>import('../pages/docCard/share.vue')
+  }
 ]

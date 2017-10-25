@@ -25,7 +25,7 @@
                     <div class="weui-cell__bd">
                         <p class="mfb">就诊人</p>
                     </div>
-                    <div class="weui-cell__ft mfb">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
+                    <div class="weui-cell__ft mfb" v-if="userList.length != 0">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
                 </a>
 
             </div>
@@ -65,7 +65,7 @@
         </div>
         <sel-patient ref="patient" @on-addPatient="addPatient">
             <div  slot="pat">
-                <div class="myPat bor" v-for="(item,index) of userList" @click="getUser(item,index)">
+                <div class="myPat bor" v-for="(item,index) in userList" @click="getUser(item,index)">
                     {{item.commpatName}}
                 </div>
             </div>
@@ -114,6 +114,10 @@
         },
         create(){
             this.scrollHeight = window.innerHeight-45
+
+        },
+        created(){
+          this.getData();
         },
         mounted(){
             window.addEventListener('resize', function () {
@@ -137,7 +141,7 @@
                 this.deptId = sessionStorage.getItem('deptId')
             }
 
-            this.getData();
+
 
         },
         methods:{
@@ -200,7 +204,8 @@
                      this.userSex =  res.list[0].commpatGender
                      this.userAge =  res.list[0].commpatIdcard
                      this.userObj = res.list[0]
-                      this.userList = res.list;
+                     this.userList = res.list;
+                     console.log(this.userList,777)
 
                   }else {
                       alert(res.msg)

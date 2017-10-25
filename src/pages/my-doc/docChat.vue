@@ -189,7 +189,11 @@
             console.log(data)
             console.log("上面是错误的data")
           } else {
-            weui.alert(data.msg)
+              if(data.msg == '医患关系不存在'){
+
+              }else{
+                weui.alert(data.msg)
+              }
           }
 //          console.log(this.attachImg)
         })

@@ -31,6 +31,12 @@
                 </ul>
             </left-del>
         </div>
+      <v-dialog :dialogTitle="dialogTitle"
+                :dialogMain="dialogMain"
+                :dialogLeftFoot="dialogLeftFoot"
+                :dialogRightFoot="dialogRightFoot"
+                v-if="showDialog"
+                @on-cancel="cancelDialog" @on-download="confirmDelete"></v-dialog>
     </div>
 </template>
 
@@ -39,19 +45,27 @@
     import {mainHeightMixin} from "../../../lib/mixin"
     import LeftDel from "../../../base/left-del.vue"
     import api from '../../../lib/http'
+    import dialog from '../../../base/dialog.vue'
 
     export default {
         mixins: [mainHeightMixin],
         data() {
             return {
                 token:localStorage.getItem('token'),
-                list:[]
+                list:[],
+              patId:"",
+              showDialog:false,
+              dialogTitle:"",
+              dialogMain:"确定删除此就诊人",
+              dialogLeftFoot:"取消",
+              dialogRightFoot:"确定",
             };
         },
         computed: {},
         components: {
             AppHeader,
-            LeftDel
+            LeftDel,
+            "VDialog":dialog
         },
         mounted() {
          this.getData()
@@ -91,22 +105,27 @@
                     }
                 })
             },
+            cancelDialog(){
+              this.showDialog = false
+            },
+            confirmDelete(){
+                this.showDialog = false
+                api('smarthos.user.commpat.delete',{
+                  token:this.token,
+                  commpatId:this.patId
+                }).then(res=>{
+                  console.log(res,66666);
+                  if(res.succ){
+                    this.$weui.toast('删除成功',3000);
+                    this.getData()
+                  }else {
+                    this.$weui.alert(res.msg)
+                  }
+                })
+            },
             del(patId){
-                if(confirm('确认删除?')){
-                    api('smarthos.user.commpat.delete',{
-                        token:this.token,
-                        commpatId:patId
-                    }).then(res=>{
-                        console.log(res,66666);
-                        if(res.succ){
-                           this.$weui.toast('删除成功',3000);
-                            this.getData()
-                        }else {
-                            this.$weui.alert(res.msg)
-                        }
-                    })
-                }
-
+                this.showDialog = true
+                this.patId = patId
             },
         }
     };

@@ -36,7 +36,8 @@
            <div class="answerList" v-for="item in arr" ref="lastItem">
              <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
                <div class="docImg">
-                 <img :src="item.userDocVo.docAvatar" alt="">
+                 <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
+                 <img src="../../../../../static/img/doctorM.png" alt="" v-if="!(item.userDocVo.docAvatar) || item.userDocVo.docAvatar == ''">
                </div>
                <div class="docMsg">
                  <p>
@@ -49,8 +50,11 @@
                </div>
              </div>
              <div v-else class="patAnswer">
-               <div class="docImg">
-                 <img :src="item.userPat.patAvatar" alt="">
+               <div class="docImg" v-if="item.userPat.patAvatar">
+                 <img :src="item.userPat.patAvatar" alt="" >
+               </div>
+               <div class="docImg" v-else>
+                 <img src="../../../../../static/img/pat.f.jpg" alt="">
                </div>
                <div class="docMsg">
                  <p>
@@ -124,6 +128,7 @@
       created(){
           this.consultId = this.$route.query.id
           console.log(this.consultId)
+          this.getInitChat()
           http("smarthos.consult.details",{
             token:tokenCache.get(),
             consultId:this.consultId
@@ -131,7 +136,7 @@
               if(data.code == 0){
                 console.log(data)
                 this.detailInfo = data.obj
-                this.arr =  data.obj.consultMessage
+//                this.arr =  data.obj.consultMessage
               }else{
                   weui.alert(data.msg)
               }
@@ -139,6 +144,19 @@
           })
       },
       methods:{
+        getInitChat(){
+             http("smarthos.consult.message.list.page",{
+                  token:localStorage.getItem('token'),
+                  consultId:this.consultId
+             }).then((data)=>{
+                 if(data.code == 0){
+                   this.arr =  data.list
+                 }else{
+                     weui.alert(data.msg)
+                 }
+//                 console.log(data,444)
+             })
+        },
         goDocCard(id){
           console.log(id,88888)
           this.$router.push('/docCard/'+id)

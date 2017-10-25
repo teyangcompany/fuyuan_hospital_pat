@@ -58,6 +58,7 @@
 //           useTransition:true,
            click:true
          })
+         console.log(this.myScroll)
       },
       check(index){
         this.$emit("activate",index);
@@ -86,9 +87,11 @@
         this.path = this.$route.path
       },
       patList(){
+        this.$nextTick(()=>{
           setTimeout(()=>{
-              this._initPatient()
-          },20)
+            this._initPatient()
+          },200)
+        })
       }
     }
   })
@@ -125,7 +128,6 @@
       }
     }
     div#wrapper{
-      /*height:10rem;*/
       /*width:100%;*/
       flex: 1 1 auto;
       /*overflow:hidden;*/

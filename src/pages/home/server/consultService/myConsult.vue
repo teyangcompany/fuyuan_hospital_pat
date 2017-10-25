@@ -15,21 +15,21 @@
         <div class="tab-item" :class="{choose_type:sortBy == 'waitPay'}">
           <div class="tab_item_container" @click="chooseType('waitPay')">
             <div class="tab_item_border">
-              <span>待付款{{ waitPayLength }}</span>
+              <span>待付款 {{ waitPayLength }}</span>
             </div>
           </div>
         </div>
         <div class="tab-item" :class="{choose_type:sortBy == 'doing'}">
           <div class="tab_item_container" @click="chooseType('doing')">
             <div class="tab_item_border">
-              <span>进行中{{ doingLength }}</span>
+              <span>进行中 {{ doingLength }}</span>
             </div>
           </div>
         </div>
         <div class="tab-item" :class="{choose_type:sortBy == 'waitComment'}">
           <div class="tab_item_container" @click="chooseType('waitComment')">
             <div class="tab_item_border">
-              <span>待评价{{ waitCommentLength }}</span>
+              <span>待评价 {{ waitCommentLength }}</span>
             </div>
           </div>
         </div>
@@ -77,10 +77,11 @@
           </li>
         </ul>
       </div>
-      <div class="emptyHistory" v-else>
+      <div class="emptyHistory" v-else-if="aboutConsult.length == 0 && requested">
             <span>暂无咨询记录</span>
       </div>
     </div>
+    <toast v-if="showToast"></toast>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -89,6 +90,7 @@
   import { consultPrice } from '../../../../lib/filter'
   import {tokenCache} from '../../../../lib/cache'
   import {Getdate,goodTime} from '../../../../lib/filter'
+  import Toast from '../../../../base/toast.vue'
   export default{
     data(){
       return{
@@ -96,7 +98,9 @@
           sortBy:"all",
           waitPayLength:"",
           doingLength:"",
-          waitCommentLength:""
+          waitCommentLength:"",
+          showToast:false,
+          requested:false,
       }
     },
     filters:{
@@ -106,10 +110,13 @@
     },
     created(){
          this.chooseType(this.sortBy)
+         this.showToast = true
          http("smarthos.consult.my.list.page",{
            token:tokenCache.get()
          }).then((data)=>{
              console.log(data)
+           this.showToast = false
+            this.requested = true
              if(data.code == 0){
                this.aboutConsult = data.list
              }else{
@@ -152,6 +159,9 @@
     },
     mounted() {
 //      this.getDate()
+    },
+    components:{
+      Toast
     },
     methods: {
       goDetail(type, id) {

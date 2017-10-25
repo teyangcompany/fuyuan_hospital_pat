@@ -136,7 +136,7 @@
                 this.bind()
               }
             } else {
-              weui.alert(data.msg)
+              weui.alert(res.msg)
             }
           })
         },
@@ -157,7 +157,7 @@
 
             }
           } else {
-            weui.alert(data.msg)
+            weui.alert(res.msg)
 //>>>>>>> 19a60ae2a7506d67891bb50b1660a1d4c127db1a
           }
         },

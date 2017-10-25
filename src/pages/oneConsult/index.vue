@@ -172,10 +172,12 @@
   import Toast from '../../base/toast'
   import {Todate, goodTime} from '../../lib/filter'
   import mask from '../../base/mask.vue'
+
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
+
+//  import {mainHeightMixin} from '../../lib/mixin'
   import { consultPrice } from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
-
 
   export default {
     data() {
@@ -241,7 +243,9 @@
       this.consultId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
-        this.getInitData()
+           this.getInitData()
+           this.getInitChat()
+
       })
     },
     mounted() {
@@ -259,6 +263,22 @@
     },
     watch: {},
     methods: {
+//<<<<<<< HEAD
+      getInitChat(){
+           http("smarthos.consult.message.list.page",{
+             token:localStorage.getItem('token'),
+             consultId:this.consultId,
+
+           }).then((data)=>{
+               if(data.code == 0){
+                 this.aboutReplyMessage = data.list
+               }else{
+                   weui.alert(data.msg)
+               }
+           })
+      },
+//      getInitData(){
+//=======
       bigImg(img) {
         let urls = [];
         this.attaList.forEach((res) => {
@@ -270,6 +290,7 @@
         })
       },
       getInitData() {
+//>>>>>>> 1e550cd818021dceb1bcdbecb8a32a9fa3dcc88f
         http("smarthos.consult.details", {
           token: localStorage.getItem('token'),
           consultId: this.consultId
@@ -283,7 +304,6 @@
               this.attaList = data.obj.attaList;
               this.consultInfo = data.obj.consultInfo
               this.aboutUserInfo = data.obj
-              this.aboutReplyMessage = data.obj.consultMessage
               this.title = data.obj.userDocVo.docName
               this.waitImg = data.obj.userDocVo.docAvatar
 //              this.vipStatus = data.obj.followDocpat.vipStatus
@@ -438,8 +458,11 @@
           replyContent: this.inputInfo,
 //          attaIdList:this.attaId
         }).then((data) => {
-          if (data.code == 0) {
-            this.getInitData()
+
+            console.log(data)
+          if(data.code == 0){
+            this.getInitChat()
+
 
             console.log(data, 11111)
 //          this.seeMore = false
