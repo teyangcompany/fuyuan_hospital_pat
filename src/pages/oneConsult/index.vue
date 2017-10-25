@@ -172,14 +172,10 @@
   import Toast from '../../base/toast'
   import {Todate, goodTime} from '../../lib/filter'
   import mask from '../../base/mask.vue'
-<<<<<<< HEAD
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
-=======
-  import {mainHeightMixin} from '../../lib/mixin'
   import { consultPrice } from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
 
->>>>>>> c02bd91ccd2d8288132c5e0f50490bcb7cce5811
 
   export default {
     data() {
