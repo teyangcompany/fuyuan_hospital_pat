@@ -240,13 +240,14 @@
           </div>
         </div>
       </scroll>
-      <div v-else class="emptyHistory">
+      <div v-else-if=" isComplete && followList.length == 0" class="emptyHistory">
         <span>暂未搜索到相关结果</span>
       </div>
       <div class="directConsult border-1px-top" @click="goOffice">
-        <p>直接咨询科室</p>
+        <p> <span>直接咨询科室</span> <span>{{ roomPrice | consultPrice }}元</span></p>
       </div>
     </div>
+    <toast v-if="showToast"></toast>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -254,6 +255,7 @@
   import Scroll from '../../../../base/scroll'
   import {tokenCache} from '../../../../lib/cache'
   import http from '../../../../lib/http'
+  import Toast from '../../../../base/toast.vue'
   import { consultPrice } from '../../../../lib/filter'
   export default{
     data(){
@@ -277,6 +279,9 @@
         orderByScore:false,
         orderByNum:false,
         orderByDocTitle:false,
+        showToast:false,
+        isComplete:false,
+        roomPrice:"",
         allRoom:[
           {
             deptName:"全部科室",
@@ -288,11 +293,14 @@
       consultPrice
     },
     created(){
+        this.showToast = true
          http("smarthos.user.doc.search",{
            pageSize:10,
            pageNum:1
          }).then((data)=>{
            this.loadingStatus = false
+           this.showToast = false
+           this.isComplete = true
              if(data.code == 0){
                  this.followList = data.list
              }else{
@@ -320,6 +328,7 @@
              }
 
          })
+         this.getPrice()
     },
     mounted(){
 //           this.$nextTick(() => {
@@ -384,8 +393,22 @@
           }
         })
       },
+      getPrice(){
+           http("smarthos.consult.platform.price",{
+               token:localStorage.getItem("token"),
+           }).then((data)=>{
+               if(data.code == 0){
+                   this.roomPrice = data.obj
+               }else{
+                   weui.alert(data.msg)
+               }
+           })
+      },
       goOffice(){
-        this.$router.push('/officeConsult')
+        this.$router.push({
+          path:'/officeConsult',
+          query:{roomPrice:this.roomPrice}
+        })
       },
       searchList(){
         this.sortBy = ''
@@ -506,7 +529,8 @@
       }
     },
     components:{
-      Scroll
+      Scroll,
+      Toast
     },
     watch:{
       searchContent(){

@@ -10,10 +10,10 @@
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
               <p>
-                                <span class="bf">患者资料： {{consultInfo.consulterName}}
-                                    {{consultInfo.consulterGender == 'M' ? '男' : '女'}}
-                                    {{consultInfo.consulterAge}}
-                                </span>
+                <span class="bf">患者资料： {{consultInfo.consulterName}}
+                    {{consultInfo.consulterGender == 'M' ? '男' : '女'}}
+                    {{consultInfo.consulterAge}}
+                </span>
               </p>
             </div>
             <!--<div class="weui-cell__ft bfc"></div>-->
@@ -75,7 +75,7 @@
                   <audio autoplay="autoplay" controls="controls" :src="item.consultMessage.replyContent" alt=""></audio>
                 </div>
                 <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'PIC'"
-                     @click="makeLarge(item.msgContent)">
+                     @click="makeLarge(item.consultMessage.replyContent)">
                   <img :src="item.consultMessage.replyContent" alt="">
                 </div>
               </div>
@@ -268,7 +268,7 @@
            http("smarthos.consult.message.list.page",{
              token:localStorage.getItem('token'),
              consultId:this.consultId,
-
+             pageSize:1000
            }).then((data)=>{
                console.log(data,333)
                if(data.code == 0){
@@ -281,6 +281,7 @@
 //      getInitData(){
 //=======
       bigImg(img) {
+         console.log("12")
         let urls = [];
         this.attaList.forEach((res) => {
           urls.push(res.attaFileUrl)
@@ -300,6 +301,7 @@
 //          this.messageLength = data.obj.messageList.length
           this.showToast = false
           if (data.code == 0) {
+              console.log("成功")
             this.$nextTick(() => {
               this.userPat = data.obj.userPat;
               this.attaList = data.obj.attaList;
@@ -402,8 +404,8 @@
       },
       makeLarge(url) {
         wx.previewImage({
-          current: img,
-          urls: [img]
+          current: url,
+          urls: [url]
         })
         /*this.largePic = url
         this.showMask = true
@@ -525,8 +527,9 @@
             }).then((data) => {
 
               console.log(data, 666)
-//              location.reload()
+              location.reload()
               if (data.code == 0) {
+                that.getInitData()
                 that.getInitData()
               } else {
                 weui.alert(data.msg)

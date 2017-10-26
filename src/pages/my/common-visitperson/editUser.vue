@@ -74,13 +74,13 @@
             </div>
             <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
-          <div class="weui-cell" @click="toggleRelation">
+          <div class="weui-cell relation" @click="toggleRelation">
             <div class="weui-cell__hd"><label class="weui-label bf relationShip">与本人的关系</label></div>
             <div class="weui-cell__bd" v-if="itemInfo.relationship">
-                 <p class="relationRight">{{ itemInfo.relationship }}</p>
+                 {{ itemInfo.relationship }}
             </div>
             <div class="weui-cell__bd" v-else>
-              <p class="relationRight">{{ compatInfo[clickIndex] }}</p>
+                 {{ compatInfo[clickIndex] }}
             </div>
             <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
@@ -299,7 +299,7 @@
     width:130px;/*no*/
   }
   .relationRight{
-    width:400px;
+    width:300px;
     text-align: right;
   }
   .relationInput{

@@ -34,7 +34,7 @@
                 <div class="weui-cell__bd">
                     <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
                 </div>
-                <img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">
+                <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
             </div>
 
             <div class="weui-cells__title">病情资料</div>
@@ -109,6 +109,7 @@
                 textLength:0,
                 text:"",
                 pickedIndex:0,
+                roomPrice:"",
                 token:localStorage.getItem('token')
             }
         },
@@ -118,6 +119,7 @@
         },
         created(){
           this.getData();
+          this.roomPrice = this.$route.query.roomPrice
         },
         mounted(){
             window.addEventListener('resize', function () {
@@ -175,7 +177,14 @@
                   }).then(res=>{
                     console.log(res,3535535);
                     if(res.succ){
-                      this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
+                      if(this.roomPrice == 0){
+                        this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
+                      }else{
+                         this.$router.push({
+                           path: 'pay/' + res.obj.consultInfo.id,
+                           query: {roomPrice: this.roomPrice}
+                         })
+                      }
                     }else {
                       alert(res.msg)
                     }

@@ -35,14 +35,14 @@
                         <span class="bf">{{consultInfo.consultContent}}</span>
                     </div>
                     <div class="patImg">
-                        <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @click="bigImg(item.attaFileUrl)">
+                        <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @touchend.prevent="bigImg(item.attaFileUrl)">
                     </div>
                     <div class="createDiv">
                         <span class="mfc create">
                           <img :src="userPat.patAvatar" alt="" v-if="userPat.patAvatar">
                           <img src="../../../static/img/pat.f.jpg" alt="" v-else-if="!(userPat.patAvatar) && userPat.patGender != 'M'">
                           <img src="../../../static/img/pat.m.jpg" alt="" v-else>
-                          <span v-if="consultInfo.consulterName">{{consultInfo.consulterName.substr(0,1)}}** </span>
+                          <span v-if="consultInfo.consulterName">{{consultInfo.consulterName}}</span>
                         </span>
                         <span class="date">{{consultInfo.createTime | goodTime}} |
                           <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="docMsg">
                             <p>
-                                <span class="mf" v-if="item.userPat.patName">{{item.userPat.patName.substr(0,1)}}**</span>
+                                <span class="mf" v-if="item.userPat.patName">{{item.userPat.patName}}</span>
                                 <!--<span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>-->
                             </p>
                             <p>
@@ -88,7 +88,7 @@
                         </span>
                     </div>
                     <div v-else-if="item.consultMessage.replyContentType=='PIC'">
-                        <img class="replyImg" :src="item.consultMessage.replyContent" alt="">
+                        <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeLarge(item.consultMessage.replyContent)">
                     </div>
                     <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
                         <span>语音需要转换格式</span>
@@ -218,12 +218,28 @@
         },
         methods:{
             //显示大图
-            bigImg(url){
-                this.$weui.gallery(url, {
-                    onDelete: function(){
-
-                    }
-                });
+            bigImg(img){
+                console.log("12")
+              let urls = [];
+              this.attaList.forEach((res) => {
+                urls.push(res.attaFileUrl)
+              });
+              wx.previewImage({
+                current: img,
+                urls: urls
+              })
+//                this.$weui.gallery(url, {
+//                    onDelete: function(){
+//
+//                    }
+//                });
+            },
+//            一张一张的显示大图
+            makeLarge(url){
+              wx.previewImage({
+                current: url,
+                urls: [url]
+              })
             },
             //上传图片
             upLoad(e){
@@ -302,6 +318,7 @@
                   api("smarthos.consult.message.list.page",{
                     token:localStorage.getItem('token'),
                     consultId:this.consultId,
+                    pageSize:1000
                   }).then((data)=>{
                       if(data.code == 0){
                         this.arr = data.list
@@ -656,22 +673,22 @@
 
     }
     .robot-room-wirte .send-btn {
-        width: 76px;
+        width: 86px;
         height: 64px;
         line-height: 64px;
         box-sizing: border-box;
-        background: greenyellow;
+        background: #3d9bff;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -webkit-appearance: none;
         text-align: center;
         text-decoration: none;
         border-radius: 10px;
-        color: #454545;
+        color: white;
         display: block;
         font-size: 28px;
         min-width: 100px;
         max-width: 100px;
-        background: greenyellow;
+        background: #3d9bff;
         border: 1px solid #ddd;
         box-sizing: border-box;
         outline: none;

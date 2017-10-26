@@ -327,12 +327,14 @@
       },
       //就诊卡检验
       recordCheck(){
+          this.showToast = true
         http("smarthos.user.commpat.record.check",{
           token:localStorage.getItem('token'),
           commpatId:this.compatInfo[this.index].id,
           bookHosId:this.hosid
         }).then((data)=>{
           console.log(data)
+          this.showToast = false
             if(data.code == 0){
                  if(data.obj == 'needCreate'){
                      this.showCreateDialog = true

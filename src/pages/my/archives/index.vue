@@ -49,7 +49,7 @@
               <ol :class="['img',item.attaList?'img'+item.attaList.length:'']">
                 <li v-for="imgSrc in item.attaList">
                   <img @load="$refs.wrapper.refresh()"
-                       @click="makeLarge(imgSrc)"
+                       @click="makeLarge(imgSrc.attaFileUrl)"
                        :src="imgSrc.attaFileUrl"
                        alt="">
                 </li>

@@ -140,21 +140,109 @@
       'VMask': mask
     },
     created() {
-
       this.listenScroll = true
       this.probeType = 3
-
       this.followId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
+           this.getInitChat()
+      })
+
+    },
+    mounted() {
+      let o = document.getElementsByClassName("chat")[0];
+      let h = o.offsetHeight;  //高度
+      let content = h
+      setTimeout(() => {
+        if (this.$refs.slideList.offsetHeight > content - 10) {
+//                     console.log(that.$refs.slideList.offsetHeight)
+          console.log("医生回复你了")
+          this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+        }
+      }, 10)
+
+      setInterval(()=>{
         http("smarthos.follow.message.detail.list", {
           token: localStorage.getItem('token'),
-          followId: this.followId
+          followId: this.followId,
+          pageSize:1000
         }).then((data) => {
           console.log(data)
-//          this.messageLength = data.obj.messageList.length
           this.showToast = false
           if (data.code == 0) {
+             if(this.messageLength != data.list.length){
+               this.$nextTick(() => {
+                 this.aboutUserInfo = data.obj
+                 this.aboutReplyMessage = data.list
+                 this.title = data.obj.userDocVO.docName
+                 this.waitImg = data.obj.userDocVO.docAvatar
+                 this.vipStatus = data.obj.followDocpat.vipStatus
+
+                 this.docId = data.obj.userDocVO.id
+//              this.attachImg = data.obj.attaList
+//              this.title = this.aboutConsult.docName
+//              this.waitImg = this.aboutConsult.docAvatar ? this.aboutConsult.docAvatar : './static/img/doctor.m.png'
+
+                 let o = document.getElementsByClassName("chat")[0];
+                 let h = o.offsetHeight;  //高度
+                 let content = h
+                 console.log(o)
+
+
+                 setTimeout(() => {
+                   if (this.$refs.slideList.offsetHeight > content - 10) {
+                     this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
+                     console.log(this.$refs.slideList.offsetHeight)
+                     console.log(content)
+                   }
+                 }, 300)
+                 this.messageLength = data.list.length
+
+               })
+             }
+
+
+          } else if (!(data.msg)) {
+            weui.alert("网络错误，请稍后重试")
+            console.log("错误的data")
+            console.log(data)
+            console.log("上面是错误的data")
+          } else {
+            if(data.msg == '医患关系不存在'){
+
+            }else{
+              weui.alert(data.msg)
+            }
+          }
+        })
+      },3000)
+
+
+
+
+    },
+    watch: {
+      light(){
+        clearInterval(this.inter)
+      }
+    },
+    methods: {
+      goArticle(id) {
+        this.$router.push({
+          path: "/articleDetail",
+          query: {articleId: id}
+        })
+      },
+      getInitChat(){
+        http("smarthos.follow.message.detail.list", {
+          token: localStorage.getItem('token'),
+          followId: this.followId,
+          pageSize:1000
+        }).then((data) => {
+          console.log(data)
+          this.showToast = false
+          if (data.code == 0) {
+            this.messageLength = data.list.length
             this.$nextTick(() => {
               this.aboutUserInfo = data.obj
               this.aboutReplyMessage = data.list
@@ -189,39 +277,12 @@
             console.log(data)
             console.log("上面是错误的data")
           } else {
-              if(data.msg == '医患关系不存在'){
+            if(data.msg == '医患关系不存在'){
 
-              }else{
-                weui.alert(data.msg)
-              }
+            }else{
+              weui.alert(data.msg)
+            }
           }
-//          console.log(this.attachImg)
-        })
-      })
-//      api("nethos.pat.info.get", {
-//        token: tokenCache.get()
-//      }).then((data) => {
-//        console.log(data)
-//      })
-    },
-    mounted() {
-      let o = document.getElementsByClassName("chat")[0];
-      let h = o.offsetHeight;  //高度
-      let content = h
-      setTimeout(() => {
-        if (this.$refs.slideList.offsetHeight > content - 10) {
-//                     console.log(that.$refs.slideList.offsetHeight)
-          console.log("医生回复你了")
-          this.$refs.conversation.scrollTo(0, content - this.$refs.slideList.offsetHeight - 80)
-        }
-      }, 10)
-    },
-    watch: {},
-    methods: {
-      goArticle(id) {
-        this.$router.push({
-          path: "/articleDetail",
-          query: {articleId: id}
         })
       },
       goDocCard() {
@@ -270,6 +331,9 @@
           this.light = true
         }
         this.inter = setInterval(() => {
+          if(this && !this._isDestroyed) { //_isDestroyed 组件是否被销毁
+            return;
+          }
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
       },
@@ -403,6 +467,9 @@
 
 //
         this.inter = setInterval(() => {
+          if(this && !this._isDestroyed) { //_isDestroyed 组件是否被销毁
+            return;
+          }
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
 
@@ -451,7 +518,7 @@
     /*height: 500px;*/
     position: absolute;
     top: 88px;
-    bottom: 80px;
+    bottom: 100px;
     flex: 1;
     overflow: hidden;
     /*overflow: auto;*/
@@ -658,10 +725,10 @@
         margin-left: 20px;
         /*<!--margin-top: 60px;-->*/
         img {
-          width: 65px;
-          height: 65px;
+          width: 75px;
+          height: 75px;
           display: block;
-          margin-bottom: 15px;
+          margin-bottom: 5px;
         }
 
         /*<!--span{-->*/
@@ -702,12 +769,12 @@
       .chatSend {
         width: 110px;
         height: 70px;
-        margin-left: 10px;
         /*background-color: dodgerblue;*/
         text-align: center;
         .send {
           width: 110px;
           height: 70px;
+          margin-right: 5px;
           background: #16af17;
           border-radius: 5px;
           display: flex;
@@ -719,6 +786,12 @@
           }
         }
         .addmore {
+          width: 110px;
+          height: 75px;
+          border-radius: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           span {
             color: #666666;
           }

@@ -53,7 +53,7 @@
         </div>
         <div class="addImg" v-if="caseObj.medicalHistory.creatorType != 'DOC'">
           <!--<img :src="item.attaFileUrl" alt="" v-for="item of imgList">-->
-          <upload-img :picList="picList" :imgList="imgList">
+          <upload-img :picList="picList" :imgList="imgList" @large="makeLarge">
                     <span slot="upload">
                         <upload class="float-left"
                                 :server="config.api_url"
@@ -160,6 +160,18 @@
           document.getElementById("myArea").value = this.text.substr(0,500)
           weui.alert("字数不能超过500")
         }
+      },
+      makeLarge(url){
+           console.log(url)
+            let urls = [];
+            this.imgList.forEach((res) => {
+              urls.push(res.attaFileUrl);
+            })
+
+            wx.previewImage({
+              current: url,
+              urls: urls
+            })
       },
       getDate(val){
 

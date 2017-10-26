@@ -250,6 +250,9 @@
         token:localStorage.getItem('token'),
 //        token:"OPENID_PAT_oDrfHwrOF-p6DYrFhoeBiOKwKBlw",
         isChoice:true,
+        stdDeptId:this.deptId == '' ? null : this.deptId,
+        illnessName:this.typePick == '' ? null : this.typePick,
+        sort:this.sortName == '' ? null : this.sortName,
         pageSize:"10",
         pageNum:"1"
       }).then((data)=>{
@@ -303,9 +306,9 @@
         http("smarthos.consult.all.list.page",{
           token:tokenCache.get(),
           isChoice:true,
-          stdDeptId:this.deptId,
-          illnessName:this.typePick,
-          sort:this.sortName,
+          stdDeptId:this.deptId == '' ? null : this.deptId,
+          illnessName:this.typePick == '' ? null : this.typePick,
+          sort:this.sortName == '' ? null : this.sortName,
           pageNum:that.listPage,
           pageSize:"10"
         }).then((data)=>{
@@ -332,9 +335,9 @@
         http("smarthos.consult.all.list.page",{
           token:localStorage.getItem('token'),
           isChoice:true,
-          stdDeptId:this.deptId,
-          illnessName:this.typePick,
-          sort:this.sortName,
+          stdDeptId:this.deptId == '' ? null : this.deptId,
+          illnessName:this.typePick == '' ? null : this.typePick,
+          sort:this.sortName == '' ? null : this.sortName,
           pageSize:10,
           pageNum:1,
         }).then((data)=>{
