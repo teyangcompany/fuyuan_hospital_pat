@@ -81,8 +81,9 @@
             http("smarthos.user.pat.get",{
                   token:localStorage.getItem('token')
             }).then((data)=>{
+                console.log(data,123456)
                 if(data.code == 0){
-                  this.patId = data.obj.commpat.patId
+                  this.patId = data.obj.userCommonPatVo.patId
                   console.log(this.patId)
                   api("smarthos.yygh.apiOrderService.orderXx",{
                     token:localStorage.getItem('token'),

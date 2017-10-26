@@ -15,8 +15,7 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patName.$error }">
-              <input  @blur="$v.patName.$touch()" readonly class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-if="itemInfo.self"/>
-              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-else/>
+              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名"/>
             </div>
           </div>
           <span class="form-group__message bf" v-if="!$v.patName.minLength&&showNameError">姓名至少2位</span>
@@ -24,21 +23,13 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf" >身份证号</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patIdcard.$error }">
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()" readonly  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-if="itemInfo.self"/>
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-else/>
+              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
             </div>
           </div>
         </div>
         <span class="form-group__message bf" v-if="!$v.patIdcard.cd&&showCd">请输入正确的身份证号</span>
         <div class="weui-cells">
-          <a class="weui-cell weui-cell_access" href="javascript:;"  v-if="itemInfo.self">
-            <div class="weui-cell__bd">
-              <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
-            </div>
-            <div class="weui-cell__ft">
-            </div>
-          </a>
-          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone" v-else>
+          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone">
             <div class="weui-cell__bd">
               <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
             </div>
@@ -75,17 +66,23 @@
             <div class="weui-cell__bd bf" v-if="result">
                 {{ result.province.name }} {{ result.city.name == '市辖区' || result.city.name == '县' ? '': result.city.name }} {{ result.area.name == '市辖区' ? '': result.area.name }}
             </div>
-            <div class="weui-cell__bd bf" v-else>
+            <div class="weui-cell__bd bf" v-else-if="itemInfo.areaName">
                 {{ itemInfo.areaName }}
             </div>
-            <div class="weui-cell__ft">
+            <div class="weui-cell__bd bf" v-else>
+
             </div>
+            <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
           <div class="weui-cell" @click="toggleRelation">
             <div class="weui-cell__hd"><label class="weui-label bf relationShip">与本人的关系</label></div>
-            <div class="weui-cell__bd">
-                 <p class="relationRight">{{ compatInfo[clickIndex] }}</p>
+            <div class="weui-cell__bd" v-if="itemInfo.relationship">
+                 <p class="relationRight">{{ itemInfo.relationship }}</p>
             </div>
+            <div class="weui-cell__bd" v-else>
+              <p class="relationRight">{{ compatInfo[clickIndex] }}</p>
+            </div>
+            <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
           <div class="hosNumber">
             <p>医院账号</p>
@@ -216,23 +213,24 @@
         }else if(this.$v.patIdcard.$invalid){
           this.$set(this.$data,'showCd',true)
         } else {
-          api('smarthos.user.commpat.infomation.modify',{
-            "token":this.token,
-            "commpatId":this.compatId,
-            "commpatName":this.patName,
-            "commpatIdcard":this.patIdcard,
-            relationship:this.compatInfo[this.clickIndex],
-//            areaCode:itemInfo.areaCode ? '':'',
-          }).then(res=>{
-              console.log(res)
-            if(res.succ){
-              this.$router.push({
-                path:"/my/common-visitperson"
-              })
-            }else {
-              this.$weui.alert(res.msg)
-            }
-          })
+             api('smarthos.user.commpat.infomation.modify',{
+               "token":this.token,
+               "commpatId":this.compatId,
+               "commpatName":this.patName,
+               "commpatIdcard":this.patIdcard,
+               relationship:this.compatInfo[this.clickIndex],
+               areaCode:this.result.area.code ? this.result.area.code:itemInfo.areaName,
+             }).then(res=>{
+               console.log(res)
+               if(res.succ){
+                 this.$router.push({
+                   path:"/my/common-visitperson"
+                 })
+               }else {
+                 this.$weui.alert(res.msg)
+               }
+             })
+
         }
       },
       getAge(){
@@ -286,6 +284,10 @@
   .arrow{
     color: gray;
     font-weight: 800;
+  }
+  .rightArrow{
+    width:16px;
+    height:24px;
   }
   .weui-cells{
     margin-top: 30px;

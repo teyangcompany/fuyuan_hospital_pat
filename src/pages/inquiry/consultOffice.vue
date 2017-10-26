@@ -218,7 +218,11 @@
             added(file) {
                 file.thumb().then(res => {
                     file.setThumbUrl(res);
-                    this.picList.push(file);
+                    if(this.picList.length < 9){
+                      this.picList.push(file);
+                    }else{
+                      weui.alert("最多可上传九张照片")
+                    }
                     this.picList.sort((a, b) => {
                         return a.sort - b.sort
                     })

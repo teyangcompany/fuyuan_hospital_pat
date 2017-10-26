@@ -105,11 +105,13 @@
                     <!--<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">-->
                        <!--{{msg}}-->
                     <!--</div>-->
-                    <div class="yk-cell-bd mr10" v-show="type=='text'">
+                    <div class="yk-cell-bd mr10">
                         <edit-div :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
                     </div>
-                    <div v-show="!text.length" class="showJia" @click="showCheckList"><span class="jia">+</span></div>
-                    <button v-show="text != ''" class="send-btn" @click="send">发送</button>
+                    <div v-if="text == ''" class="showJia" @click="showCheckList">
+                      <span class="jia">+</span>
+                    </div>
+                    <button v-if="text != ''" class="send-btn" @click="send">发送</button>
                 </div>
                 <div  class="checkList" v-show="checkList">
                     <div class="upload">
@@ -355,7 +357,7 @@
                         this.getData();
                         this.getInitChat()
                         this.$set(this.$data,'clean',!this.clean);
-                        this.text=''
+                        this.text= ''
                     }else {
                         alert(res.msg)
                     }
