@@ -163,7 +163,7 @@
       </transition>
       <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
         <div>
-          <ul class="border-1px" v-for="item in aboutConsult" :key="item.id">
+          <ul class="border-1px" v-for="(item,index) in aboutConsult" :key="item.id">
             <li >
               <div class="border-1px-dashed dashedPlace">
                 <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
@@ -183,10 +183,16 @@
 
                   |
                   &nbsp;
-                  <img src="../../../../../static/img/zan_off.png" alt="" @click="upvote(item.consultInfo.id)" >&nbsp;
+                  <img src="../../../../../static/img/zan.png" alt=""  v-if="item.praiseRecord">
+                  <img src="../../../../../static/img/zan_off.png" alt="" @click="upvote(item)" v-else>
+                  &nbsp;
                   <!--<img src="../../../../../static/img/zan.png" alt="">-->
-                  <span v-if="item.consultInfo.praiseCount">{{ item.consultInfo.praiseCount }}</span>
-                  <span v-else>0</span>
+                  <span v-if="item.consultInfo.praiseCount">
+                    <span>{{ item.consultInfo.praiseCount }}</span>
+                  </span>
+                  <span v-else>
+                    <span>{{ clickLikes }}</span>
+                  </span>
                 </span>
               </div>
             </li>
@@ -341,16 +347,20 @@
 //            console.log(data)
         })
       },
-      upvote(id){
-          console.log(id)
+      upvote(item){
+          console.log(item)
           http("smarthos.consult.praise",{
              token:localStorage.getItem('token'),
-             consultId:id
+             consultId:item.consultInfo.id
           }).then((data)=>{
               if(data.code == 0){
-                  this.clickLikes = data.obj.praiseCount + 1
-//                  location.reload()
-//                  this.praiseStatus = true
+                  this.sort()
+                weui.alert("点赞成功")
+//                  if(item.consultInfo.hasOwnProperty('praiseCount')){
+//                      this.clickLikes = parseInt(item.consultInfo.praiseCount) + 1
+//                  }else{
+//                    this.clickLikes += 1
+//                  }
               }else{
                   weui.alert(data.msg)
               }
@@ -545,6 +555,10 @@
             justify-content: center;
             >div{
               margin-top: 10px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
               img{
                 width: 22.5%;
                 height: 120px;

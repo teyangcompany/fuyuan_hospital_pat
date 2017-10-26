@@ -6,8 +6,11 @@
     <!--</top>-->
     <top title="病历详情" class="noflex">
       <i slot="back"></i>
-      <div slot="right" class="right absolute" @click="save">
+      <div slot="right" class="right absolute" @click="save" v-if="caseObj.medicalHistory.creatorType != 'DOC'">
         保存
+      </div>
+      <div slot="right" class="right absolute" @click="save" v-else>
+
       </div>
     </top>
 
@@ -20,7 +23,15 @@
               <!--<div class="weui-cell__ft bf">{{date | Getdate}}</div>-->
             <!--</a>-->
           <!--</div>-->
-          <date :time="time" @getDate="getDate"></date>
+          <div v-if="caseObj.medicalHistory.creatorType != 'DOC'">
+            <date :time="time" @getDate="getDate"></date>
+          </div>
+          <div v-else class="timeSelect">
+               <p>
+                   <span>日期</span>
+                   <span>{{ time }}</span>
+               </p>
+          </div>
           <div class="weui-cells">
             <div class="weui-cell">
               <div class="weui-cell__bd wordLimit">
@@ -32,12 +43,15 @@
           <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
               <div class="weui-cell__bd">
-                <textarea class="weui-textarea" @keyup="keypress()" id="myArea" v-model="caseText" placeholder="请输入文本" rows="3"></textarea>
+                <textarea class="weui-textarea" @keyup="keypress()" id="myArea" v-model="caseText"
+                          placeholder="请输入文本" rows="3" v-if="caseObj.medicalHistory.creatorType != 'DOC'"></textarea>
+                <textarea class="weui-textarea" @keyup="keypress()"  v-model="caseText"
+                          placeholder="请输入文本" rows="3" readonly v-else ></textarea>
               </div>
             </div>
           </div>
         </div>
-        <div class="addImg">
+        <div class="addImg" v-if="caseObj.medicalHistory.creatorType != 'DOC'">
           <!--<img :src="item.attaFileUrl" alt="" v-for="item of imgList">-->
           <upload-img :picList="picList" :imgList="imgList">
                     <span slot="upload">
@@ -55,7 +69,7 @@
         </div>
         <div class="btn">
           <div class="text mfc">{{createTime |  getDay}} &nbsp;&nbsp;由{{creatorName}}添加</div>
-          <a @click="deleteCase" style="background: #ff8588" href="javascript:;" class="weui-btn weui-btn_primary">删除</a>
+          <a @click="deleteCase" style="background: #ff8588" href="javascript:;" class="weui-btn weui-btn_primary" v-if="caseObj.medicalHistory.creatorType != 'DOC'">删除</a>
         </div>
         <v-dialog @on-cancel="closeAll" @on-download="closeAllCancel" v-if="showAllDialog"
                   :dialogTitle="dialogTitle"
@@ -148,8 +162,10 @@
         }
       },
       getDate(val){
+
+           this.time = val
+
         console.log(val)
-        this.time = val
       },
       save(){
         for(var i=0;i<this.picList.length;i++){
@@ -229,7 +245,22 @@
 .page{
   display: flex;
   flex: 1;
+  background: white;
   flex-direction: column;
+  .timeSelect{
+    height:80px;
+    width:690px;
+    margin:0 auto;
+    p{
+      height:80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      span{
+        font-size: 32px;
+      }
+    }
+  }
 }
 
   .weui-cells{

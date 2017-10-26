@@ -1,6 +1,6 @@
 <template>
     <div class="wrapPick">
-      <scroll class="relateList" :data="detailInfo"  ref="main">
+      <scroll class="relateList" :data="arr"  ref="main">
          <div>
            <div class="topInfo border-1px">
              <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
@@ -22,7 +22,14 @@
                  </div>
                  <div class="ConsultRelate">
 
-                   <span class="name"><span class="number"><img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat"> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span></span></span>
+                   <span class="name">
+                     <span class="number" v-if="detailInfo.userPat">
+                       <img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat.patAvatar">
+                       <img src="../../../../../static/img/pat.f.jpg" alt="" v-else-if="!(detailInfo.userPat.patAvatar) && detailInfo.userPat.patGender != 'M'">
+                       <img src="../../../../../static/img/pat.m.jpg" alt="" v-else>
+                       <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span>
+                     </span>
+                   </span>
                    <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | goodTime }}&nbsp;
                 |
                 &nbsp;
@@ -54,11 +61,12 @@
                  <img :src="item.userPat.patAvatar" alt="" >
                </div>
                <div class="docImg" v-else>
-                 <img src="../../../../../static/img/pat.f.jpg" alt="">
+                 <img src="../../../../../static/img/pat.m.jpg" alt="" v-if="item.userPat.patGender == 'M'">
+                 <img src="../../../../../static/img/pat.f.jpg" alt="" v-else>
                </div>
                <div class="docMsg">
                  <p>
-                   <span class="mf">{{item.userPat.patName}}</span>
+                   <span class="mf">{{item.userPat.patName.substr(0,1)}}**</span>
                    <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>
                  </p>
                  <p>
@@ -75,8 +83,8 @@
                <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeLarge(item.consultMessage.replyContent)">
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
-               <span>语音需要转换格式</span>
-               <audio :src="item.consultMessage.replyContent"></audio>
+               <span> </span>
+               <audio controls :src="item.consultMessage.replyContent"></audio>
              </div>
            </div>
          </div>
@@ -87,7 +95,8 @@
               <span v-else>0</span>
             |
             &nbsp;
-            <img src="../../../../../static/img/zan_off.png" alt="">&nbsp;
+            <img src="../../../../../static/img/zan.png" alt="" v-if="detailInfo.praiseRecord">
+            <img src="../../../../../static/img/zan_off.png" alt="" v-else  @click="upvote(detailInfo)">&nbsp;
              <span v-if="detailInfo.consultInfo.praiseCount">{{ detailInfo.consultInfo.praiseCount }}</span>
               <span v-else>0</span>
             </span>
@@ -129,21 +138,24 @@
           this.consultId = this.$route.query.id
           console.log(this.consultId)
           this.getInitChat()
+          this.getConsultDetail()
+      },
+      methods:{
+        getConsultDetail(){
           http("smarthos.consult.details",{
             token:tokenCache.get(),
             consultId:this.consultId
           }).then((data)=>{
-              if(data.code == 0){
-                console.log(data)
-                this.detailInfo = data.obj
+            if(data.code == 0){
+              console.log(data,333)
+              this.detailInfo = data.obj
 //                this.arr =  data.obj.consultMessage
-              }else{
-                  weui.alert(data.msg)
-              }
+            }else{
+              weui.alert(data.msg)
+            }
 
           })
-      },
-      methods:{
+        },
         getInitChat(){
              http("smarthos.consult.message.list.page",{
                   token:localStorage.getItem('token'),
@@ -154,8 +166,23 @@
                  }else{
                      weui.alert(data.msg)
                  }
-//                 console.log(data,444)
+                 console.log(data,444)
              })
+        },
+        upvote(detailInfo){
+          console.log(detailInfo)
+          http("smarthos.consult.praise",{
+            token:localStorage.getItem('token'),
+            consultId:detailInfo.consultInfo.id
+          }).then((data)=>{
+            if(data.code == 0){
+              this.getConsultDetail()
+              weui.alert("点赞成功")
+            }else{
+              weui.alert(data.msg)
+            }
+            console.log(data)
+          })
         },
         goDocCard(id){
           console.log(id,88888)

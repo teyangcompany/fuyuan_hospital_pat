@@ -7,11 +7,12 @@
             <div class="wrap">
                 <div class="content" v-for="item in registerNumList">
                     <div class="registrationDetail">
-                        <p>{{ item.hyrq.substr(0,4) }}-{{ item.hyrq.substr(4,2) }}-{{ item.hyrq.substr(6) }}&nbsp;&nbsp;{{ item.yylx == 1 ? '上午':'下午' }}<span class="current" >实时挂号</span></p>
+                        <p>{{ item.hyrq.substr(0,4) }}-{{ item.hyrq.substr(4,2) }}-{{ item.hyrq.substr(6) }}&nbsp;&nbsp;{{ item.yylx == 1 ? '上午':'下午' }}<span class="current" ></span></p>
                         <p>医院 : {{ item.yymc }}</p>
                         <p>科室 : {{ item.ksmc }}</p>
-                        <p>医生 : {{ item.ysxm }}</p>
-                        <p>预估就诊时间 : {{ item.hysj.substr(0,2) }}:{{ item.hysj.substr(2) }}</p>
+                        <p v-if="item.ysxm ">医生 : {{item.ysxm }}</p>
+                        <p v-else>医生 : 普通号</p>
+                        <p>预估就诊时间 : {{ item.hysj.substr(0,2) }}:{{ item.hysj.substr(2) }} <span style="color: #999999;">(以医院实际情况为准)</span></p>
                         <p>支付方式 : 线下支付</p>
                         <p>挂号费 : {{ item.ghf }}</p>
                         <p>取号密码 : {{ item.qhmm }}</p>
@@ -35,18 +36,25 @@
                 </div>
             </div>
         </scroll>
-
+       <v-dialog :dialogTitle="dialogTitle"
+                :dialogMain="dialogMain"
+                :dialogLeftFoot="dialogLeftFoot"
+                :dialogRightFoot="dialogRightFoot"
+                v-if="showDialog"
+                @on-cancel="cancelDialog" @on-download="confirmCancel"></v-dialog>
     </div>
 </template>
 <script type="text/ecmascript-6">
     import top from '../../../components/app-header.vue'
     import api from '../../../lib/bookApi'
     import http from '../../../lib/http'
+    import dialog from '../../../base/dialog.vue'
     import scroll from '../../../base/scroll.vue'
     export default{
         components: {
             top,
-            scroll
+            scroll,
+            "VDialog":dialog
         },
         filters:{
         },
@@ -59,7 +67,13 @@
                 pullup:true,
                 scrollHeight:"",
                 patId:"",
-                registerNumList:""
+                item:"",
+                registerNumList:"",
+                dialogTitle:"",
+                dialogMain:"确定取消此预约",
+                dialogLeftFoot:"取消",
+                dialogRightFoot:"确定",
+                showDialog:false
             }
         },
         created(){
@@ -95,14 +109,22 @@
             },50)
         },
         methods:{
+          cancelDialog(){
+            this.showDialog = false
+          },
+          confirmCancel(){
+            this.showDialog = false
+            api("smarthos.yygh.apiOrderService.cancel",{
+              orderid:this.item.ddid,
+              pass:this.item.qhmm
+            }).then((data)=>{
+              location.reload()
+            })
+          },
           cancelBook(item){
-              console.log(item)
-             api("smarthos.yygh.apiOrderService.cancel",{
-               orderid:item.ddid,
-               pass:item.qhmm
-             }).then((data)=>{
-                 location.reload()
-             })
+              this.showDialog = true
+              this.item = item
+//              console.log(item)
           },
           scrollToEnd(){
             if (this.preventRepeatRequest) {
@@ -180,7 +202,7 @@
         padding: 10px;
         margin-bottom: 15px;
         border-top: 1px solid gainsboro;
-        color: gray;
+        color: #333333;
         box-sizing: border-box;
         background: white;
         overflow: hidden;
