@@ -63,7 +63,7 @@
           <img src="../../../static/img/图片.png" alt="" @click="selectImg()">
         </div>
         <div class="chatInput">
-          <textarea type="text" id="forInput" maxlength="200" @blur="blured" @focus="focus()" ref="inputFocus"
+          <textarea type="text" id="forInput"  maxlength="200" @blur="blured" @focus="focus()" ref="inputFocus"
                     v-model="inputInfo" @input="whatInput"></textarea>
         </div>
         <div class="chatSend">
@@ -331,9 +331,6 @@
           this.light = true
         }
         this.inter = setInterval(() => {
-          if(this && !this._isDestroyed) { //_isDestroyed 组件是否被销毁
-            return;
-          }
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
       },
@@ -467,9 +464,6 @@
 
 //
         this.inter = setInterval(() => {
-          if(this && !this._isDestroyed) { //_isDestroyed 组件是否被销毁
-            return;
-          }
           document.getElementsByClassName("foot_top")[0].scrollIntoView()
         }, 500)
 
@@ -518,7 +512,7 @@
     /*height: 500px;*/
     position: absolute;
     top: 88px;
-    bottom: 100px;
+    bottom: 90px;
     flex: 1;
     overflow: hidden;
     /*overflow: auto;*/
@@ -728,7 +722,8 @@
           width: 75px;
           height: 75px;
           display: block;
-          margin-bottom: 5px;
+          padding-top: 13px;
+          /*margin-bottom: 5px;*/
         }
 
         /*<!--span{-->*/
@@ -746,12 +741,12 @@
         }
       }
       .chatInput {
-        width: 520px;
-        margin-left: 30px;
+        width: 480px;
+        margin-left: 20px;
         text-align: center;
         textarea {
-          width: 520px;
-          min-height: 64px;
+          width: 480px;
+          min-height: 34px;
           border: none;
           font-size: 32px;
           outline: medium;
@@ -769,12 +764,14 @@
       .chatSend {
         width: 110px;
         height: 70px;
+        padding-left: 20px;
         /*background-color: dodgerblue;*/
         text-align: center;
         .send {
           width: 110px;
           height: 70px;
           margin-right: 5px;
+          margin-top: 8px;
           background: #16af17;
           border-radius: 5px;
           display: flex;
