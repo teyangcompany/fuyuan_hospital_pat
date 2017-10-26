@@ -20,7 +20,7 @@
                     <div class="weui-cells">
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
-                                <input v-model="captcha" class="weui-input phoneNumber" readonly placeholder="请输入"/>
+                                <input v-model="captcha" class="weui-input phoneNumber" placeholder="请输入"/>
                             </div>
                             <send-code service="smarthos.captcha.pat.wechat.bind" :mobile="patMobile" @error="onError"
                                        v-model="cid" @result="onResult"></send-code>
@@ -186,18 +186,23 @@
 //      },
 
         bind() {
-          api("smarthos.user.pat.wechat.bind", {
-            openid: openidCache.get(),
-            captcha: this.captcha,
-            cid: this.cid
-          }).then((res) => {
-            console.log(res);
-            if (res.code != 0) {
-              weui.alert(res.msg);
-              this.$router.push({
-                name: 'home'
-              })
-            } else {
+           if(this.patMobile == ''){
+               weui.alert("手机号不能为空")
+           }else if(this.captcha == ''){
+               weui.alert("验证码不能为空")
+           }else{
+             api("smarthos.user.pat.wechat.bind", {
+               openid: openidCache.get(),
+               captcha: this.captcha,
+               cid: this.cid
+             }).then((res) => {
+               console.log(res);
+               if (res.code != 0) {
+                 weui.alert(res.msg);
+                 this.$router.push({
+                   name: 'home'
+                 })
+               } else {
 
 
 //            inputText(){
@@ -251,11 +256,13 @@
 //                })
 //
 //          }
-              this.$router.push({
-                name: 'home'
-              })
-            }
-          })
+                 this.$router.push({
+                   name: 'home'
+                 })
+               }
+             })
+           }
+
         }
       }
     }

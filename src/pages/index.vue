@@ -39,23 +39,23 @@
                     </li>
                 </ul>
             </div>
-            <div class="notice">
-                <ul>
-                    <li v-for="i in 3">
-                        <div class="icon">
-                            <i></i>
-                        </div>
-                        <div class="info">
-                            <div class="title">预约挂号</div>
-                            <div class="time">10:09</div>
-                            <div class="content">
-                                您在浙二医院预约挂号成功
-                            </div>
-                            <div class="sub">浙二医院</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <!--<div class="notice">-->
+                <!--<ul>-->
+                    <!--<li v-for="i in 3">-->
+                        <!--<div class="icon">-->
+                            <!--<i></i>-->
+                        <!--</div>-->
+                        <!--<div class="info">-->
+                            <!--<div class="title">预约挂号</div>-->
+                            <!--<div class="time">10:09</div>-->
+                            <!--<div class="content">-->
+                                <!--您在浙二医院预约挂号成功-->
+                            <!--</div>-->
+                            <!--<div class="sub">浙二医院</div>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
 
         </div>
         <app-footer class="noflex" ref="footer"></app-footer>

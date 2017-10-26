@@ -90,6 +90,7 @@
         },
         methods: {
             goRouter(router){
+
               this.$router.push(router)
             },
             goConsultList(){

@@ -27,7 +27,8 @@ export default {
     {name: "report", value: "查报告单", path: '/checkReport'},
     {name: "steward", value: "住院管家"},
     {name: "help", value: "就诊指南"},
-    {name: "more", value: "更多", path: '/home/moreSel'}
+    {name: "more", value: "更多"}
+    // {name: "more", value: "更多", path: '/home/moreSel'}
   ],
   my_doc_nav: [
     {name: "follow", value: "关注医生", path: "/docList"},

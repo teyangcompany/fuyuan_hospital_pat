@@ -37,6 +37,8 @@
             goPage(page) {
                 if (page == "home") {
                     page = "home";
+                }else if(page == 'health'){
+                    location.href='https://ddys-wechat.diandianys.com/WeChat/jkbk/?from=groupmessage&isappinstalled=0#/home'
                 }
                 this.$router.push(`/${page}`);
             }
