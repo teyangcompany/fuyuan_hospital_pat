@@ -106,7 +106,7 @@
                        <!--{{msg}}-->
                     <!--</div>-->
                     <div class="yk-cell-bd mr10">
-                        <edit-div :message="clean" v-model="text" id="inputArea" class="input-text" ></edit-div>
+                        <input :message="clean" v-model="text" id="inputArea" class="input-text" />
                     </div>
                     <div v-if="text == ''" class="showJia" @click="showCheckList">
                       <span class="jia">+</span>
