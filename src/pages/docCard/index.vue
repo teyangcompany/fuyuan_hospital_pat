@@ -50,7 +50,6 @@
         <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
           <span :class="{bar:index==num}">{{item.value}}</span>
         </div>
-<<<<<<< HEAD
       </div>
       <router-view></router-view>
     </div>
@@ -65,15 +64,6 @@
         <span @click="attention" v-if="!isFollow">关注医生</span>
         <span @click="attention" v-else>取消关注</span>
       </div>
-=======
-        <div class="alertArea" v-if="showAndroid">
-           <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic">
-        </div>
-        <div class="alertArea" v-if="showIos">
-          <img src="../../../static/img/ios引导.png" alt="" @click="hidePic">
-        </div>
-        <seivice :docId="docId" ref="ser"></seivice>
->>>>>>> 12c6c5a9f3b4fec08e6a1af8bdb333c73babaf18
     </div>
     <seivice :docId="docId" ref="ser"></seivice>
   </div>
@@ -86,7 +76,6 @@
   import api from '../../lib/http'
   import {debug, getShareLink} from "../../lib/util"
 
-<<<<<<< HEAD
   export default {
     components: {
       top,
@@ -115,39 +104,6 @@
       });
     },
     mounted() {
-=======
-    export default {
-        components: {
-            top,
-            seivice
-        },
-        mixins: [mainHeightMixin,isBindMixin],
-        data(){
-
-            return {
-                bar: config.doc_bar,
-                num: 0,
-                flag: false,
-                docId: "",
-                token: localStorage.getItem('token'),
-                doc: {},
-                docServeList: "",
-                isFollow: false,
-              showAndroid:false,
-              showIos:false
-            }
-        },
-        created() {
-            this.docId = this.$route.params.id;
-            this._isBind().then((res) => {
-              if (res === false) {
-                fromCache.set(this.$route.fullPath);
-                this.$router.push("/login")
-              }
-            });
-        },
-        mounted() {
->>>>>>> 12c6c5a9f3b4fec08e6a1af8bdb333c73babaf18
 
       sessionStorage.setItem('docId', this.$route.params.id);
 
@@ -160,7 +116,6 @@
         let doc = this.doc;
         debug("医生信息", this.doc, getShareLink(location.href));
 
-<<<<<<< HEAD
         let conf = {
           title: doc.docName,
           link: getShareLink(location.href),
@@ -229,66 +184,7 @@
             if (res.obj.followDocpat) {
               this.isFollow = true
             }
-=======
-        },
-        methods: {
-            share(){
-              let UA = window.navigator.userAgent.toLocaleLowerCase();
-              if (/iphone/.test(UA)) {
-                window.device = "iphone";
-              }
-              if (/android/.test(UA)) {
-                window.device = "android";
-              }
-              if (window.device == "iphone") {
-                this.showIos = true
-              }else{
-                this.showAndroid = true
-              }
-//               this.$router.push({
-//                 path:"/share"
-//               })
-            },
-            hidePic(){
-              this.showIos = false
-              this.showAndroid = false
-            },
-            goBack() {
-                this.$router.go(-1)
-            },
-            attention() {
-                if (!(this.isFollow)) {
-                    api('smarthos.follow.docpat.add', {
-                        token: this.token,
-                        docId: this.docId
-                    }).then(res => {
-//                    console.log(res,88888);
-                        if (res.succ) {
-                            this.isFollow = true
-                            weui.alert("关注成功")
-                        } else {
-                            weui.alert(res.msg)
-                        }
-                    })
-                } else {
-                    api('smarthos.follow.docpat.delete', {
-                        token: this.token,
-                        docId: this.docId
-                    }).then(res => {
-//                    console.log(res,88888);
-                        if (res.succ) {
-                            this.isFollow = false
-                            weui.alert("已取消关注")
-                        } else {
-                            weui.alert(res.msg)
-                        }
-                    })
-                }
-            },
->>>>>>> 12c6c5a9f3b4fec08e6a1af8bdb333c73babaf18
-
             this.__shareInit();
-
           } else {
             if (res.msg == '医患关系不存在') {
 
@@ -315,7 +211,6 @@
   }
 </script>
 <style scoped lang='scss'>
-<<<<<<< HEAD
   @import '../../common/common.scss';
 
   .page {
@@ -325,51 +220,17 @@
     flex: 1;
     background: white;
   }
-=======
-    @import '../../common/common.scss';
-    .page {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        flex: 1;
-        background: white;
-        .alertArea{
-          position: absolute;
-          top:0;
-          bottom:0;
-          left:0;
-          right:0;
-          z-index:10000;
-          img{
-            position: absolute;
-            z-index: 10000;
-            width:100%;
-            height:100%;
-          }
-        }
-    }
->>>>>>> 12c6c5a9f3b4fec08e6a1af8bdb333c73babaf18
 
   .wrapper {
     overflow: scroll;
   }
 
-<<<<<<< HEAD
   .myHeader {
     width: 100%;
     padding: 0px 30px;
     position: absolute;
     top: 30px;;
   }
-=======
-    .myHeader {
-        width: 100%;
-        padding: 0px 30px;
-        position: absolute;
-        z-index:0;
-        top: 30px;;
-    }
->>>>>>> 12c6c5a9f3b4fec08e6a1af8bdb333c73babaf18
 
   .famous {
     display: inline-block;
