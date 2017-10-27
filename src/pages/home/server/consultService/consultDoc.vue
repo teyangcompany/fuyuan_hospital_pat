@@ -226,7 +226,7 @@
                 </section>
                 <section v-if="item.userDocServes">
                   <div v-for="subItem in item.userDocServes">
-                    <p>{{ subItem.serveName }}{{ subItem.servePrice | consultPrice }}元</p>
+                    <p >{{ subItem.serveName }}{{ subItem.servePrice | consultPrice }}元</p>
                   </div>
                 </section>
               </li>
@@ -950,7 +950,7 @@
       }
       .goodAt{
         width: 100%;
-        height: 170px;
+        /*height: 0px;*/
         margin:0 auto;
         background-color: #ffffff;
         section{
@@ -970,22 +970,28 @@
         }
         section:nth-child(2){
           margin-top: 15px;
-          display: flex;
+          /*display: flex;*/
           width:690px;
           word-wrap: break-word;
           word-break: break-all;
           >div{
             /*flex:1;*/
-            display: block;
+            /*border:1px solid #999999;*/
+            margin-left: 15px;
+            margin-bottom: 15px;
+            display: inline-block;
+            word-wrap: break-word;
+            word-break: break-all;
             p{
-              width: 240px;
+              /*width: 280px;*/
               border:1px solid #999999;
               color: #999999;
-              display: flex;
+              /*display: flex;*/
               font-size: 30px;
-              border-radius: 7px;
-              align-items: center;
-              justify-content: center;
+              padding:5px 8px 5px 8px;
+              /*border-radius: 7px;*/
+              /*align-items: center;*/
+              /*justify-content: center;*/
             }
           }
         }
