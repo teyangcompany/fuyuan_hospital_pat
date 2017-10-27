@@ -181,7 +181,7 @@
                         this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
                       }else{
                          this.$router.push({
-                           path: 'pay/' + res.obj.consultInfo.id,
+                           path: '/pay/' + res.obj.consultInfo.id,
                            query: {roomPrice: this.roomPrice}
                          })
                       }

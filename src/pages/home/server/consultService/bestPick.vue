@@ -296,7 +296,7 @@
     },
     methods:{
       scrollToEnd(){
-        if (this.preventRepeatRequest) {
+        if (this.preventRepeatRequest || this.aboutConsult.length <10) {
           return
         }
         this.loadingStatus = true
