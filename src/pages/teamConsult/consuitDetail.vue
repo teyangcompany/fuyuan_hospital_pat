@@ -1,9 +1,11 @@
 <template>
     <div class="page">
-        <top class="noflex" title="" ref="header">
-            <!--<i slot="back" @click="goBack"></i>-->
-          <div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>
-        </top>
+        <!--<top class="noflex" title="" ref="header">-->
+            <!--&lt;!&ndash;<i slot="back" @click="goBack"></i>&ndash;&gt;-->
+          <!--<div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>-->
+        <!--</top>-->
+        <v-header :title="title" :rightTitle="rightOverTitle" v-if="consultInfo.consultStatus=='3'" @on-docCard="closeConsult"></v-header>
+        <v-header :title="title" :rightTitle="rightTitle" v-else></v-header>
         <div class="wrapper" ref="Scroll" @click="closeCheckList">
             <div>
                 <div class="weui-cells">
@@ -161,15 +163,20 @@
     import api from '../../lib/http'
     import {goodTime,Getdate,consultPrice} from '../../lib/filter'
     import ajax from '../../lib/ajax'
+    import header from '../../base/header.vue'
     import dialog from '../../base/dialog.vue'
     export default{
         components: {
             top,
             editDiv,
-            "VDialog":dialog
+            "VDialog":dialog,
+            "VHeader":header
         },
         data(){
             return {
+                title:"",
+                rightTitle:"",
+              rightOverTitle:"结束咨询",
                 flag:true,
                 text:'',
                 clean:false,
