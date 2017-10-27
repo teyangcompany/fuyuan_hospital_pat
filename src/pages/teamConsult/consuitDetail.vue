@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
     <div class="page">
         <!--<top class="noflex" title="" ref="header">-->
             <!--&lt;!&ndash;<i slot="back" @click="goBack"></i>&ndash;&gt;-->
@@ -158,7 +157,6 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-<<<<<<< HEAD
     import top from '../../components/app-header.vue'
     import BScroll from 'better-scroll'
     import editDiv from '../../components/editDiv.vue'
