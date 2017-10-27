@@ -327,7 +327,6 @@
       },
       //就诊卡检验
       recordCheck(){
-          this.showToast = true
         http("smarthos.user.commpat.record.check",{
           token:localStorage.getItem('token'),
           commpatId:this.compatInfo[this.index].id,
@@ -432,6 +431,7 @@
       },
       //确认预约的点击事件
       goBookService(){
+             this.showToast = true
              this.recordCheck()
       },
 //      getCode(){
