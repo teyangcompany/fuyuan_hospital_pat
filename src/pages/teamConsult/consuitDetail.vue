@@ -12,7 +12,7 @@
               <p>
                                 <span class="bf">患者资料： {{consultInfo.consulterName}}
                                     {{consultInfo.consulterGender = 'M' ? '男' : '女'}}
-                                    {{consultInfo.consulterAge}}
+                                  {{consultInfo.consulterAge}}
                                 </span>
               </p>
             </div>

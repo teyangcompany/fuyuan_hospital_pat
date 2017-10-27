@@ -49,7 +49,7 @@
       <div class="navbar">
         <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
           <span :class="{bar:index==num}">
-               <span> {{item.value}} <span class="restName">{{ item.value1 }}</span></span>
+               <span > {{item.value}}</span><img :src="item.value1" alt="">
           </span>
         </div>
       </div>
@@ -248,9 +248,11 @@
           console.log(res, 66666);
           if (res.succ) {
             this.docRestNotice = res.obj.docRestNotice
-            if (this.docRestNotice.content) {
-              this.bar[2].value1 = '(停诊)'
-            } else {
+            if(this.docRestNotice.content){
+                this.bar[0].value1 = ''
+                this.bar[1].value1 = ''
+                 this.bar[2].value1 = './static/img/stop.png'
+            }else{
               this.bar[2].value1 = ''
             }
           } else {
@@ -395,9 +397,10 @@
     align-items: center;
     padding: 10px 0;
     margin-top: 15px;
-    .restName {
-      color: red;
-    }
+      img{
+        width:40px;
+        margin-left: 5px;
+      }
   }
 
   .bar {

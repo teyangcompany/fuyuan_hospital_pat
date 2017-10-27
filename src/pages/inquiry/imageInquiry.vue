@@ -35,7 +35,7 @@
                 <div class="weui-cell__bd">
                     <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
                 </div>
-                <img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">
+                <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
             </div>
             <div class="weui-cells__title">病情资料</div>
             <div class="weui-cells weui-cells_form">
@@ -185,7 +185,7 @@
                                 })
                             }
                         } else {
-                            alert(res.msg)
+                            weui.alert(res.msg)
                         }
                     })
                 }

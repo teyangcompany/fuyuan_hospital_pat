@@ -6,6 +6,9 @@
     <section class="goBack"  v-else-if="path== nowPath  && historyLength <= 1">
       <!--<img src="../../static/img/icon/arrow-left-black.png" alt="">-->
     </section>
+    <section class="goBack"  v-else-if="path== roomPath  && historyLength <= 1">
+      <!--<img src="../../static/img/icon/arrow-left-black.png" alt="">-->
+    </section>
     <section class="goBack" @click="goBack" v-else>
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
@@ -26,6 +29,7 @@
          path:"",
          nowPath:"",
          oneConsultPath:"",
+         roomPath:"",
          historyLength:""
        }
     },
@@ -49,6 +53,7 @@
       this.historyLength = window.history.length
       this.nowPath = `/docChat/${this.id}`
       this.oneConsultPath = `/oneConsult/${this.id}`
+      this.roomPath = `/consuitDetail/${this.id}`
       console.log(this.nowPath,555)
       console.log(this.id)
       console.log(this.path)

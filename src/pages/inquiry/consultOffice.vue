@@ -186,7 +186,7 @@
                          })
                       }
                     }else {
-                      alert(res.msg)
+                      weui.alert(res.msg)
                     }
                   })
                 }
