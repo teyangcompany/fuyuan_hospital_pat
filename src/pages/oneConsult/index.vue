@@ -35,6 +35,7 @@
             <span class="bf">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
+
             <img v-for="item in attaList" :src="item.attaFileUrl" alt=""
                  @click.stop="bigImg(item.attaFileUrl)">
           </div>
@@ -175,7 +176,7 @@
 
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
 
-//  import {mainHeightMixin} from '../../lib/mixin'
+  //  import {mainHeightMixin} from '../../lib/mixin'
   import { consultPrice } from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
 
@@ -243,8 +244,8 @@
       this.consultId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
-           this.getInitData()
-           this.getInitChat()
+        this.getInitData()
+        this.getInitChat()
 
       })
     },
@@ -265,23 +266,23 @@
     methods: {
 //<<<<<<< HEAD
       getInitChat(){
-           http("smarthos.consult.message.list.page",{
-             token:localStorage.getItem('token'),
-             consultId:this.consultId,
-             pageSize:1000
-           }).then((data)=>{
-               console.log(data,333)
-               if(data.code == 0){
-                 this.aboutReplyMessage = data.list
-               }else{
-                   weui.alert(data.msg)
-               }
-           })
+        http("smarthos.consult.message.list.page",{
+          token:localStorage.getItem('token'),
+          consultId:this.consultId,
+          pageSize:1000
+        }).then((data)=>{
+          console.log(data,333)
+          if(data.code == 0){
+            this.aboutReplyMessage = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+        })
       },
 //      getInitData(){
 //=======
       bigImg(img) {
-         console.log("12")
+        console.log("12")
         let urls = [];
         this.attaList.forEach((res) => {
           urls.push(res.attaFileUrl)
@@ -301,7 +302,7 @@
 //          this.messageLength = data.obj.messageList.length
           this.showToast = false
           if (data.code == 0) {
-              console.log("成功")
+            console.log("成功")
             this.$nextTick(() => {
               this.userPat = data.obj.userPat;
               this.attaList = data.obj.attaList;
@@ -462,7 +463,7 @@
 //          attaIdList:this.attaId
         }).then((data) => {
 
-            console.log(data)
+          console.log(data)
           if(data.code == 0){
             this.getInitChat()
 

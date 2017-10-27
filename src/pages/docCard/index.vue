@@ -72,6 +72,23 @@
       <img src="../../../static/img/ios引导.png" alt="" @click="hidePic" v-if="showIos">
     </div>
     <seivice :docId="docId" ref="ser"></seivice>
+    <div v-if="showQrcode" class="ercode">
+      <div class="mask" @click.stop="showQrcode=false"></div>
+      <div class="mainbox">
+        <div class="info flex">
+          <div class="ava">
+            <img class="myImg" :src="doc.docAvatar" alt="" v-if="doc.docAvatar">
+            <img class="myImg" src="../../../static/img/doctorM.png" alt="" v-else></div>
+          <div class="text">
+            <div class="h3">{{doc.docName}} 名医</div>
+            <div class="dept">{{doc.hosName}} &nbsp;&nbsp;&nbsp; {{doc.deptName}}&nbsp;&nbsp; {{doc.docTitle}}</div>
+          </div>
+        </div>
+        <div class="er">
+          <img :src="doc.docQrcode" alt="">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -80,7 +97,7 @@
   import {mainHeightMixin, isBindMixin, jssdkMixin} from '../../lib/mixin'
   import config from '../../lib/config'
   import api from '../../lib/http'
-  import {debug, getShareLink} from "../../lib/util"
+  import {debug, getShareLink, getParamsFromUrl} from "../../lib/util"
 
   export default {
     components: {
@@ -98,9 +115,10 @@
         doc: {},
         docServeList: "",
         isFollow: false,
-        showAndroid:false,
-        showIos:false,
-        docRestNotice:""
+        showQrcode: false,
+        showAndroid: false,
+        showIos: false,
+        docRestNotice: ""
       }
     },
     created() {
@@ -124,7 +142,6 @@
       __shareInit() {
         let doc = this.doc;
         debug("医生信息", this.doc, getShareLink(location.href));
-
         let conf = {
           title: doc.docName,
           link: getShareLink(location.href),
@@ -145,11 +162,11 @@
           wx.onMenuShareAppMessage(conf);
         })
       },
-      hidePic(){
+      hidePic() {
         this.showIos = false
         this.showAndroid = false
       },
-      share(){
+      share() {
         let UA = window.navigator.userAgent.toLocaleLowerCase();
         if (/iphone/.test(UA)) {
           window.device = "iphone";
@@ -159,7 +176,7 @@
         }
         if (window.device == "iphone") {
           this.showIos = true
-        }else{
+        } else {
           this.showAndroid = true
         }
 
@@ -201,7 +218,6 @@
           })
         }
       },
-
       getData() {
         api('smarthos.user.doc.card.get', {
           docId: this.docId
@@ -224,13 +240,13 @@
           }
         })
       },
-      getRestInfo(){
-        api('smarthos.user.doc.notice.get',{
-          token:this.token,
-          docId:this.docId
-        }).then(res=>{
-          console.log(res,66666);
-          if(res.succ){
+      getRestInfo() {
+        api('smarthos.user.doc.notice.get', {
+          token: this.token,
+          docId: this.docId
+        }).then(res => {
+          console.log(res, 66666);
+          if (res.succ) {
             this.docRestNotice = res.obj.docRestNotice
             if(this.docRestNotice.content){
                 this.bar[0].value1 = ''
@@ -239,7 +255,7 @@
             }else{
               this.bar[2].value1 = ''
             }
-          }else {
+          } else {
             weui.alert(res.msg)
           }
         })
@@ -251,6 +267,14 @@
         })
       },
       showService() {
+        let urlParams = getParamsFromUrl(location.href);
+        debug("ppp", urlParams)
+        if (urlParams.query && urlParams.query.comefrom == "share") {
+          this.showQrcode = true
+          return;
+        }
+
+
         if (this.docServeList.length != 0) {
           this.$refs.ser.flag = true
         } else {
@@ -270,20 +294,21 @@
     flex: 1;
     background: white;
   }
-  .alertArea{
+
+  .alertArea {
     position: absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: #000;
-    z-index:10000;
-    img{
+    z-index: 10000;
+    img {
       position: absolute;
-      top:0;
+      top: 0;
       z-index: 10000;
-      width:100%;
-      height:100%;
+      width: 100%;
+      height: 100%;
     }
   }
 
@@ -295,7 +320,7 @@
     width: 100%;
     padding: 0px 30px;
     position: absolute;
-    z-index:0;
+    z-index: 0;
     top: 30px;;
   }
 
@@ -333,7 +358,7 @@
     position: relative;
     width: 100%;
     height: 520px;
-    z-index:0;
+    z-index: 0;
     background-image: url("../../../static/img/docBac.png");
     background-size: 100% 100%;
     background-position: center center;
@@ -421,5 +446,44 @@
     background: #2772ff;
     width: 33.3333%;
     float: left;
+  }
+
+  .ercode {
+    .mask {
+      position: fixed;
+      @include t_r_b_l();
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, .5);
+    }
+    .mainbox {
+      z-index: 3000;
+      background-color: white;
+      position: fixed;
+      top: 200px;
+      bottom: 200px;
+      left: 100px;
+      right: 100px;
+      padding: 20px;
+      .info {
+        .ava {
+          margin-right: 15px;
+          .myImg {
+            margin-bottom: 0px;
+          }
+        }
+        .h3 {
+          font-size: 16px; /*no*/
+        }
+        .desc {
+          font-size: 12px; /*no*/
+          color: #999999;
+        }
+      }
+      .er {
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
 </style>
