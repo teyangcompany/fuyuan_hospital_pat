@@ -112,7 +112,8 @@
          this.chooseType(this.sortBy)
          this.showToast = true
          http("smarthos.consult.my.list.page",{
-           token:tokenCache.get()
+           token:tokenCache.get(),
+           pageSize:1000
          }).then((data)=>{
              console.log(data)
            this.showToast = false
@@ -125,7 +126,8 @@
          })
         http("smarthos.consult.my.list.page",{
           token:tokenCache.get(),
-          statusList:['0']
+          statusList:['0'],
+          pageSize:1000
         }).then((data)=>{
           if(data.code == 0){
             this.waitPayLength = data.list.length
@@ -136,7 +138,8 @@
         })
         http("smarthos.consult.my.list.page",{
           token:tokenCache.get(),
-          statusList:['3']
+          statusList:['3'],
+          pageSize:1000
         }).then((data)=>{
           if(data.code == 0){
             this.doingLength = data.list.length
@@ -147,7 +150,8 @@
         })
         http("smarthos.consult.my.list.page",{
           token:tokenCache.get(),
-          statusList:['4']
+          statusList:['4'],
+          pageSize:1000
         }).then((data)=>{
           if(data.code == 0){
             this.waitCommentLength = data.list.length

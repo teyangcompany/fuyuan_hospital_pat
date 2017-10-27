@@ -302,9 +302,9 @@
            this.loadingStatus = false
            this.showToast = false
            this.isComplete = true
-           this.pages = data.page.pages
            console.log(this.pages,111)
              if(data.code == 0){
+               this.pages = data.page.pages
                  this.followList = data.list
              }else{
                  weui.alert(data.msg)
@@ -361,7 +361,7 @@
 //           },
       scrollToEnd(){
         this.listPage +=1;
-        if (this.preventRepeatRequest || this.followList.length <10 || this.listPage > this.pages ) {
+        if (this.followList.length <10 || this.listPage > this.pages ) {
           return
         }
         this.loadingStatus = true
@@ -385,9 +385,9 @@
 //              this.createTime.push(formatDate(new Date(data.list[i].createTime)))
             }
             this.loadingStatus = false
-            if(data.list.length >= 10){
-              this.preventRepeatRequest = false;
-            }
+//            if(data.list.length > 10){
+//              this.preventRepeatRequest = false;
+//            }
           }else if(!(data.msg)){
             this.loadingStatus = false
             weui.alert("网络错误，请稍后重试")
@@ -423,14 +423,14 @@
           orderByScore:this.orderByScore,
           orderByNum:this.orderByNum,
           orderByDocTitle:this.orderByDocTitle,
-          pageSize:10,
-          pageNum:1
+          pageSize:1000,
+//          pageNum:1
         }).then((data)=>{
           console.log(data,66666)
-          this.pages = data.page.pages
           console.log(this.pages,111)
           this.loadingStatus = false
           if(data.code == 0){
+            this.pages = data.page.pages
             this.followList = data.list
           }else{
             weui.alert(data.msg)
@@ -498,11 +498,12 @@
               orderByScore:this.orderByScore,
               orderByNum:this.orderByNum,
               orderByDocTitle:this.orderByDocTitle,
-              pageSize:10,
-              pageNum:1
+              pageSize:1000,
+//              pageNum:1
             }).then((data)=>{
-                console.log(data)
+                console.log(data,12121)
               if(data.code == 0){
+                this.pages = data.page.pages
                 this.followList = data.list
               }else{
                   weui.alert(data.msg)
@@ -522,10 +523,12 @@
             orderByScore:this.orderByScore,
             orderByNum:this.orderByNum,
             orderByDocTitle:this.orderByDocTitle,
-            pageSize:10,
-            pageNum:1,
+//            pageSize:10,
+//            pageNum:1,
           }).then((data)=>{
+           console.log(data,2222)
             if(data.code == 0){
+              this.pages = data.page.pages
               this.followList = data.list
             }else{
                 weui.alert(data.msg)
@@ -542,12 +545,13 @@
       searchContent(){
           if(this.searchContent == ''){
             http("smarthos.user.doc.search",{
-              pageSize:10,
-              pageNum:1
+              pageSize:1000,
+//              pageNum:1
             }).then((data)=>{
               console.log(data,66666)
               this.loadingStatus = false
               if(data.code == 0){
+                this.pages = data.page.pages
                 this.followList = data.list
               }else{
                 weui.alert(data.msg)
