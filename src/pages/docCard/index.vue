@@ -66,6 +66,23 @@
       </div>
     </div>
     <seivice :docId="docId" ref="ser"></seivice>
+    <div v-if="showQrcode" class="ercode">
+      <div class="mask" @click.stop="showQrcode=false"></div>
+      <div class="mainbox">
+        <div class="info flex">
+          <div class="ava">
+            <img class="myImg" :src="doc.docAvatar" alt="" v-if="doc.docAvatar">
+            <img class="myImg" src="../../../static/img/doctorM.png" alt="" v-else></div>
+          <div class="text">
+            <div class="h3">{{doc.docName}} 名医</div>
+            <div class="dept">{{doc.hosName}} &nbsp;&nbsp;&nbsp; {{doc.deptName}}&nbsp;&nbsp; {{doc.docTitle}}</div>
+          </div>
+        </div>
+        <div class="er">
+          <img :src="doc.docQrcode" alt="">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -74,7 +91,7 @@
   import {mainHeightMixin, isBindMixin, jssdkMixin} from '../../lib/mixin'
   import config from '../../lib/config'
   import api from '../../lib/http'
-  import {debug, getShareLink} from "../../lib/util"
+  import {debug, getShareLink, getParamsFromUrl} from "../../lib/util"
 
   export default {
     components: {
@@ -91,7 +108,8 @@
         token: localStorage.getItem('token'),
         doc: {},
         docServeList: "",
-        isFollow: false
+        isFollow: false,
+        showQrcode: false
       }
     },
     created() {
@@ -115,7 +133,6 @@
       __shareInit() {
         let doc = this.doc;
         debug("医生信息", this.doc, getShareLink(location.href));
-
         let conf = {
           title: doc.docName,
           link: getShareLink(location.href),
@@ -171,7 +188,6 @@
           })
         }
       },
-
       getData() {
         api('smarthos.user.doc.card.get', {
           docId: this.docId
@@ -201,6 +217,14 @@
         })
       },
       showService() {
+        let urlParams = getParamsFromUrl(location.href);
+        debug("ppp", urlParams)
+        if (urlParams.query && urlParams.query.comefrom == "share") {
+          this.showQrcode = true
+          return;
+        }
+
+
         if (this.docServeList.length != 0) {
           this.$refs.ser.flag = true
         } else {
@@ -349,5 +373,44 @@
     background: #2772ff;
     width: 33.3333%;
     float: left;
+  }
+
+  .ercode {
+    .mask {
+      position: fixed;
+      @include t_r_b_l();
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, .5);
+    }
+    .mainbox {
+      z-index: 2000;
+      background-color: white;
+      position: fixed;
+      top: 200px;
+      bottom: 200px;
+      left: 100px;
+      right: 100px;
+      padding: 20px;
+      .info {
+        .ava {
+          margin-right: 15px;
+          .myImg {
+            margin-bottom: 0px;
+          }
+        }
+        .h3 {
+          font-size: 16px; /*no*/
+        }
+        .desc {
+          font-size: 12px; /*no*/
+          color: #999999;
+        }
+      }
+      .er {
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
 </style>

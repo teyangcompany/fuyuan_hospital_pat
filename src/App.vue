@@ -1,33 +1,34 @@
 <template>
-
   <div id="app">
-
     <transition :name="page">
       <router-view></router-view>
     </transition>
+    <audio :src="playerSrc"></audio>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {historyCache} from "./lib/cache"
   import http from "./lib/http"
+  import {mapState} from "vuex"
 
   export default {
     name: 'app',
+
     data() {
       return {
         page: ""
       }
     },
-
+    computed: {
+      ...mapState(["playerSrc"])
+    },
     created() {
       /*window.socket = io("test-websocket-smarthos.hztywl.cn:6060");
       window.socket.on('connect', function () {
         console.log("socket成功")
       });*/
     },
-
-
     watch: {
       $route(to, from) {
         let p = to.fullPath;

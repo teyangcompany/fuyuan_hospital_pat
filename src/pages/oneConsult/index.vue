@@ -35,8 +35,10 @@
             <span class="bf">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
-            <img v-for="item in attaList" :src="item.attaFileUrl" alt=""
-                 @click.stop="bigImg(item.attaFileUrl)">
+            <div v-for="item in attaList" class="thumb">
+              <img :src="item.attaFileUrl" alt=""
+                   @click.stop="bigImg(item.attaFileUrl)">
+            </div>
           </div>
           <div class="createDiv">
             <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
@@ -71,8 +73,9 @@
                   <span>  <img class="checkMore" src="../../../static/img/icon/arrow-right-grow.png" alt="">  </span>
 
                 </div>
-                <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'AUDIO'">
-                  <audio autoplay="autoplay" controls="controls" :src="item.consultMessage.replyContent" alt=""></audio>
+                <div class="whatsay_text playbox"
+                     v-else-if="item.consultMessage.replyContentType == 'AUDIO'">
+                  <audio controls="controls" :src="item.consultMessage.replyContent" alt=""></audio>
                 </div>
                 <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'PIC'"
                      @click="makeLarge(item.msgContent)">
@@ -175,9 +178,11 @@
 
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
 
-//  import {mainHeightMixin} from '../../lib/mixin'
-  import { consultPrice } from '../../lib/filter'
+  //  import {mainHeightMixin} from '../../lib/mixin'
+  import {consultPrice} from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
+  import {mapMutations} from "vuex"
+  import {debug} from "../../lib/util"
 
   export default {
     data() {
@@ -243,9 +248,8 @@
       this.consultId = this.$route.params.id
       this.showToast = true
       this.$nextTick(() => {
-           this.getInitData()
-           this.getInitChat()
-
+        this.getInitData()
+        this.getInitChat()
       })
     },
     mounted() {
@@ -263,23 +267,25 @@
     },
     watch: {},
     methods: {
-//<<<<<<< HEAD
-      getInitChat(){
-           http("smarthos.consult.message.list.page",{
-             token:localStorage.getItem('token'),
-             consultId:this.consultId,
-
-           }).then((data)=>{
-               console.log(data,333)
-               if(data.code == 0){
-                 this.aboutReplyMessage = data.list
-               }else{
-                   weui.alert(data.msg)
-               }
-           })
+      ...mapMutations(['setPlayerSrc']),
+      play(src) {
+        debug("kdkdk", src);
+        this.setPlayerSrc(src);
       },
-//      getInitData(){
-//=======
+
+      getInitChat() {
+        http("smarthos.consult.message.list.page", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId,
+        }).then((data) => {
+          console.log(data, 333)
+          if (data.code == 0) {
+            this.aboutReplyMessage = data.list
+          } else {
+            weui.alert(data.msg)
+          }
+        })
+      },
       bigImg(img) {
         let urls = [];
         this.attaList.forEach((res) => {
@@ -291,7 +297,6 @@
         })
       },
       getInitData() {
-//>>>>>>> 1e550cd818021dceb1bcdbecb8a32a9fa3dcc88f
         http("smarthos.consult.details", {
           token: localStorage.getItem('token'),
           consultId: this.consultId
@@ -460,8 +465,8 @@
 //          attaIdList:this.attaId
         }).then((data) => {
 
-            console.log(data)
-          if(data.code == 0){
+          console.log(data)
+          if (data.code == 0) {
             this.getInitChat()
 
 
@@ -658,10 +663,16 @@
     border-radius: 20px;
     border-bottom: 1px solid gainsboro;
     .patImg {
+      $w: 160px;
+      .thumb {
+        margin-right: 10px;
+        margin-top: 10px;
+        display: inline-block;
+        overflow: hidden;
+        @include w_h($w, $w);
+      }
       img {
-        width: 160px;
-        height: 160px;
-        margin-right: 17px;
+        width: $w;
       }
     }
     .createDiv {
@@ -787,8 +798,17 @@
               height: 24px;
               width: 16px;
             }
-            audio {
-              width: 200px;
+            &.playbox {
+              overflow: hidden;
+              width: 152px*2;
+              height: 40px*2;
+              background: none;
+              background-image: url("../../../static/img/player.png");
+              @include backgroundImageSet(152px*2, 40px*2);
+              audio {
+                width: 152px*1.5;
+                height: 40px*1.5;
+              }
             }
             img {
               border-radius: 0;
