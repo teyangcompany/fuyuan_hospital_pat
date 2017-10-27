@@ -6,7 +6,8 @@
     <div class="payInfo">
       <div class="paySum border-1px">
         <span>订单金额</span>
-        <span>{{ fee | consultPrice }}</span>
+        <span v-if="fee">{{ fee | consultPrice }}</span>
+        <span v-else>{{ roomPrice | consultPrice }}</span>
       </div>
       <p class="border-1px payMethod">支付方式:</p>
       <div class="payBy border-1px">
@@ -47,7 +48,8 @@
       return {
         id: "",
         paySort:"",
-        fee:""
+        fee:"",
+        roomPrice:""
       }
     },
     filters:{
@@ -57,6 +59,7 @@
       this.id = this.$route.params.id;
       this.fee = this.$route.query.fee
       this.paySort = this.$route.query.dept
+      this.roomPrice = this.$route.query.roomPrice
 //      setTimeout((res) => {
 //        this.paySucc();
 //      }, 1000)

@@ -15,8 +15,7 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patName.$error }">
-              <input  @blur="$v.patName.$touch()" readonly class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-if="itemInfo.self"/>
-              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名" v-else/>
+              <input  @blur="$v.patName.$touch()" class="weui-input" type="text" v-model="patName"  placeholder="请输入姓名"/>
             </div>
           </div>
           <span class="form-group__message bf" v-if="!$v.patName.minLength&&showNameError">姓名至少2位</span>
@@ -24,21 +23,13 @@
           <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label bf" >身份证号</label></div>
             <div class="weui-cell__bd" :class="{ 'form-group--error':$v.patIdcard.$error }">
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()" readonly  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-if="itemInfo.self"/>
-              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号" v-else/>
+              <input @blur="getAge"  @input="$v.patIdcard.$touch()"  class="weui-input" type="text" v-model="patIdcard" placeholder="请输入身份证号"/>
             </div>
           </div>
         </div>
         <span class="form-group__message bf" v-if="!$v.patIdcard.cd&&showCd">请输入正确的身份证号</span>
         <div class="weui-cells">
-          <a class="weui-cell weui-cell_access" href="javascript:;"  v-if="itemInfo.self">
-            <div class="weui-cell__bd">
-              <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
-            </div>
-            <div class="weui-cell__ft">
-            </div>
-          </a>
-          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone" v-else>
+          <a class="weui-cell weui-cell_access" href="javascript:;" @click="editPhone">
             <div class="weui-cell__bd">
               <p>手机号 &nbsp; &nbsp;&nbsp;{{mobile}}</p>
             </div>
@@ -75,37 +66,38 @@
             <div class="weui-cell__bd bf" v-if="result">
                 {{ result.province.name }} {{ result.city.name == '市辖区' || result.city.name == '县' ? '': result.city.name }} {{ result.area.name == '市辖区' ? '': result.area.name }}
             </div>
-            <div class="weui-cell__bd bf" v-else>
+            <div class="weui-cell__bd bf" v-else-if="itemInfo.areaName">
                 {{ itemInfo.areaName }}
             </div>
-            <div class="weui-cell__ft">
+            <div class="weui-cell__bd bf" v-else>
+
             </div>
+            <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
-          <div class="weui-cell" @click="toggleRelation">
+          <div class="weui-cell relation" @click="toggleRelation">
             <div class="weui-cell__hd"><label class="weui-label bf relationShip">与本人的关系</label></div>
-            <div class="weui-cell__bd">
-                 <p class="relationRight">{{ compatInfo[clickIndex] }}</p>
+            <div class="weui-cell__bd" v-if="itemInfo.relationship">
+                 {{ itemInfo.relationship }}
             </div>
+            <div class="weui-cell__bd" v-else>
+                 {{ compatInfo[clickIndex] }}
+            </div>
+            <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
-          <div class="hosNumber">
-            <p>医院账号</p>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label  class="weui-label bf">浙二医院</label>
-            </div>
-            <div class="weui-cell__bd bf" >
-
-            </div>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label  class="weui-label bf hos">长兴人民医院</label>
-            </div>
-            <div class="weui-cell__bd bf" >
-
-            </div>
-          </div>
+          <!--<div class="hosNumber">-->
+            <!--<p>医院账号</p>-->
+          <!--</div>-->
+          <!--<div class="weui-cell border-1px" v-for="item in hosList">-->
+            <!--<div class="weui-cell__hd">-->
+              <!--<label  class="weui-label bf hos">{{ item.yymc }}</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd bf" >-->
+                 <!--{{ itemInfo.userCommonPatRecords[0].compatRecord  }}-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div @click="addHosNumber" class="addHosNumber">-->
+               <!--<p> + 添加医院账号</p>-->
+          <!--</div>-->
         </div>
       </div>
       <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
@@ -119,6 +111,7 @@
   import api from '../../../lib/http'
   import relationToggle from '../../../base/relationToggle.vue'
   import {mainHeightMixin} from "../../../lib/mixin"
+  import http from '../../../lib/bookApi'
   import vueArea from 'vue-area'
 //  var token  = localStorage.getItem('token')
   export default{
@@ -154,6 +147,7 @@
         itemInfo:"",
         relationInfo:"",
         showPat:false,
+        hosList:"",
         compatInfo:['本人','父母','配偶','子女','亲戚','朋友','其他'],
         clickIndex:0,
         patOption:"",
@@ -171,7 +165,7 @@
       this.$set(this.$data,'gender',this.itemInfo.commpatGender);
 //      this.$set(this.$data,'initAge',this.$route.params.item.compatAge);
       this.$set(this.$data,'compatId',this.itemInfo.id);
-
+      this.getHosList()
     },
     methods:{
       areaResult: function(show, result){
@@ -193,6 +187,21 @@
       },
       toggleArea(){
             this.show = true
+      },
+//      获取医院列表
+      getHosList(){
+           http("smarthos.yygh.ApiHospitalService.areaHosList",{
+           }).then((data)=>{
+               this.hosList = data.list
+
+               console.log(data)
+           })
+      },
+      //添加医院账号
+      addHosNumber(){
+             this.$router.push({
+               path:"/my/addHosNum"
+             })
       },
       getAge(){
         var date = new Date;
@@ -216,23 +225,24 @@
         }else if(this.$v.patIdcard.$invalid){
           this.$set(this.$data,'showCd',true)
         } else {
-          api('smarthos.user.commpat.infomation.modify',{
-            "token":this.token,
-            "commpatId":this.compatId,
-            "commpatName":this.patName,
-            "commpatIdcard":this.patIdcard,
-            relationship:this.compatInfo[this.clickIndex],
-//            areaCode:itemInfo.areaCode ? '':'',
-          }).then(res=>{
-              console.log(res)
-            if(res.succ){
-              this.$router.push({
-                path:"/my/common-visitperson"
-              })
-            }else {
-              this.$weui.alert(res.msg)
-            }
-          })
+             api('smarthos.user.commpat.infomation.modify',{
+               "token":this.token,
+               "commpatId":this.compatId,
+               "commpatName":this.patName,
+               "commpatIdcard":this.patIdcard,
+               relationship:this.compatInfo[this.clickIndex],
+               areaCode:this.result.area.code ? this.result.area.code:itemInfo.areaName,
+             }).then(res=>{
+               console.log(res)
+               if(res.succ){
+                 this.$router.push({
+                   path:"/my/common-visitperson"
+                 })
+               }else {
+                 this.$weui.alert(res.msg)
+               }
+             })
+
         }
       },
       getAge(){
@@ -287,6 +297,10 @@
     color: gray;
     font-weight: 800;
   }
+  .rightArrow{
+    width:16px;
+    height:24px;
+  }
   .weui-cells{
     margin-top: 30px;
   }
@@ -297,7 +311,7 @@
     width:130px;/*no*/
   }
   .relationRight{
-    width:400px;
+    width:300px;
     text-align: right;
   }
   .relationInput{
@@ -314,6 +328,15 @@
       font-size: 28px;
       height:80px;
       line-height: 80px;
+    }
+  }
+  .addHosNumber{
+    width:690px;
+    margin: 0 auto;
+    p{
+      width:690px;
+      color: #3d9bff;
+      text-align: center;
     }
   }
   .hos{

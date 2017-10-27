@@ -4,7 +4,7 @@
             <div v-show="imgList.length>0" class="pic float-left relative"
                  v-for="item in imgList">
                 <img :src="item.attaFileUrl"
-                     alt="">
+                     alt="" @touchend.prevent="makeLarge(item.attaFileUrl)">
             </div>
             <div class="pic float-left relative" v-for="pic in picList">
                 <img @click="scan(pic.url)" :id="pic.id" :src="pic.url?pic.url:pic.thumbUrl"
@@ -52,6 +52,9 @@
                     current: img,
                     urls: urls
                 })
+            },
+            makeLarge(url){
+                 this.$emit('large',url)
             }
         }
     }

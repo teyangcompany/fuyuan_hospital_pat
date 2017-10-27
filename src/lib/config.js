@@ -27,7 +27,8 @@ export default {
     {name: "report", value: "查报告单", path: '/checkReport'},
     {name: "steward", value: "住院管家"},
     {name: "help", value: "就诊指南"},
-    {name: "more", value: "更多", path: '/home/moreSel'}
+    {name: "more", value: "更多"}
+    // {name: "more", value: "更多", path: '/home/moreSel'}
   ],
   my_doc_nav: [
     {name: "follow", value: "关注医生", path: "/docList"},
@@ -42,9 +43,9 @@ export default {
     {name: "my-book", value: "我的挂号", path: "/myRegistration"},
     {name: "common-visitperson", value: "常用就诊人", path: "/common-visitperson"},
     {name: "archives", value: "健康档案", path: "/archives"},
-    {name: "wallet", value: "我的钱包"},
+    {name: "wallet", value: "消费记录",path:'/costLog'},
     // {name: "account", value: "账户相关", path: "/accountAbout"},
-    {name: "about", value: "关于"}
+    // {name: "about", value: "关于"}
   ],
   book_doc_nav: [
     {name: "bypeople", value: "按专家预约"},

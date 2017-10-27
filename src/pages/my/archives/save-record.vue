@@ -112,30 +112,35 @@
             },
             added(file) {
                 file.thumb().then(res => {
-                    file.setThumbUrl(res);
-                    this.picList.push(file);
+                  file.setThumbUrl(res);
+                    if(this.picList.length < 9){
+                      this.picList.push(file);
+                    }else{
+                      weui.alert("最多可上传九张照片")
+                    }
                     this.picList.sort((a, b) => {
                         return a.sort - b.sort
                     })
                 });
             },
             progress(file, pro) {
-                let index = this.picList.findIndex((pic) => {
+
+                  let index = this.picList.findIndex((pic) => {
                     return pic.id == file.id;
-                });
-                this.picList[index].changeStatus("loading");
-                this.picList[index].setProgress(pro);
+                  });
+                  this.picList[index].changeStatus("loading");
+                  this.picList[index].setProgress(pro);
+
             },
             success(file, res) {
-                let index = this.picList.findIndex((pic) => {
+                  let index = this.picList.findIndex((pic) => {
                     return pic.id == file.id;
-                });
-                if (res.code == 0) {
+                  });
+                  if (res.code == 0) {
                     this.picList[index].changeStatus("loaded");
                     this.picList[index].setImgId(res.obj.id);
                     this.picList[index].setUrl(res.obj.attaFileUrl)
-                }
-
+                  }
             },
             save(){
                 if(this.description == '' && this.picList.length == 0){

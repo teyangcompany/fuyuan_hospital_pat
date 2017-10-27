@@ -30,7 +30,8 @@
             return {
                 currentDept: 0,
                 dept: [],
-                subDeptList:[]
+                subDeptList:[],
+                roomPrice:"",
 
             };
         },
@@ -48,6 +49,7 @@
         mounted() {
             this._init();
             this.getData()
+            this.roomPrice = this.$route.query.roomPrice
         },
         beforeDestroy() {
 
@@ -58,7 +60,8 @@
                 this.$router.push({
                     path:'/consultOffice/'+item.id,
                     query:{
-                        officeName:item.deptName
+                        officeName:item.deptName,
+                        roomPrice:this.roomPrice
                     }
                 })
             },

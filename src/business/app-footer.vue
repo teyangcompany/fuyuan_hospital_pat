@@ -40,7 +40,7 @@
     methods: {
         go(index){
             var indexList=["/","/consultList",'/serviceHistory',"/myDetail"];
-        this.$router.push(indexList[index]);
+           this.$router.push(indexList[index]);
 
         },
         setCurrentPage(index){

@@ -1,13 +1,16 @@
 <template>
     <div class="notice">
         <div class="contain">
-            <div class="msg">
-               <p>停诊公告</p>
+            <div class="msg" v-if="docRestNotice.content">
+               <p>
+                   <span>停诊公告</span>
+                   <span class="restTime">{{ docRestNotice.noticeStartDate | Todate}}~{{ docRestNotice.noticeEndDate | Todate}}</span>
+               </p>
                <p>&nbsp; &nbsp;&nbsp; &nbsp;{{docRestNotice.content}}</p>
             </div>
             <div>
                <p>医生公告</p>
-               <p>&nbsp; &nbsp; &nbsp; &nbsp;{{docOrdinaryNotice.content}}</p>
+               <p>{{docOrdinaryNotice.content}}</p>
             </div>
         </div>
 
@@ -18,11 +21,16 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
+    import {Todate,getDay,} from '../../lib/filter'
     export default{
         components: {
             top
         },
         mixins: [mainHeightMixin],
+        filters:{
+          Todate,
+          getDay,
+        },
         data(){
             return {
                 token:localStorage.getItem('token'),
@@ -59,5 +67,12 @@
     }
     .msg{
         margin-bottom: 40px;
+        p:nth-child(1){
+            display: flex;
+            justify-content: space-between;
+            span.restTime{
+              color: red;
+            }
+        }
     }
 </style>

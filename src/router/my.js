@@ -20,6 +20,10 @@ export default [
     component: () => import("../pages/my/archives/presentingComplaint.vue")
   },
   {
+     path:"/my/costLog",
+     component:()=>import("../pages/my/costLog.vue")
+  },
+  {
     path: "/my/archives",
     name: 'healthRecord',
     component: () => import("../pages/my/archives/index.vue")
@@ -43,7 +47,11 @@ export default [
     path: "/my/editUser",
     name: 'editUser',
     component: () => import("../pages/my/common-visitperson/editUser.vue")
-  }, {
+  },{
+     path:"/my/addHosNum",
+     component:()=>import("../pages/my/common-visitperson/addHosNum.vue")
+  },
+  {
     path: "/my/editPhone",
     name: 'editPhone',
     component: () => import("../pages/my/common-visitperson/editPhone.vue")

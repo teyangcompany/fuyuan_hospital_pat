@@ -1,162 +1,162 @@
 <template>
     <div>
-        <div class="contain">
-            <div class="headerTro">
-                <span class="col"></span>
-                <span class="mfb">精选课堂</span>
-                <span class="more mfc">查看更多</span>
-            </div>
-            <div class="docImg">
-                <div class="wrapImg" v-for="item of 2">
-                    <div class="docTro" >
-                        <img class="vioImg"  src="../../../static/img/vio.png" alt="">
-                        <img class="stop" src="../../../static/img/my-doc/zanting.png" alt="">
-                    </div>
-                    <div class="mfb">
-                        M名医课堂，如何有效的避免癌症......
-                    </div>
-                </div>
-            </div>
-            <div class="headerTro">
-                <span class="col"></span>
-                <span class="mfb">精选语音</span>
-                <span class="more mfc">查看更多</span>
-            </div>
-            <div class="docImg voice" v-for="item of 3">
-                <div class="docTitle">
-                    <img src="../../../static/img/test.jpg" alt="">
-                </div>
-                <div class="textDetail">
-                    <p class="mfb">李时珍</p>
-                    <p class="mfc character">眼底病患者应该注意的事项，最好不要长时间用眼,容易造成......</p>
-                    <div class="player">
-                        <div class="zan">
-                            <span class="lis smc">
-                                <img class="good" src="../../../static/img/zan.png" alt="">&nbsp;&nbsp;
-                                200&nbsp;&nbsp;&nbsp;&nbsp;
-                            </span>
-                            <span class="lis smc">2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        </div>
+        <!--<div class="contain">-->
+            <!--<div class="headerTro">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">精选课堂</span>-->
+                <!--<span class="more mfc">查看更多</span>-->
+            <!--</div>-->
+            <!--<div class="docImg">-->
+                <!--<div class="wrapImg" v-for="item of 2">-->
+                    <!--<div class="docTro" >-->
+                        <!--<img class="vioImg"  src="../../../static/img/vio.png" alt="">-->
+                        <!--<img class="stop" src="../../../static/img/my-doc/zanting.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="mfb">-->
+                        <!--M名医课堂，如何有效的避免癌症......-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="headerTro">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">精选语音</span>-->
+                <!--<span class="more mfc">查看更多</span>-->
+            <!--</div>-->
+            <!--<div class="docImg voice" v-for="item of 3">-->
+                <!--<div class="docTitle">-->
+                    <!--<img src="../../../static/img/test.jpg" alt="">-->
+                <!--</div>-->
+                <!--<div class="textDetail">-->
+                    <!--<p class="mfb">李时珍</p>-->
+                    <!--<p class="mfc character">眼底病患者应该注意的事项，最好不要长时间用眼,容易造成......</p>-->
+                    <!--<div class="player">-->
+                        <!--<div class="zan">-->
+                            <!--<span class="lis smc">-->
+                                <!--<img class="good" src="../../../static/img/zan.png" alt="">&nbsp;&nbsp;-->
+                                <!--200&nbsp;&nbsp;&nbsp;&nbsp;-->
+                            <!--</span>-->
+                            <!--<span class="lis smc">2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
+                        <!--</div>-->
 
-                    </div>
-                </div>
-            </div>
-            <div class="headerTro">
-                <span class="col"></span>
-                <span class="mfb">精选文章</span>
-                <span class="more mfc" @click="goArticleList">查看更多</span>
-            </div>
-            <div class="docImg voice" v-for="(item,index) of DocArticleList">
-                <div class="essay">
-                   <p class="mfb">{{item.title}}</p>
-                   <p class="mfc essayCon">{{item.content}}</p>
-                </div>
-                <div class="docTitle">
-                    <img class="smallImg" src="../../../static/img/test.jpg" alt="">
-                </div>
-                <div class="mfc">
-                    <span>{{item.docName}}</span>
-                    <span class="lis smc" >
-                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
-                    {{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;
-                    </span>
-                    <span class="lis smc audience" >{{item.readCount}}人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                </div>
-            </div>
-            <div class="headerTro">
-                <span class="col"></span>
-                <span class="mfb">精选咨询</span>
-                <span class="more mfc">查看更多</span>
-            </div>
-            <div class="docImg voice" v-for="item of 3">
-                <div class="essay">
-                   <p class="mfc essayCon">良好的睡觉可以促进血液循环，皮肤好，血管好等等的......</p>
-                </div>
-                <div class="docTitle">
-                    <img class="smallImg" src="../../../static/img/test.jpg" alt="">
-                </div>
-                <div class="mfc">
-                    <span>李时珍</span>
-                    <span class="lis smc" >
-                    <img class="good" src="../../../static/img/zan.png" alt="" >&nbsp;&nbsp;
-                    200&nbsp;&nbsp;&nbsp;&nbsp;
-                    </span>
-                    <span class="lis smc audience" >2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                </div>
-            </div>
-        </div>
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="headerTro">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">精选文章</span>-->
+                <!--<span class="more mfc" @click="goArticleList">查看更多</span>-->
+            <!--</div>-->
+            <!--<div class="docImg voice" v-for="(item,index) of DocArticleList">-->
+                <!--<div class="essay">-->
+                   <!--<p class="mfb">{{item.title}}</p>-->
+                   <!--<p class="mfc essayCon">{{item.content}}</p>-->
+                <!--</div>-->
+                <!--<div class="docTitle">-->
+                    <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
+                <!--</div>-->
+                <!--<div class="mfc">-->
+                    <!--<span>{{item.docName}}</span>-->
+                    <!--<span class="lis smc" >-->
+                    <!--<img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;-->
+                    <!--{{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <!--</span>-->
+                    <!--<span class="lis smc audience" >{{item.readCount}}人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="headerTro">-->
+                <!--<span class="col"></span>-->
+                <!--<span class="mfb">精选咨询</span>-->
+                <!--<span class="more mfc">查看更多</span>-->
+            <!--</div>-->
+            <!--<div class="docImg voice" v-for="item of 3">-->
+                <!--<div class="essay">-->
+                   <!--<p class="mfc essayCon">良好的睡觉可以促进血液循环，皮肤好，血管好等等的......</p>-->
+                <!--</div>-->
+                <!--<div class="docTitle">-->
+                    <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
+                <!--</div>-->
+                <!--<div class="mfc">-->
+                    <!--<span>李时珍</span>-->
+                    <!--<span class="lis smc" >-->
+                    <!--<img class="good" src="../../../static/img/zan.png" alt="" >&nbsp;&nbsp;-->
+                    <!--200&nbsp;&nbsp;&nbsp;&nbsp;-->
+                    <!--</span>-->
+                    <!--<span class="lis smc audience" >2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
     </div>
 </template>
-<script type="text/ecmascript-6">
-    import top from '../../components/app-header.vue'
-    import {mainHeightMixin} from '../../lib/mixin'
-    import config from '../../lib/config'
-    import api from '../../lib/http'
-    export default{
-            components: {
-            top
-        },
-        mixins: [mainHeightMixin],
-        data(){
-            return {
-                active:true,
-                isActive:true,
-                num:Number,
-                token:localStorage.getItem('token'),
-                docId:sessionStorage.getItem('docId')||"",
-                DocArticleList:[],
-                docObj:{}
-            }
-        },
-        mounted(){
-            console.log(sessionStorage.getItem('docId'));
-            this.getData()
-        },
-        methods:{
-            goArticleList(){
-                this.$router.push({
-                    name:'articleList'
-                })
-            },
-            getData(){
-              api('smarthos.user.doc.choice',{
-                  token:this.token,
-                  docId:this.docId
-              }).then(res=>{
-                  console.log(res,222222);
-                  if(res.succ){
-                      this.DocArticleList = res.obj.userDocArticleList
-                  }else {
-                      alert(res.msg)
-                  }
-              })
-            },
-            addZan(index,id){
-                console.log(21212121212)
-                this.num  = index;
-                api('smarthos.user.doc.article.likes',{
-                    token:this.token,
-                    articleId:id
-                }).then(res=>{
-                    console.log(res,6666);
-                    if(res.succ){
-                        this.getData()
-                    }else {
-                        alert(res.msg)
-                    }
-                })
-            },
+<!--<script type="text/ecmascript-6">-->
+    <!--import top from '../../components/app-header.vue'-->
+    <!--import {mainHeightMixin} from '../../lib/mixin'-->
+    <!--import config from '../../lib/config'-->
+    <!--import api from '../../lib/http'-->
+    <!--export default{-->
+            <!--components: {-->
+            <!--top-->
+        <!--},-->
+        <!--mixins: [mainHeightMixin],-->
+        <!--data(){-->
+            <!--return {-->
+                <!--active:true,-->
+                <!--isActive:true,-->
+                <!--num:Number,-->
+                <!--token:localStorage.getItem('token'),-->
+                <!--docId:sessionStorage.getItem('docId')||"",-->
+                <!--DocArticleList:[],-->
+                <!--docObj:{}-->
+            <!--}-->
+        <!--},-->
+        <!--mounted(){-->
+            <!--console.log(sessionStorage.getItem('docId'));-->
+            <!--this.getData()-->
+        <!--},-->
+        <!--methods:{-->
+            <!--goArticleList(){-->
+                <!--this.$router.push({-->
+                    <!--name:'articleList'-->
+                <!--})-->
+            <!--},-->
+            <!--getData(){-->
+              <!--api('smarthos.user.doc.choice',{-->
+                  <!--token:this.token,-->
+                  <!--docId:this.docId-->
+              <!--}).then(res=>{-->
+                  <!--console.log(res,222222);-->
+                  <!--if(res.succ){-->
+                      <!--this.DocArticleList = res.obj.userDocArticleList-->
+                  <!--}else {-->
+                      <!--alert(res.msg)-->
+                  <!--}-->
+              <!--})-->
+            <!--},-->
+            <!--addZan(index,id){-->
+                <!--console.log(21212121212)-->
+                <!--this.num  = index;-->
+                <!--api('smarthos.user.doc.article.likes',{-->
+                    <!--token:this.token,-->
+                    <!--articleId:id-->
+                <!--}).then(res=>{-->
+                    <!--console.log(res,6666);-->
+                    <!--if(res.succ){-->
+                        <!--this.getData()-->
+                    <!--}else {-->
+                        <!--alert(res.msg)-->
+                    <!--}-->
+                <!--})-->
+            <!--},-->
 
-            toggleArrow(){
-                this.active=!this.active
-            },
-            toggleArrow1(){
-                this.isActive=!this.isActive
-            },
-        }
-    }
-</script>
+            <!--toggleArrow(){-->
+                <!--this.active=!this.active-->
+            <!--},-->
+            <!--toggleArrow1(){-->
+                <!--this.isActive=!this.isActive-->
+            <!--},-->
+        <!--}-->
+    <!--}-->
+<!--</script>-->
 <style scoped lang='scss'>
     @import '../../common/common.scss';
     .contain{

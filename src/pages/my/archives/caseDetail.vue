@@ -53,7 +53,7 @@
         </div>
         <div class="addImg" v-if="caseObj.medicalHistory.creatorType != 'DOC'">
           <!--<img :src="item.attaFileUrl" alt="" v-for="item of imgList">-->
-          <upload-img :picList="picList" :imgList="imgList">
+          <upload-img :picList="picList" :imgList="imgList" @large="makeLarge">
                     <span slot="upload">
                         <upload class="float-left"
                                 :server="config.api_url"
@@ -161,6 +161,18 @@
           weui.alert("字数不能超过500")
         }
       },
+      makeLarge(url){
+           console.log(url)
+            let urls = [];
+            this.imgList.forEach((res) => {
+              urls.push(res.attaFileUrl);
+            })
+
+            wx.previewImage({
+              current: url,
+              urls: urls
+            })
+      },
       getDate(val){
 
            this.time = val
@@ -213,7 +225,11 @@
       added(file) {
         file.thumb().then(res => {
           file.setThumbUrl(res);
-          this.picList.push(file);
+          if(this.picList.length + this.imgList.length < 9){
+            this.picList.push(file);
+          }else{
+            weui.alert("最多可以上传九张照片")
+          }
           this.picList.sort((a, b) => {
             return a.sort - b.sort
           })

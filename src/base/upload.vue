@@ -43,7 +43,7 @@
         methods: {
             change(e) {
                 let files = e.target.files;
-                if(files.length < 9){
+                if(files.length < 10){
                   this.queue = queue(1);
                   for (let i = 0; i < files.length; i++) {
                     let file = files[i];

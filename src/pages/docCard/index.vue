@@ -3,15 +3,15 @@
     <div class="wrapper" ref="main">
       <div class="teamImg">
         <div class="myHeader">
-                    <span class="back" @click="goBack">
-                        <img src="../../../static/img/back.png" alt="">
-                    </span>
+          <span class="back" @click="goBack">
+              <img src="../../../static/img/back.png" alt="">
+          </span>
           <span class="headerImg" @click="share">
-                       <img src="../../../static/img/share.png" alt="">
-                       <span class="mfw">
-                             分享
-                       </span>
-                   </span>
+             <img src="../../../static/img/share.png" alt="">
+             <span class="mfw">
+                   分享
+             </span>
+           </span>
 
           <!--<span class="headerImg">-->
           <!--<img src="../../../static/img/guan.png" alt="" @click="attention">-->
@@ -48,7 +48,9 @@
       </div>
       <div class="navbar">
         <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
-          <span :class="{bar:index==num}">{{item.value}}</span>
+          <span :class="{bar:index==num}">
+               <span> {{item.value}} <span class="restName">{{ item.value1 }}</span></span>
+          </span>
         </div>
       </div>
       <router-view></router-view>
@@ -64,6 +66,10 @@
         <span @click="attention" v-if="!isFollow">关注医生</span>
         <span @click="attention" v-else>取消关注</span>
       </div>
+    </div>
+    <div class="alertArea" v-if="showAndroid || showIos">
+      <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic" v-if="showAndroid">
+      <img src="../../../static/img/ios引导.png" alt="" @click="hidePic" v-if="showIos">
     </div>
     <seivice :docId="docId" ref="ser"></seivice>
     <div v-if="showQrcode" class="ercode">
@@ -109,7 +115,10 @@
         doc: {},
         docServeList: "",
         isFollow: false,
-        showQrcode: false
+        showQrcode: false,
+        showAndroid: false,
+        showIos: false,
+        docRestNotice: ""
       }
     },
     created() {
@@ -127,7 +136,7 @@
 
 //            console.log(this.docId,3333)
       this.getData()
-
+      this.getRestInfo()
     },
     methods: {
       __shareInit() {
@@ -153,11 +162,30 @@
           wx.onMenuShareAppMessage(conf);
         })
       },
-      share() {
-        this.$router.push({
-          path: "/share"
-        })
+      hidePic() {
+        this.showIos = false
+        this.showAndroid = false
       },
+      share() {
+        let UA = window.navigator.userAgent.toLocaleLowerCase();
+        if (/iphone/.test(UA)) {
+          window.device = "iphone";
+        }
+        if (/android/.test(UA)) {
+          window.device = "android";
+        }
+        if (window.device == "iphone") {
+          this.showIos = true
+        } else {
+          this.showAndroid = true
+        }
+
+      },
+//      share() {
+//        this.$router.push({
+//          path: "/share"
+//        })
+//      },
       goBack() {
         this.$router.go(-1)
       },
@@ -170,6 +198,7 @@
 //                    console.log(res,88888);
             if (res.succ) {
               this.isFollow = true
+              weui.alert("关注成功")
             } else {
               weui.alert(res.msg)
             }
@@ -182,6 +211,7 @@
 //                    console.log(res,88888);
             if (res.succ) {
               this.isFollow = false
+              weui.alert("已取消关注")
             } else {
               weui.alert(res.msg)
             }
@@ -207,6 +237,24 @@
             } else {
               alert(res.msg)
             }
+          }
+        })
+      },
+      getRestInfo() {
+        api('smarthos.user.doc.notice.get', {
+          token: this.token,
+          docId: this.docId
+        }).then(res => {
+          console.log(res, 66666);
+          if (res.succ) {
+            this.docRestNotice = res.obj.docRestNotice
+            if (this.docRestNotice.content) {
+              this.bar[2].value1 = '(停诊)'
+            } else {
+              this.bar[2].value1 = ''
+            }
+          } else {
+            weui.alert(res.msg)
           }
         })
       },
@@ -245,6 +293,23 @@
     background: white;
   }
 
+  .alertArea {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    z-index: 10000;
+    img {
+      position: absolute;
+      top: 0;
+      z-index: 10000;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   .wrapper {
     overflow: scroll;
   }
@@ -253,6 +318,7 @@
     width: 100%;
     padding: 0px 30px;
     position: absolute;
+    z-index: 0;
     top: 30px;;
   }
 
@@ -290,6 +356,7 @@
     position: relative;
     width: 100%;
     height: 520px;
+    z-index: 0;
     background-image: url("../../../static/img/docBac.png");
     background-size: 100% 100%;
     background-position: center center;
@@ -328,6 +395,9 @@
     align-items: center;
     padding: 10px 0;
     margin-top: 15px;
+    .restName {
+      color: red;
+    }
   }
 
   .bar {

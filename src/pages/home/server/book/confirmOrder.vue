@@ -333,6 +333,7 @@
           bookHosId:this.hosid
         }).then((data)=>{
           console.log(data)
+          this.showToast = false
             if(data.code == 0){
                  if(data.obj == 'needCreate'){
                      this.showCreateDialog = true
@@ -430,6 +431,7 @@
       },
       //确认预约的点击事件
       goBookService(){
+             this.showToast = true
              this.recordCheck()
       },
 //      getCode(){

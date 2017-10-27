@@ -12,7 +12,7 @@
                         <p>科室 : {{ item.ksmc }}</p>
                         <p v-if="item.ysxm ">医生 : {{item.ysxm }}</p>
                         <p v-else>医生 : 普通号</p>
-                        <p>预估就诊时间 : {{ item.hysj.substr(0,2) }}:{{ item.hysj.substr(2) }} <span style="color: #999999;">(以医院实际情况为准)</span></p>
+                        <p>预估就诊时间 : {{ item.hysj }} <span style="color: #999999;">(以医院实际情况为准)</span></p>
                         <p>支付方式 : 线下支付</p>
                         <p>挂号费 : {{ item.ghf }}</p>
                         <p>取号密码 : {{ item.qhmm }}</p>
@@ -36,6 +36,7 @@
                 </div>
             </div>
         </scroll>
+       <toast v-if="showToast"></toast>
        <v-dialog :dialogTitle="dialogTitle"
                 :dialogMain="dialogMain"
                 :dialogLeftFoot="dialogLeftFoot"
@@ -48,12 +49,14 @@
     import top from '../../../components/app-header.vue'
     import api from '../../../lib/bookApi'
     import http from '../../../lib/http'
+    import Toast from '../../../base/toast.vue'
     import dialog from '../../../base/dialog.vue'
     import scroll from '../../../base/scroll.vue'
     export default{
         components: {
             top,
             scroll,
+            Toast,
             "VDialog":dialog
         },
         filters:{
@@ -73,16 +76,19 @@
                 dialogMain:"确定取消此预约",
                 dialogLeftFoot:"取消",
                 dialogRightFoot:"确定",
-                showDialog:false
+                showDialog:false,
+                showToast:false,
+                token:localStorage.getItem('token')
             }
         },
         created(){
-            console.log(localStorage.getItem('token'))
+            console.log(this.token)
             http("smarthos.user.pat.get",{
                   token:localStorage.getItem('token')
             }).then((data)=>{
+                console.log(data,123456)
                 if(data.code == 0){
-                  this.patId = data.obj.commpat.patId
+                  this.patId = data.obj.userCommonPatVo.patId
                   console.log(this.patId)
                   api("smarthos.yygh.apiOrderService.orderXx",{
                     token:localStorage.getItem('token'),
@@ -114,11 +120,17 @@
           },
           confirmCancel(){
             this.showDialog = false
+            this.showToast = true
             api("smarthos.yygh.apiOrderService.cancel",{
               orderid:this.item.ddid,
               pass:this.item.qhmm
             }).then((data)=>{
-              location.reload()
+              this.showToast = false
+                if(data.code == 0){
+                  location.reload()
+                }else{
+                    weui.alert(data.msg)
+                }
             })
           },
           cancelBook(item){
