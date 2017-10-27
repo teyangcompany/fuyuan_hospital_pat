@@ -1,6 +1,12 @@
 <template>
   <div class="top_bar main_head border-1px">
-    <section class="goBack" @click="goBack">
+    <section class="goBack"  v-if="path == oneConsultPath && historyLength <= 1">
+      <!--<img src="../../static/img/icon/arrow-left-black.png" alt="">-->
+    </section>
+    <section class="goBack"  v-else-if="path== nowPath  && historyLength <= 1">
+      <!--<img src="../../static/img/icon/arrow-left-black.png" alt="">-->
+    </section>
+    <section class="goBack" @click="goBack" v-else>
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
     <section class="title">
@@ -19,7 +25,8 @@
        return{
          path:"",
          nowPath:"",
-         oneConsultPath:""
+         oneConsultPath:"",
+         historyLength:""
        }
     },
     props:{
@@ -39,6 +46,7 @@
     mounted(){
       this.path = this.$route.path
       this.id = this.$route.params.id
+      this.historyLength = window.history.length
       this.nowPath = `/docChat/${this.id}`
       this.oneConsultPath = `/oneConsult/${this.id}`
       console.log(this.nowPath,555)

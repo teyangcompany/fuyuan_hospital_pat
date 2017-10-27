@@ -84,25 +84,20 @@
             </div>
             <img src="../../../../static/img/icon/arrow-right-grow.png" alt="" class="rightArrow">
           </div>
-          <div class="hosNumber">
-            <p>医院账号</p>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label  class="weui-label bf">浙二医院</label>
-            </div>
-            <div class="weui-cell__bd bf" >
-
-            </div>
-          </div>
-          <div class="weui-cell">
-            <div class="weui-cell__hd">
-              <label  class="weui-label bf hos">长兴人民医院</label>
-            </div>
-            <div class="weui-cell__bd bf" >
-
-            </div>
-          </div>
+          <!--<div class="hosNumber">-->
+            <!--<p>医院账号</p>-->
+          <!--</div>-->
+          <!--<div class="weui-cell border-1px" v-for="item in hosList">-->
+            <!--<div class="weui-cell__hd">-->
+              <!--<label  class="weui-label bf hos">{{ item.yymc }}</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd bf" >-->
+                 <!--{{ itemInfo.userCommonPatRecords[0].compatRecord  }}-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div @click="addHosNumber" class="addHosNumber">-->
+               <!--<p> + 添加医院账号</p>-->
+          <!--</div>-->
         </div>
       </div>
       <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
@@ -116,6 +111,7 @@
   import api from '../../../lib/http'
   import relationToggle from '../../../base/relationToggle.vue'
   import {mainHeightMixin} from "../../../lib/mixin"
+  import http from '../../../lib/bookApi'
   import vueArea from 'vue-area'
 //  var token  = localStorage.getItem('token')
   export default{
@@ -151,6 +147,7 @@
         itemInfo:"",
         relationInfo:"",
         showPat:false,
+        hosList:"",
         compatInfo:['本人','父母','配偶','子女','亲戚','朋友','其他'],
         clickIndex:0,
         patOption:"",
@@ -168,7 +165,7 @@
       this.$set(this.$data,'gender',this.itemInfo.commpatGender);
 //      this.$set(this.$data,'initAge',this.$route.params.item.compatAge);
       this.$set(this.$data,'compatId',this.itemInfo.id);
-
+      this.getHosList()
     },
     methods:{
       areaResult: function(show, result){
@@ -190,6 +187,21 @@
       },
       toggleArea(){
             this.show = true
+      },
+//      获取医院列表
+      getHosList(){
+           http("smarthos.yygh.ApiHospitalService.areaHosList",{
+           }).then((data)=>{
+               this.hosList = data.list
+
+               console.log(data)
+           })
+      },
+      //添加医院账号
+      addHosNumber(){
+             this.$router.push({
+               path:"/my/addHosNum"
+             })
       },
       getAge(){
         var date = new Date;
@@ -316,6 +328,15 @@
       font-size: 28px;
       height:80px;
       line-height: 80px;
+    }
+  }
+  .addHosNumber{
+    width:690px;
+    margin: 0 auto;
+    p{
+      width:690px;
+      color: #3d9bff;
+      text-align: center;
     }
   }
   .hos{

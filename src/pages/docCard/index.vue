@@ -48,7 +48,9 @@
       </div>
       <div class="navbar">
         <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
-          <span :class="{bar:index==num}">{{item.value}}</span>
+          <span :class="{bar:index==num}">
+               <span > {{item.value}} <span class="restName">{{ item.value1 }}</span></span>
+          </span>
         </div>
       </div>
       <router-view></router-view>
@@ -97,7 +99,8 @@
         docServeList: "",
         isFollow: false,
         showAndroid:false,
-        showIos:false
+        showIos:false,
+        docRestNotice:""
       }
     },
     created() {
@@ -115,7 +118,7 @@
 
 //            console.log(this.docId,3333)
       this.getData()
-
+      this.getRestInfo()
     },
     methods: {
       __shareInit() {
@@ -218,6 +221,24 @@
             } else {
               alert(res.msg)
             }
+          }
+        })
+      },
+      getRestInfo(){
+        api('smarthos.user.doc.notice.get',{
+          token:this.token,
+          docId:this.docId
+        }).then(res=>{
+          console.log(res,66666);
+          if(res.succ){
+            this.docRestNotice = res.obj.docRestNotice
+            if(this.docRestNotice.content){
+                 this.bar[2].value1 = '(停诊)'
+            }else{
+              this.bar[2].value1 = ''
+            }
+          }else {
+            weui.alert(res.msg)
           }
         })
       },
@@ -349,6 +370,9 @@
     align-items: center;
     padding: 10px 0;
     margin-top: 15px;
+    .restName{
+      color: red;
+    }
   }
 
   .bar {

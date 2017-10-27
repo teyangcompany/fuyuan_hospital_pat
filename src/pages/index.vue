@@ -18,17 +18,19 @@
             </div>
             <div class="fastnav">
                 <ul>
-
-                    <li :class="[item.name]" v-for="item in fastNav" @click="goMyRouter(item)">
+                     <li>
+                       <img src="../../static/img/箭头.png" alt="" @click="goDoctor">
+                     </li>
+                    <!--<li :class="[item.name]" v-for="item in fastNav" @click="goMyRouter(item)">-->
 
                         <!--<li :class="[item.name]" v-for="(item,index) in fastNav" @click="go(index)">-->
 
-                        <div class="name">{{item.value}}</div>
-                        <div class="text">{{item.text}}</div>
-                        <div class="btn">
-                            <span>{{item.btn}}</span>
-                        </div>
-                    </li>
+                        <!--<div class="name">{{item.value}}</div>-->
+                        <!--<div class="text">{{item.text}}</div>-->
+                        <!--<div class="btn">-->
+                            <!--<span>{{item.btn}}</span>-->
+                        <!--</div>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="indexnav">
@@ -132,6 +134,11 @@
                 console.log(item)
                 item.path && this.$router.push(item.path);
             },
+            goDoctor(){
+                this.$router.push({
+                  path:"my/consultService/consultDoc"
+                })
+            },
             goMyRouter(item) {
 
                 this.$router.push(item.route)
@@ -193,8 +200,13 @@
                         background-size: 100% 100%;
                         flex: 0 0 auto;
                         padding-top: 20px;
-                        padding-left: $commonSpace;
-                        width: 50%;
+                        /*<!--padding-left: $commonSpace;-->*/
+                        /*width: 50%;*/
+                        width:100%;
+                        img{
+                          width:100%;
+                          /*box-shadow: 5px 5px 20px #888888;*/
+                        }
                         .name {
                             font-size: 16px; /*no*/
                         }

@@ -5,7 +5,7 @@
            <div class="topInfo border-1px">
              <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
            </div>
-           <div class="topInfo border-1px">
+           <div class="topIllName border-1px">
              <p>疾病名称: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</span> </p>
            </div>
            <div class="detailList">
@@ -236,6 +236,14 @@
            margin:0 auto;
            height: 80px;
            line-height: 80px;
+           background-color: #FFFFFF;
+           p{
+             font-size: 32px;
+           }
+         }
+         .topIllName{
+           width: 690px;
+           margin:0 auto;
            background-color: #FFFFFF;
            p{
              font-size: 32px;
