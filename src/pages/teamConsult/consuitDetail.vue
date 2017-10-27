@@ -1,9 +1,11 @@
 <template>
   <div class="page">
-    <top class="noflex" title="" ref="header">
-      <!--<i slot="back" @click="goBack"></i>-->
-      <div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>
-    </top>
+    <!--<top class="noflex" title="" ref="header">-->
+      <!--&lt;!&ndash;<i slot="back" @click="goBack"></i>&ndash;&gt;-->
+      <!--<div slot="right" class="right absolute" v-if="consultInfo.consultStatus=='3'" @click="closeConsult">结束咨询</div>-->
+    <!--</top>-->
+    <v-header :title="title" :rightTitle="rightOverTitle" v-if="consultInfo.consultStatus=='3'" @on-docCard="closeConsult"></v-header>
+    <v-header :title="title" :rightTitle="rightTitle" v-else></v-header>
     <div class="wrapper" ref="Scroll" @click="closeCheckList">
       <div>
         <div class="weui-cells">
@@ -145,6 +147,7 @@
     <div class="btn" v-show="consultInfo.consultStatus=='6'" @click="consultAgain">
       <p class="mfb reply ">再次咨询</p>
     </div>
+    <toast v-if="showToast"></toast>
     <v-dialog @on-cancel="over" @on-download="overConsult" v-if="showOverConsult"
               :dialogTitle="dialogOverTitle"
               :dialogMain="dialogOverMain"
@@ -162,20 +165,27 @@
 <script type="text/ecmascript-6">
   import top from '../../components/app-header.vue'
   import BScroll from 'better-scroll'
+  import header from '../../base/header.vue'
   import editDiv from '../../components/editDiv.vue'
   import api from '../../lib/http'
   import {goodTime, Getdate, consultPrice} from '../../lib/filter'
   import ajax from '../../lib/ajax'
   import dialog from '../../base/dialog.vue'
-
+  import Toast from '../../base/toast.vue'
   export default {
     components: {
       top,
       editDiv,
-      "VDialog": dialog
+      Toast,
+      "VDialog": dialog,
+      "VHeader":header
     },
     data() {
       return {
+        title:"",
+        rightTitle:"",
+        rightOverTitle:"结束咨询",
+        showToast:false,
         flag: true,
         text: '',
         clean: false,
@@ -189,6 +199,7 @@
         attaList: [],
         consultInfo: {},
         userPat: {},
+        picURL:"",
         noReadReplyCount: Number,
         replyContentType: "TEXT",
         showOverConsult: false,
@@ -252,8 +263,31 @@
         var fileName = e.target.files[0].name;
         ajax('smarthos.system.file.upload', file, 'IMAGE', fileName, "PAT").then(res => {
           if (res.succ) {
-            this.text = res.obj.attaFileUrl;
+            this.picURL = res.obj.attaFileUrl;
             console.log(res.obj.attaFileUrl, 7777)
+
+            api('smarthos.consult.platform.pic.reply', {
+              token: this.token,
+              consultId: this.consultId,
+              replyContent: this.picURL,
+              replyContentType: "PIC"
+            }).then(res => {
+              if (res.succ) {
+                console.log(res, 598976);
+                this.getData();
+                this.getInitChat()
+                this.$set(this.$data, 'clean', !this.clean);
+                this.text = ''
+              } else {
+                alert(res.msg)
+              }
+            })
+
+
+
+
+
+
           } else {
             alert(res.msg)
           }
@@ -334,10 +368,12 @@
         })
       },
       getData() {
+          this.showToast = true
         api('smarthos.consult.details', {
           token: this.token,
           consultId: this.consultId
         }).then(res => {
+          this.showToast = false
           console.log(res, 352679);
           if (res.succ) {
             this.attaList = res.obj.attaList;
@@ -367,12 +403,12 @@
       },
       send() {
         console.log(this.text, 22222);
-        this.text.indexOf('http') == '-1' ? this.replyContentType = 'TEXT' : this.replyContentType = 'PIC';
+//        this.text.indexOf('http') == '-1' ? this.replyContentType = 'TEXT' : this.replyContentType = 'PIC';
         api('smarthos.consult.platform.pic.reply', {
           token: this.token,
           consultId: this.consultId,
           replyContent: this.text,
-          replyContentType: this.replyContentType
+          replyContentType: "TEXT"
         }).then(res => {
           if (res.succ) {
             console.log(res, 598976);
@@ -387,6 +423,7 @@
 
 
       },
+
 //            startRecord(){
 //                this.time= new Date();
 //                this.$set(this.$data,'msg','松开结束')
@@ -708,7 +745,7 @@
   }
 
   .robot-room-wirte .send-btn {
-    width: 86px;
+    width: 116px;
     height: 64px;
     line-height: 64px;
     box-sizing: border-box;
@@ -721,8 +758,8 @@
     color: white;
     display: block;
     font-size: 28px;
-    min-width: 100px;
-    max-width: 100px;
+    min-width: 150px;
+    /*max-width: 100px;*/
     background: #3d9bff;
     border: 1px solid #ddd;
     box-sizing: border-box;

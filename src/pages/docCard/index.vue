@@ -89,6 +89,7 @@
         </div>
       </div>
     </div>
+    <toast v-if="showToast"></toast>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -97,12 +98,14 @@
   import {mainHeightMixin, isBindMixin, jssdkMixin} from '../../lib/mixin'
   import config from '../../lib/config'
   import api from '../../lib/http'
+  import Toast from '../../base/toast.vue'
   import {debug, getShareLink, getParamsFromUrl} from "../../lib/util"
 
   export default {
     components: {
       top,
-      seivice
+      seivice,
+      Toast
     },
     mixins: [mainHeightMixin, isBindMixin, jssdkMixin],
     data() {
@@ -118,7 +121,8 @@
         showQrcode: false,
         showAndroid: false,
         showIos: false,
-        docRestNotice: ""
+        docRestNotice: "",
+        showToast:false
       }
     },
     created() {
@@ -219,9 +223,11 @@
         }
       },
       getData() {
+          this.showToast = true
         api('smarthos.user.doc.card.get', {
           docId: this.docId
         }).then(res => {
+          this.showToast = false
           if (res.succ) {
             this.doc = res.obj.doc;
             this.docServeList = res.obj.docServeList
