@@ -178,7 +178,7 @@
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
 
   //  import {mainHeightMixin} from '../../lib/mixin'
-  import { consultPrice } from '../../lib/filter'
+  import {consultPrice} from '../../lib/filter'
   //  import consultPatAva from "../../../utils/consultPatAva"
 
   export default {
@@ -266,16 +266,16 @@
     watch: {},
     methods: {
 //<<<<<<< HEAD
-      getInitChat(){
-        http("smarthos.consult.message.list.page",{
-          token:localStorage.getItem('token'),
-          consultId:this.consultId,
-          pageSize:1000
-        }).then((data)=>{
-          console.log(data,333)
-          if(data.code == 0){
+      getInitChat() {
+        http("smarthos.consult.message.list.page", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId,
+          pageSize: 1000
+        }).then((data) => {
+          console.log(data, 333)
+          if (data.code == 0) {
             this.aboutReplyMessage = data.list
-          }else{
+          } else {
             weui.alert(data.msg)
           }
         })
@@ -305,12 +305,16 @@
           if (data.code == 0) {
             console.log("成功")
             this.$nextTick(() => {
-              this.userPat = data.obj.userPat;
-              this.attaList = data.obj.attaList;
               this.consultInfo = data.obj.consultInfo
-              this.aboutUserInfo = data.obj
-              this.title = data.obj.userDocVo.docName
-              this.waitImg = data.obj.userDocVo.docAvatar
+              if (this.consultInfo.consultType == "PLATFORMPIC") {
+                this.$router.replace(`/consuitDetail/${this.consultId}`);
+              } else {
+                this.userPat = data.obj.userPat;
+                this.attaList = data.obj.attaList;
+                this.aboutUserInfo = data.obj
+                this.title = data.obj.userDocVo.docName
+                this.waitImg = data.obj.userDocVo.docAvatar
+              }
 //              this.vipStatus = data.obj.followDocpat.vipStatus
 
 //              this.docId = data.obj.userDocVO.id
@@ -465,7 +469,7 @@
         }).then((data) => {
 
           console.log(data)
-          if(data.code == 0){
+          if (data.code == 0) {
             this.getInitChat()
 
 
@@ -663,7 +667,7 @@
     border-radius: 20px;
     border-bottom: 1px solid gainsboro;
     .patImg {
-      .thumb{
+      .thumb {
         width: 160px;
         height: 160px;
         margin-right: 17px;
