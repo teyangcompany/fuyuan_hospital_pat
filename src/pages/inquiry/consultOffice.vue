@@ -182,7 +182,7 @@
                       }else{
                          this.$router.push({
                            path: '/pay/' + res.obj.consultInfo.id,
-                           query: {roomPrice: this.roomPrice}
+                           query: {roomPrice: this.roomPrice,source:'room'}
                          })
                       }
                     }else {
