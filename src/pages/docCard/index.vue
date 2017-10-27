@@ -453,7 +453,7 @@
       background-color: rgba(0, 0, 0, .5);
     }
     .mainbox {
-      z-index: 2000;
+      z-index: 3000;
       background-color: white;
       position: fixed;
       top: 200px;
