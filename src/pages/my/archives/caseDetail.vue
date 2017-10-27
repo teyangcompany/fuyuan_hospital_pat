@@ -36,7 +36,7 @@
             <div class="weui-cell">
               <div class="weui-cell__bd wordLimit">
                 <p class="bf">请输入病历详情</p>
-                <p>{{ textLength }}/500</p>
+                <p v-if="caseObj.medicalHistory.creatorType != 'DOC'">{{ textLength }}/500</p>
               </div>
             </div>
           </div>
@@ -65,6 +65,12 @@
                                 @success="success"
                                 @added="added"></upload>
                     </span>
+          </upload-img>
+        </div>
+        <div class="addImg" v-else>
+          <!--<img :src="item.attaFileUrl" alt="" v-for="item of imgList">-->
+          <upload-img :picList="picList" :imgList="imgList" @large="makeLarge">
+
           </upload-img>
         </div>
         <div class="btn">

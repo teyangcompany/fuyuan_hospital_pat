@@ -181,7 +181,7 @@
                             } else {
                                 this.$router.push({
                                     path: 'pay/' + res.obj.consultInfo.id,
-                                    query: {fee: this.fee}
+                                    query: {fee: this.fee,source:'image'}
                                 })
                             }
                         } else {

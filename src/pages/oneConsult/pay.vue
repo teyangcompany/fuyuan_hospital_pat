@@ -49,7 +49,8 @@
         id: "",
         paySort:"",
         fee:"",
-        roomPrice:""
+        roomPrice:"",
+        source:""
       }
     },
     filters:{
@@ -59,6 +60,7 @@
       this.id = this.$route.params.id;
       this.fee = this.$route.query.fee
       this.paySort = this.$route.query.dept
+      this.source = this.$route.query.source
       this.roomPrice = this.$route.query.roomPrice
 //      setTimeout((res) => {
 //        this.paySucc();
@@ -93,10 +95,22 @@
                     }
                 } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
                   console.log("支付过程中用户取消")
-                  this.$router.back(-1)
+                  if(this.source == 'room'){
+                    this.$router.push("/consuitDetail/" + this.id)
+                  }else if(this.source == 'image'){
+                    this.$router.push("/oneConsult/" + this.id)
+                  }else{
+                    this.$router.back(-1)
+                  }
                 } else if (res.err_msg == "get_brand_wcpay_request:fail") {
                   console.log("支付失败")
-                  this.$router.back(-1)
+                  if(this.source == 'room'){
+                    this.$router.push("/consuitDetail/" + this.id)
+                  }else if(this.source == 'image'){
+                    this.$router.push("/oneConsult/" + this.id)
+                  }else{
+                    this.$router.back(-1)
+                  }
                  weui.alert(JSON.stringify(res))
                 }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
               }
