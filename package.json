@@ -1,10 +1,6 @@
 {
     "name": "fuyuan_hospital_pat",
-<<<<<<< HEAD
-    "version": "1.0.21",
-=======
-    "version": "1.0.27",
->>>>>>> 356cc2eceb8ce5c87725c13cfccfbd4e3e50ce1a
+    "version": "1.0.22",
     "description": "A Vue.js project",
     "author": "lmw6412036 <lmw6412036@sina.com>",
     "private": true,
