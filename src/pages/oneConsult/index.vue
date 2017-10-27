@@ -35,9 +35,10 @@
             <span class="bf">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
-
-            <img v-for="item in attaList" :src="item.attaFileUrl" alt=""
-                 @click.stop="bigImg(item.attaFileUrl)">
+            <div v-for="item in attaList" class="thumb">
+              <img :src="item.attaFileUrl" alt=""
+                   @click.stop="bigImg(item.attaFileUrl)">
+            </div>
           </div>
           <div class="createDiv">
             <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
@@ -662,10 +663,15 @@
     border-radius: 20px;
     border-bottom: 1px solid gainsboro;
     .patImg {
-      img {
+      .thumb{
         width: 160px;
         height: 160px;
         margin-right: 17px;
+        overflow: hidden;
+        display: inline-block;
+      }
+      img {
+        width: 160px;
       }
     }
     .createDiv {

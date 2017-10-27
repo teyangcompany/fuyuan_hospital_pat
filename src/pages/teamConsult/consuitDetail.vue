@@ -10,8 +10,8 @@
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
               <p>
-                                <span  class="bf">患者资料： {{consultInfo.consulterName}}
-                                    {{consultInfo.consulterGender='M'?'男':'女'}}
+                                <span class="bf">患者资料： {{consultInfo.consulterName}}
+                                    {{consultInfo.consulterGender = 'M' ? '男' : '女'}}
                                     {{consultInfo.consulterAge}}
                                 </span>
               </p>
@@ -35,12 +35,15 @@
             <span class="bf">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
-            <img v-for="item of attaList"  :src="item.attaFileUrl" alt="" @touchend.prevent="bigImg(item.attaFileUrl)">
+            <div v-for="item in attaList" class="thumb">
+              <img :src="item.attaFileUrl" alt="" @touchend.prevent="bigImg(item.attaFileUrl)">
+            </div>
           </div>
           <div class="createDiv">
                         <span class="mfc create">
                           <img :src="userPat.patAvatar" alt="" v-if="userPat.patAvatar">
-                          <img src="../../../static/img/pat.f.jpg" alt="" v-else-if="!(userPat.patAvatar) && userPat.patGender != 'M'">
+                          <img src="../../../static/img/pat.f.jpg" alt=""
+                               v-else-if="!(userPat.patAvatar) && userPat.patGender != 'M'">
                           <img src="../../../static/img/pat.m.jpg" alt="" v-else>
                           <span v-if="consultInfo.consulterName">{{consultInfo.consulterName}}</span>
                         </span>
@@ -69,7 +72,8 @@
           <div v-else class="patAnswer">
             <div class="docImg">
               <img :src="item.userPat.patAvatar" alt="" v-if="item.userPat.patAvatar">
-              <img src="../../../static/img/pat.m.jpg" alt="" v-else-if="!(item.userPat.patAvatar) && item.userPat.patGender == 'M'">
+              <img src="../../../static/img/pat.m.jpg" alt=""
+                   v-else-if="!(item.userPat.patAvatar) && item.userPat.patGender == 'M'">
               <img src="../../../static/img/pat.f.jpg" alt="" v-else>
             </div>
             <div class="docMsg">
@@ -83,12 +87,13 @@
             </div>
           </div>
           <div v-if="item.consultMessage.replyContentType=='TEXT'">
-                        <span class="bf" >
+                        <span class="bf">
                             {{item.consultMessage.replyContent}}
                         </span>
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='PIC'">
-            <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeLarge(item.consultMessage.replyContent)">
+            <img class="replyImg" :src="item.consultMessage.replyContent" alt=""
+                 @click="makeLarge(item.consultMessage.replyContent)">
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
             <span>语音需要转换格式</span>
@@ -97,7 +102,7 @@
         </div>
       </div>
     </div>
-    <div v-show="consultInfo.consultStatus=='3'"  class="bottom">
+    <div v-show="consultInfo.consultStatus=='3'" class="bottom">
       <div class="robot-room-wirte yk-box yk-cell">
         <!--<div class="talkImg">-->
         <!--<img src="../../../static/img/talk.png" alt="" @click="setType">-->
@@ -106,17 +111,17 @@
         <!--{{msg}}-->
         <!--</div>-->
         <div class="yk-cell-bd mr10">
-          <input :message="clean" v-model="text" id="inputArea" class="input-text" />
+          <input :message="clean" v-model="text" id="inputArea" class="input-text"/>
         </div>
         <div v-if="text == ''" class="showJia" @click="showCheckList">
           <span class="jia">+</span>
         </div>
         <button v-if="text != ''" class="send-btn" @click="send">发送</button>
       </div>
-      <div  class="checkList" v-show="checkList">
+      <div class="checkList" v-show="checkList">
         <div class="upload">
           <label for="upload_img" class="label_img">图片</label>
-          <input  type="file" id="upload_img" @change="upLoad">
+          <input type="file" id="upload_img" @change="upLoad">
         </div>
       </div>
     </div>
@@ -159,66 +164,66 @@
   import BScroll from 'better-scroll'
   import editDiv from '../../components/editDiv.vue'
   import api from '../../lib/http'
-  import {goodTime,Getdate,consultPrice} from '../../lib/filter'
+  import {goodTime, Getdate, consultPrice} from '../../lib/filter'
   import ajax from '../../lib/ajax'
   import dialog from '../../base/dialog.vue'
-  export default{
+
+  export default {
     components: {
       top,
       editDiv,
-      "VDialog":dialog
+      "VDialog": dialog
     },
-    data(){
+    data() {
       return {
-        flag:true,
-        text:'',
-        clean:false,
-        checkList:false,
-        type:"text",
-        time:'',
-        msg:'按住说话',
-        arr:[],
-        consultId:"",
-        token:localStorage.getItem('token'),
-        attaList:[],
-        consultInfo:{},
-        userPat:{},
-        noReadReplyCount:Number,
-        replyContentType:"TEXT",
-        showOverConsult:false,
+        flag: true,
+        text: '',
+        clean: false,
+        checkList: false,
+        type: "text",
+        time: '',
+        msg: '按住说话',
+        arr: [],
+        consultId: "",
+        token: localStorage.getItem('token'),
+        attaList: [],
+        consultInfo: {},
+        userPat: {},
+        noReadReplyCount: Number,
+        replyContentType: "TEXT",
+        showOverConsult: false,
         dialogOverTitle: "结束咨询",
         dialogOverMain: "结束咨询后双方都无法继续回复。请酌情使用该功能",
         dialogOverLeft: "取消",
         dialogOverRight: "确定结束",
-        dialogTitle:"取消申请",
-        dialogMain:"确定取消申请",
-        dialogLeftFoot:"取消",
-        dialogRightFoot:"确定",
-        showDialog:false
+        dialogTitle: "取消申请",
+        dialogMain: "确定取消申请",
+        dialogLeftFoot: "取消",
+        dialogRightFoot: "确定",
+        showDialog: false
       }
     },
-    filters:{
+    filters: {
       goodTime,
       Getdate,
       consultPrice
     },
-    mounted(){
+    mounted() {
       this.consultId = this.$route.params.id;
       this.getData()
       this.getInitChat()
 //            this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
 //            this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
-      this.scroll = new BScroll(this.$refs.Scroll,{
-        click:true,
+      this.scroll = new BScroll(this.$refs.Scroll, {
+        click: true,
         probeType: 1,
         bounce: true
       });
     },
-    watch:{
-    },
-    methods:{
+    watch: {},
+    methods: {
       //显示大图
-      bigImg(img){
+      bigImg(img) {
         console.log("12")
         let urls = [];
         this.attaList.forEach((res) => {
@@ -235,147 +240,147 @@
 //                });
       },
 //            一张一张的显示大图
-      makeLarge(url){
+      makeLarge(url) {
         wx.previewImage({
           current: url,
           urls: [url]
         })
       },
       //上传图片
-      upLoad(e){
+      upLoad(e) {
         var file = e.target.files[0];
         var fileName = e.target.files[0].name;
-        ajax('smarthos.system.file.upload',file,'IMAGE',fileName,"PAT").then(res=>{
-          if(res.succ){
-            this.text= res.obj.attaFileUrl;
-            console.log( res.obj.attaFileUrl,7777)
-          }else {
+        ajax('smarthos.system.file.upload', file, 'IMAGE', fileName, "PAT").then(res => {
+          if (res.succ) {
+            this.text = res.obj.attaFileUrl;
+            console.log(res.obj.attaFileUrl, 7777)
+          } else {
             alert(res.msg)
           }
         })
       },
       //结束咨询
-      closeConsult(){
+      closeConsult() {
         this.showOverConsult = true
       },
-      over(){
+      over() {
         this.showOverConsult = false
       },
-      overConsult(){
+      overConsult() {
         this.showOverConsult = false
-        api("smarthos.consult.platform.pic.complete",{
-          token:this.token,
-          consultId:this.consultId
-        }).then((data)=>{
-          if(data.code == 0){
+        api("smarthos.consult.platform.pic.complete", {
+          token: this.token,
+          consultId: this.consultId
+        }).then((data) => {
+          if (data.code == 0) {
             this.getData()
-          }else{
+          } else {
             weui.alert(data.msg)
           }
           console.log(data)
         })
       },
       //再次咨询
-      consultAgain(){
+      consultAgain() {
         this.$router.push('/officeConsult')
       },
       //评价
-      comment(){
+      comment() {
         this.$router.push({
-          path:"/evaluate/"+this.consultId,
-          query:{consultType:this.consultInfo.consultType}
+          path: "/evaluate/" + this.consultId,
+          query: {consultType: this.consultInfo.consultType}
         })
       },
       //付款
-      goPay(){
+      goPay() {
         this.$router.push({
-          path:'/pay/'+this.consultId,
-          query:{paySort:'dept',fee:this.consultInfo.payFee}
+          path: '/pay/' + this.consultId,
+          query: {paySort: 'dept', fee: this.consultInfo.payFee}
         })
       },
       //取消申请
-      cancelConsult(){
+      cancelConsult() {
         this.showDialog = true
       },
-      cancelDialog(){
+      cancelDialog() {
         this.showDialog = false
       },
-      cancelApply(){
+      cancelApply() {
         this.showDialog = false
-        api("smarthos.consult.pic.cancel",{
-          token:localStorage.getItem('token'),
-          consultId:this.consultId
-        }).then((data)=>{
-          if(data.code == 0){
+        api("smarthos.consult.pic.cancel", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId
+        }).then((data) => {
+          if (data.code == 0) {
             this.getData()
-          }else{
+          } else {
             weui.alert(data.msg)
           }
           console.log(data)
         })
       },
-      getInitChat(){
-        api("smarthos.consult.message.list.page",{
-          token:localStorage.getItem('token'),
-          consultId:this.consultId,
-          pageSize:1000
-        }).then((data)=>{
-          if(data.code == 0){
+      getInitChat() {
+        api("smarthos.consult.message.list.page", {
+          token: localStorage.getItem('token'),
+          consultId: this.consultId,
+          pageSize: 1000
+        }).then((data) => {
+          if (data.code == 0) {
             this.arr = data.list
             console.log(data)
-          }else{
+          } else {
             weui.alert(data.msg)
           }
         })
       },
-      getData(){
-        api('smarthos.consult.details',{
-          token:this.token,
-          consultId:this.consultId
-        }).then(res=>{
-          console.log(res,352679);
-          if(res.succ){
+      getData() {
+        api('smarthos.consult.details', {
+          token: this.token,
+          consultId: this.consultId
+        }).then(res => {
+          console.log(res, 352679);
+          if (res.succ) {
             this.attaList = res.obj.attaList;
             this.consultInfo = res.obj.consultInfo;
             this.userPat = res.obj.userPat;
             this.noReadReplyCount = res.obj.noReadReplyCount;
-            res.obj.consultMessage?this.arr =res.obj.consultMessage:"";
+            res.obj.consultMessage ? this.arr = res.obj.consultMessage : "";
 
-            setTimeout(()=>{
-              this.scroll = new BScroll(this.$refs.Scroll,{
-                click:true,
+            setTimeout(() => {
+              this.scroll = new BScroll(this.$refs.Scroll, {
+                click: true,
                 probeType: 1,
                 bounce: true
               });
 //                          this.scroll.scrollToElement(this.$refs.lastItem[this.$refs.lastItem.length-1])
 
-            },500)
-          }else {
+            }, 500)
+          } else {
             alert(res.msg)
           }
         })
       },
-      goBack(){
+      goBack() {
         this.$router.push({
-          path:"/my/consultService/myConsult"
+          path: "/my/consultService/myConsult"
         })
       },
-      send(){
-        console.log(this.text,22222);
-        this.text.indexOf('http')=='-1'?this.replyContentType='TEXT':this.replyContentType='PIC';
-        api('smarthos.consult.platform.pic.reply',{
-          token:this.token,
-          consultId:this.consultId,
-          replyContent:this.text,
-          replyContentType:this.replyContentType
-        }).then(res=>{
-          if(res.succ){
-            console.log(res,598976);
+      send() {
+        console.log(this.text, 22222);
+        this.text.indexOf('http') == '-1' ? this.replyContentType = 'TEXT' : this.replyContentType = 'PIC';
+        api('smarthos.consult.platform.pic.reply', {
+          token: this.token,
+          consultId: this.consultId,
+          replyContent: this.text,
+          replyContentType: this.replyContentType
+        }).then(res => {
+          if (res.succ) {
+            console.log(res, 598976);
             this.getData();
             this.getInitChat()
-            this.$set(this.$data,'clean',!this.clean);
-            this.text= ''
-          }else {
+            this.$set(this.$data, 'clean', !this.clean);
+            this.text = ''
+          } else {
             alert(res.msg)
           }
         })
@@ -409,12 +414,12 @@
 //                }
 //
 //            },
-      showCheckList(){
-        this.checkList = ! this.checkList
+      showCheckList() {
+        this.checkList = !this.checkList
 //                this.$set(this.$data,'checkList',true)
       },
-      closeCheckList(){
-        this.$set(this.$data,'checkList',false)
+      closeCheckList() {
+        this.$set(this.$data, 'checkList', false)
       },
 
     }
@@ -422,23 +427,26 @@
 </script>
 <style scoped lang='scss'>
   @import '../../common/common.scss';
-  .evaluate{
+
+  .evaluate {
     display: inline-block;
     width: 49%;
     text-align: center;
     height: 80px;
     line-height: 80px;
   }
-  .bor{
+
+  .bor {
     border-right: 1px solid gainsboro;
   }
 
-  .replyImg{
+  .replyImg {
     width: 150px;
     height: 150px;
     margin: 10px;
   }
-  .btn{
+
+  .btn {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -446,101 +454,116 @@
     background: white;
     display: flex;
     align-items: center;
-    div{
-      width:100%;
+    div {
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      p{
-        height:50px;
+      p {
+        height: 50px;
         margin-bottom: 20px;
         text-align: center;
       }
     }
   }
-  .reply{
+
+  .reply {
     text-align: center;
     height: 80px;
     line-height: 80px;
-    margin:0 auto;
+    margin: 0 auto;
   }
-  .page{
+
+  .page {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
-  .wrapper{
+
+  .wrapper {
     position: fixed;
     left: 0;
     right: 0;
     top: 88px;
-    bottom:100px;
+    bottom: 100px;
 
   }
+
   .step {
     padding-right: 5px;
     color: #3CC51F;
     box-sizing: border-box;
-    font-size: 16px;/*no*/
+    font-size: 16px; /*no*/
   }
-  .weui-cells{
+
+  .weui-cells {
     margin-top: 0;
   }
-  .contain{
+
+  .contain {
     background: white;
     box-sizing: border-box;
     padding: 20px;
     border-radius: 20px;
     border-bottom: 1px solid gainsboro;
-    .createDiv{
+    .createDiv {
       display: flex;
       justify-content: space-between;
-      .create{
-        width:200px;
+      .create {
+        width: 200px;
         display: flex;
         align-items: center;
-        img{
-          width:40px;
-          height:40px;
+        img {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           margin-right: 5px;
         }
       }
     }
   }
-  .print{
+
+  .print {
     float: right;
     color: orange;
   }
-  .patImg{
-    img{
+
+  .patImg {
+    .thumb {
+      overflow: hidden;
       display: inline-block;
-      width: 160px;
       height: 160px;
       margin-right: 10px;
       margin-top: 10px;
     }
+    img {
+      width: 160px;
+    }
   }
-  .date{
+
+  .date {
     display: inline-block;
     float: right;
     font-size: 14px; /*no*/
     color: grey;
   }
-  .answerList{
+
+  .answerList {
     padding: 20px;
     box-sizing: border-box;
     background: white;
     border-bottom: 1px solid gainsboro;
     margin-top: 30px;
   }
-  .patAnswer{
+
+  .patAnswer {
     display: flex;
     align-items: center;
 
   }
-  .docImg{
-    img{
+
+  .docImg {
+    img {
       display: inline-block;
       width: 80px;
       height: 80px;
@@ -549,43 +572,46 @@
 
     }
   }
-  .patMusic{
+
+  .patMusic {
     position: relative;
     margin-left: 80px;
     margin-top: 20px;
     width: 400px;
     height: 80px;
-    img{
+    img {
       display: inline-block;
       width: 400px;
       height: 80px;
     }
   }
-  #music{
+
+  #music {
     display: none;
   }
-  .musicDate{
+
+  .musicDate {
     color: white;
     position: absolute;
-    top:0;
+    top: 0;
     right: 30px;
     height: 80px;
     line-height: 80px;
   }
-  .musicImg{
+
+  .musicImg {
     position: absolute;
-    top:12px;
+    top: 12px;
     left: 30px;
     height: 80px;
     line-height: 80px;
-    img{
+    img {
       height: 48px;
       width: 40px;
     }
   }
 
-
-  .bottom{
+  .bottom {
     height: auto;
     position: fixed;
     width: 100%;
@@ -594,11 +620,13 @@
     bottom: 0;
     background: white;
   }
+
   .mr10 {
     margin-right: 20px;
     width: 100%;
   }
-  .audioInput{
+
+  .audioInput {
     margin-right: 20px;
     width: 100%;
     text-align: center;
@@ -608,29 +636,34 @@
     background: white;
     box-shadow: inset 0 0 18px #ddd;
   }
+
   .yk-cell {
     display: flex;
     align-items: center;
   }
+
   .yk-box {
     padding: 20px 30px
   }
+
   .robot-room-wirte {
     background: #eee;
     box-sizing: border-box;
     border-top: 1px solid #dedede;
   }
-  .talkImg{
+
+  .talkImg {
     width: 60px;
     height: 60px;
     margin-right: 15px;
-    img{
+    img {
       display: inline-block;
       width: 60px;
       height: 60px;
       margin-right: 15px;
     }
   }
+
   .robot-room-wirte .input-text {
     display: block;
     border: none;
@@ -649,12 +682,14 @@
     line-height: 42px;
     font-size: 28px;
   }
+
   .robot-room-wirte .input-text::-webkit-scrollbar {
     /*width: 0;*/
     /*opacity: 0;*/
     display: none;
   }
-  .robot-room-wirte .showJia{
+
+  .robot-room-wirte .showJia {
     width: 64px;
     height: 64px;
     line-height: 54px;
@@ -670,8 +705,8 @@
     background: white;
     border: 1px solid #ddd;
     outline: none;
-
   }
+
   .robot-room-wirte .send-btn {
     width: 86px;
     height: 64px;
@@ -694,24 +729,28 @@
     outline: none;
     align-self: flex-end
   }
+
   .robot-room-wirte .send-btn:active {
     opacity: 0.6;
   }
 
-  .checkList{
+  .checkList {
     display: flex;
     align-items: center;
     box-sizing: border-box;
     padding: 20px 40px;
   }
-  .upload{
+
+  .upload {
     display: flex;
     align-items: center;
   }
-  #upload_img{
+
+  #upload_img {
     display: none;
   }
-  .label_img{
+
+  .label_img {
     width: 100px;
     height: 100px;
     border-radius: 10px;
