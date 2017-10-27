@@ -220,7 +220,7 @@
         }).then(res=>{
           console.log(res,7877878)
           if(res.succ){
-            this.$router.push({
+            this.$router.replace({
               name:'healthRecord'
             })
           }else {

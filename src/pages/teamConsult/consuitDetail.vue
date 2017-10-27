@@ -95,7 +95,7 @@
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='PIC'">
             <img class="replyImg" :src="item.consultMessage.replyContent" alt=""
-                 @click="makeLarge(item.consultMessage.replyContent)">
+                 @touchend.stop="makeLarge(item.consultMessage.replyContent)">
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
             <span>语音需要转换格式</span>
@@ -252,6 +252,7 @@
       },
 //            一张一张的显示大图
       makeLarge(url) {
+          console.log("123")
         wx.previewImage({
           current: url,
           urls: [url]

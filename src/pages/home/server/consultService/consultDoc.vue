@@ -282,6 +282,7 @@
         showToast:false,
         isComplete:false,
         roomPrice:"",
+        pages:"",
         allRoom:[
           {
             deptName:"全部科室",
@@ -301,6 +302,8 @@
            this.loadingStatus = false
            this.showToast = false
            this.isComplete = true
+           this.pages = data.page.pages
+           console.log(this.pages,111)
              if(data.code == 0){
                  this.followList = data.list
              }else{
@@ -357,13 +360,12 @@
 //             })
 //           },
       scrollToEnd(){
-
-        if (this.preventRepeatRequest || this.followList.length <10) {
+        this.listPage +=1;
+        if (this.preventRepeatRequest || this.followList.length <10 || this.listPage > this.pages ) {
           return
         }
         this.loadingStatus = true
         this.preventRepeatRequest = true;
-        this.listPage +=1;
         let that = this
         http("smarthos.user.doc.search",{
           deptId:this.deptId,
@@ -375,7 +377,9 @@
           pageNum:that.listPage,
           pageSize:"10"
         }).then((data)=>{
+           console.log(data,333)
           if(data.code == 0){
+
             for(var i=0;i<data.list.length; i++){
               this.followList.push(data.list[i])
 //              this.createTime.push(formatDate(new Date(data.list[i].createTime)))
@@ -423,6 +427,8 @@
           pageNum:1
         }).then((data)=>{
           console.log(data,66666)
+          this.pages = data.page.pages
+          console.log(this.pages,111)
           this.loadingStatus = false
           if(data.code == 0){
             this.followList = data.list

@@ -6,8 +6,8 @@
                 <img :src="item.attaFileUrl"
                      alt="" @touchend.prevent="makeLarge(item.attaFileUrl)">
             </div>
-            <div class="pic float-left relative" v-for="pic in picList">
-                <img @click="scan(pic.url)" :id="pic.id" :src="pic.url?pic.url:pic.thumbUrl"
+            <div class="pic float-left relative" v-for="(pic,index) in picList">
+                <img @click="scan(pic.url,index)" :id="pic.id" :src="pic.url?pic.url:pic.thumbUrl"
                      alt="">
                 <div class="mask absolute" v-show="pic.status!='loaded'">{{pic.progress}}</div>
             </div>
@@ -42,16 +42,28 @@
 
         },
         methods: {
-            scan(img) {
-                let urls = []
-                Array.prototype.forEach.call(this.picList, (file) => {
-                    debug("file", file);
-                    urls.push(file.url);
-                })
-                wx.previewImage({
-                    current: img,
-                    urls: urls
-                })
+            scan(img,index) {
+//                let urls = []
+//                Array.prototype.forEach.call(this.picList, (file) => {
+//                    debug("file", file);
+//                    urls.push(file.url);
+//                })
+//                wx.previewImage({
+//                    current: img,
+//                    urls: urls
+//                })
+            let  gallery = this.$weui.gallery(img, {
+                className: 'custom-classname',
+                onDelete: ()=>{
+                   if(confirm('确定删除该图片？')){
+                       console.log('删除');
+                     gallery.hide(()=> {
+                       console.log('`gallery` has been hidden');
+                       this.$emit('delete',index)
+                     });
+                   }
+                }
+              });
             },
             makeLarge(url){
                  this.$emit('large',url)

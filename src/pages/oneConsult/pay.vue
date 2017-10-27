@@ -88,11 +88,13 @@
               conf,
               (res) => {
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-                    if(this.paySort == 'dept'){
-                      this.$router.push("/consuitDetail/" + this.id)
-                    }else{
-                      this.$router.push("/oneConsult/" + this.id)
-                    }
+                    setTimeout(()=>{
+                      if(this.paySort == 'dept'){
+                        this.$router.push("/consuitDetail/" + this.id)
+                      }else{
+                        this.$router.push("/oneConsult/" + this.id)
+                      }
+                    },1000)
                 } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
                   console.log("支付过程中用户取消")
                   if(this.source == 'room'){

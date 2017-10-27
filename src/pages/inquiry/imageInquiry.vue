@@ -51,7 +51,7 @@
         </div>
 
         <div class="addImg">
-            <upload-img :picList="picList">
+            <upload-img :picList="picList" @delete="deleteImg">
 
                 <upload slot="upload" class="float-left"
                         :server="config.api_url"
@@ -150,6 +150,9 @@
                     document.getElementById("myArea").value = this.text.substr(0, 500)
                     weui.alert("病情资料不能超过500个字")
                 }
+            },
+            deleteImg(index){
+              this.picList.splice(index,1)
             },
             submit() {
                 if (this.illDescribe == '') {

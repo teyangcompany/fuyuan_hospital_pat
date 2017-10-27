@@ -28,7 +28,7 @@
                         <textarea v-model="description" @keyup="keypress()" id="myArea" placeholder="请输入"></textarea>
                     </div>
                 </li>
-                <upload-img :picList="picList">
+                <upload-img :picList="picList"  @delete="deleteImg">
                     <span slot="upload">
                         <upload class="float-left"
                                 :server="config.api_url"
@@ -38,7 +38,8 @@
                                 fileType="IMAGE"
                                 @progress="progress"
                                 @success="success"
-                                @added="added"></upload>
+                                @added="added"
+                                ></upload>
                     </span>
                 </upload-img>
 
@@ -109,6 +110,9 @@
             },
             getDate(val){
               this.time = val
+            },
+            deleteImg(index){
+                this.picList.splice(index,1)
             },
             added(file) {
                 file.thumb().then(res => {

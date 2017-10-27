@@ -56,7 +56,7 @@
       <router-view></router-view>
     </div>
     <div ref="footer" class="btn">
-      <div class="mfw registration">
+      <div class="mfw registration" @click="book">
         预约挂号
       </div>
       <div class="mfw onLine" @click="showService">
@@ -71,7 +71,9 @@
       <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic" v-if="showAndroid">
       <img src="../../../static/img/ios引导.png" alt="" @click="hidePic" v-if="showIos">
     </div>
-    <seivice :docId="docId" ref="ser"></seivice>
+    <div>
+       <seivice :docId="docId" ref="ser"></seivice>
+    </div>
     <div v-if="showQrcode" class="ercode">
       <div class="mask" @click.stop="showQrcode=false"></div>
       <div class="mainbox">
@@ -193,7 +195,21 @@
       goBack() {
         this.$router.go(-1)
       },
+      book(){
+        let urlParams = getParamsFromUrl(location.href);
+        debug("ppp", urlParams)
+        if (urlParams.query && urlParams.query.comefrom == "share") {
+          this.showQrcode = true
+          return;
+        }
+      },
       attention() {
+        let urlParams = getParamsFromUrl(location.href);
+        debug("ppp", urlParams)
+        if (urlParams.query && urlParams.query.comefrom == "share") {
+          this.showQrcode = true
+          return;
+        }
         if (!(this.isFollow)) {
           api('smarthos.follow.docpat.add', {
             token: this.token,
