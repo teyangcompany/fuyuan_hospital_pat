@@ -303,6 +303,7 @@
            this.showToast = false
            this.isComplete = true
            console.log(this.pages,111)
+            console.log(data)
              if(data.code == 0){
                this.pages = data.page.pages
                  this.followList = data.list

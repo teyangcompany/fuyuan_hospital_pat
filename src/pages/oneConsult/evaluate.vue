@@ -5,15 +5,15 @@
         </top>
         <div class="wrap">
             <div class="xing">
-               <p class="topWord">请您对本次问诊做出评价</p>
+               <p class="topWord"><span>请您对本次问诊做出评价</span></p>
                 <label v-for="item,index of 5" class="eval" :class="{sel:num>index}" @click="num=index+1">&#xe64e;</label>
             </div>
             <div class="contain">
-                <div class="weui-cells__title">请输入评价</div>
+                <div class="weui-cells__title commentTitle"> <span>请输入评价</span><span>{{ textLength }}/200</span></div>
                 <div class="weui-cells weui-cells_form">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea v-model="evaluateContent" class="weui-textarea" placeholder="您对医生的具体评价(可以不填)" rows="3"></textarea>
+                            <textarea v-model="evaluateContent" id="myArea" @keyup="keypress()" class="weui-textarea" placeholder="您对医生的具体评价(可以不填)" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,9 @@
                 token:localStorage.getItem('token'),
                 evaluateContent:"",
                 consultType:"",
-                showToast:false
+                showToast:false,
+                textLength: 0,
+                text: "",
             }
         },
         mounted(){
@@ -55,12 +57,24 @@
             this.consultType = this.$route.query.consultType
             console.log(this.consultType)
         },
+        watch:{
+          evaluateContent() {
+            this.text = document.getElementById("myArea").value
+            this.textLength = this.text.length
+            if (this.textLength > 200) {
+              document.getElementById("myArea").value = this.text.substr(0, 200)
+              weui.alert("评价内容不能超过200个字")
+            }
+          }
+        },
         methods:{
             submit(){
                 this.showToast = true
                 if(this.num == 0){
                   this.showToast = false
                     weui.alert("您还未对该医生做出评价")
+                }else if(this.textLength > 200){
+                  weui.alert("评价内容不能超过200个字")
                 }else{
                     api('smarthos.system.comment.add',{
                         content:this.evaluateContent,
@@ -80,7 +94,15 @@
                         }
                     })
                 }
-            }
+            },
+            keypress() {
+              this.text = document.getElementById("myArea").value
+              this.textLength = this.text.length
+              if (this.textLength > 200) {
+                document.getElementById("myArea").value = this.text.substr(0, 200)
+                weui.alert("评价内容不能超过200个字")
+              }
+            },
         }
     }
 </script>
@@ -100,6 +122,10 @@
     }
     .contain{
         padding: 0 20px;
+      .commentTitle{
+           display: flex;
+           justify-content: space-between;
+      }
     }
     .sel{
         color: orange;

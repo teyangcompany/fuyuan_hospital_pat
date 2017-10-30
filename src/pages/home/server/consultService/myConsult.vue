@@ -64,7 +64,8 @@
             <div class="ConsultRelate">
               <span class="name">
                 <span class="number" v-if="item.userDocVo">
-                  <img :src="item.userDocVo.docAvatar" alt="">
+                  <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
+                  <img src="../../../../../static/img/doctorM.png" alt="" v-else>
                   <span>{{ item.userDocVo.docName }}</span>回答
                 </span>
                 <span class="number" v-else>

@@ -20,6 +20,10 @@ export default [
     component: () => import("../pages/my/archives/presentingComplaint.vue")
   },
   {
+    path:"/my/personInfo",
+    component:()=>import("../pages/my/personInfo.vue")
+  },
+  {
      path:"/my/costLog",
      component:()=>import("../pages/my/costLog.vue")
   },

@@ -278,6 +278,14 @@
         flex: 1;
         overflow: hidden;
         flex-direction: column;
+        .weui-cell{
+          label{
+            font-size: 32px;
+          }
+          input{
+            font-size: 32px;
+          }
+        }
     }
     textarea{
       font-size: 30px;

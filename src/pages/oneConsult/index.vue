@@ -52,7 +52,8 @@
           <li v-for="item in aboutReplyMessage" ref="chatLi">
             <div class="other" :class="{mysay:item.consultMessage.replierType == 'PAT'}">
               <img :src="item.userPat.patAvatar" alt="" v-if="item.consultMessage.replierType == 'PAT'">
-              <img :src="waitImg" alt="" v-if="item.consultMessage.replierType == 'DOC'">
+              <img :src="waitImg" alt="" v-if="item.consultMessage.replierType == 'DOC' && waitImg">
+              <img src="../../../static/img/doctorM.png" alt="" v-else-if="item.consultMessage.replierType == 'DOC' && !waitImg">
               <span class="msgTime">{{item.consultMessage.createTime | Todate}} </span>
               <div class="whatsay">
                 <!--<p class="msgTime">{{item.createTime | Todate}}</p>-->
@@ -533,9 +534,8 @@
             }).then((data) => {
 
               console.log(data, 666)
-              location.reload()
               if (data.code == 0) {
-                that.getInitData()
+                that.getInitChat()
                 that.getInitData()
               } else {
                 weui.alert(data.msg)

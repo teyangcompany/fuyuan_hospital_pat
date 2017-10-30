@@ -98,8 +98,7 @@
                  @touchend.stop="makeLarge(item.consultMessage.replyContent)">
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
-            <span>语音需要转换格式</span>
-            <audio :src="item.consultMessage.replyContent"></audio>
+            <audio controls :src="item.consultMessage.replyContent"></audio>
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@
         <!--<div class="back absolute"></div>-->
         我的
       </header>
-      <div class="subheader flex">
+      <div class="subheader flex" @click="goPerson">
         <div class="ava flex0" v-if="patAvatar">
           <img :src="patAvatar" alt="">
         </div>
@@ -79,6 +79,11 @@
     methods: {
       goPage(nav) {
         nav.path && this.$router.push("/my" + nav.path);
+      },
+      goPerson(){
+          this.$router.push({
+               path:"my/personInfo"
+          })
       }
     }
   };

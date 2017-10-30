@@ -293,6 +293,14 @@
         textarea {
             font-size: 30px;
         }
+      .weui-cell{
+        label{
+            font-size: 32px;
+        }
+        input{
+            font-size: 32px;
+        }
+      }
     }
 
     .illName {

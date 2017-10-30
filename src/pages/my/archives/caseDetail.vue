@@ -53,7 +53,7 @@
         </div>
         <div class="addImg" v-if="caseObj.medicalHistory.creatorType != 'DOC'">
           <!--<img :src="item.attaFileUrl" alt="" v-for="item of imgList">-->
-          <upload-img :picList="picList" :imgList="imgList" @large="makeLarge">
+          <upload-img :picList="picList" :imgList="imgList" @large="makeLarge" @delete="deleteImg">
                     <span slot="upload">
                         <upload class="float-left"
                                 :server="config.api_url"
@@ -83,7 +83,12 @@
                   :dialogLeftFoot="dialogLeftFoot"
                   :dialogRightFoot="dialogRightFoot"
         ></v-dialog>
-
+        <v-dialog @on-cancel="closeDel" @on-download="confirmDel" v-if="showDialog"
+                  :dialogTitle="dialogDelTitle"
+                  :dialogMain="dialogDelMain"
+                  :dialogLeftFoot="dialogDelLeftFoot"
+                  :dialogRightFoot="dialogDelRightFoot"
+        ></v-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -123,12 +128,19 @@
         time:"",
         textLength:0,
         text:"",
+        index:"",
+        img:"",
         createTime:"",
         dialogTitle: "删除",
         dialogMain: "确定删除此条记录",
         dialogLeftFoot: "取消",
         dialogRightFoot: "删除",
-        showAllDialog:false
+        showAllDialog:false,
+        dialogDelTitle:"",
+        dialogDelMain:"确定删除此张照片",
+        dialogDelLeftFoot:"取消",
+        dialogDelRightFoot:"确定",
+        showDialog:false
       }
     },
     created(){
@@ -167,17 +179,61 @@
           weui.alert("字数不能超过500")
         }
       },
-      makeLarge(url){
-           console.log(url)
-            let urls = [];
-            this.imgList.forEach((res) => {
-              urls.push(res.attaFileUrl);
-            })
-
-            wx.previewImage({
-              current: url,
-              urls: urls
-            })
+      closeDel(){
+        this.showDialog = false
+      },
+      confirmDel(){
+        this.showDialog = false
+        console.log(this.index)
+        let  gallery = this.$weui.gallery(this.img, {
+          className: 'custom-classname',
+          onDelete: ()=>{
+//            this.showDialog = true
+             gallery.hide(()=> {
+               console.log('`gallery` has been hidden');
+               this.imgList.splice(this.index,1)
+               this.imgId.splice(this.index,1)
+//               this.$emit('delete',this.index)
+             });
+          }
+        });
+        gallery.hide(()=> {
+          console.log('`gallery` has been hidden');
+          this.imgList.splice(this.index,1)
+          this.imgId.splice(this.index,1)
+//               this.$emit('delete',this.index)
+        });
+      },
+      makeLarge(img,index){
+           console.log(img,1111)
+           this.index = index
+           this.img = img
+           console.log(index,88888)
+//            let urls = [];
+//            this.imgList.forEach((res) => {
+//              urls.push(res.attaFileUrl);
+//            })
+//
+//            wx.previewImage({
+//              current: url,
+//              urls: urls
+//            })
+        let  gallery = this.$weui.gallery(img, {
+          className: 'custom-classname',
+          onDelete: ()=>{
+              this.showDialog = true
+//           if(confirm("是否删除")){
+//               console.log("删除")
+//             gallery.hide(()=> {
+//               console.log('`gallery` has been hidden');
+////               this.$emit('delete',this.index)
+//             });
+//           }
+          }
+        });
+      },
+      deleteImg(index){
+        this.picList.splice(index,1)
       },
       getDate(val){
 
