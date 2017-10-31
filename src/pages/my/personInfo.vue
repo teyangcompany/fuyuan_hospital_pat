@@ -6,6 +6,9 @@
     </top>
     <div class="successContent" ref="success">
       <div>
+        <div class="avatar">
+            <span></span>
+        </div>
         <div class="line"></div>
         <p class="doctorInfoTitle border-1px">个人信息</p>
         <div class="doctorInfo">
@@ -257,12 +260,12 @@
         font-size: 32px;
        }
   }
-  .weui-cells:before{
-    border:none;
-  }
-  .weui-cells:after{
-    border:none;
-  }
+  /*.weui-cells:before{*/
+    /*border:none;*/
+  /*}*/
+  /*.weui-cells:after{*/
+    /*border:none;*/
+  /*}*/
   .emptyHistory{
     position: absolute;
     width:100%;

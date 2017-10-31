@@ -82,7 +82,7 @@
       },
       goPerson(){
           this.$router.push({
-               path:"my/personInfo"
+               path:"my/profile"
           })
       }
     }
