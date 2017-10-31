@@ -10,7 +10,7 @@
         <p class="doctorInfoTitle border-1px">个人信息</p>
         <div class="doctorInfo">
           <div class="circleAngle">
-            <div class="aboutConsult">
+            <!--<div class="aboutConsult">-->
               <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
@@ -81,24 +81,27 @@
                   <div class="weui-cell__ft" v-else>{{ compatInfo[clickIndex] }}</div>
                 </a>
               </div>
-            </div>
+            <!--</div>-->
           </div>
         </div>
         <div class="secondLine"></div>
         <p class="patientInfoTitle"> <span class="leftPatTitle">医院账号</span>  </p>
-        <!--<div class="patientInfo">-->
+        <div class="patientInfo">
           <div class="weui-cells">
             <div class="weui-cell">
               <div class="weui-cell__bd">
-                <p>标题文字</p>
+                <p v-if="hosList">{{ hosList[0].yymc }}</p>
               </div>
-              <div class="weui-cell__ft" style="text-align: right">说明文字</div>
+              <div class="weui-cell__ft" style="text-align: right" v-if="personInfo">{{ personInfo.userCommonPatRecords[0].compatRecord }}</div>
             </div>
           </div>
 
-        <!--</div>-->
+        </div>
         <div class="aboutCode" @click="goBookService">
-          <button>添加医院账号</button>
+          <button>
+             <span>添加医院账号</span>
+            <img src="../../../static/img/add.png" alt="">
+          </button>
         </div>
         <div class="assistScroll">
 
@@ -106,54 +109,20 @@
       </div>
 
     </div>
-    <!--<v-dialog :dialogTitle="dialogTitle"-->
-              <!--:dialogMain="dialogMain"-->
-              <!--:dialogLeftFoot="dialogLeftFoot"-->
-              <!--:dialogRightFoot="dialogRightFoot"-->
-              <!--v-if="showDialog"-->
-              <!--@on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>-->
-    <!--<v-dialog :dialogTitle="dialogCreateTitle"-->
-              <!--:dialogMain="dialogCreateMain"-->
-              <!--:dialogLeftFoot="dialogCreateLeftFoot"-->
-              <!--:dialogRightFoot="dialogCreateRightFoot"-->
-              <!--v-if="showCreateDialog"-->
-              <!--@on-cancel="cancelCreate" @on-download="createCard"></v-dialog>-->
-    <!--<div class="emptyHistory" v-if="fail">-->
-      <!--<bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>-->
-    <!--</div>-->
-    <!--<div class="emptyHistory" v-if="successDisplay">-->
-      <!--<bind-success :title="description" :illNumber="alertStatus" :failKnow="failKnow" @on-iSee="iSee()"></bind-success>-->
-    <!--</div>-->
-    <!--<div class="emptyHistory" v-if="createDisplay">-->
-      <!--<create-success :title="createWord" :illNumber="createNumber" :secondLine="secondCreateLine" :failKnow="failKnow" @on-iSee="iSeeCreate()"></create-success>-->
-    <!--</div>-->
-    <!--<patient-toggle :patList="compatInfo" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>-->
     <toast v-if="showToast"></toast>
     <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-    <!--<v-mask v-if="fail || successDisplay || createDisplay"></v-mask>-->
     <relation-toggle :patList="compatInfo" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></relation-toggle>
   </div>
 </template>
 <script>
-  //  import header from '../../../../base/header'
   import BScroll from 'better-scroll'
   import api from '../../lib/bookApi'
   import http from '../../lib/http'
   import top from '../../components/app-header.vue'
-  import patientToggle from '../../base/patientToggle.vue'
-  import Dialog from '../../base/dialog'
-  import bindSuccess from '../../base/bindSuccess/bindSuccess'
-  import bindFail from '../../base/bindFail/bindFail'
-  import VMask from '../../base/mask'
   import Toast from '../../base/toast'
   import relationToggle from '../../base/relationToggle.vue'
-  import createSuccess from '../../base/createSuccess/createSuccess.vue'
   import vueArea from 'vue-area'
   import { getAge } from '../../lib/filter'
-  //  import Alert from '../../../base/alert'
-  //  import weui from 'weui.js'
-  //  import {isLoginMixin} from "../../../lib/mixin"
-  //  import {tokenCache} from '../../../lib/cache'
   export default{
 //    mixins: [isLoginMixin],
     data(){
@@ -175,6 +144,7 @@
         showGender:false,
         showGenderSec:true,
         nowAge:"",
+        hosList:""
       }
     },
     mounted(){
@@ -188,6 +158,7 @@
       getAge
     },
     created(){
+        this.getHosList()
       http("smarthos.user.pat.get",{
         token:localStorage.getItem('token')
       }).then((data)=>{
@@ -216,18 +187,12 @@
       }
     },
     methods:{
-      getPatient(){
-        http("smarthos.user.commpat.list",{
-          token:localStorage.getItem('token'),
-//            patId:this.selfInfo.patId
-        }).then((data)=>{
-          if(data.code == 0){
-            this.compatInfo = data.list
-            console.log(data,555555555555)
-          }else{
-            weui.alert(data.msg)
-          }
-        })
+      getHosList(){
+         api("smarthos.yygh.ApiHospitalService.areaHosList",{
+         }).then((data)=>{
+             this.hosList = data.list
+             console.log(data,333)
+         })
       },
       areaResult: function(show, result){
         this.show = show
@@ -235,25 +200,20 @@
         console.log(this.show)
         console.log(this.result)
       },
+      check(index){
+        console.log(index)
+        this.showPat=false;
+        this.isChange = true
+        this.clickIndex=index;
+      },
+      closePatient(){
+        this.showPat=false;
+      },
       toggleArea(){
           this.show = true
       },
       showRelation(){
          this.showPat = true
-      },
-      cancelDialog(){
-        this.showDialog = false
-      },
-      iKnow(){
-        this.showAlert = false
-      },
-      iSee(){
-        this.successDisplay = false
-        this.fail = false
-      },
-      iSeeCreate(){
-        this.getPatient()
-        this.createDisplay = false
       },
       _initSuccessScroll(){
         this.success = new BScroll(this.$refs.success,{
@@ -261,114 +221,19 @@
         })
         console.log(this.success)
       },
-      goToggle(){
-        this.showPat = true
-//        this.$router.push({
-//          path:'/bookTogglePatient',
-//          query:{bookDeptId:this.bookDeptId,bookNumId:this.bookNumId,numTime:this.numTime,allInfo:this.allInfo,listIndex:this.listIndex,bookSort:this.bookSort}
-//        })
-      },
-      check(index){
-         console.log(index)
-        this.clickIndex = index
-        this.isChange = true
-        this.showPat = false
-      },
-      closePatient(){
-        this.showPat=false;
-      },
-      //就诊卡绑定
-      bindCard(){
-        this.showDialog = false
-        this.showToast = true
-        http("smarthos.user.commpat.record.bind",{
-          token:localStorage.getItem('token'),
-          commpatId:this.compatInfo[this.index].id,
-          bookHosId:this.hosid
-        }).then((data)=>{
-          console.log(this.hosid)
-          console.log(this.compatInfo[this.index].id)
-          this.alertStatus = data.msg
-          this.showToast = false
-          if(data.code == 0){
-            this.fail = false
-            this.successDisplay = true
-          }else{
-            this.successDisplay = false
-            this.fail = true
-          }
-          console.log(data)
-        })
-      },
-      //就诊卡创建
-      createNum(){
-        http("smarthos.user.commpat.record.new",{
-          token:localStorage.getItem('token'),
-          commpatId:this.compatInfo[this.index].id,
-          bookHosId:this.hosid
-        }).then((data)=>{
-          if(data.code == 0){
-            this.createDisplay = true
-            this.createNumber = data.obj.compatRecord
-          }else{
-            weui.alert(data.msg)
-          }
-          console.log(data)
-        })
-      },
-      //就诊卡检验
-      recordCheck(){
-        http("smarthos.user.commpat.record.check",{
-          token:localStorage.getItem('token'),
-          commpatId:this.compatInfo[this.index].id,
-          bookHosId:this.hosid
-        }).then((data)=>{
-          console.log(data)
-          this.showToast = false
-          if(data.code == 0){
-            if(data.obj == 'needCreate'){
-              this.showCreateDialog = true
-            }else if(data.obj == 'needBind'){
-              this.showDialog = true
-            }else{
-              this.finalBook()
-            }
-          }else{
-            weui.alert(data.msg)
-          }
-        })
-      },
-      //取消创建就诊卡
-      cancelCreate(){
-        this.showCreateDialog = false
-      },
-      //确认创建就诊卡
-      createCard(){
-        this.showCreateDialog = false
-        this.createNum()
-      },
-      //预约挂号提交
 
-      //确认预约的点击事件
       goBookService(){
-        this.showToast = true
-        this.recordCheck()
+          this.$router.push({
+               path:"/my/addHosNum"
+          })
       },
 
     },
     components:{
-//      'VHeader':header,
-      "VDialog":Dialog,
-      bindSuccess,
-      VMask,
-      bindFail,
       Toast,
       top,
-      createSuccess,
-      patientToggle,
-      relationToggle,
       vueArea,
-//      Alert
+      relationToggle
     }
   }
 </script>
@@ -477,212 +342,42 @@
         font-size: 32px;
       }
     }
-    .reasonWrap{
-      display: flex;
-      align-items:center;
-      .refuseReason{
-        width:100%;
-        height: 140px;
-        display: flex;
-        /*<!--background-color: $bgColor2;-->*/
-        .wrapImg{
-          height: 140px;
-          width: 140px;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          margin-right: 30px;
-          img{
-            width: 60px;
-            height: 60px;
-          }
-        }
-        .wrapWord{
-          height: 140px;
-          display: flex;
-          align-items: center;
-          span{
-            display: block;
-            font-size: 24px;
-            line-height: 19px;
-            color: #4BCEC8;
-            .time{
-              display: inline-block;
-              color: red;
-            }
-          }
-        }
-      }
-    }
     .doctorInfo{
       width:100%;
       .circleAngle{
         width:690px;
         margin:0 auto;
-        .aboutConsult{
-          width:690px;
-          margin: 0 auto;
-          border-bottom-right-radius: 10px;
-          border-bottom-left-radius: 10px;
-          /*<!--background-color:$bgColor2;-->*/
-          .list{
-            width:100%;
-            height: 80px;
-            display: block;
-            p{
-              width:690px;
-              height: 80px;
-              margin:0 auto;
-              font-size: 32px;
-              color: #333333;
-              padding-left: 20px;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              span{
-                padding-right: 20px;
-                color: #999999;
-              }
-            }
-          }
-        }
-        ul{
-          padding:0;
-          margin:0 auto;
-          width: 690px;
-          height: 190px;
-          /*<!--background-color: $bgColor2;-->*/
-          border-top-right-radius: 10px;
-          border-top-left-radius: 10px;
-          li{
-            list-style-type: none;
-            height: 190px;
-            display: flex;
-            .cancelImg{
-              width: 160px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              /*padding-left: 15px;*/
-              img{
-                width: 120px;
-                height: 120px;
-                border-radius: 50%;
-              }
-            }
-            .cancelIntro{
-              flex:2;
-              display: flex;
-              align-items: center;
-              /*line-height: 10px;*/
-              .introTitle{
-                .subTitle{
-                  font-size: 32px;
-                  color: #333333;
-                }
-                .myDoctor{
-                  width: 120px;
-                  height: 36px;
-                  display: inline-block;
-                  font-size: 28px;
-                  /*line-height: 18px;*/
-                  color: #666666;
-                  text-align: center;
-                }
-                p{
-                  margin:0;
-                  font-size: 28px;
-                  color: #999999;
-                }
-              }
 
-
-              span{
-
-              }
-            }
-          }
-        }
       }
 
     }
     .patientInfo{
       width: 690px;
-      border-radius: 10px;
       margin:0 auto;
       /*<!--background-color: $bgColor2;-->*/
-      display: flex;
-      .leftTitle{
-        width: 150px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        span{
-          height:80px;
-          line-height: 80px;
-          font-size: 32px;
-          color: #333333;
-        }
-      }
-      .rightMatch{
-        width:540px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        span{
-          padding-right: 20px;
-          height:80px;
-          line-height: 80px;
-          font-size: 32px;
-          color: #999999;
-        }
-      }
     }
     .aboutCode{
       width:690px;
-      margin: 30px auto;
-      height:80px;
+      margin:0 auto;
+      margin-top: 20px;
       display: flex;
-      align-items: center;
-      /*<!--background-color: $bgColor2;-->*/
-      >div{
-        width:690px;
-        display: flex;
-        justify-content: space-between;
-        p{
-          font-size: 32px;
-          padding-left: 20px;
-          padding-right: 20px;
-          color: #333333;
-        }
-        p.codeDisplay{
-          width:150px;
-          background-color: #FFFFFF;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          img{
-            width: 90px;
-            height: 30px;
-          }
-        }
-        input{
-          width:150px;
-          border: none;
-          outline:medium;
-          text-align: center;
-        }
-      }
+      justify-content: center;
       button{
-        width:690px;
-        height: 80px;
+        width:400px;
+        height:80px;
         border:none;
-        outline: medium;
+        outline:medium;
         color: $mainColor;
         font-size: 32px;
-        border-radius: 10px;
+        padding:10px 10px 10px 10px;
         background-color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img{
+          width:36px;
+          margin-left: 10px;
+        }
       }
     }
     .assistScroll{

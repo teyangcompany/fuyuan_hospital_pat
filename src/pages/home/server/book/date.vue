@@ -176,6 +176,7 @@
           isPb:"0",
           date:this.completeTimeArray[this.selected]
         }).then((data)=>{
+           console.log(data)
           if(data.code == 0){
             this.commonRoom = data.list
           }else if(!(data.msg)){

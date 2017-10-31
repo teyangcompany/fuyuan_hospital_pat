@@ -3,32 +3,34 @@
     <v-header :title="title" :rightTitle="rightTitle"></v-header>
     <div class="checkList">
       <div>
-        <div class="topMenu border-1px">
-          <!--<p class="picked" @click="seeTime('一周内')">一周内</p>-->
-          <p class="picked" @click="seeTime('三个月')">三个月</p>
+        <div class="topMenu border-1px-top">
+          <p class="picked" @click="seeTime('一周内')">一周内</p>
+          <p @click="seeTime('三个月')">三个月</p>
           <p @click="seeTime('半年内')">半年内</p>
           <p @click="seeTime('一年内')">一年内</p>
         </div>
         <div class="wrapContent" ref="wrapContent">
           <div>
-            <div v-if="reportInfo == 1" class="loading">
-              <img src="../../../static/img/loading.gif" alt="">
-              <span>正在很努力的加载中...</span>
-            </div>
-            <div v-else-if="reportInfo.length == 0" class="loading">
+            <!--<div v-if="reportInfo == 1" class="loading">-->
+              <!--<img src="../../../static/img/loading.gif" alt="">-->
+              <!--<span>正在很努力的加载中...</span>-->
+            <!--</div>-->
+            <div v-if="isChanged && reportInfo.length == 0 " class="tips">
               <span>抱歉，未能查询到您的相关报告</span>
             </div>
-            <div v-else-if="reportInfo.length > 0">
-              <router-link tag="div" :to="{path:'/checkReportCard',query:{specialIndex:specialIndex,index:index,compatId:compatId,reportInfoString:reportInfoString}}" class="checkCenter" style="display: block" v-for="(item,index) in reportInfo" :key="item.id">
+            <div v-else-if="isChanged && reportInfo.length > 0">
+              <router-link tag="div" :to="{path:'/checkReportCard',query:{index:index,reportInfoString:reportInfoString}}" class="checkCenter" style="display: block" v-for="(item,index) in reportInfo" :key="item.id">
                 <div class="reportList">
-                  <h3 class="border-1px">{{ item.checkName }}</h3>
-                  <p><span>{{ item.name }}</span><span>{{ item.checkTime }}</span></p>
+                  <h3>{{ item.inspectitemname }}</h3>
+                  <p>{{ hosName }}</p>
+                  <p><span>{{ item.name }}</span><span>{{ item.checkdate }}</span></p>
                 </div>
               </router-link>
             </div>
             <div class="assistScroll" style="height: 20px;">
 
             </div>
+            <toast v-if="showToast"></toast>
           </div>
         </div>
       </div>
@@ -39,6 +41,7 @@
   import header from '../../base/header'
   import api from '../../lib/bookApi'
   import BScroll from 'better-scroll'
+  import Toast from '../../base/toast.vue'
 //  import weui from 'weui.js'
 //  import {tokenCache} from '../../../lib/cache'
   export default{
@@ -50,14 +53,18 @@
         patCard:"",
         compatId:"",
         index:"",
-        reportInfo:1,
+        reportInfo:[],
+        report:[],
+        isChanged:false,
         reportInfoString:"",
         oneWeek:"",
         threeMonth:"",
         halfYear:"",
         oneYear:"",
         nowTime:"",
-        hosid:""
+        hosid:"",
+        hosName:"",
+        showToast:false
       }
     },
     mounted(){
@@ -87,32 +94,37 @@
     },
     created(){
 //      this.selectValue = this.$route.query.selectValue
+      this.hosName = this.$route.query.hosName
       this.hosid = this.$route.query.hosId
       this.index= this.$route.query.index
       this.patCard = this.$route.query.patCard
       this.specialIndex = this.$route.query.specialIndex
       this.threeMonth = this.getMonth(3)
+      this.oneWeek = this.GetDateStr(7)
       this.nowTime = this.getNow()
+      this.showToast = true
         api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
           token:localStorage.getItem('token'),
-//          hosid:this.hosid,
           orgid:this.hosid,
-//          medcardno:"",
-          hosid:"027885516",
-          idcard:"620321196303280021",
+          hosid:this.hosid,
+          idcard:this.patCard,
 //          idcard:this.patCard,
-          bdate:this.threeMonth,
+          bdate:this.oneWeek,
           edate:this.nowTime,
         }).then((data)=>{
+          this.showToast = false
+          this.isChanged = true
           if(data.code == 0){
-            this.reportInfo = data.list
-            this.reportInfoString = JSON.stringify(this.reportInfo)
+             if(data.list){
+               this.reportInfo = data.list
+               this.reportInfoString = JSON.stringify(this.reportInfo)
+             }else{
+                 this.reportInfo = this.report
+             }
             console.log(data)
           }else if(!(data.msg)){
-            this.reportInfo = 2
             weui.alert("网络错误，请稍后重试")
           }else{
-            this.reportInfo = 2
             weui.alert(data.msg)
           }
         })
@@ -127,10 +139,10 @@
       GetDateStr(i){
         var dd = new Date();
         dd.setDate(dd.getDate()-i);//获取AddDayCount天后的日期
-        var y = dd.getFullYear();
+        var y = dd.getFullYear().toString();
         var month = dd.getMonth()+1;//获取当前月份的日期
         var d = dd.getDate();
-        return y + "-" + (month < 10 ? "0" + month : month)+"-"+(d < 10 ? "0" + d : d);
+        return y + (month < 10 ? "0" + month : month) + (d < 10 ? "0" + d : d);
       },
       getNow(){
         var dd = new Date();
@@ -149,86 +161,111 @@
       },
       seeTime(time){
         if(time == "一周内"){
-          this.reportInfo = 1
+          this.showToast = true
           if(this.selectValue == '检查报告'){
-            api("nethos.book.inspect.examination",{
-              token:tokenCache.get(),
-              startDate:this.oneWeek,
-              endDate:this.nowTime,
-              compatId:this.compatId
+            api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
+              token:localStorage.getItem('token'),
+              idcard:this.patCard,
+              orgid:this.hosid,
+              hosid:this.hosid,
+              bdate:this.oneWeek,
+              edate:this.nowTime,
             }).then((data)=>{
+              this.showToast = false
+              this.isChanged = true
               if(data.code == 0){
-                this.reportInfo = data.list
-                this.reportInfoString = JSON.stringify(this.reportInfo)
+                if(data.list){
+                  this.reportInfo = data.list
+                  this.reportInfoString = JSON.stringify(this.reportInfo)
+                }else{
+                  this.reportInfo = this.report
+                }
                 console.log(data)
               }else{
                 weui.alert(data.msg)
-                this.reportInfo = 2
               }
             })
           }
         }else if(time == '三个月'){
-          this.reportInfo = 1
+          this.showToast = true
           if(this.selectValue == '检查报告'){
-            api("nethos.book.inspect.examination",{
-              token:tokenCache.get(),
-              startDate:this.threeMonth,
-              endDate:this.nowTime,
-              compatId:this.compatId
+            api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
+              token:localStorage.getItem('token'),
+              idcard:this.patCard,
+              orgid:this.hosid,
+              hosid:this.hosid,
+              bdate:this.threeMonth,
+              edate:this.nowTime,
             }).then((data)=>{
+              this.showToast = false
+              this.isChanged = true
               if(data.code == 0){
-                this.reportInfo = data.list
-                this.reportInfoString = JSON.stringify(this.reportInfo)
+                if(data.list){
+                  this.reportInfo = data.list
+                  this.reportInfoString = JSON.stringify(this.reportInfo)
+                }else{
+                  this.reportInfo = this.report
+                }
                 console.log(data)
               }else if(!(data.msg)){
-                this.reportInfo = 2
                 weui.alert("网络错误，请稍后重试")
               }else{
-                this.reportInfo = 2
                 weui.alert(data.msg)
               }
             })
           }
         }else if(time == '半年内'){
-          this.reportInfo = 1
+          this.showToast = true
           if(this.selectValue == '检查报告'){
-            api("nethos.book.inspect.examination",{
-              token:tokenCache.get(),
-              startDate:this.halfYear,
-              endDate:this.nowTime,
-              compatId:this.compatId
+            api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
+              token:localStorage.getItem('token'),
+              idcard:this.patCard,
+              orgid:this.hosid,
+              hosid:this.hosid,
+              bdate:this.halfYear,
+              edate:this.nowTime,
             }).then((data)=>{
+              this.showToast = false
+              this.isChanged = true
               if(data.code == 0){
-                this.reportInfo = data.list
-                this.reportInfoString = JSON.stringify(this.reportInfo)
+                if(data.list){
+                  this.reportInfo = data.list
+                  this.reportInfoString = JSON.stringify(this.reportInfo)
+                }else{
+                  this.reportInfo = this.report
+                }
                 console.log(data)
               }else if(!(data.msg)){
-                this.reportInfo = 2
                 weui.alert("网络错误，请稍后重试")
               }else{
-                this.reportInfo = 2
                 weui.alert(data.msg)
               }
             })
           }
         }else{
-          this.reportInfo = 1
+          this.showToast = true
           if(this.selectValue == '检查报告'){
-            api("nethos.book.inspect.examination",{
-              token:tokenCache.get(),
-              startDate:this.oneYear,
-              endDate:this.nowTime,
-              compatId:this.compatId
+            api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
+              token:localStorage.getItem('token'),
+              idcard:this.patCard,
+              orgid:this.hosid,
+              hosid:this.hosid,
+              bdate:this.oneYear,
+              edate:this.nowTime,
             }).then((data)=>{
+              this.showToast = false
+              this.isChanged = true
               if(data.code == 0){
-                this.reportInfo = data.list
-                this.reportInfoString = JSON.stringify(this.reportInfo)
+                if(data.list){
+                  this.reportInfo = data.list
+                  this.reportInfoString = JSON.stringify(this.reportInfo)
+                }else{
+                  this.reportInfo = this.report
+                }
                 console.log(data)
               }else if(!(data.msg)){
-                this.reportInfo = 2
                 weui.alert("网络错误，请稍后重试")
               }else{
-                this.reportInfo = 2
                 weui.alert(data.msg)
               }
             })
@@ -238,6 +275,7 @@
     },
     components:{
       "VHeader":header,
+      Toast
     },
     watch:{
       reportInfo(){
@@ -252,33 +290,14 @@
 </script>
 <style scoped lang="scss">
   @import '../../common/common.scss';
-  .loading{
-    position: fixed;
-    top: 90px;
-    left:0;
-    right:0;
-    bottom:0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    img{
-      width:100px;
-      margin-bottom: 10px;
-    }
-    span{
-      font-size: 32px;
-      color: #999999;
-    }
-  }
   .checkList{
     position: absolute;
-    top: 88px;
+    top: 99px;
     left:0;
     right:0;
     bottom:0;
     .topMenu{
-      height:50px;
+      height:80px;
       display: flex;
       z-index:100;
       align-items: center;
@@ -299,24 +318,50 @@
     >div{
       .wrapContent{
         position: absolute;
-        top:50px;
+        top:85px;
         left:0;
         right:0;
         bottom:0;
         >div{
+          .tips{
+            position: absolute;
+            top: 90px;
+            left:0;
+            right:0;
+            bottom:0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /*img{*/
+            /*width:100px;*/
+            /*margin-bottom: 10px;*/
+            /*}*/
+            span{
+              font-size: 32px;
+              color: #999999;
+            }
+          }
           >div{
             .checkCenter{
               width:690px;
+              height:197px;
               margin: 0 auto;
               display: none;
+              border-radius: 10px;
+              background-color: #FFFFFF;
               .reportList{
-                margin-top: 10px;
+                margin-top: 15px;
                 border-radius: 7px;
+                height:197px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
                 /*<!--background-color: $bgColor2;-->*/
                 h3{
                   font-weight: normal;
-                  font-size: 32px;
-                  color: #323333;
+                  font-size: 36px;
+                  color: #333333;
                   padding-top: 15px;
                   padding-bottom: 15px;
                   padding-left: 15px;
@@ -325,7 +370,7 @@
                   margin-top: 15px;
                   padding-bottom: 15px;
                   font-size: 28px;
-                  color: #999899;
+                  color: #999999;
                   font-family: PingFangSC;
                   display: flex;
                   justify-content: space-between;

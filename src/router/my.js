@@ -24,6 +24,10 @@ export default [
     component:()=>import("../pages/my/personInfo.vue")
   },
   {
+    path:"/my/addHosNum",
+    component:()=>import('../pages/my/addHosNum.vue')
+  },
+  {
      path:"/my/costLog",
      component:()=>import("../pages/my/costLog.vue")
   },

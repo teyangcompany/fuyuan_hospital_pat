@@ -203,7 +203,7 @@
                   console.log(data)
                 }else{
                   this.showToast = false
-                  weui.alert(data.err)
+                  weui.alert(data.msg)
                   console.log(data)
                 }
               })

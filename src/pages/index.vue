@@ -199,7 +199,8 @@
                         height: 180px;
                         background-size: 100% 100%;
                         flex: 0 0 auto;
-                        padding-top: 20px;
+                        background-color: white;
+                        /*padding-top: 20px;*/
                         /*<!--padding-left: $commonSpace;-->*/
                         /*width: 50%;*/
                         width:100%;
@@ -231,7 +232,7 @@
                 }
             }
             .indexnav {
-                margin-top: $wrapperPadding;
+                /*<!--margin-top: $wrapperPadding;-->*/
                 ul {
                     background-color: white;
                     overflow: hidden;

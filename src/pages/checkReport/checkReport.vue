@@ -5,52 +5,78 @@
       <div class="hosTitle" @click="goHosList">
           <p class="titleToggle"> <span>选择医院</span> <span class="hosTitleLeft"><span v-if="hosList">{{hosList[hosIndex].yymc}}</span><img src="../../../static/img/icon/arrow-right.png" alt=""> </span> </p>
       </div>
-      <div class="usual" v-if="allPatient">
-        <div  class="usualLine">
-          <div class="usualCenter">
-            <ul >
-              <p class="patientToggle"> <span class="patientToggleLeft">就诊人信息</span> <span @click="goUsual()" class="change">切换就诊人</span></p>
-              <li>{{ allPatient[index].commpatName }} <span>&nbsp;&nbsp; {{allPatient[index].compatAge}} &nbsp;&nbsp;{{allPatient[index].commpatGender == 'M'? '男':'女'}}</span></li>
-              <li>身份证号： <span>{{ allPatient[index].commpatIdcard }}</span></li>
-              <li>电话号码：<span>{{allPatient[index].commpatMobile}}</span></li>
-              <li v-if="!(allPatient[index].compatMedicalRecord)">病&nbsp;&nbsp;案&nbsp;号：<span>暂未绑定病案号</span></li>
-              <li v-else>病&nbsp;&nbsp;案&nbsp;号：<span>{{ allPatient[index].compatMedicalRecord }}</span></li>
-            </ul>
-          </div>
+      <div class="hosTitle" @click="togglePatient">
+        <p class="titleToggle"> <span>就诊人信息</span> <span class="hosTitleLeft"><span v-if="allPatient">{{ allPatient[index].commpatName }}</span><img src="../../../static/img/icon/arrow-right.png" alt=""> </span> </p>
+      </div>
+      <div class="hosTitle">
+        <p class="titleToggle" v-if="allPatient && allPatient[index].userCommonPatRecords"> <span>病案号</span>
+          <span class="hosTitleLeft illNumColor">
+            <span v-if="allPatient[index].userCommonPatRecords.length != 0">{{ allPatient[index].userCommonPatRecords[0].compatRecord  }}(义乌復元医院)</span>
+            <span v-else>暂未绑定病案号</span>
+            <img src="../../../static/img/icon/arrow-right.png" alt="">
+          </span>
+        </p>
+      </div>
+      <div class="checkMenu">
+          <button @click="goTest">检验单查询</button>
+          <p></p>
+          <button @click="goCheck">检查单查询</button>
+      </div>
+      <div class="warmWrap">
+        <div class="warmTips">
+          <h3>温馨提示：</h3>
+          <p>1.检验报告：查看血常规、尿检等生化类报告单信息；</p>
+          <p>2.检查报告：查看CT、MRI（磁共振）、X光、B超等检查类报告单信息；</p>
+          <p>3.报告仅供参考，请以医院实际纸质报告为准。</p>
         </div>
       </div>
-      <div class="checkList">
-        <div class="checkCenter">
-          <div class="weui-cells weuiMargin">
-            <a @click="goTest" class="weui-cell weui-cell_access" href="javascript:;">
-              <div class="weui-cell__bd">
-                <p>检验报告</p>
-              </div>
-              <div class="weui-cell__ft">
-              </div>
-            </a>
-            <a @click="goCheck" class="weui-cell weui-cell_access" href="javascript:;">
-              <div class="weui-cell__bd">
-                <p>检查报告</p>
-              </div>
-              <div class="weui-cell__ft">
-              </div>
-            </a>
-          </div>
-          <div class="warmTips">
-            <h3>温馨提示：</h3>
-            <p>1.检验报告：查看血常规、尿检等生化类报告单信息；</p>
-            <p>2.检查报告：查看CT、MRI（磁共振）、X光、B超等检查类报告单信息；</p>
-            <p>3.报告仅供参考，请以医院实际纸质报告为准。</p>
-          </div>
-        </div>
-      </div>
+      <!--<div class="usual" v-if="allPatient">-->
+        <!--<div  class="usualLine">-->
+          <!--<div class="usualCenter">-->
+            <!--<ul >-->
+              <!--<p class="patientToggle"> <span class="patientToggleLeft">就诊人信息</span> <span @click="goUsual()" class="change">切换就诊人</span></p>-->
+              <!--<li>{{ allPatient[index].commpatName }} <span>&nbsp;&nbsp; {{allPatient[index].compatAge}} &nbsp;&nbsp;{{allPatient[index].commpatGender == 'M'? '男':'女'}}</span></li>-->
+              <!--<li>身份证号： <span>{{ allPatient[index].commpatIdcard }}</span></li>-->
+              <!--<li>电话号码：<span>{{allPatient[index].commpatMobile}}</span></li>-->
+              <!--<li v-if="!(allPatient[index].compatMedicalRecord)">病&nbsp;&nbsp;案&nbsp;号：<span>暂未绑定病案号</span></li>-->
+              <!--<li v-else>病&nbsp;&nbsp;案&nbsp;号：<span>{{ allPatient[index].compatMedicalRecord }}</span></li>-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="checkList">-->
+        <!--<div class="checkCenter">-->
+          <!--<div class="weui-cells weuiMargin">-->
+            <!--<a @click="goTest" class="weui-cell weui-cell_access" href="javascript:;">-->
+              <!--<div class="weui-cell__bd">-->
+                <!--<p>检验报告</p>-->
+              <!--</div>-->
+              <!--<div class="weui-cell__ft">-->
+              <!--</div>-->
+            <!--</a>-->
+            <!--<a @click="goCheck" class="weui-cell weui-cell_access" href="javascript:;">-->
+              <!--<div class="weui-cell__bd">-->
+                <!--<p>检查报告</p>-->
+              <!--</div>-->
+              <!--<div class="weui-cell__ft">-->
+              <!--</div>-->
+            <!--</a>-->
+          <!--</div>-->
+          <!--<div class="warmTips">-->
+            <!--<h3>温馨提示：</h3>-->
+            <!--<p>1.检验报告：查看血常规、尿检等生化类报告单信息；</p>-->
+            <!--<p>2.检查报告：查看CT、MRI（磁共振）、X光、B超等检查类报告单信息；</p>-->
+            <!--<p>3.报告仅供参考，请以医院实际纸质报告为准。</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <v-dialog :dialogTitle="dialogTitle"
                 :dialogMain="dialogMain"
                 :dialogLeftFoot="dialogLeftFoot"
                 :dialogRightFoot="dialogRightFoot"
                 v-if="showDialog"
                 @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+      <patient-toggle :patList="allPatient" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>
       <div class="emptyHistory" v-if="fail">
         <bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>
       </div>
@@ -71,6 +97,7 @@
 //  import bindFail from '../../../base/bindFail/bindFail'
 //  import VMask from '../../../base/mask'
   import Toast from '../../base/toast'
+  import patientToggle from '../../base/patientToggle.vue'
 //  import weui from 'weui.js'
 //  import {isLoginMixin} from "../../../lib/mixin"
 //  import {tokenCache} from '../../../lib/cache'
@@ -98,7 +125,9 @@
         failDetailSecond:"若该就诊人未在医院建档，请前往医院窗口办理",
         failKnow:"我知道了",
         illNumber:"314324",
-        hosList:""
+        hosList:"",
+        patOption:"请选择就诊人",
+        showPat:false
       }
     },
     created(){
@@ -142,6 +171,17 @@
     methods:{
       cancelDialog(){
         this.showDialog = false
+      },
+      closePatient(){
+        this.showPat = false
+      },
+      check(item){
+        console.log(item)
+        this.showPat=false;
+        this.index=item;
+      },
+      togglePatient(){
+        this.showPat = true
       },
       bindCard(){
         this.showDialog = false
@@ -187,13 +227,13 @@
       goTest(){
           this.$router.push({
             path: '/testReportDetail',
-            query: {hosId: this.hosList[this.hosIndex].yyid}
+            query: {hosId:this.hosList[this.hosIndex].yyid,hosName:this.hosList[this.hosIndex].yymc,patCard:this.allPatient[this.index].commpatIdcard}
           })
       },
       goCheck(){
         this.$router.push({
           path: '/checkReportDetail',
-          query:{hosId:this.hosList[this.hosIndex].yyid,patCard:this.allPatient[this.index].commpatIdcard}
+          query:{hosId:this.hosList[this.hosIndex].yyid,hosName:this.hosList[this.hosIndex].yymc,patCard:this.allPatient[this.index].commpatIdcard}
         })
       },
       goIndex(){
@@ -203,6 +243,7 @@
     components:{
       "VHeader":header,
       "VDialog":Dialog,
+      patientToggle,
 //      bindSuccess,
 //      VMask,
 //      bindFail,
@@ -241,6 +282,7 @@
   }
   .hosTitle{
     width:100%;
+    margin-top: 15px;
     background-color: #FFFFFF;
     .titleToggle{
       height:80px;
@@ -254,7 +296,7 @@
         font-size: 32px;
       }
       .hosTitleLeft{
-        color: #999999;
+        color: $mainColor;
         display: flex;
         align-items: center;
         span{
@@ -264,6 +306,48 @@
           width:15px;
 
         }
+      }
+      .illNumColor{
+        color: #999999;
+      }
+    }
+  }
+  .checkMenu{
+    width:690px;
+    margin:0 auto;
+    margin-top: 600px;
+    height:80px;
+    display: flex;
+    justify-content: space-between;
+    p{
+      flex:0.2;
+    }
+    button{
+      flex:2;
+      height:80px;
+      border:none;
+      outline:medium;
+      color: white;
+      font-size: 32px;
+      border-radius: 7px;
+      background-color: $mainColor;
+    }
+  }
+  .warmWrap{
+    width:100%;
+    background-color: $boederCol;
+    .warmTips{
+      width:690px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      margin:0 auto;
+      margin-top: 15px;
+      h3,p{
+        font-size: 24px;
+        color: #666666;
+        font-weight: normal;
+        line-height: 36px;
+        padding:3px 0 3px 0;
       }
     }
   }

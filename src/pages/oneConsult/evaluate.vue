@@ -69,13 +69,12 @@
         },
         methods:{
             submit(){
-                this.showToast = true
                 if(this.num == 0){
-                  this.showToast = false
                     weui.alert("您还未对该医生做出评价")
                 }else if(this.textLength > 200){
                   weui.alert("评价内容不能超过200个字")
                 }else{
+                  this.showToast = true
                     api('smarthos.system.comment.add',{
                         content:this.evaluateContent,
                         token:this.token,

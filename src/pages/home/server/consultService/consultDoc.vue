@@ -417,6 +417,7 @@
       },
       searchList(){
         this.sortBy = ''
+        this.showToast = true
         http("smarthos.user.doc.search",{
           deptId:this.deptId,
           keyWord:this.searchContent,
@@ -430,6 +431,7 @@
           console.log(data,66666)
           console.log(this.pages,111)
           this.loadingStatus = false
+          this.showToast = false
           if(data.code == 0){
             this.pages = data.page.pages
             this.followList = data.list
@@ -517,6 +519,7 @@
         this.deptId = item.id
         console.log(this.deptId)
         this.sortPick = item.deptName
+        this.showToast = true
           http("smarthos.user.doc.search",{
             deptId:this.deptId,
             keyWord:this.searchContent,
@@ -528,6 +531,7 @@
 //            pageNum:1,
           }).then((data)=>{
            console.log(data,2222)
+            this.showToast = false
             if(data.code == 0){
               this.pages = data.page.pages
               this.followList = data.list

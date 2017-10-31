@@ -13,7 +13,8 @@
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
     <section class="title">
-      <img :src="waitImg" alt="" v-if="path==oneConsultPath">
+      <img :src="waitImg" alt="" v-if="path==oneConsultPath && waitImg">
+      <img src="../../static/img/doctorM.png" alt="" v-else-if="path==oneConsultPath && !waitImg">
       <span class="word">{{title}}</span>
       <span v-if="path== nowPath && showMy" class="myDoc" >我的医生</span>
     </section>

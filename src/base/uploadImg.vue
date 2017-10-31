@@ -20,14 +20,13 @@
                     </div>
                 </div>
             </div>
+            <v-dialog :dialogTitle="dialogTitle"
+                      :dialogMain="dialogMain"
+                      :dialogLeftFoot="dialogLeftFoot"
+                      :dialogRightFoot="dialogRightFoot"
+                      v-if="showDialog"
+                      @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
         </li>
-        <v-dialog :dialogTitle="dialogTitle"
-                  :dialogMain="dialogMain"
-                  :dialogLeftFoot="dialogLeftFoot"
-                  :dialogRightFoot="dialogRightFoot"
-                  v-if="showDialog"
-                  @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
-        <v-mask v-if="showDialog"></v-mask>
       </div>
 </template>
 <script type="text/ecmascript-6">
@@ -35,14 +34,12 @@
     import {mainHeightMixin, jssdkMixin} from '../lib/mixin'
     import config from '../lib/config'
     import dialog from '../base/dialog.vue'
-    import mask from '../base/mask.vue'
     import {debug} from "../lib/util"
 
     export default {
         components: {
             top,
             "VDialog":dialog,
-            "VMask":mask
         },
         props: ['picList', 'imgList'],
         mixins: [mainHeightMixin],
@@ -101,7 +98,12 @@
               let  gallery = this.$weui.gallery(this.img, {
                 className: 'custom-classname',
                 onDelete: ()=>{
-                    this.showDialog = true
+                  this.$weui.confirm('是否删除此张照片',()=>{
+                    gallery.hide(()=> {
+                      console.log('`gallery` has been hidden');
+                      this.$emit('delete',this.index)
+                    });
+                  })
                 }
               });
             },

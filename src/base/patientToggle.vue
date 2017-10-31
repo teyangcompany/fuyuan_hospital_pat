@@ -124,7 +124,7 @@
       text-align:center;
       padding:0 auto;
       &.ft{
-        margin-top:.5rem;
+        margin-top:.1rem;
       }
     }
     div#wrapper{

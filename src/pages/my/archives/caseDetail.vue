@@ -151,8 +151,11 @@
       this.$set(this.$data,'date',caseObj.medicalHistory.medicalTime)
       this.$set(this.$data,'caseText',caseObj.medicalHistory.medContent)
       this.$set(this.$data,'id',caseObj.medicalHistory.id)
-      this.$set(this.$data,'imgList',caseObj.attaList)
+      if(caseObj.attaList){
+        this.$set(this.$data,'imgList',caseObj.attaList)
+      }
       this.$set(this.$data,'creatorName',caseObj.creatorName);
+      console.log(this.imgList,7777)
       if(this.imgList && this.imgList.length>0){
         for(var i=0;i<this.imgList.length;i++){
           this.imgId.push(this.imgList[i].id)
@@ -285,13 +288,15 @@
         })
       },
       added(file) {
+        console.log(this.picList.length,6666)
+        console.log(this.imgList,111)
         file.thumb().then(res => {
           file.setThumbUrl(res);
-          if(this.picList.length + this.imgList.length < 9){
-            this.picList.push(file);
-          }else{
-            weui.alert("最多可以上传九张照片")
-          }
+            if( this.picList.length + this.imgList.length < 9){
+              this.picList.push(file);
+            }else{
+              weui.alert("最多可以上传九张照片")
+            }
           this.picList.sort((a, b) => {
             return a.sort - b.sort
           })

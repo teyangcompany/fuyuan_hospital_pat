@@ -15,6 +15,14 @@ export default[
     component:()=>import('../pages/checkReport/checkReportDetail.vue')
   },
   {
+    path:"/checkReportCard",
+    component:()=>import('../pages/checkReport/checkReportCard.vue')
+  },
+  {
+    path:"/testReportCard",
+    component:()=>import('../pages/checkReport/testReportCard.vue')
+  },
+  {
     path:"/hosList",
     component:()=>import('../pages/checkReport/hosList.vue')
   }
