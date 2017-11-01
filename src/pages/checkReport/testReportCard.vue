@@ -52,7 +52,7 @@
             </tr>
             <tr v-for="(item,index) in experiment">
               <td>{{ item.assayitemcode }}</td>
-              <td>{{ item.assayitemname }}</td>
+              <td class="secondCol">{{ item.assayitemname }}</td>
               <td >{{ item.result }}
                 <img v-if="status[index] == 'up'" src="../../../static/img/up@2x.png" alt="">
                 <img v-else-if="status[index] == 'down'" src="../../../static/img/down@2x.png" alt="">
@@ -256,6 +256,9 @@
           img{
             width:20px;
           }
+        }
+        .secondCol{
+         width:350px;
         }
         tr:nth-child(even){
           background-color: rgb(250,250,250);

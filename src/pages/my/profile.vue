@@ -1,9 +1,9 @@
 <template>
   <div class="success">
-    <!--<v-header :title="title" :rightTitle="rightTitle" @on-bookService="goBookService()"></v-header>-->
-    <top class="noflex" title="个人资料" ref="header">
-      <i slot="back"></i>
-    </top>
+    <v-header :title="title" :rightTitle="rightTitle" @on-docCard="modify()"></v-header>
+    <!--<top class="noflex" title="个人资料" ref="header">-->
+      <!--<i slot="back"></i>-->
+    <!--</top>-->
     <div class="successContent" ref="success">
       <div>
         <div class="avatar">
@@ -15,10 +15,11 @@
             <div class="weui-cells weui-cells_form">
               <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">头像</label></div>
-                <div class="weui-cell__bd">
+                <div class="weui-cell__bd" @click="uploadImg">
                   <img :src="patAvatar" alt="" v-if="patAvatar">
                   <img src="../../../static/img/pat.m.jpg" alt="" v-else-if="!patAvatar && personInfo.commpatGender == 'M'">
                   <img src="../../../static/img/pat.f.jpg" alt="" v-else>
+                  <input type="file" style="display: none" accept="image/*" name="upload" id="upload" ref="upload" @change="onFileChange">
                 </div>
               </div>
               <div class="weui-cell">
@@ -43,7 +44,7 @@
               <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
+                  <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
                 </div>
               </div>
               <div class="weui-cell">
@@ -64,6 +65,7 @@
   </div>
 </template>
 <script>
+  import header from '../../base/header.vue'
   import BScroll from 'better-scroll'
   import api from '../../lib/bookApi'
   import http from '../../lib/http'
@@ -76,6 +78,8 @@
 //    mixins: [isLoginMixin],
     data(){
       return{
+        title:"个人资料",
+        rightTitle:"保存",
         personInfo:"",
         patOption:"",
         showPat:false,
@@ -96,7 +100,8 @@
         hosList:"",
         changeGender:"",
         changeAge:"",
-        patAvatar:""
+        patAvatar:"",
+        previewImg:""
       }
     },
     mounted(){
@@ -111,18 +116,7 @@
     },
     created(){
       this.getHosList()
-      http("smarthos.user.pat.get",{
-        token:localStorage.getItem('token')
-      }).then((data)=>{
-        this.personInfo = data.obj.userCommonPatVo
-        this.patAvatar = data.obj.pat.patAvatar
-        this.patName = this.personInfo.commpatName
-        this.patIdCard = this.personInfo.commpatIdcard
-        this.patMobile = this.personInfo.commpatMobile
-        console.log(data,666)
-      })
-
-
+      this.getPersonInfo()
     },
     watch:{
       patIdCard(){
@@ -142,6 +136,21 @@
       }
     },
     methods:{
+      getPersonInfo(){
+        http("smarthos.user.pat.get",{
+          token:localStorage.getItem('token')
+        }).then((data)=>{
+          if(data.code == 0){
+            this.personInfo = data.obj.userCommonPatVo
+            this.patAvatar = data.obj.pat.patAvatar
+            this.patName = this.personInfo.commpatName
+            this.patIdCard = this.personInfo.commpatIdcard
+            this.patMobile = this.personInfo.commpatMobile
+          }else{
+              weui.alert(data.msg)
+          }
+        })
+      },
       getHosList(){
         api("smarthos.yygh.ApiHospitalService.areaHosList",{
         }).then((data)=>{
@@ -176,11 +185,66 @@
         })
         console.log(this.success)
       },
-
-      goBookService(){
-        this.$router.push({
-          path:"/my/addHosNum"
+      uploadImg(){
+        this.$refs.upload.click()
+      },
+      onFileChange(e) {
+        console.log(e)
+        var file = e.target.files[0]
+        this.createImage(file)
+      },
+      createImage(file) {
+        if (typeof FileReader === "undefined") {
+          alert("您的浏览器不支持图片上传，请升级您的浏览器")
+          return false
+        }
+        let that = this
+        let fileName = file.name
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          http("smarthos.system.file.upload.image.base64", {
+            base64: this.result,
+            fileName: fileName,
+            fileType:"IMAGE",
+            module:"PAT"
+          }).then((data) => {
+             if(data.code == 0){
+               that.$set(that.$data, 'previewImg', data.obj.attaFileUrl)
+               that.modifyPic()
+             }else{
+                 weui.alert(data.msg)
+             }
+          })
+        }
+      },
+      modifyPic(){
+        http("smarthos.user.pat.infomation.modify",{
+          patAvatar:this.previewImg,
+          areaCode:"",
+          patName:this.patName,
+          patIdcard:this.patIdCard
+        }).then((data)=>{
+          if(data.code == 0){
+            this.getPersonInfo()
+          }else{
+            weui.alert(data.msg)
+          }
         })
+      },
+      modify(){
+          console.log("123")
+           http("smarthos.user.pat.infomation.modify",{
+             areaCode:"",
+             patName:this.patName,
+             patIdcard:this.patIdCard
+           }).then((data)=>{
+               if(data.code == 0){
+                  this.getPersonInfo()
+               }else{
+                   weui.alert(data.msg)
+               }
+           })
       },
 
     },
@@ -188,7 +252,8 @@
       Toast,
       top,
       vueArea,
-      relationToggle
+      relationToggle,
+      "VHeader":header
     }
   }
 </script>

@@ -13,13 +13,18 @@
           <img src="../../../static/img/pat.m.jpg" alt="" v-if="patDetail.commpatGender == 'M'">
           <img src="../../../static/img/pat.f.jpg" alt="" v-else>
         </div>
-        <rouer-link :to="{name:'editUser',query:{id:patDetail.id,item:JSON.stringify(patDetail)}}" tag="div"
-                    class="info flex1">
+        <div class="info flex1">
           <!--<h3 v-show="patDetail.commpatName">小{{patDetail.commpatName.substring(0, 1)}}</h3>-->
           <div>姓名：{{patDetail.commpatName}}</div>
           <p v-if="patDetail">
             {{patDetail.commpatGender | getGender}} {{ patDetail.commpatIdcard | getAge}}岁</p>
-        </rouer-link>
+        </div>
+        <!--<rouer-link :to="{name:'editUser',query:{id:patDetail.id,item:JSON.stringify(patDetail)}}" tag="div"-->
+                    <!--class="info flex1">-->
+          <!--<div>姓名：{{patDetail.commpatName}}</div>-->
+          <!--<p v-if="patDetail">-->
+            <!--{{patDetail.commpatGender | getGender}} {{ patDetail.commpatIdcard | getAge}}岁</p>-->
+        <!--</rouer-link>-->
       </div>
 
       <div class="nav">

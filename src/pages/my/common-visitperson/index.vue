@@ -75,14 +75,20 @@
         },
         methods: {
             goEditUser(id,item){
-                console.log(212121)
-                this.$router.push({
+                console.log(item,1)
+                if(item.self){
+                    this.$router.push({
+                        path:"/my/profile"
+                    })
+                }else{
+                  this.$router.push({
                     name:'editUser',
                     query:{
-                        id:id,
-                        item:JSON.stringify(item)
+                      id:id,
+                      item:JSON.stringify(item)
                     }
-                })
+                  })
+                }
             },
             addUser(){
                if(this.list.length == 5){
