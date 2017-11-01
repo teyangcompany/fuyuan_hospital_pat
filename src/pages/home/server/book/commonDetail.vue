@@ -36,12 +36,12 @@
           </div>
           <div class="list border-1px" v-for="(item,index) in parentItem.schemeList" @click="book(item,index)">
             <p class="specialBlack">{{ (item.schdate).substr(0,4) }}-{{ (item.schdate).substr(4,2) }}-{{ (item.schdate).substr(6) }} {{ weekNum[index] }} {{ item.ampm == '1'? '上午':'下午' }}
-              <span class="specialMoney" v-if="item.schstate == 0">预约 {{ item.fee }}元</span>
+              <span class="specialMoney" v-if="item.schstate == 0 && item.numremain > 0">预约 {{ item.fee }}元</span>
+              <span class="fullNum" v-if="item.schstate == 0 && item.numremain <= 0">已满</span>
               <span class="year gray" v-if="item.schstate == 1">停诊</span>
-              <span class="year gray" v-if="item.schstate == 2">已满</span>
-              <span class="year" v-if="item.schstate == 3">即将(未放号或号子被锁定)</span>
-              <!--<span class="year" >预约</span>-->
-              <span class="specialMoney" v-if="item.schstate == 4" >预约{{ item.bookFee }}元</span>
+              <!--<span class="year gray" v-if="item.schstate == 2">已满</span>-->
+              <!--<span class="year" v-if="item.schstate == 3">即将(未放号或号子被锁定)</span>-->
+              <!--<span class="specialMoney" v-if="item.schstate == 4" >预约{{ item.bookFee }}元</span>-->
             </p>
           </div>
         </div>
@@ -300,6 +300,17 @@
             justify-content: center;
             border-radius: 7px;
             background-color: $mainColor;
+          }
+          .fullNum{
+            min-width: 170px;
+            height: 60px;
+            font-size: 32px;
+            color: #999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 7px;
+            background-color: #f5f5f5;
           }
         }
       }

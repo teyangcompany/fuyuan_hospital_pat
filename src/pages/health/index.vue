@@ -9,10 +9,8 @@
             <div class="wrapper" ref="main">
                 <div class="banner swiper-container" ref="swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="i in 6">
-                            <img
-                                    src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1504700244175&di=68e85a71e961263b6321dca0b40c179b&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01b91c577f7b280000012e7ec2cd9b.jpg%40900w_1l_2o_100sh.jpg"
-                                    alt="">
+                        <div class="swiper-slide" v-for="i in carouselPic">
+                            <img :src="i.adUrl" alt="">
                         </div>
                     </div>
                     <div class="swiper-pagination"></div>
@@ -63,7 +61,9 @@
             return {
                 currentNav: 2,
                 nav: config.health_nav,
-                scrollHeight:""
+                scrollHeight:"",
+                carouselPic:""
+
             };
         },
         computed: {},
@@ -74,6 +74,8 @@
         },
         created() {
             this.swiper = null;
+            this.getIndexInfo()
+            this.getHealthList()
         },
         mounted() {
             this.scrollHeight = window.innerHeight-45-60;
@@ -90,11 +92,29 @@
         },
         methods: {
             goRouter(router){
-
-              this.$router.push(router)
+              console.log(router)
+              if(router == '/my/wiki'){
+                 location.href='https://ddys-wechat.diandianys.com/WeChat/jkbk/?from=groupmessage&isappinstalled=0#/home'
+              }else{
+                this.$router.push(router)
+              }
             },
             goConsultList(){
-              this.$router.push('/consultList')
+              this.$router.push('/healthModule')
+            },
+            getIndexInfo(){
+               api("smarthos.information.news.index",{
+               }).then((data)=>{
+                   this.carouselPic = data.obj.adSettingPage
+               })
+            },
+            getHealthList(){
+               api("smarthos.information.news.page",{
+//                 moduleId:"",
+                 pageSize:1000
+               }).then((data)=>{
+                   console.log(data,333)
+               })
             },
             _swiper() {
                 setTimeout((res) => {

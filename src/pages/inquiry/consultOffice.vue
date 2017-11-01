@@ -27,16 +27,14 @@
                     </div>
                     <div class="weui-cell__ft mfb" v-if="userList.length != 0">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
                 </a>
-
-            </div>
-            <div class="weui-cell"v style="background: white">
-                <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
-                <div class="weui-cell__bd">
+                <div class="weui-cell"v style="background: white">
+                  <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
+                  <div class="weui-cell__bd">
                     <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
+                  </div>
+                  <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
                 </div>
-                <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
             </div>
-
             <div class="weui-cells__title">病情资料</div>
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">

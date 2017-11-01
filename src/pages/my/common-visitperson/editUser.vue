@@ -231,7 +231,7 @@
                "commpatName":this.patName,
                "commpatIdcard":this.patIdcard,
                relationship:this.compatInfo[this.clickIndex],
-               areaCode:this.result.area.code ? this.result.area.code:itemInfo.areaName,
+               areaCode: this.result == null || this.result.area.code == '' ? this.itemInfo.areaCode : this.result.area.code,
              }).then(res=>{
                console.log(res)
                if(res.succ){

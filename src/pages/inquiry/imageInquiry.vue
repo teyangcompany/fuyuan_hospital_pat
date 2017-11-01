@@ -29,13 +29,13 @@
                         {{showPat}}
                     </div>
                 </a>
-            </div>
-            <div class="weui-cell" style="background: white">
-                <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
-                <div class="weui-cell__bd">
+                <div class="weui-cell" >
+                  <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
+                  <div class="weui-cell__bd">
                     <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
+                  </div>
+                  <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
                 </div>
-                <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
             </div>
             <div class="weui-cells__title">病情资料</div>
             <div class="weui-cells weui-cells_form">

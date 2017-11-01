@@ -32,7 +32,7 @@
                     <p style="color: #333333;">{{ single.schdate.substr(0,4) }}-{{  single.schdate.substr(4,2) }}-{{  single.schdate.substr(6) }} <span style="color: #3d9bff">{{ single.ampm == '1'? '上午':'下午' }}</span> 普通</p>
                   </div>
                 </div>
-                <div class="cancelTime specialCancel"  v-if="single.schstate == 0">
+                <div class="cancelTime specialCancel"  v-if="single.schstate == 0 && single.numremain > 0">
                   <div >
                     <p>预约</p>
                     <p style="color: #FAAC79;"> {{ single.fee }}元 </p>
@@ -41,12 +41,15 @@
                 </div>
                 <div class="cancelTime" v-else>
                   <div >
-                    <span class="year gray" v-if="single.schemeStats == 0">无</span>
-                    <span class="year gray" v-if="single.schemeStats == 1">停诊</span>
-                    <span class="year gray" v-if="single.schemeStats == 2">已满</span>
-                    <span class="year" v-if="single.schemeStats == 3">即将(未放号或号子被锁定)</span>
-                    <!--<span class="year" >预约</span>-->
-                    <span class="specialMoney" v-if="single.schemeStats == 4">预约{{ single.bookFee }}元</span>
+                    <span class="fullNum" v-if="single.schstate == 0 && single.numremain <= 0">已满</span>
+                    <span class="year gray" v-else-if="single.schstate == 1">停诊</span>
+
+                    <!--<span class="year gray" v-if="single.schemeStats == 0">无</span>-->
+                    <!--<span class="year gray" v-if="single.schemeStats == 1">停诊</span>-->
+                    <!--<span class="year gray" v-if="single.schemeStats == 2">已满</span>-->
+                    <!--<span class="year" v-if="single.schemeStats == 3">即将(未放号或号子被锁定)</span>-->
+                    <!--&lt;!&ndash;<span class="year" >预约</span>&ndash;&gt;-->
+                    <!--<span class="specialMoney" v-if="single.schemeStats == 4">预约{{ single.bookFee }}元</span>-->
                     <!--<img src="../../../../static/img/查看更多.png" alt="">-->
                   </div>
                 </div>
@@ -68,7 +71,7 @@
                     <p style="color: #333333;">{{ single.schdate.substr(0,4) }}-{{  single.schdate.substr(4,2) }}-{{  single.schdate.substr(6) }} <span style="color: #3d9bff"> {{ single.ampm == '1'? '上午':'下午' }}</span> 专家</p>
                   </div>
                 </div>
-                <div class="cancelTime specialCancel" id="" v-if="single.schstate == 0">
+                <div class="cancelTime specialCancel" id="" v-if="single.schstate == 0 && single.numremain > 0">
                   <div >
                     <p>预约</p>
                     <p style="color: #FAAC79;"> {{ single.fee }}元 </p>
@@ -77,12 +80,14 @@
                 </div>
                 <div class="cancelTime" v-else>
                   <div >
-                    <span class="year gray" v-if="single.schstate == 0">无</span>
-                    <span class="year gray" v-if="single.schstate == 1">停诊</span>
-                    <span class="year gray" v-if="single.schstate == 2">已满</span>
-                    <span class="year" v-if="single.schstate == 3">即将(未放号或号子被锁定)</span>
+                    <!--<span class="year gray" v-if="single.schstate == 0 ">无</span>-->
+                    <!--<span class="year gray" v-if="single.schstate == 1">停诊</span>-->
+                    <!--<span class="year gray" v-if="single.schstate == 2">已满</span>-->
+                    <!--<span class="year" v-if="single.schstate == 3">即将(未放号或号子被锁定)</span>-->
                     <!--<span class="year" >预约</span>-->
-                    <span class="specialMoney" v-if="single.schstate == 4">预约{{ single.bookFee }}元</span>
+                    <!--<span class="specialMoney" v-if="single.schstate == 0 && single.numremain > 0">预约{{ single.bookFee }}元</span>-->
+                    <span class="fullNum" v-if="single.schstate == 0 && single.numremain <= 0">已满</span>
+                    <span class="year gray" v-else-if="single.schstate == 1">停诊</span>
                     <!--<img src="../../../../static/img/查看更多.png" alt="">-->
                   </div>
                 </div>
@@ -246,7 +251,7 @@
           isPb:"0",
           date:this.completeTimeArray[this.selected]
         }).then((data)=>{
-           console.log(data)
+           console.log(data,333)
           if(data.code == 0){
             this.commonRoom = data.list
           }else if(!(data.msg)){
@@ -483,6 +488,18 @@
                       justify-content: center;
                       border-radius: 7px;
                       background-color: $mainColor;
+                    }
+                    .fullNum{
+                      min-width:170px;
+                      height:60px;
+                      color: #999999;
+                      font-size: 32px;
+                      margin-right: 5px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border-radius: 7px;
+                      background-color: #f5f5f5;
                     }
                     span.gray{
                       color: #999999;

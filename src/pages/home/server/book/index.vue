@@ -11,7 +11,7 @@
         <ul>
           <router-link :key="item.id" :to="{path:'/home/server/book/dept',query:{hosid:item.yyid,hosName:item.yyjc}}" tag="li" class="flex" v-for="item in hosList">
             <div class="ava flex0">
-              <img :src="item.yytp" alt="" v-if="item.yytp">
+              <img :src="item.yytp" alt="" v-if="item.yytp" onerror="javascript:this.src='./static/img/fuyuanPic.jpg'">
               <img src="../../../../../static/img/fuyuanPic.jpg" alt="" v-else>
             </div>
             <div class="info flex1">

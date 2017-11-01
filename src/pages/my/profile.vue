@@ -41,28 +41,32 @@
                   <input class="weui-input" readonly style="text-align: right" type="text"  v-model="changeAge"  placeholder=""/>
                 </div>
               </div>
-              <div class="weui-cell">
+              <div class="weui-cell" @click="goPhone">
                 <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
+                  <p >{{ patMobile }}</p>
+                  <!--<input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>-->
                 </div>
               </div>
               <div class="weui-cell" v-if="result" @click="toggleArea">
                 <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="selectedName" placeholder=""/>
+                  <p>{{selectedName}}</p>
+                  <!--<input class="weui-input" readonly  style="text-align: right" type="text"  v-model="selectedName" placeholder=""/>-->
                 </div>
               </div>
               <div class="weui-cell" v-else-if="areaName" @click="toggleArea">
                 <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="areaName" placeholder=""/>
+                  <p>{{ areaName }}</p>
+                  <!--<input class="weui-input" readonly  style="text-align: right" type="text"  v-model="areaName" placeholder=""/>-->
                 </div>
               </div>
               <div class="weui-cell" v-else  @click="toggleArea">
                 <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="empty" placeholder=""/>
+                  <p>{{ empty }}</p>
+                  <!--<input class="weui-input" readonly  style="text-align: right" type="text"  v-model="empty" placeholder=""/>-->
                 </div>
               </div>
               <!--<a class="weui-cell weui-cell_access" href="javascript:;" @click="toggleArea">-->
@@ -136,7 +140,8 @@
         previewImg:"",
         areaName:"",
         selectedName:"",
-        empty:""
+        empty:"",
+        finalCode:""
       }
     },
     mounted(){
@@ -201,7 +206,7 @@
         this.show = show
         this.result = result
         if(this.result){
-          this.selectedName =  result.province.name + result.city.name  +  result.area.name
+          this.selectedName =  result.province.name + ','+ result.city.name + ','+  result.area.name
         }
 
         console.log(this.show)
@@ -227,6 +232,9 @@
           click:true
         })
         console.log(this.success)
+      },
+      goPhone(){
+          console.log("123")
       },
       uploadImg(){
         this.$refs.upload.click()
@@ -264,7 +272,7 @@
       modifyPic(){
         http("smarthos.user.pat.infomation.modify",{
           patAvatar:this.previewImg,
-          areaCode:this.result ? this.result.area.code : '',
+          areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
           patName:this.patName,
           patIdcard:this.patIdCard
         }).then((data)=>{
@@ -276,15 +284,17 @@
         })
       },
       modify(){
-          console.log("123")
            http("smarthos.user.pat.infomation.modify",{
-             areaCode:this.result ? this.result.area.code : '',
+             areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
              patName:this.patName,
              patIdcard:this.patIdCard
            }).then((data)=>{
                if(data.code == 0){
                   this.getPersonInfo()
                   weui.alert("修改成功")
+                  this.$router.push({
+                      path:"/my"
+                  })
                }else{
                    weui.alert(data.msg)
                }
@@ -310,6 +320,10 @@
     }
     input{
       font-size: 32px;
+    }
+    p{
+        font-size: 32px;
+        color: #666666;
     }
   }
   .weui-cells{

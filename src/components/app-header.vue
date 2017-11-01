@@ -42,6 +42,7 @@
   .header {
     font-size: 18px; /*no*/
     background-color: white;
+    z-index:8888;
     @include border(bottom);
     @extend %a;
 

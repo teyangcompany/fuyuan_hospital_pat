@@ -36,7 +36,7 @@ export default {
   ],
   health_nav: [
     {name: "archives", value: "健康档案", router: '/my/archives'},
-    {name: "wiki", value: "健康百科"}
+    {name: "wiki", value: "健康百科",router:'/my/wiki'}
   ],
   my_nav: [
     {name: "my-consult", value: "我的咨询", path: "/consultService/myConsult"},

@@ -35,11 +35,12 @@
         },
         methods: {
             goPage(page) {
-                if (page == "home") {
-                    page = "home";
-                }else if(page == 'health'){
-                    location.href='https://ddys-wechat.diandianys.com/WeChat/jkbk/?from=groupmessage&isappinstalled=0#/home'
-                }
+//                if (page == "home") {
+//                    page = "home";
+//                }else if(page == 'health'){
+//                    location.href='https://ddys-wechat.diandianys.com/WeChat/jkbk/?from=groupmessage&isappinstalled=0#/home'
+//                }
+//                page = "home";
                 this.$router.push(`/${page}`);
             }
         }
@@ -53,6 +54,7 @@
         $footerHei: 60px;
         height: $footerHei; /*no*/
         background-color: #fafafa;
+        z-index:8888;
         ul {
             height: $footerHei; /*no*/
             display: flex;

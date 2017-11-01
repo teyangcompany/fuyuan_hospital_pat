@@ -258,6 +258,7 @@
         this.showAlert = false
       },
       iSee(){
+        this.getPatient()
         this.successDisplay = false
         this.fail = false
       },
@@ -297,7 +298,7 @@
         }).then((data)=>{
           console.log(this.hosid)
           console.log(this.compatInfo[this.index].id)
-          this.alertStatus = data.msg
+          this.alertStatus = data.obj.compatRecord
           this.showToast = false
           if(data.code == 0){
             this.fail = false

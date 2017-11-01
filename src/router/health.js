@@ -12,5 +12,12 @@ export default [
       name:"consultDetail",
     component: () => import('../pages/health/consultDetail.vue')
   },
-
+  {
+     path:"/healthModule",
+     component:()=>import('../pages/health/healthModule.vue')
+  },
+  {
+    path:"/healthInfoDetail",
+    component:()=>import('../pages/health/healthInfoDetail.vue')
+  }
 ]
