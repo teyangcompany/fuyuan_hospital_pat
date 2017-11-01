@@ -19,9 +19,10 @@
               <span>抱歉，未能查询到您的相关报告</span>
             </div>
             <div v-else-if="reportInfo.length > 0">
-              <router-link tag="div" :to="{path:'/testReportCard',query:{index:index,hosid:hosid,recordId:item.assayno,item:reportInfoString}}" class="checkCenter" style="display: block" v-for="(item,index) in reportInfo" :key="item.id">
+              <router-link tag="div" :to="{path:'/testReportCard',query:{specialIndex:index,hosid:hosid,recordId:item.assayno,item:reportInfoString}}" class="checkCenter" style="display: block" v-for="(item,index) in reportInfo" :key="item.id">
                 <div class="reportList">
                   <h3 class="border-1px">{{ item.assayitemname }}</h3>
+                  <p> <span>{{hosName}}</span> </p>
                   <p><span>{{ item.name }}</span><span>{{ item.checkdate }}</span></p>
                 </div>
               </router-link>
@@ -59,6 +60,7 @@
         oneYear:"",
         nowTime:"",
         hosid:"",
+        hosName:"",
         showToast:false
       }
     },
@@ -89,6 +91,7 @@
     },
     created(){
       this.hosid = this.$route.query.hosId
+      this.hosName = this.$route.query.hosName
 //      this.selectValue = this.$route.query.selectValue
       this.index= this.$route.query.index
       this.patCard = this.$route.query.patCard

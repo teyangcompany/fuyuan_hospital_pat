@@ -4,37 +4,37 @@
     <div class="reportDetail" ref="reportDetail">
       <div>
         <div class="topBanner">
-          <p>{{ reportInfoArray[index].inspectType }}</p>
+          <p>{{ reportInfoArray[specialIndex].assayitemname }}</p>
         </div>
         <div class="testType">
           <div class="type">
-            <h4>NO.{{ reportInfoArray[index].recordId }}</h4>
+            <h4>NO.{{ reportInfoArray[specialIndex].assayitemno }}</h4>
           </div>
           <div class="name">
-            <p class="first">姓名：{{ reportInfoArray[index].name }}</p>
-            <p>科室：{{ reportInfoArray[index].inspectDept }}</p>
+            <p class="first">姓名：{{ reportInfoArray[specialIndex].name }}</p>
+            <p>科室：{{ reportInfoArray[specialIndex].deptname }}</p>
           </div>
           <div class="name">
-            <p class="first">性别：{{ reportInfoArray[index].gender == 2? '女':'男' }}</p>
-            <p>病区：{{ reportInfoArray[index].inspectDept }}</p>
+            <p class="first">性别：{{ reportInfoArray[specialIndex].gender == 2? '女':'男' }}</p>
+            <p>病区：{{ reportInfoArray[specialIndex].inspectDept }}</p>
           </div>
           <div class="name">
-            <p class="first">年龄：{{ reportInfoArray[index].age }}</p>
-            <p>床号：{{  reportInfoArray[index].bedNo }}</p>
+            <p class="first">年龄：{{ reportInfoArray[specialIndex].age }}</p>
+            <p>床号：{{  reportInfoArray[specialIndex].bedNo }}</p>
           </div>
           <div class="name">
-            <p class="first">送检医生：</p>
-            <p>标本类型：{{ reportInfoArray[index].specimenType }}</p>
+            <p class="first">送检医生：{{  reportInfoArray[specialIndex].sjdocname }}</p>
+            <p>标本类型：{{ reportInfoArray[specialIndex].specimenType }}</p>
           </div>
           <div class="name lastArrangeName">
-            <p class="first">检验医生：{{  reportInfoArray[index].inspectDoc }}</p>
-            <p>检验样本号：{{ reportInfoArray[index].sampleNum }}</p>
+            <p class="first">检验医生：{{  reportInfoArray[specialIndex].inspectdocname }}</p>
+            <p>检验样本号：{{ reportInfoArray[specialIndex].sampleNum }}</p>
           </div>
-          <p class="checkDoctor">临床诊断：{{ reportInfoArray[index].diagnosis }}</p>
-          <p>采集日期：{{ reportInfoArray[index].collectionDate }}</p>
-          <p>检验日期：{{ reportInfoArray[index].inspectDate }}</p>
+          <p class="checkDoctor">临床诊断：{{ reportInfoArray[specialIndex].assayname }}</p>
+          <p>采集日期：{{ reportInfoArray[specialIndex].collectiondate }}</p>
+          <p>检验日期：{{ reportInfoArray[specialIndex].checkdate }}</p>
           <div class="checkDoctor">
-            <p>审核医生：{{ reportInfoArray[index].examineDoc }}</p>
+            <p>审核医生：{{ reportInfoArray[specialIndex].checkdocname }}</p>
           </div>
           <div class="detailTips">
             <p style="color: red;">具体报告信息请以医院纸质报告为准！</p>
@@ -51,14 +51,14 @@
               <td>单位</td>
             </tr>
             <tr v-for="(item,index) in experiment">
-              <td>{{ item.expCode }}</td>
-              <td>{{ item.expName }}</td>
-              <td >{{ item.expResultNum }}
+              <td>{{ item.assayitemcode }}</td>
+              <td>{{ item.assayitemname }}</td>
+              <td >{{ item.result }}
                 <img v-if="status[index] == 'up'" src="../../../static/img/up@2x.png" alt="">
-                <img v-else-if="lowStatus[index] == 'down'" src="../../../static/img/down@2x.png" alt="">
+                <img v-else-if="status[index] == 'down'" src="../../../static/img/down@2x.png" alt="">
               </td>
-              <td>{{ item.consult}}</td>
-              <td>{{ item.expUnit }}</td>
+              <td>{{ item.refrange}}</td>
+              <td>{{ item.unit }}</td>
             </tr>
           </table>
         </div>
@@ -77,7 +77,7 @@
         rightTitle:"",
         recordId:"",
         reportInfoArray:"",
-        index:"",
+        specialIndex:"",
         experiment:"",
         completeRange:[],
         lowValue:[],
@@ -91,8 +91,8 @@
       this.recordId = this.$route.query.recordId
       this.hosid = this.$route.query.hosid
       this.reportInfoArray = JSON.parse(this.$route.query.item)
-      this.index = this.$route.query.index
-      console.log(this.index)
+      this.specialIndex = this.$route.query.specialIndex
+      console.log(this.specialIndex)
       console.log(this.reportInfoArray)
       api("smarthos.yygh.apiQueryInspectionService.selectExamInfo",{
         token:localStorage.getItem('token'),
@@ -104,55 +104,19 @@
         if(data.code == 0){
           this.experiment = data.list
           for(var i=0;i<data.list.length;i++){
-            console.log(data.list[i].consult.indexOf('-'))
-            if(data.list[i].consult.indexOf('-') != -1){
-              this.completeRange.push(1)
-              console.log(data.list[i].consult.substr(0,data.list[i].consult.indexOf('-')))
-              this.lowValue.push(data.list[i].consult.substr(0,data.list[i].consult.indexOf('-')))
-              this.highValue.push(data.list[i].consult.substr(data.list[i].consult.indexOf('-')+1))
-            }else{
-              if(data.list[i].consult.indexOf('<') != -1){
-                console.log(data.list[i].consult.substr(data.list[i].consult.indexOf('<')+1))
-                this.lowValue.push('-10000000000000000000000000000000000000')
-                this.highValue.push(data.list[i].consult.substr(data.list[i].consult.indexOf('<')+1))
+             if( parseFloat(data.list[i].result)  > parseFloat(data.list[i].refrange.substr(data.list[i].refrange.indexOf('~') + 1))){
+                 this.status.push('up')
+             }else if(parseFloat(data.list[i].result)  < parseFloat(data.list[i].refrange.substr(0,data.list[i].refrange.indexOf('~')))){
+               this.status.push('down')
+             }else{
+               this.status.push(' ')
+             }
 
-              }else if(data.list[i].consult.indexOf('>') != -1){
-                this.highValue.push('1000000000000000000000000')
-                this.lowValue.push(data.list[i].consult.substr(data.list[i].consult.indexOf('>')+1))
-              }
-//                   this.completeRange.push(0)
-//                   this.lowValue.push('')
-//                   this.highValue.push('')
-            }
-
-          }
-          if(this.highValue.length == data.list.length){
-            for(var i=0;i<data.list.length;i++){
-              if(parseFloat(data.list[i].expResultNum) > parseFloat(this.highValue[i])){
-                this.status.push('up')
-              }else{
-                this.status.push('')
-              }
-            }
-          }
-          if(this.lowValue.length == data.list.length){
-            for(var i=0;i<data.list.length;i++){
-              if(parseFloat(data.list[i].expResultNum) < parseFloat(this.lowValue[i])){
-                this.lowStatus.push('down')
-              }else{
-                this.lowStatus.push('')
-              }
-            }
+//
+//             console.log(this.status)
+//             console.log(data.list[i].refrange.substr(0,data.list[i].refrange.indexOf('~')))
           }
 
-          console.log(this.status)
-          console.log(this.lowStatus)
-          console.log(this.completeRange)
-          console.log(this.lowValue)
-          console.log(this.highValue)
-          console.log(this.experiment[0].expResultNum)
-          console.log(this.lowValue[0])
-          console.log(data)
         }else if(!(data.msg)){
           weui.alert("网络错误，请稍后重试")
         }else{
@@ -186,7 +150,7 @@
   @import '../../common/common';
   .reportDetail{
     position: absolute;
-    top: 55px;
+    top: 100px;
     left:0;
     right:0;
     bottom: 0px;
@@ -194,7 +158,7 @@
     .topBanner{
       width:100%;
       min-height:80px;
-      /*<!--background-color: $buttonColor;-->*/
+      background-color: $mainColor;
       p{
         width:690px;
         min-height: 80px;
@@ -203,6 +167,7 @@
         margin: 0 auto;
         color: white;
         font-size: 32px;
+        word-break: break-all;
       }
     }
     .testType{
@@ -289,7 +254,7 @@
           color: #666666;
           text-align: center;
           img{
-            width:10px;
+            width:20px;
           }
         }
         tr:nth-child(even){

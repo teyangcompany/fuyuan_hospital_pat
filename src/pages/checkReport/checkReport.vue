@@ -315,7 +315,7 @@
   .checkMenu{
     width:690px;
     margin:0 auto;
-    margin-top: 500px;
+    margin-top: 450px;
     height:80px;
     display: flex;
     justify-content: space-between;
