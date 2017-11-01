@@ -47,6 +47,38 @@
                   <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
                 </div>
               </div>
+              <div class="weui-cell" v-if="result" @click="toggleArea">
+                <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
+                <div class="weui-cell__bd">
+                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="selectedName" placeholder=""/>
+                </div>
+              </div>
+              <div class="weui-cell" v-else-if="areaName" @click="toggleArea">
+                <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
+                <div class="weui-cell__bd">
+                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="areaName" placeholder=""/>
+                </div>
+              </div>
+              <div class="weui-cell" v-else  @click="toggleArea">
+                <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
+                <div class="weui-cell__bd">
+                  <input class="weui-input" readonly  style="text-align: right" type="text"  v-model="empty" placeholder=""/>
+                </div>
+              </div>
+              <!--<a class="weui-cell weui-cell_access" href="javascript:;" @click="toggleArea">-->
+                <!--<div class="weui-cell__bd">-->
+                  <!--<p>所在地区</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft" v-if="result">-->
+                  <!--{{ result.province.name }} {{ result.city.name == '市辖区' || result.city.name == '县' ? '': result.city.name }} {{ result.area.name == '市辖区' ? '': result.area.name }}-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft" v-else-if="personInfo.areaName">-->
+                  <!--{{ personInfo.areaName }}-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft" v-else>-->
+                  <!--qingxuanze-->
+                <!--</div>-->
+              <!--</a>-->
               <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">身份证号</label></div>
                 <div class="weui-cell__bd">
@@ -61,7 +93,7 @@
       </div>
     </div>
     <toast v-if="showToast"></toast>
-
+    <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
   </div>
 </template>
 <script>
@@ -101,7 +133,10 @@
         changeGender:"",
         changeAge:"",
         patAvatar:"",
-        previewImg:""
+        previewImg:"",
+        areaName:"",
+        selectedName:"",
+        empty:""
       }
     },
     mounted(){
@@ -140,12 +175,16 @@
         http("smarthos.user.pat.get",{
           token:localStorage.getItem('token')
         }).then((data)=>{
+            console.log(data)
           if(data.code == 0){
             this.personInfo = data.obj.userCommonPatVo
             this.patAvatar = data.obj.pat.patAvatar
             this.patName = this.personInfo.commpatName
             this.patIdCard = this.personInfo.commpatIdcard
             this.patMobile = this.personInfo.commpatMobile
+            if(this.personInfo.areaName ){
+              this.areaName = this.personInfo.areaName
+            }
           }else{
               weui.alert(data.msg)
           }
@@ -161,6 +200,10 @@
       areaResult: function(show, result){
         this.show = show
         this.result = result
+        if(this.result){
+          this.selectedName =  result.province.name + result.city.name  +  result.area.name
+        }
+
         console.log(this.show)
         console.log(this.result)
       },
@@ -221,7 +264,7 @@
       modifyPic(){
         http("smarthos.user.pat.infomation.modify",{
           patAvatar:this.previewImg,
-          areaCode:"",
+          areaCode:this.result ? this.result.area.code : '',
           patName:this.patName,
           patIdcard:this.patIdCard
         }).then((data)=>{
@@ -235,12 +278,13 @@
       modify(){
           console.log("123")
            http("smarthos.user.pat.infomation.modify",{
-             areaCode:"",
+             areaCode:this.result ? this.result.area.code : '',
              patName:this.patName,
              patIdcard:this.patIdCard
            }).then((data)=>{
                if(data.code == 0){
                   this.getPersonInfo()
+                  weui.alert("修改成功")
                }else{
                    weui.alert(data.msg)
                }
