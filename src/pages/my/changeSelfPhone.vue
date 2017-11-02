@@ -66,7 +66,7 @@
                    }).then((data)=>{
                      if(data.code == 0){
                        this.newCid = data.obj.cid
-  //                         this.newCaptcha =  data.obj.value
+                       this.newCaptcha =  data.obj.value
                      }else{
                        weui.alert(data.msg)
                      }
@@ -108,6 +108,9 @@
     }
     .second{
       height:45px;/*no*/
+    }
+    label,input,button{
+        font-size: 32px;
     }
   }
   .confirmBtn{

@@ -5,7 +5,7 @@
                 <span>0</span>
             </div>
         </app-header>
-        <scroll :height="scrollHeight">
+        <scroll :height="scrollHeight" :data="healthList">
             <div class="wrapper" ref="main">
                 <div class="banner swiper-container" ref="swiper">
                     <div class="swiper-wrapper">
@@ -28,18 +28,17 @@
                     <div class="more flex0" @click="goConsultList">更多</div>
                 </div>
                 <div class="list">
-                    <ul>
-                        <li class="flex" v-for="i in 3">
+                    <router-link tag="ul" :to="{path:'/healthInfoDetail',query:{newId:i.id}}" v-for="i in healthList">
+                        <li class="flex" >
                             <div class="ava flex0">
-                                <img src="https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1209344693,1206146625&fm=173&s=9D384597490274CE16D48C5A0300D031&w=550&h=385&img.JPEG"
-                                     alt="">
+                                <img :src="i.titleCoverImg" alt="">
                             </div>
                             <div class="info flex1">
-                                <h3>继续教育市场调查：文凭买卖泛滥 花钱拿证成噱头</h3>
-                                <div class="cate">健康资讯</div>
+                                <h3>{{ i.title }}</h3>
+                                <div class="cate">{{ i.content }}</div>
                             </div>
                         </li>
-                    </ul>
+                    </router-link>
                 </div>
             </div>
         </scroll>
@@ -62,8 +61,8 @@
                 currentNav: 2,
                 nav: config.health_nav,
                 scrollHeight:"",
-                carouselPic:""
-
+                carouselPic:"",
+                healthList:""
             };
         },
         computed: {},
@@ -113,6 +112,7 @@
                  moduleId:"",
                  pageSize:1000
                }).then((data)=>{
+                   this.healthList = data.list
                    console.log(data,333)
                })
             },
@@ -192,6 +192,7 @@
     .list {
         ul {
             background-color: white;
+            padding-top: 30px;
             li + li {
                 margin-top: 30px;
             }
@@ -210,11 +211,20 @@
                     margin-left: 24px;
                     h3 {
                         color: #333;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                        overflow: hidden;
                     }
                     .cate {
-                        margin-top: 30px;
+                        margin-top: 20px;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        overflow: hidden;
                         color: #b2b2b2;
                         font-size: 12px; /*no*/
+                        word-break: break-all;
                     }
                 }
             }

@@ -4,7 +4,7 @@
     <div class="wrapArticle" ref="wrapArticle">
       <div>
         <div class="articleTop">
-          <p class="title">{{ articleTitle }}</p>
+          <p class="title">{{ infoDetail.title }}</p>
           <p class="time"> <span v-if="infoDetail.createTime">{{ infoDetail.createTime | Todate }}</span> 阅读：{{ infoDetail.viewCount }}次</p>
         </div>
         <div class="contentWrap">
