@@ -28,6 +28,10 @@ export default [
     component:()=>import('../pages/my/profile.vue')
   },
   {
+    path:"/changeSelfPhone",
+    component:()=>import('../pages/my/changeSelfPhone.vue')
+  },
+  {
     path:"/my/addHosNum",
     component:()=>import('../pages/my/addHosNum.vue')
   },

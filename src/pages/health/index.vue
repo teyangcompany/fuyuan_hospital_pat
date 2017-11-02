@@ -110,7 +110,7 @@
             },
             getHealthList(){
                api("smarthos.information.news.page",{
-//                 moduleId:"",
+                 moduleId:"",
                  pageSize:1000
                }).then((data)=>{
                    console.log(data,333)

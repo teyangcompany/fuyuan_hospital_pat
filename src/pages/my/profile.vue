@@ -234,7 +234,9 @@
         console.log(this.success)
       },
       goPhone(){
-          console.log("123")
+         this.$router.push({
+              path:"/changeSelfPhone"
+         })
       },
       uploadImg(){
         this.$refs.upload.click()
