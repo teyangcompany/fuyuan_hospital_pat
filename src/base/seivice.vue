@@ -1,40 +1,42 @@
 <template>
   <transition name="fade">
-    <div class="page" v-show="flag" @click.stop="close">
-      <div class="wrap">
+   <div class="wholeWrap" v-show="flag">
+     <div class="page"  @click.stop="close">
+       <div class="wrap">
 
-      </div>
+       </div>
 
-      <div class="contain">
-        <div class="mfb">选择你需要的服务</div>
-        <div class="serviceType">
-          <div class="imageText" :class="{active:test==index}" v-for="(item,index) in serviceList"
-               @click.stop="getText(index)">
-            <p class="mf">{{item.serveName}}</p>
-            <p class="col">{{item.servePrice | consultPrice}}元</p>
-          </div>
-        </div>
-        <!--<div v-if="serviceList.length>0">-->
-        <!--<p class="mfc">-->
-        <!--{{serviceList[test].serveReadme}}-->
-        <!--</p>-->
-        <!--</div>-->
-        <div class="agree">
-          <div v-for="(item,index) in serviceList"
-               v-if="(item.serveName == '图文问诊' || item.serveName == '图文咨询') && test==index">
-            <span>1.您将支付{{ item.servePrice | consultPrice }}元，向医生发起一个图文咨询。</span><br/>
-            <span>2.为珍惜您的咨询机会，请全部围绕病情进行沟通，避免无关内容。</span><br/>
-            <span>3.医生工作繁忙，可能无法及时回复您的咨询，若医生48小时未回复，我们会为您自动退款。</span>
-          </div>
-          <!--<span style="color: blue">-->
-          <!--浙二网络医学中心服务协议-->
-          <!--</span>-->
-        </div>
-        <div class="goNext mfb" @click.stop="goNext">
-          下一步
-        </div>
-      </div>
-    </div>
+       <div class="contain">
+         <div class="mfb">选择你需要的服务</div>
+         <div class="serviceType">
+           <div class="imageText" :class="{active:test==index}" v-for="(item,index) in serviceList"
+                @click.stop="getText(index)">
+             <p class="mf">{{item.serveName}}</p>
+             <p class="col">{{item.servePrice | consultPrice}}元</p>
+           </div>
+         </div>
+         <!--<div v-if="serviceList.length>0">-->
+         <!--<p class="mfc">-->
+         <!--{{serviceList[test].serveReadme}}-->
+         <!--</p>-->
+         <!--</div>-->
+         <div class="agree">
+           <div v-for="(item,index) in serviceList"
+                v-if="(item.serveName == '图文问诊' || item.serveName == '图文咨询') && test==index">
+             <span>1.您将支付{{ item.servePrice | consultPrice }}元，向医生发起一个图文咨询。</span><br/>
+             <span>2.为珍惜您的咨询机会，请全部围绕病情进行沟通，避免无关内容。</span><br/>
+             <span>3.医生工作繁忙，可能无法及时回复您的咨询，若医生48小时未回复，我们会为您自动退款。</span>
+           </div>
+           <!--<span style="color: blue">-->
+           <!--浙二网络医学中心服务协议-->
+           <!--</span>-->
+         </div>
+         <div class="goNext mfb" @click.stop="goNext">
+           下一步
+         </div>
+       </div>
+     </div>
+   </div>
   </transition>
 </template>
 <script type="text/ecmascript-6">
@@ -150,18 +152,20 @@
     width: 100%;
     padding: 15px;
     text-align: center;
-    color: blue;
-    background: beige;
+    color: white;
+    background: $mainColor;
+    border-radius: 10px;
   }
 
   .agree {
     width: 100%;
     font-size: 24px;
-    color: grey;
-    background: gainsboro;
+    color: #666666;
+    background: #f5f5f5;
     text-align: left;
-    margin: 10px 0;
-    padding-left: 10px;
+    margin: 0px 0;
+    margin-bottom: 15px;
+    padding: 15px 5px 15px 15px;
   }
 
   .col {
@@ -172,7 +176,7 @@
   .serviceType {
     display: flex;
     justify-content: space-around;
-    margin: 15px 0;
+    margin: 10px 0;
     flex-wrap: wrap;
   }
 
@@ -183,14 +187,20 @@
     text-align: center;
     width: 170px;
   }
-
-  .page {
+  .wholeWrap{
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
     bottom: 0;
-    background: grey;
+    height:500px;
+    z-index:1000;
+  }
+  .page {
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*height:500px;*/
     /*opacity: 0.6;*/
   }
 
@@ -210,7 +220,7 @@
 
   .fade-enter {
     opacity: 0;
-    .contain {
+    .page {
       transform: translateY(100%);
     }
 
@@ -218,7 +228,7 @@
 
   .fade-enter-active {
     transition: all 0.6s ease;
-    .contain {
+    .page {
       transition: all 0.6s ease;
     }
 
@@ -226,14 +236,14 @@
 
   .fade-leave-active {
     transition: all 0.6s ease;
-    .contain {
+    .page {
       transition: all 0.6s ease;
     }
   }
 
   .fade-leave-to {
     opacity: 0;
-    .contain {
+    .page {
       transform: translateY(100%);
     }
   }

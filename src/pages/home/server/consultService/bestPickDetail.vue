@@ -80,7 +80,7 @@
                         </span>
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='PIC'">
-               <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeLarge(item.consultMessage.replyContent)">
+               <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeSinLarge(item.consultMessage.replyContent)">
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
                <span> </span>
@@ -188,9 +188,23 @@
           console.log(id,88888)
           this.$router.push('/docCard/'+id)
         },
+        makeSinLarge(img){
+          wx.previewImage({
+            current: img,
+            urls: [img]
+          })
+          },
         makeLarge(url){
-          this.showLargePic= true
-          this.largePicUrl = url
+          let urls = [];
+          this.detailInfo.attaList.forEach((res) => {
+            urls.push(res.attaFileUrl)
+          });
+          wx.previewImage({
+            current: url,
+            urls: urls
+          })
+//          this.showLargePic= true
+//          this.largePicUrl = url
        },
         makeSmall(){
           this.showLargePic= false

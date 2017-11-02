@@ -49,6 +49,14 @@ export default[
 ]
 },
   {
+     path:"/DoconsultList",
+     component:()=>import('../pages/docCard/DoconsultList.vue')
+  },
+  {
+    path:"/docConsultDetail",
+    component:()=>import('../pages/docCard/docConsultDetail.vue')
+  },
+  {
     path:"/share",
     component:()=>import('../pages/docCard/share.vue')
   }

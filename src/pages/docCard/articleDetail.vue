@@ -1,8 +1,9 @@
 <template>
     <div>
-        <top class="noflex" title="文章详情" ref="header">
-            <i slot="back"></i>
-        </top>
+        <!--<top class="noflex" title="文章详情" ref="header">-->
+            <!--<i slot="back"></i>-->
+        <!--</top>-->
+        <v-header :title="title" :rightTitle="rightTitle"></v-header>
         <scroll :height="scrollHeight"  style="background: white" :data="articleObj">
             <div>
                 <div class="easyHeader">
@@ -25,12 +26,14 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
+    import header from '../../base/header.vue'
     import scroll from '../../base/scroll.vue'
     import {Todate} from '../../lib/filter'
     export default{
         components: {
             top,
-            scroll
+            scroll,
+            "VHeader":header
         },
         mixins: [mainHeightMixin],
         filters:{
@@ -41,7 +44,9 @@
                 id:"",
                 token:localStorage.getItem('token'),
                 scrollHeight:"",
-                articleObj:{}
+                articleObj:{},
+                title:"文章详情",
+                rightTitle:""
             }
         },
         created(){
@@ -68,15 +73,25 @@
 .easyHeader{
     text-align: center;
     padding: 20px;
+    h3{
+      font-size: 32px;
+      color: #333333;
+    }
 }
     .date{
         text-align: center;
+        span{
+           font-size: 24px;
+           color: #999999;
+        }
     }
     .reader{
-        color: blue;
+        color: #666666;
         padding: 5px;
     }
     .contain{
         padding: 30px;
+        font-size: 28px;
+        color: #333333;
     }
 </style>

@@ -61,7 +61,8 @@
         nav: config.my_nav,
         currentNav: 3,
         patDetail: {},
-        patAvatar: ""
+        patAvatar: "",
+        patGender:""
       };
     },
     computed: {},
@@ -75,6 +76,7 @@
         } else {
           this.patDetail = res.userCommonPatVo;
           this.patAvatar = res.pat.patAvatar
+          this.patGender = res.pat.patGender
         }
       });
     },

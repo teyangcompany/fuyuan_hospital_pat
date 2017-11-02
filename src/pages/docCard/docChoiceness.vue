@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--<div class="contain">-->
+        <div class="contain">
             <!--<div class="headerTro">-->
                 <!--<span class="col"></span>-->
                 <!--<span class="mfb">精选课堂</span>-->
@@ -41,122 +41,149 @@
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
-            <!--<div class="headerTro">-->
-                <!--<span class="col"></span>-->
-                <!--<span class="mfb">精选文章</span>-->
-                <!--<span class="more mfc" @click="goArticleList">查看更多</span>-->
-            <!--</div>-->
-            <!--<div class="docImg voice" v-for="(item,index) of DocArticleList">-->
-                <!--<div class="essay">-->
-                   <!--<p class="mfb">{{item.title}}</p>-->
-                   <!--<p class="mfc essayCon">{{item.content}}</p>-->
-                <!--</div>-->
+            <div class="headerTro">
+                <span class="col"></span>
+                <span class="mfb">精选文章</span>
+                <span class="more mfc" @click="goArticleList">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
+            </div>
+            <div class="docImg voice" v-for="(item,index) in DocArticleList" @click="goArticleDe(item)">
+                <div class="essay">
+                   <p class="mfb">{{item.title}}</p>
+                   <p class="mfc essayCon">{{item.content}}</p>
+                </div>
                 <!--<div class="docTitle">-->
                     <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
                 <!--</div>-->
-                <!--<div class="mfc">-->
+                <div class="mfc bottomLine">
                     <!--<span>{{item.docName}}</span>-->
-                    <!--<span class="lis smc" >-->
-                    <!--<img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;-->
-                    <!--{{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;-->
-                    <!--</span>-->
-                    <!--<span class="lis smc audience" >{{item.readCount}}人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="headerTro">-->
-                <!--<span class="col"></span>-->
-                <!--<span class="mfb">精选咨询</span>-->
-                <!--<span class="more mfc">查看更多</span>-->
-            <!--</div>-->
-            <!--<div class="docImg voice" v-for="item of 3">-->
-                <!--<div class="essay">-->
-                   <!--<p class="mfc essayCon">良好的睡觉可以促进血液循环，皮肤好，血管好等等的......</p>-->
-                <!--</div>-->
+                    <span class="lis smc" >
+                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
+                    {{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span class="lis smc audience" >阅读 {{item.readCount}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+            </div>
+            <div class="headerTro">
+                <span class="col"></span>
+                <span class="mfb">精选咨询</span>
+                <span class="more mfc" @click="goConsultMore">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
+            </div>
+            <div class="docImg voice" v-for="item in consultInfoList" @click="goConsultDetail(item.consultInfo.id)">
+                <div class="essay">
+                   <p class="mfc essayCon">{{ item.consultInfo.consultContent }}</p>
+                   <img :src="subItem.attaFileUrl" alt="" v-for="(subItem,index) in item.attaList" @click="makeLarge(subItem.attaFileUrl,index)">
+                </div>
                 <!--<div class="docTitle">-->
                     <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
                 <!--</div>-->
-                <!--<div class="mfc">-->
-                    <!--<span>李时珍</span>-->
-                    <!--<span class="lis smc" >-->
-                    <!--<img class="good" src="../../../static/img/zan.png" alt="" >&nbsp;&nbsp;-->
-                    <!--200&nbsp;&nbsp;&nbsp;&nbsp;-->
-                    <!--</span>-->
-                    <!--<span class="lis smc audience" >2000人听过&nbsp;&nbsp;&nbsp;&nbsp;</span>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
+                <div class="mfc bottomLine">
+                    <span> </span>
+                    <span class="lis smc" >
+                    |&nbsp;&nbsp;{{ item.consultInfo.replyCount }}条回复&nbsp;&nbsp;
+                    </span>
+                    <span class="lis smc audience" >{{ item.consultInfo.createTime | goodTime }}创建 &nbsp;</span>
+                </div>
+            </div>
+        </div>
 
     </div>
 </template>
-<!--<script type="text/ecmascript-6">-->
-    <!--import top from '../../components/app-header.vue'-->
-    <!--import {mainHeightMixin} from '../../lib/mixin'-->
-    <!--import config from '../../lib/config'-->
-    <!--import api from '../../lib/http'-->
-    <!--export default{-->
-            <!--components: {-->
-            <!--top-->
-        <!--},-->
-        <!--mixins: [mainHeightMixin],-->
-        <!--data(){-->
-            <!--return {-->
-                <!--active:true,-->
-                <!--isActive:true,-->
-                <!--num:Number,-->
-                <!--token:localStorage.getItem('token'),-->
-                <!--docId:sessionStorage.getItem('docId')||"",-->
-                <!--DocArticleList:[],-->
-                <!--docObj:{}-->
-            <!--}-->
-        <!--},-->
-        <!--mounted(){-->
-            <!--console.log(sessionStorage.getItem('docId'));-->
-            <!--this.getData()-->
-        <!--},-->
-        <!--methods:{-->
-            <!--goArticleList(){-->
-                <!--this.$router.push({-->
-                    <!--name:'articleList'-->
-                <!--})-->
-            <!--},-->
-            <!--getData(){-->
-              <!--api('smarthos.user.doc.choice',{-->
-                  <!--token:this.token,-->
-                  <!--docId:this.docId-->
-              <!--}).then(res=>{-->
-                  <!--console.log(res,222222);-->
-                  <!--if(res.succ){-->
-                      <!--this.DocArticleList = res.obj.userDocArticleList-->
-                  <!--}else {-->
-                      <!--alert(res.msg)-->
-                  <!--}-->
-              <!--})-->
-            <!--},-->
-            <!--addZan(index,id){-->
-                <!--console.log(21212121212)-->
-                <!--this.num  = index;-->
-                <!--api('smarthos.user.doc.article.likes',{-->
-                    <!--token:this.token,-->
-                    <!--articleId:id-->
-                <!--}).then(res=>{-->
-                    <!--console.log(res,6666);-->
-                    <!--if(res.succ){-->
-                        <!--this.getData()-->
-                    <!--}else {-->
-                        <!--alert(res.msg)-->
-                    <!--}-->
-                <!--})-->
-            <!--},-->
-
-            <!--toggleArrow(){-->
-                <!--this.active=!this.active-->
-            <!--},-->
-            <!--toggleArrow1(){-->
-                <!--this.isActive=!this.isActive-->
-            <!--},-->
-        <!--}-->
-    <!--}-->
-<!--</script>-->
+<script type="text/ecmascript-6">
+    import top from '../../components/app-header.vue'
+    import {mainHeightMixin} from '../../lib/mixin'
+    import config from '../../lib/config'
+    import { goodTime } from '../../lib/filter'
+    import api from '../../lib/http'
+    export default{
+            components: {
+            top
+        },
+        filters:{
+          goodTime
+        },
+        mixins: [mainHeightMixin],
+        data(){
+            return {
+                active:true,
+                isActive:true,
+                num:Number,
+                token:localStorage.getItem('token'),
+                docId:sessionStorage.getItem('docId')||"",
+                DocArticleList:[],
+                consultInfoList:[],
+                docObj:{}
+            }
+        },
+        mounted(){
+            console.log(sessionStorage.getItem('docId'));
+            this.getData()
+        },
+        methods:{
+            goArticleList(){
+                this.$router.push({
+                    name:'articleList'
+                })
+            },
+            goConsultMore(){
+                this.$router.push({
+                     path:"/DoconsultList"
+                })
+            },
+            goArticleDe(item){
+              this.$router.push('/articleDetail/'+item.id)
+            },
+            goConsultDetail(id){
+              this.$router.push({
+                path:'/docConsultDetail',
+                query:{consultId:id}
+              })
+            },
+            getData(){
+              api('smarthos.user.doc.choice',{
+                  token:this.token,
+                  docId:this.docId
+              }).then(res=>{
+                  console.log(res,222222);
+                  if(res.succ){
+                      this.DocArticleList = res.obj.userDocArticleList
+                      res.obj.consultInfoList ? this.consultInfoList = res.obj.consultInfoList : this.consultInfoList = null
+                  }else {
+                     weui.alert(res.msg)
+                  }
+              })
+            },
+            addZan(index,id){
+                console.log(21212121212)
+                this.num  = index;
+                api('smarthos.user.doc.article.likes',{
+                    token:this.token,
+                    articleId:id
+                }).then(res=>{
+                    console.log(res,6666);
+                    if(res.succ){
+                        this.getData()
+                    }else {
+                       weui.alert(res.msg)
+                    }
+                })
+            },
+            makeLarge(url,index){
+                console.log(url)
+                console.log(index)
+                wx.previewImage({
+                  current: url,
+                  urls: [url]
+                })
+            },
+            toggleArrow(){
+                this.active=!this.active
+            },
+            toggleArrow1(){
+                this.isActive=!this.isActive
+            },
+        }
+    }
+</script>
 <style scoped lang='scss'>
     @import '../../common/common.scss';
     .contain{
@@ -179,7 +206,9 @@
         display: inline-block;
         position: absolute;
         right: 30px;
-
+        img{
+          width:16px;
+        }
     }
 
     .docImg{
@@ -262,6 +291,11 @@
     }
     .essay{
         /*margin: 20px 30px;*/
+      img{
+        width:160px;
+        height:160px;
+        margin-left: 20px;
+      }
     }
     .essayCon{
         padding: 20px 0;
@@ -279,6 +313,9 @@
     .voice{
         border-bottom: 1px solid gainsboro;
         padding-bottom: 20px;
+      .bottomLine{
+        width:690px;
+      }
     }
 
 </style>

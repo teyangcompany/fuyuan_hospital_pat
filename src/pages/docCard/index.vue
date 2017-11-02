@@ -49,7 +49,7 @@
       <div class="navbar">
         <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
           <span :class="{bar:index==num}">
-               <span > {{item.value}}</span><img :src="item.value1" alt="">
+               <span > {{item.value}}  </span><img :src="item.value1" alt="" class="hideImg">
           </span>
         </div>
       </div>
@@ -71,9 +71,11 @@
       <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic" v-if="showAndroid">
       <img src="../../../static/img/ios引导.png" alt="" @click="hidePic" v-if="showIos">
     </div>
-    <div>
-       <seivice :docId="docId" ref="ser"></seivice>
+    <div class="popService" v-if="maskFlag" @click="hideMask">
+      <v-mask ></v-mask>
     </div>
+    <seivice :docId="docId" ref="ser"></seivice>
+
     <div v-if="showQrcode" class="ercode">
       <div class="mask" @click.stop="showQrcode=false"></div>
       <div class="mainbox">
@@ -101,13 +103,15 @@
   import config from '../../lib/config'
   import api from '../../lib/http'
   import Toast from '../../base/toast.vue'
+  import mask from '../../base/mask.vue'
   import {debug, getShareLink, getParamsFromUrl} from "../../lib/util"
 
   export default {
     components: {
       top,
       seivice,
-      Toast
+      Toast,
+      "VMask":mask
     },
     mixins: [mainHeightMixin, isBindMixin, jssdkMixin],
     data() {
@@ -124,7 +128,8 @@
         showAndroid: false,
         showIos: false,
         docRestNotice: "",
-        showToast:false
+        showToast:false,
+        maskFlag:false
       }
     },
     created() {
@@ -269,13 +274,20 @@
         }).then(res => {
           console.log(res, 66666);
           if (res.succ) {
-            this.docRestNotice = res.obj.docRestNotice
-            if(this.docRestNotice.content){
+            res.obj.docRestNotice ? this.docRestNotice = res.obj.docRestNotice : this.docRestNotice = null
+            if(this.docRestNotice && this.docRestNotice.content){
                 this.bar[0].value1 = ''
                 this.bar[1].value1 = ''
-                 this.bar[2].value1 = './static/img/stop.png'
+                this.bar[2].value1 = './static/img/stop.png'
+               document.getElementsByClassName('hideImg')[0].style.display='none'
+              document.getElementsByClassName('hideImg')[1].style.display='none'
             }else{
+              this.bar[0].value1 = ''
+              this.bar[1].value1 = ''
               this.bar[2].value1 = ''
+              document.getElementsByClassName('hideImg')[0].style.display='none'
+              document.getElementsByClassName('hideImg')[1].style.display='none'
+              document.getElementsByClassName('hideImg')[2].style.display='none'
             }
           } else {
             weui.alert(res.msg)
@@ -288,6 +300,10 @@
           name: item.router
         })
       },
+      hideMask(){
+        this.maskFlag = false
+        this.$refs.ser.flag = false
+      },
       showService() {
         let urlParams = getParamsFromUrl(location.href);
         debug("ppp", urlParams)
@@ -298,7 +314,8 @@
 
 
         if (this.docServeList.length != 0) {
-          this.$refs.ser.flag = true
+         this.$refs.ser.flag = true
+          this.maskFlag = this.$refs.ser.flag
         } else {
           weui.alert("该医生尚未开通此服务")
         }
@@ -423,6 +440,9 @@
         width:40px;
         margin-left: 5px;
       }
+       span{
+          text-align: center;
+       }
   }
 
   .bar {
@@ -443,8 +463,15 @@
     /*display: flex;*/
     line-height: 100px;
     text-align: center;
+    /*background-color: ;*/
   }
-
+  /*.popService{*/
+      /*position: fixed;*/
+    /*height:500px;*/
+      /*bottom:100px;*/
+    /*left:0;*/
+    /*right:0;*/
+  /*}*/
   .myImg {
     width: 180px;
     height: 180px;

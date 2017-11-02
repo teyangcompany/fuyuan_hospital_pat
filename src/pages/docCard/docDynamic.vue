@@ -1,7 +1,7 @@
 <template>
     <div class="notice">
         <div class="contain">
-            <div class="msg" v-if="docRestNotice.content">
+            <div class="msg" v-if="docRestNotice && docRestNotice.content">
                <p>
                    <span>停诊公告</span>
                    <span class="restTime">{{ docRestNotice.noticeStartDate | Todate}}~{{ docRestNotice.noticeEndDate | Todate}}</span>
