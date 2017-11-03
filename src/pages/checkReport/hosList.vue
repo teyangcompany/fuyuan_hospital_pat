@@ -6,7 +6,7 @@
     <div class="wrapper" ref="main">
       <div class="list">
         <ul>
-          <router-link :key="item.id" :to="{path:'/checkReport',query:{pickedIndex:index}}" tag="li" class="flex" v-for="(item,index) in hosList">
+          <li @click="goOrigin(index)" :key="item.id"  class="flex" v-for="(item,index) in hosList">
             <div class="ava flex0">
               <img :src="item.yytp" alt="" v-if="item.yytp">
               <img src="../../../static/img/fuyuanPic.jpg" alt="" v-else>
@@ -16,7 +16,7 @@
               <div>{{ item.yydj }}</div>
               <p>{{ item.yydz }}</p>
             </div>
-          </router-link>
+          </li>
         </ul>
       </div>
     </div>
@@ -30,7 +30,8 @@
   export default {
     data() {
       return {
-        hosList:""
+        hosList:"",
+        from:""
       };
     },
     computed: {},
@@ -41,6 +42,7 @@
 
     },
     created(){
+       this.from = this.$route.query.from
       api("smarthos.yygh.ApiHospitalService.areaHosList",{
       }).then((data)=>{
         if(data.code == 0){
@@ -54,7 +56,21 @@
     beforeDestroy() {
 
     },
-    methods: {}
+    methods: {
+      goOrigin(index){
+          if(this.from == 'wait'){
+              this.$router.replace({
+                path:"/waitCallNumber",
+                query:{pickedIndex:index}
+              })
+          }else{
+              this.$router.replace({
+                   path:"/checkReport",
+                   query:{pickedIndex:index}
+              })
+          }
+      }
+    }
   };
 </script>
 

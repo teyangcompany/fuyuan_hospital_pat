@@ -7,9 +7,9 @@
             </div>
         </app-header>
         <div class="wrapper list" ref="main">
-            <left-del displacement="0" tag="ul" class="part" :key="1"  v-for="item in list" >
+            <left-del displacement="0" tag="ul" class="part" :key="1"  v-for="(item,index) in list" >
                 <ul class="flex">
-                    <li class="left-part flex0 info" @click="goEditUser(item.id,item)">
+                    <li class="left-part flex0 info" @click="goEditUser(item.id,item,index)">
                         <dl class="flex">
                             <dt class="flex0">{{item.commpatName}} {{item.commpatGender=='M'?'男':'女'}} {{ JSON.stringify(new Date()).substr(1,4)- item.commpatIdcard.substr(6,4)  }}岁 </dt>
                         </dl>
@@ -74,18 +74,21 @@
 
         },
         methods: {
-            goEditUser(id,item){
+            goEditUser(id,item,index){
                 console.log(item,1)
+                console.log(index,333)
                 if(item.self){
                     this.$router.push({
                         path:"/my/profile"
                     })
                 }else{
                   this.$router.push({
-                    name:'editUser',
+//                    name:'editUser',
+                    path:"/my/personInfo",
                     query:{
                       id:id,
-                      item:JSON.stringify(item)
+                      item:JSON.stringify(item),
+                      index:index
                     }
                   })
                 }

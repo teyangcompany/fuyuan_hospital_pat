@@ -281,6 +281,7 @@
                 this.bar[2].value1 = './static/img/stop.png'
                document.getElementsByClassName('hideImg')[0].style.display='none'
               document.getElementsByClassName('hideImg')[1].style.display='none'
+              document.getElementsByClassName('hideImg')[2].style.display='block'
             }else{
               this.bar[0].value1 = ''
               this.bar[1].value1 = ''

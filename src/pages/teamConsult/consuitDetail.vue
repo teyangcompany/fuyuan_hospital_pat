@@ -67,7 +67,7 @@
                 <span class="mfc">{{item.userDocVo.docTitle}} {{ item.userDocVo.deptName }}</span>
               </p>
               <p>
-                <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
               </p>
             </div>
           </div>
@@ -84,20 +84,20 @@
                 <!--<span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>-->
               </p>
               <p>
-                <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
               </p>
             </div>
           </div>
-          <div v-if="item.consultMessage.replyContentType=='TEXT'">
+          <div v-if="item.consultMessage.replyContentType=='TEXT'" class="replyCon">
                         <span class="bf">
                             {{item.consultMessage.replyContent}}
                         </span>
           </div>
-          <div v-else-if="item.consultMessage.replyContentType=='PIC'">
+          <div v-else-if="item.consultMessage.replyContentType=='PIC'" class="replyCon">
             <img class="replyImg" :src="item.consultMessage.replyContent" alt=""
                  @touchend.stop="makeLarge(item.consultMessage.replyContent)">
           </div>
-          <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
+          <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon">
             <audio controls :src="item.consultMessage.replyContent"></audio>
           </div>
         </div>
@@ -590,7 +590,20 @@
     box-sizing: border-box;
     background: white;
     border-bottom: 1px solid gainsboro;
-    margin-top: 30px;
+    margin-top: 10px;
+    .fromTime{
+      margin-top: 5px;
+      display: inline-block;
+    }
+    .replyCon{
+      width: 500px;
+      margin-top: 20px;
+      margin-left: 100px;
+      span{
+        font-size: 32px;
+        color: #333333;
+      }
+    }
   }
 
   .patAnswer {

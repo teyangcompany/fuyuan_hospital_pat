@@ -540,7 +540,7 @@
               margin-top: 5px;
               span{
                 border:1px solid #29AB91;/*no*/
-                padding:10px 10px 10px 10px;
+                padding:5px 10px 5px 10px;
                 border-radius: 6px;
                 color: #29AB91;
                 margin-top: 5px;
