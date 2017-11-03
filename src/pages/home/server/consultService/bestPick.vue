@@ -165,9 +165,9 @@
         <div>
           <ul class="border-1px" v-for="(item,index) in aboutConsult" :key="item.id">
             <li >
-              <div class="border-1px-dashed dashedPlace">
+              <router-link tag="div" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="border-1px-dashed dashedPlace">
                 <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
-              </div>
+              </router-link>
               <router-link tag="div" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="mainContent">
                 <p>{{ item.consultInfo.consultContent }}</p>
                 <div>
@@ -537,10 +537,14 @@
             justify-content: space-between;
             p.picConsult {
               font-size: 32px;
+              margin-top: 5px;
               span{
-                border:1px dashed $mainColor;
-                padding:0px 5px 5px 5px;
-                color: $mainColor;
+                border:1px solid #29AB91;/*no*/
+                padding:10px 10px 10px 10px;
+                border-radius: 6px;
+                color: #29AB91;
+                margin-top: 5px;
+                line-height: 65px;
               }
             }
             span.consultTim {
@@ -550,21 +554,25 @@
           }
           .dashedPlace{
             margin-top: 5px;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
           }
           div.mainContent {
+            min-height: 150px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             >div{
-              margin-top: 10px;
+              margin-top: 20px;
+              margin-bottom: 20px;
               display: -webkit-box;
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 1;
               overflow: hidden;
+              word-break: break-all;
               img{
                 width: 22.5%;
-                height: 120px;
+                height: 130px;
                 margin-left: 15px;
               }
             }
@@ -629,10 +637,10 @@
         span.pullMore{
           display: flex;
           align-items: center;
-          font-size: 12px;
+          font-size: 24px;
           img{
-            width: 16px;
-            height: 16px;
+            width: 40px;
+            height: 40px;
             margin-right: 5px;
           }
         }
@@ -714,6 +722,9 @@
     .tab-item:last-child{
       border-right: none;
     }
+    .sort_icon{
+    fill:#666;
+    }
     .choose_type{
       span{
         color: $mainColor;
@@ -761,11 +772,11 @@
         flex:1;
         height: 800px;
         overflow: hidden;
-        background-color:#F0F5F5 ;
+        background-color:#f5f5f5;
         .category_active{
           background-color: white!important;
           span{
-            color:#2AB6B3 ;
+            color:$mainColor;
           }
         }
         ul{

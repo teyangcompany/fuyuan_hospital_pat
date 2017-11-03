@@ -259,8 +259,8 @@
       }
       .list{
         width:100%;
-        height: 80px;
-        line-height: 80px;
+        height: 90px;
+        line-height: 90px;
         display: block;
         span.year{
           font-size: 28px;
@@ -268,9 +268,9 @@
         }
         p{
           width:690px;
-          height: 80px;
+          height: 90px;
           margin:0 auto;
-          line-height: 80px;
+          line-height: 90px;
           font-size: 32px;
           color: #999999;
           display: flex;

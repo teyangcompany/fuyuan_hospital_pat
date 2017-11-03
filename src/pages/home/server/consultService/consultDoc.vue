@@ -845,11 +845,11 @@
         flex:1;
         height: 800px;
         overflow: hidden;
-        background-color:#F0F5F5 ;
+        background-color:#f5f5f5 ;
         .category_active{
           background-color: white!important;
           span{
-            color:#2AB6B3 ;
+            color:$mainColor;
           }
         }
         ul{

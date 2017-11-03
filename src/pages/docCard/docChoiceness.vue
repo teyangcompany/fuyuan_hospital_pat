@@ -203,6 +203,8 @@
         margin-right: 20px;
     }
     .more{
+        height: 80px;
+        line-height: 80px;
         display: inline-block;
         position: absolute;
         right: 30px;

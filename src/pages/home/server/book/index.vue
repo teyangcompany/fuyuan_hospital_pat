@@ -23,22 +23,26 @@
         </ul>
       </div>
     </div>
+    <toast v-if="showToast"></toast>
   </div>
 </template>
 
 <script>
   import AppHeader from "../../../../components/app-header.vue"
   import api from '../../../../lib/bookApi'
+  import Toast from '../../../../base/toast.vue'
   import {isBindMixin} from '../../../../lib/mixin'
   export default {
     data() {
       return {
-          hosList:""
+          hosList:"",
+        showToast:false
       };
     },
     computed: {},
     components: {
-      AppHeader
+      AppHeader,
+      Toast
     },
     mixins: [isBindMixin],
     mounted() {
@@ -51,9 +55,11 @@
           this.$router.push("/login")
         }
       });
+        this.showToast = true
         api("smarthos.yygh.ApiHospitalService.areaHosList",{
 //          cityAreaId:"330100"
         }).then((data)=>{
+          this.showToast = false
             if(data.code == 0){
               this.hosList = data.list
             }else{

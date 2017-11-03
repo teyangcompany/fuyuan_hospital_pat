@@ -2,12 +2,14 @@
   <div class="date">
     <div class="dateList">
       <div class="menu">
+        <div class="smallBlank"></div>
         <ul ref="wrapWidth" class="border-1px">
-          <li class="border-1px-right arrangeTime" :class="{picked:selected == index}"  v-for="(item,index) in timeArray" @click="selectOne(index)">
+          <li class="arrangeTime" :class="{picked:selected == index}"  v-for="(item,index) in timeArray" @click="selectOne(index)">
             <p>{{timeArray[index]}}</p>
             <p>{{ weekArray[index] }}</p>
           </li>
         </ul>
+        <div class="smallBlank"></div>
       </div>
       <div v-if="!commonRoom" class="loading">
         <img src="../../../../../static/img/loading.gif" alt="">
@@ -56,7 +58,7 @@
               </div>
             </div>
           </div>
-          <div class="blank border-1px"></div>
+          <!--<div class="blank border-1px"></div>-->
           <div class="content" style="display: block">
             <div class="border-1px"  v-if="item.ysid" v-for="item in commonRoom">
               <div  class="border-1px" @click="selectTime(single,index)"  v-for="(single,index) in item.deptSchemeList[0].schemeList">
@@ -364,19 +366,20 @@
         ul{
           width:100%;
           display: flex;
-          height: 80px;
+          height: 110px;
           background-color: white;
           li{
             list-style-type: none;
             flex:1;
             font-size: 32px;
             text-align: center;
-            height: 80px;
+            height: 110px;
+            line-height: 55px;
             p{
-              height: 40px;
-              font-size: 32px;
-              color: #333333;
-              line-height: 40px;
+              /*height:110px;*/
+              font-size: 24px;
+              color: #999999;
+              /*line-height: 35px;*/
             }
           }
           li.picked{
@@ -405,6 +408,11 @@
           color: #999999;
         }
       }
+      .smallBlank{
+        width:100%;
+        height: 10px;
+        background-color: rgb(245,245,245);
+      }
       .blank{
         width:100%;
         height: 20px;
@@ -412,7 +420,7 @@
       }
       .contentWrap{
         position: fixed;
-        top: 258px;
+        top: 298px;
         left:0;
         right:0;
         bottom:0;

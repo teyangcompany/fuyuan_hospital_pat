@@ -271,12 +271,12 @@
       }
       .list{
         width:100%;
-        height: 80px;
+        height: 90px;
         display: block;
         p{
           width:690px;
-          height: 80px;
-          line-height: 80px;
+          height: 90px;
+          line-height: 90px;
           margin:0 auto;
           font-size: 32px;
           color: #999999;

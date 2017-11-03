@@ -18,6 +18,7 @@
                  </div>
              </div>
          </scroll>
+         <toast v-if="showToast"></toast>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -26,6 +27,7 @@
     import api from '../../lib/http'
     import header from '../../base/header.vue'
     import scroll from  '../../base/scroll.vue'
+    import Toast from '../../base/toast.vue'
     export default{
       data(){
           return{
@@ -33,7 +35,8 @@
               doctorId:"",
               easyList:[],
               title:"精选文章",
-            rightTitle:""
+            rightTitle:"",
+            showToast:false
           }
       },
        created(){
@@ -41,10 +44,12 @@
        },
      mounted(){
          this.doctorId = sessionStorage.getItem('docId')
+        this.showToast = true
          api("smarthos.user.doc.article.list",{
              docId:this.doctorId,
              token:localStorage.getItem('token')
          }).then((res)=>{
+           this.showToast = false
              console.log(res,88888);
              if(res.succ){
                  this.easyList = res.list
@@ -61,7 +66,8 @@
       components:{
           top,
           scroll,
-          "VHeader":header
+          "VHeader":header,
+          Toast
       }
   }
 </script>

@@ -21,6 +21,7 @@
         </div>
       </div>
     </scroll>
+    <toast v-if="showToast"></toast>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -30,6 +31,7 @@
   import { goodTime } from '../../lib/filter'
   import header from '../../base/header.vue'
   import scroll from  '../../base/scroll.vue'
+  import Toast from '../../base/toast.vue'
   export default{
     data(){
       return{
@@ -37,7 +39,8 @@
         doctorId:"",
         easyList:[],
         title:"精选咨询",
-        rightTitle:""
+        rightTitle:"",
+        showToast:false
       }
     },
     filters:{
@@ -49,12 +52,14 @@
     mounted(){
       this.doctorId = sessionStorage.getItem('docId')
       console.log( this.doctorId,1111)
+      this.showToast = true
       api("smarthos.consult.all.list.page",{
         docId:this.doctorId,
         isChoice:true,
         token:localStorage.getItem('token')
       }).then((res)=>{
         console.log(res,88888);
+        this.showToast = false
         if(res.succ){
           this.easyList = res.list
         }else {
@@ -73,7 +78,8 @@
     components:{
       top,
       scroll,
-      "VHeader":header
+      "VHeader":header,
+      Toast
     }
   }
 </script>

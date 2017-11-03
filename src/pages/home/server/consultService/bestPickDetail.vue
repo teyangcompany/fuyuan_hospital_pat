@@ -1,12 +1,14 @@
 <template>
     <div class="wrapPick">
+      <v-header :title="title" :rightTitle="rightTitle"></v-header>
       <scroll class="relateList" :data="arr"  ref="main">
          <div>
            <div class="topInfo border-1px">
              <p>患者资料: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterGender == 'M'? '男':'女' }}</span> <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterAge  }}</span> </p>
            </div>
            <div class="topIllName border-1px">
-             <p>疾病名称: <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</span> </p>
+               <div class="illNameFirst">疾病名称:</div>
+               <div class="illNameSecond" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.illnessName }}</div>
            </div>
            <div class="detailList">
              <ul class="border-1px">
@@ -40,7 +42,7 @@
                </li>
              </ul>
            </div>
-           <div class="answerList" v-for="item in arr" ref="lastItem">
+           <div class="answerList border-1px" v-for="item in arr" ref="lastItem">
              <div class="patAnswer" v-if="item.consultMessage.replierType=='DOC'">
                <div class="docImg">
                  <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
@@ -52,7 +54,7 @@
                    <span class="mfc">{{item.userDocVo.docTitle}} {{ item.userDocVo.deptName }}</span>
                  </p>
                  <p>
-                   <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                   <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
                  </p>
                </div>
              </div>
@@ -70,19 +72,19 @@
                    <span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>
                  </p>
                  <p>
-                   <span class="mfc">{{item.consultMessage.createTime | goodTime}}</span>
+                   <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
                  </p>
                </div>
              </div>
-             <div v-if="item.consultMessage.replyContentType=='TEXT'">
+             <div v-if="item.consultMessage.replyContentType=='TEXT'" class="replyCon">
                         <span class="bf" >
                             {{item.consultMessage.replyContent}}
                         </span>
              </div>
-             <div v-else-if="item.consultMessage.replyContentType=='PIC'">
+             <div v-else-if="item.consultMessage.replyContentType=='PIC'" class="replyCon">
                <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeSinLarge(item.consultMessage.replyContent)">
              </div>
-             <div v-else-if="item.consultMessage.replyContentType=='AUDIO'">
+             <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon">
                <span> </span>
                <audio controls :src="item.consultMessage.replyContent"></audio>
              </div>
@@ -114,11 +116,14 @@
   import http from '../../../../lib/http'
   import {tokenCache} from '../../../../lib/cache'
   import Scroll from '../../../../base/scroll.vue'
+  import header from '../../../../base/header.vue'
 //  import {mainHeightMixin} from '../../../../lib/mixin'
   import {Getdate,goodTime} from '../../../../lib/filter'
   export default{
       data(){
           return{
+            title:"精选详情",
+            rightTitle:"",
             consultId:"",
             detailInfo:"",
             largePicUrl:"",
@@ -132,7 +137,8 @@
         goodTime
       },
       components:{
-        Scroll
+        Scroll,
+        "VHeader":header
       },
       created(){
           this.consultId = this.$route.query.id
@@ -238,8 +244,8 @@
      }
      .relateList{
        position: fixed;
-       top:0px;
-       bottom:100px;
+       top:100px;
+       bottom:82px;
        left:0;
        right:0;
        background-color: #FFFFFF;
@@ -257,10 +263,25 @@
          }
          .topIllName{
            width: 690px;
+           min-height: 70px;
            margin:0 auto;
            background-color: #FFFFFF;
-           p{
+           display: flex;
+           align-items: center;
+           div.illNameFirst{
+             width:150px;
+             height:70px;
+             display: flex;
+             align-items: center;
+           }
+           div.illNameSecond{
+             width:540px;
              font-size: 32px;
+             min-height:70px;
+             padding-top: 10px;
+             padding-bottom: 10px;
+             display: flex;
+             align-items: center;
            }
          }
          .detailList{
@@ -297,8 +318,9 @@
                    margin-top: 10px;
                    img{
                      width: 22.5%;
-                     height: 120px;
+                     height: 130px;
                      margin-left: 15px;
+                     margin-bottom: 20px;
                    }
                  }
                  p {
@@ -306,9 +328,10 @@
                    /*-webkit-box-orient: vertical;*/
                    /*-webkit-line-clamp: 2;*/
                    /*overflow: hidden;*/
-                   font-size: 30px;
-                   color: #888888;
+                   font-size: 28px;
+                   color: #333333;
                    padding-top: 5px;
+                   line-height: 45px;
                    /*background-color: #E64340;*/
                  }
                }
@@ -356,8 +379,20 @@
            padding: 20px;
            box-sizing: border-box;
            background: white;
-           border-bottom: 1px solid gainsboro;
            margin-top: 10px;
+           .fromTime{
+              margin-top: 5px;
+              display: inline-block;
+           }
+           .replyCon{
+             width: 500px;
+             margin-top: 20px;
+             margin-left: 100px;
+             span{
+                 font-size: 32px;
+                 color: #333333;
+             }
+           }
            .patAnswer{
              display: flex;
              align-items: center;

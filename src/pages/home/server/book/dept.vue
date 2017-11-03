@@ -123,7 +123,7 @@
       }
     }
     .maindept {
-      background-color: #f5f5f9;
+      background-color: #f5f5f5;
       width: 240px;
       li {
         color: #666666;
