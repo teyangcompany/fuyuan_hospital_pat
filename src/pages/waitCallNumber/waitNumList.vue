@@ -3,7 +3,7 @@
     <v-header :title="title" :rightTitle="rightTitle"></v-header>
       <div class="contentWrap" ref="contentWrap">
         <div>
-          <div class="content" v-for="item in waitNumList">
+          <div class="content" v-for="(item,index) in waitNumList">
               <div  class="border-1px infoArea">
                 <div class="cancelImg" v-if="item.docid">
                   <img src="../../../static/img/doctorM.png" alt="">
@@ -37,8 +37,8 @@
               <div class="weui-cells weui-cells_form">
                 <div class="weui-cell weui-cell_switch">
                   <div class="weui-cell__bd">提醒</div> <span class="advancedCount">提前10个号提醒</span>
-                  <div class="weui-cell__ft" @click.stop="getWhich(item)">
-                    <input class="weui-switch" type="checkbox" v-model="text" placeholder="提前 个叫号提醒"/>
+                  <div class="weui-cell__ft">
+                    <input class="weui-switch" type="checkbox" v-model="text"   @click="getWhich(item,index)"/>
                   </div>
                 </div>
               </div>
@@ -66,7 +66,8 @@
             ghnumber:"",
             deptid:"",
            waitNumList:"",
-           text:""
+           text:"",
+           changedGhNum:"",
       }
     },
     created(){
@@ -91,23 +92,49 @@
               }
           })
       },
-      getWhich(item){
+      getWhich(item,index){
          console.log(item,111)
+         console.log(index,777)
         console.log(this.text,222)
         this.visitdate = item.visitdate
         this.ghnumber = item.ghnumber
         this.deptid = item.deptid
-
-
-
-
       },
       _initDateList(){
         this.dateList = new BScroll(this.$refs.contentWrap,{
           click:true
         })
         console.log(this.dateList)
-      }
+      },
+//      selectNum(index){
+//        var hours = [{
+//            label:'提前',
+//            value:"1"
+//        }]
+//        var minutes = [{
+//            label:"个叫号提醒",
+//            value:"A"
+//        }]
+//        var symbol = []
+//        if(!symbol.length){
+//          for(var j=0;j<=this.waitNumList[index].beforenum;j++){
+//            var symbols_item = {}
+//            symbols_item.label = j
+//            symbols_item.value = j
+//            symbol.push(symbols_item)
+//          }
+//        }
+//        console.log(symbol)
+//        weui.picker(hours,symbol, minutes,{
+//          defaultValue: ['1', 'A'],
+//          onConfirm: function (result) {
+//            console.log(result,444);
+//            this.changedGhNum = result[1].label
+//            console.log(this.changedGhNum)
+//          },
+//          id: 'multiPickerBtn'
+//        })
+//      }
     },
     components:{
       Toast,
@@ -122,6 +149,7 @@
         })
       },
       text(){
+          this.getWhich()
         api("smarthos.yygh.ApiWfCallService.callRemind",{
           idcard:this.patCard,
           userid:this.text ? this.userId : null,
