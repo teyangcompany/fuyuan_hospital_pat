@@ -9,5 +9,9 @@ export default[
   {
     path:"/waitNumList",
     component:()=>import('../pages/waitCallNumber/waitNumList.vue')
+  },
+  {
+    path:"/example",
+    component:()=>import('../pages/waitCallNumber/example.vue')
   }
 ]

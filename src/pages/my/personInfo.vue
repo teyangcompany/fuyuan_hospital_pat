@@ -72,9 +72,6 @@
                 </div>
               </div>
               <div class="weui-cells">
-
-              </div>
-              <div class="weui-cells">
                 <a class="weui-cell weui-cell_access" href="javascript:;" @click="toggleArea">
                   <div class="weui-cell__bd">
                     <p>所在地区</p>
@@ -287,7 +284,8 @@
       },
       goBookService(){
           this.$router.push({
-               path:"/my/addHosNum"
+               path:"/my/addHosNum",
+               query:{record:this.list[this.index].userCommonPatRecords[0] && this.list[this.index].userCommonPatRecords[0].compatRecord ? this.list[this.index].userCommonPatRecords[0].compatRecord :'',id:this.list[this.index].id }
           })
       },
 
@@ -321,9 +319,9 @@
         font-size: 32px;
        }
   }
-  /*.weui-cells:before{*/
-    /*border:none;*/
-  /*}*/
+  .weui-cells:before{
+    border:none;
+  }
   /*.weui-cells:after{*/
     /*border:none;*/
   /*}*/
@@ -374,7 +372,7 @@
     }
     .secondLine{
       position: absolute;
-      top:833px;
+      top:752px;
       left:40px;
       height: 30px;
       width:10px;

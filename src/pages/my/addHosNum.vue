@@ -2,11 +2,12 @@
   <transition name="slide">
     <div>
       <v-header :title="title" :rightTitle="rightTitle" @on-check="goCheck()" @on-index="goIndex()"></v-header>
-      <div class="hosTitle border-1px-top" @click="goHosList">
+      <div class="hosTitle border-1px-top">
         <p class="titleToggle border-1px-top" v-for="item in hosList">
           <span>{{ item.yymc }}</span>
           <span class="hosTitleRight">
-            <span v-if="hosList">{{hosList[hosIndex].yymc}}</span>
+            <span v-if="record">{{record}}</span>
+            <span v-else @click="recordCheck">点击绑定</span>
             <img src="../../../static/img/icon/arrow-right.png" alt="">
           </span>
         </p>
@@ -17,12 +18,21 @@
                 :dialogRightFoot="dialogRightFoot"
                 v-if="showDialog"
                 @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+      <v-dialog :dialogTitle="dialogCreateTitle"
+                :dialogMain="dialogCreateMain"
+                :dialogLeftFoot="dialogCreateLeftFoot"
+                :dialogRightFoot="dialogCreateRightFoot"
+                v-if="showCreateDialog"
+                @on-cancel="cancelCreate" @on-download="createCard"></v-dialog>
       <patient-toggle :patList="allPatient" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>
       <div class="emptyHistory" v-if="fail">
         <bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>
       </div>
       <div class="emptyHistory" v-if="successDisplay">
         <bind-success :title="description" :illNumber="alertStatus" :failKnow="failKnow" @on-iSee="iSee()"></bind-success>
+      </div>
+      <div class="emptyHistory" v-if="createDisplay">
+        <create-success :title="createWord" :illNumber="createNumber" :secondLine="secondCreateLine" :failKnow="failKnow" @on-iSee="iSeeCreate()"></create-success>
       </div>
       <toast v-if="showToast"></toast>
       <v-mask v-if="fail || successDisplay"></v-mask>
@@ -39,6 +49,7 @@
   //  import VMask from '../../../base/mask'
   import Toast from '../../base/toast'
   import patientToggle from '../../base/patientToggle.vue'
+  import createSuccess from '../../base/createSuccess/createSuccess.vue'
   //  import weui from 'weui.js'
   //  import {isLoginMixin} from "../../../lib/mixin"
   //  import {tokenCache} from '../../../lib/cache'
@@ -47,7 +58,7 @@
     data(){
       return{
         title:"添加病案号",
-        rightTitle:"添加",
+        rightTitle:"",
         allPatient:"",
         index:0,
         hosIndex:0,
@@ -66,13 +77,25 @@
         failDetailSecond:"若该就诊人未在医院建档，请前往医院窗口办理",
         failKnow:"我知道了",
         illNumber:"314324",
+        createDisplay:false,
+        createWord:"新建成功，您的医院账号是",
+        createNumber:"",
+        secondCreateLine:"初次前往医院就诊时请务必携带身份证和医保卡(本)，缺一不可",
+        dialogCreateTitle:"",
+        dialogCreateMain:"该就诊人没有在医院建过档，请先新建医院账号，才能使用功能。",
+        dialogCreateLeftFoot:"取消",
+        dialogCreateRightFoot:"新建医院账号",
+        showCreateDialog:false,
         hosList:"",
         patOption:"请选择就诊人",
-        showPat:false
+        showPat:false,
+        record:"",
+        id:""
       }
     },
     created(){
-
+      this.record = this.$route.query.record
+      this.id = this.$route.query.id
       if(this.$route.query.index){
         this.index = this.$route.query.index
       }else{
@@ -108,6 +131,18 @@
       togglePatient(){
         this.showPat = true
       },
+      //取消创建就诊卡
+      cancelCreate(){
+        this.showCreateDialog = false
+      },
+      //确认创建就诊卡
+      createCard(){
+        this.showCreateDialog = false
+        this.createNum()
+      },
+      iSeeCreate(){
+        this.createDisplay = false
+      },
       bindCard(){
         this.showDialog = false
         this.showToast = true
@@ -131,12 +166,72 @@
         this.successDisplay = false
         this.fail = false
       },
-      goHosList(){
-        this.$router.push({
-          path:"/hosList"
+//      goHosList(){
+//        this.$router.push({
+//          path:"/hosList"
+//        })
+//      },
+      //就诊卡绑定
+      bindCard(){
+        this.showDialog = false
+        this.showToast = true
+        http("smarthos.user.commpat.record.bind",{
+          token:localStorage.getItem('token'),
+          commpatId:this.id,
+          bookHosId:this.hosList[0].yyid
+        }).then((data)=>{
+          console.log(this.hosid)
+          console.log(this.compatInfo[this.index].id)
+          this.alertStatus = data.obj.compatRecord
+          this.showToast = false
+          if(data.code == 0){
+            this.fail = false
+            this.successDisplay = true
+          }else{
+            this.successDisplay = false
+            this.fail = true
+          }
+          console.log(data)
         })
       },
-
+      //就诊卡创建
+      createNum(){
+        http("smarthos.user.commpat.record.new",{
+          token:localStorage.getItem('token'),
+          commpatId:this.id,
+          bookHosId:this.hosList[0].yyid
+        }).then((data)=>{
+          if(data.code == 0){
+            this.createDisplay = true
+            this.createNumber = data.obj.compatRecord
+          }else{
+            weui.alert(data.msg)
+          }
+          console.log(data)
+        })
+      },
+      //就诊卡检验
+      recordCheck(){
+        http("smarthos.user.commpat.record.check",{
+          token:localStorage.getItem('token'),
+          commpatId:this.id,
+          bookHosId:this.hosList[0].yyid
+        }).then((data)=>{
+          console.log(data)
+          this.showToast = false
+          if(data.code == 0){
+            if(data.obj == 'needCreate'){
+              this.showCreateDialog = true
+            }else if(data.obj == 'needBind'){
+              this.showDialog = true
+            }else{
+              this.finalBook()
+            }
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
     },
     components:{
       "VHeader":header,
