@@ -27,17 +27,20 @@ export function getApiUrl() {
   return api_url;
 }
 
-
-export function getAppid() {
+/**
+ *
+ * @returns {string}
+ */
+export function getEnv() {
   let hostname = url("hostname");
   let api_url = "";
   for (let key in API_URL) {
     if (hostname == key) {
-      api_url = API_URL[key].appid;
+      api_url = API_URL[key];
     }
   }
   if (!api_url) {
-    api_url = API_URL[Object.keys(config.api_url)[0]].appid;
+    api_url = API_URL[Object.keys(config.api_url)[0]];
   }
   return api_url;
 }
