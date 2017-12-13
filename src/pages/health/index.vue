@@ -1,15 +1,15 @@
 <template>
     <div class="page health">
         <app-header class="noflex" title="健康" ref="header">
-            <div class="right absolute" slot="right">
-                <span>0</span>
-            </div>
+            <!--<div class="right absolute" slot="right">-->
+                <!--<span>0</span>-->
+            <!--</div>-->
         </app-header>
         <scroll :height="scrollHeight" :data="healthList">
             <div class="wrapper" ref="main">
                 <div class="banner swiper-container" ref="swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="i in carouselPic">
+                        <div class="swiper-slide" v-for="i in carouselPic" :key="i.id">
                             <img :src="i.adUrl" alt="">
                         </div>
                     </div>
@@ -28,14 +28,15 @@
                     <div class="more flex0" @click="goConsultList">更多</div>
                 </div>
                 <div class="list">
-                    <router-link tag="ul" :to="{path:'/healthInfoDetail',query:{newId:i.id}}" v-for="i in healthList">
+                    <router-link tag="ul" :to="{path:'/healthInfoDetail',query:{newId:i.id}}" v-for="i in healthList" :key="i.id">
                         <li class="flex" >
                             <div class="ava flex0">
                                 <img :src="i.titleCoverImg" alt="">
                             </div>
                             <div class="info flex1">
                                 <h3>{{ i.title }}</h3>
-                                <div class="cate">{{ i.content }}</div>
+                                <div class="cate" v-html="i.content"></div>
+                                <p style="color: #666666">来源：{{ i.sourceName }}</p>
                             </div>
                         </li>
                     </router-link>
@@ -217,10 +218,11 @@
                         overflow: hidden;
                     }
                     .cate {
-                        margin-top: 20px;
-                        display: -webkit-box;
-                        -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 2;
+                        /*margin-top: 20px;*/
+                        height:70px;
+                        /*display: -webkit-box;*/
+                        /*-webkit-box-orient: vertical;*/
+                        /*-webkit-line-clamp: 2;*/
                         overflow: hidden;
                         color: #b2b2b2;
                         font-size: 12px; /*no*/

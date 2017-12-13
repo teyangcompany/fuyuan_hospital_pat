@@ -14,7 +14,6 @@
           疾病名称:视网膜中央动脉阻塞
         </div>
       </div>
-
     </div>
 </template>
 <script>

@@ -49,7 +49,7 @@
                           <img src="../../../static/img/pat.m.jpg" alt="" v-else>
                           <span v-if="consultInfo.consulterName">{{consultInfo.consulterName}}</span>
                         </span>
-            <span class="date">{{consultInfo.createTime | goodTime}} |
+            <span class="date">{{consultInfo.createTime | exactTime}} |
                           <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
                           <span v-else>暂无回复</span>
                         </span>
@@ -67,7 +67,7 @@
                 <span class="mfc">{{item.userDocVo.docTitle}} {{ item.userDocVo.deptName }}</span>
               </p>
               <p>
-                <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
+                <span class="mfc fromTime">{{item.consultMessage.createTime | exactTime}}</span>
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@
                 <!--<span class="mfc">&nbsp;&nbsp;&nbsp;{{item.userPat.patTitle}}</span>-->
               </p>
               <p>
-                <span class="mfc fromTime">{{item.consultMessage.createTime | goodTime}}</span>
+                <span class="mfc fromTime">{{item.consultMessage.createTime | exactTime}}</span>
               </p>
             </div>
           </div>
@@ -99,6 +99,26 @@
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon">
             <audio controls :src="item.consultMessage.replyContent"></audio>
+          </div>
+          <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='CHECK'" class="replyCon">
+            <div class="jcItem border-1px-white">
+              <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+              <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+              <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+            </div>
+            <div class="seeJcDetail">
+              <p>查看详情</p>
+            </div>
+          </div>
+          <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='INSPECT'" class="replyCon">
+            <div class="jcItem border-1px-white">
+              <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+              <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+              <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+            </div>
+            <div class="seeJcDetail">
+              <p>查看详情</p>
+            </div>
           </div>
         </div>
       </div>
@@ -130,7 +150,7 @@
       <p class="mfb reply">请等待医生回复，48小时未回复自动退款</p>
     </div>
     <div class="btn" v-show="consultInfo.consultStatus=='-1'">
-      <div>
+      <div class="cancelStatus">
         <p class="mfb reply">问诊已取消</p>
         <p class="mfb reply">如有退款将在7~10个工作日返回您的支付账户</p>
       </div>
@@ -167,7 +187,7 @@
   import header from '../../base/header.vue'
   import editDiv from '../../components/editDiv.vue'
   import api from '../../lib/http'
-  import {goodTime, Getdate, consultPrice} from '../../lib/filter'
+  import {goodTime, Getdate,exactTime,consultPrice} from '../../lib/filter'
   import ajax from '../../lib/ajax'
   import dialog from '../../base/dialog.vue'
   import Toast from '../../base/toast.vue'
@@ -216,6 +236,7 @@
     filters: {
       goodTime,
       Getdate,
+      exactTime,
       consultPrice
     },
     mounted() {
@@ -232,6 +253,20 @@
     },
     watch: {},
     methods: {
+      goItemDetail(item){
+        console.log(item)
+        if(item.type == 'CHECK'){
+          this.$router.push({
+            path:"/displayJc",
+            query:{id:item.id}
+          })
+        }else{
+          this.$router.push({
+            path:"/displayJy",
+            query:{id:item.id}
+          })
+        }
+      },
       //显示大图
       bigImg(img) {
         console.log("12")
@@ -308,6 +343,10 @@
         }).then((data) => {
           if (data.code == 0) {
             this.getData()
+            this.$router.push({
+              path: "/evaluate/" + this.consultId,
+              query: {consultType: this.consultInfo.consultType}
+            })
           } else {
             weui.alert(data.msg)
           }
@@ -361,6 +400,11 @@
         }).then((data) => {
           if (data.code == 0) {
             this.arr = data.list
+            this.arr.forEach((item)=>{
+              if(item.consultMessage.replyContentType == 'INSPECT' || item.consultMessage.replyContentType == 'CHECK'){
+                item.consultMessage.newContent =  JSON.parse(item.consultMessage.replyContent)
+              }
+            })
             console.log(data)
           } else {
             weui.alert(data.msg)
@@ -488,18 +532,22 @@
     left: 0;
     bottom: 0;
     width: 100%;
+    height:90px;
     background: white;
     display: flex;
     align-items: center;
-    div {
+    .cancelStatus{
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      p {
-        height: 50px;
-        margin-bottom: 20px;
+      height:90px;
+      p{
+        line-height:35px;
         text-align: center;
+        font-size: 26px;
+        color: #666666;
+        padding-top: 5px;
       }
     }
   }
@@ -541,8 +589,7 @@
     background: white;
     box-sizing: border-box;
     padding: 20px;
-    border-radius: 20px;
-    border-bottom: 1px solid gainsboro;
+    margin-top: 20px;
     .createDiv {
       display: flex;
       justify-content: space-between;
@@ -589,8 +636,7 @@
     padding: 20px;
     box-sizing: border-box;
     background: white;
-    border-bottom: 1px solid gainsboro;
-    margin-top: 10px;
+    margin-top: 20px;
     .fromTime{
       margin-top: 5px;
       display: inline-block;
@@ -602,6 +648,34 @@
       span{
         font-size: 32px;
         color: #333333;
+      }
+      .jcItem{
+        margin-left: 0;
+        width:300px;
+        background-color: #3d9bff;
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        p{
+          padding:15px 15px 5px 15px;
+          font-size: 30px;
+          color: #333333;
+          color: #ffffff;
+        }
+      }
+      .seeJcDetail{
+        width:300px;
+        margin-left: 0;
+        background-color: #3d9bff;
+        text-align: center;
+        height:60px;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        p{
+          color: #ffffff;
+          font-size: 32px;
+          height: 60px;
+          line-height: 60px;
+        }
       }
     }
   }

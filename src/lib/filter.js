@@ -18,6 +18,34 @@ const Todate = (time) => {
 }
 //time为datetime格式，如"2017-02-03 00:00:00"
 
+function formatDate(now) {
+  var year=now.getFullYear();
+  var month=now.getMonth()+1;
+  var date=now.getDate();
+  var hour=now.getHours();
+  var minute=now.getMinutes();
+  return year+"-"
+    +(month < 10 ? "0" + month:month)+"-"
+    +(date<10?"0" + date:date)
+}
+
+const getForMoment = (time) =>{
+  let now = new Date(time)
+  let year = now.getFullYear()
+  let mm = now.getMonth() + 1     //月
+  let dd = now.getDate()          //日
+  let hh = now.getHours()        //时
+  let ii = now.getMinutes()      //分
+  let clock=''
+  clock+=year+'-'
+  if(mm < 10) clock += "0"
+  clock += mm + "-"
+  if(dd < 10) clock += "0"
+  clock += dd
+  return  clock
+}
+
+
 const Getdate = (time) => {
   let now = new Date(time)
   let year = now.getFullYear()
@@ -133,6 +161,51 @@ const goodTime = function (unixTime) {
   else result = "刚刚";
   return result;
 }
+
+var exactTime = function(unixTime){
+
+  if(!unixTime){
+    return "";
+  }
+
+  let str = parseInt( unixTime )
+  var now = new Date().getTime(),
+    oldTime = new Date(str).getTime(),
+    difference = now - oldTime,
+    result='',
+    minute = 1000 * 60,
+    hour = minute * 60,
+    day = hour * 24,
+    halfamonth = day * 15,
+    month = day * 30,
+    year = month * 12,
+
+    myYear=new Date(str).getFullYear(),
+    myMonth=new Date(str).getMonth()+1,
+    myDate=new Date(str).getDate(),
+    myHour=new Date(str).getHours(),
+    myMinute=new Date(str).getMinutes(),
+    dispalyWhole = myYear+"-"
+      +(myMonth < 10 ? "0" + myMonth:myMonth)+"-"
+      +(myDate<10?"0" + myDate:myDate),
+    // +(myHour<10?"0"+myHour:myHour)+":"
+    // +(myMinute<10?"0"+myMinute:myMinute),
+
+    _year = difference/year,
+    _month =difference/month,
+    _week =difference/(7*day),
+    _day =difference/day,
+    _hour =difference/hour,
+    _min =difference/minute;
+  if(_hour>=24){result= dispalyWhole}
+  else if(_hour>=1 && _hour < 24) {result= ~~(_hour) +"小时前"}
+  else if(_min>=1) {result= ~~(_min) +"分钟前"}
+  else result="刚刚";
+  return result;
+}
+
+
+
 const getAge = function (id) {
   if (!id) {
     return "";
@@ -212,5 +285,5 @@ const consultPrice = function (price) {
 }
 
 
-export {Todate, getWeek, getDay, goodTime, getMyDay, getAge, getGender, Getdate, week, state, consultPrice}
+export {Todate,formatDate,getForMoment,getWeek, getDay, goodTime,exactTime, getMyDay, getAge, getGender, Getdate, week, state, consultPrice}
 

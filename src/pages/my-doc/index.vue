@@ -40,6 +40,8 @@
                   <span v-else-if="item.followMessage.msgType=='PIC'">[图片]</span>
                   <span v-else-if="item.followMessage.msgType=='AUDIO'">[语音消息]</span>
                   <span v-else-if="item.followMessage.msgType=='VEDIO'">[视频消息]</span>
+                  <span v-else-if="item.followMessage.msgType=='CHECK'">[检查单]</span>
+                  <span v-else-if="item.followMessage.msgType=='INSPECT'">[检验单]</span>
                 </div>
               </div>
             </li>

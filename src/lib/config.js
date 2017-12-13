@@ -23,9 +23,9 @@ export default {
     {name: "guide", value: "智能导诊", path: "/login"},
     {name: "book", value: "预约挂号", path: "/home/server/book"},
     {name: "queuing", value: "排队叫号",path:"/waitCallNumber"},
-    {name: "payment", value: "诊间支付"},
+    {name: "payment", value: "诊间支付",path:"/consultPay"},
     {name: "report", value: "查报告单", path: '/checkReport'},
-    {name: "steward", value: "住院管家"},
+    {name: "steward", value: "住院管家",path:"/hosService"},
     {name: "help", value: "就诊指南"},
     {name: "more", value: "更多"}
     // {name: "more", value: "更多", path: '/home/moreSel'}

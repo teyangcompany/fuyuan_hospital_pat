@@ -161,9 +161,9 @@
       <transition name="showcover">
         <div class="back_cover" v-show="sortBy" @click="hideCover"></div>
       </transition>
-      <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup"  @scrollToEnd="scrollToEnd()">
+      <scroll class="wrapMy" :data="aboutConsult" :pullup="pullup">
         <div>
-          <ul class="border-1px" v-for="(item,index) in aboutConsult" :key="item.id">
+          <ul  v-for="(item,index) in aboutConsult" :key="item.id">
             <li >
               <router-link tag="div" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="border-1px-dashed dashedPlace">
                 <p class="picConsult" ><span v-if="item.userDocVo">{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
@@ -171,12 +171,17 @@
               <router-link tag="div" :to="{path:'/bestPickDetail',query:{id:item.consultInfo.id}}" class="mainContent">
                 <p>{{ item.consultInfo.consultContent }}</p>
                 <div>
-                  <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">
+                  <!--<img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in item.attaList">-->
                 </div>
               </router-link>
               <div class="ConsultRelate">
-
-                <span class="name"><span class="number"><img :src="item.userDocVo.docAvatar" alt="">{{item.userDocVo.docName}}回答</span></span>
+                <span class="name">
+                  <span class="number">
+                    <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
+                    <img src="../../../../../static/img/doctorM.png" alt="" v-else>
+                    {{item.userDocVo.docName}}回答
+                  </span>
+                </span>
                 <span class="money"> <span>看过</span>&nbsp;
                   <span v-if="item.consultInfo.readCount">{{ item.consultInfo.readCount }} </span>
                   <span v-else>0</span>&nbsp;
@@ -197,14 +202,15 @@
               </div>
             </li>
           </ul>
-          <div class="loadMore" v-if="loadingStatus">
-            <span class="pullMore">
-               <img src="../../../../../static/img/loading.gif" alt="">
-               数据加载中...
-            </span>
-          </div>
+          <!--<div class="loadMore" v-if="loadingStatus">-->
+            <!--<span class="pullMore">-->
+               <!--<img src="../../../../../static/img/loading.gif" alt="">-->
+               <!--数据加载中...-->
+            <!--</span>-->
+          <!--</div>-->
         </div>
       </scroll>
+      <toast v-if="showToast"></toast>
     </div>
   </div>
 </template>
@@ -214,6 +220,7 @@
   import http from '../../../../lib/http'
   import {tokenCache} from '../../../../lib/cache'
   import {Getdate} from '../../../../lib/filter'
+  import Toast from '../../../../base/toast.vue'
   export default{
     data(){
       return{
@@ -233,6 +240,7 @@
         defaultPick:"",
         sortName:"",
         clickIndex:0,
+        showToast:false,
         illNameList:[],
         allRoom:[
           {
@@ -245,6 +253,7 @@
       Getdate
     },
     created(){
+        this.showToast = true
       http("smarthos.consult.all.list.page",{
 //        token:localStorage.getItem('token'),
         token:localStorage.getItem('token'),
@@ -253,9 +262,9 @@
         stdDeptId:this.deptId == '' ? null : this.deptId,
         illnessName:this.typePick == '' ? null : this.typePick,
         sort:this.sortName == '' ? null : this.sortName,
-        pageSize:"10",
-        pageNum:"1"
+        pageSize:"1000",
       }).then((data)=>{
+        this.showToast = false
         this.loadingStatus = false
         if(data.code == 0){
           this.aboutConsult = data.list
@@ -304,7 +313,7 @@
         this.listPage +=1;
         let that = this
         http("smarthos.consult.all.list.page",{
-          token:tokenCache.get(),
+          token:localStorage.getItem('token'),
           isChoice:true,
           stdDeptId:this.deptId == '' ? null : this.deptId,
           illnessName:this.typePick == '' ? null : this.typePick,
@@ -319,9 +328,9 @@
 //              this.createTime.push(formatDate(new Date(data.list[i].createTime)))
             }
             this.loadingStatus = false
-            if(data.list.length >= 10){
-              this.preventRepeatRequest = false;
-            }
+//            if(data.list.length >= 10){
+//              this.preventRepeatRequest = false;
+//            }
           }else if(!(data.msg)){
             this.loadingStatus = false
             weui.alert("网络错误，请稍后重试")
@@ -338,8 +347,7 @@
           stdDeptId:this.deptId == '' ? null : this.deptId,
           illnessName:this.typePick == '' ? null : this.typePick,
           sort:this.sortName == '' ? null : this.sortName,
-          pageSize:10,
-          pageNum:1,
+          pageSize:1000,
         }).then((data)=>{
           console.log(data)
           if(data.code == 0){
@@ -358,6 +366,7 @@
           }).then((data)=>{
               if(data.code == 0){
                   this.sort()
+                 this.listPage = 1
                 weui.alert("点赞成功")
 //                  if(item.consultInfo.hasOwnProperty('praiseCount')){
 //                      this.clickLikes = parseInt(item.consultInfo.praiseCount) + 1
@@ -461,7 +470,8 @@
       }
     },
     components:{
-      Scroll
+      Scroll,
+      Toast
     },
     watch:{
       childDetail(){
@@ -520,15 +530,16 @@
       left:0;
       right:0;
       bottom:0;
-      background-color: white;
+      background-color: #f5f5f5;
       overflow: hidden;
       ul {
-        margin-top: 5px;
+        margin-bottom: 20px;
+        width:100%;
+        background-color:white;
         li {
           width: 690px;
           /*height: 166px;*/
           border-radius: 7px;
-          background-color:white;
           list-style-type: none;
           margin: 0 auto;
           padding: 0px 8px 8px 8px;
@@ -589,6 +600,7 @@
           }
           div.ConsultRelate {
             margin-top: 5px;
+            margin-bottom: 10px;
             span.name {
               font-size: 28px;
               color: #999999;

@@ -9,6 +9,12 @@
     <section class="goBack"  v-else-if="path== roomPath  && historyLength <= 1">
       <!--<img src="../../static/img/icon/arrow-left-black.png" alt="">-->
     </section>
+    <section class="goBack" @click="goSelect" v-else-if="path == '/payItem/waitPay' || path == '/payItem/payed'">
+      <img src="../../static/img/icon/arrow-left-black.png" alt="">
+    </section>
+    <section class="goBack" @click="gohome" v-else-if="path == '/consultPay'">
+      <img src="../../static/img/icon/arrow-left-black.png" alt="">
+    </section>
     <section class="goBack" @click="goBack" v-else>
       <img src="../../static/img/icon/arrow-left-black.png" alt="">
     </section>
@@ -65,6 +71,12 @@
       },
       goDocCard(){
           this.$emit('on-docCard')
+      },
+      gohome(){
+           this.$emit('on-home')
+      },
+      goSelect(){
+          this.$emit('on-select')
       }
     },
     watch:{

@@ -4,10 +4,9 @@
     <div class="checkList">
       <div>
         <div class="topMenu border-1px-top">
-          <p class="picked" @click="seeTime('一周内')">一周内</p>
-          <p @click="seeTime('三个月')">三个月</p>
-          <p @click="seeTime('半年内')">半年内</p>
-          <p @click="seeTime('一年内')">一年内</p>
+          <p class="picked" @click="seeTime('一个月内')">一个月内</p>
+          <p @click="seeTime('近三个月')">近三个月</p>
+          <p @click="seeTime('三至六个月')">三至六个月</p>
         </div>
         <div class="wrapContent" ref="wrapContent">
           <div>
@@ -80,7 +79,7 @@
             lastIndex = this.index;
           }
         }
-        this.oneWeek = this.GetDateStr(7)
+        this.oneWeek = this.getMonth(1)
         this.threeMonth = this.getMonth(3)
         this.halfYear = this.getMonth(6)
         this.oneYear = this.getMonth(12)
@@ -98,7 +97,7 @@
       this.compatId = this.$route.query.compatId
       this.nowTime = this.getNow()
       this.threeMonth = this.getMonth(3)
-      this.oneWeek = this.GetDateStr(7)
+      this.oneWeek = this.getMonth(1)
 //      if(this.selectValue == '检验报告'){
         if(this.oneWeek != ''){
           this.showToast = true
@@ -106,7 +105,7 @@
             token:localStorage.getItem('token'),
             hosid:this.hosid,
             orgid:this.hosid,
-            idcard:this.patCard,
+            idcard:"332601195512242418",
             bdate:this.oneWeek,
             edate:this.nowTime,
 //            patCard:this.patCard,
@@ -149,7 +148,7 @@
         var y = dd.getFullYear().toString();
         var month = dd.getMonth()+1;//获取当前月份的日期
         var d = dd.getDate();
-        return y  + (month < 10 ? "0" + month : month)+(d < 10 ? "0" + d : d);
+        return y  + '-' + (month < 10 ? "0" + month : month)+ '-' + (d < 10 ? "0" + d : d);
       },
       getMonth(i){
         var dd = new Date();
@@ -157,10 +156,10 @@
         var y = dd.getFullYear().toString();
         var month = dd.getMonth()+1;//获取当前月份的日期
         var d = dd.getDate();
-        return y + (month < 10 ? "0" + month : month)+(d < 10 ? "0" + d : d);
+        return y + '-' + (month < 10 ? "0" + month : month)+ '-' + (d < 10 ? "0" + d : d);
       },
       seeTime(time){
-        if(time == "一周内"){
+        if(time == "一个月内"){
           this.reportInfo = 1
           if(this.selectValue == '检验报告'){
             this.showToast = true
@@ -168,7 +167,8 @@
               token:localStorage.getItem('token'),
               hosid:this.hosid,
               orgid:this.hosid,
-              idcard:this.patCard,
+              medcardno:"027888287",
+              idcard:"332601195512242418",
               bdate:this.oneWeek,
               edate:this.nowTime,
             }).then((data)=>{
@@ -186,7 +186,7 @@
               }
             })
           }
-        }else if(time == '三个月'){
+        }else if(time == '近三个月'){
           this.reportInfo = 1
           if(this.selectValue == '检验报告'){
             this.showToast = true
@@ -194,7 +194,8 @@
               token:localStorage.getItem('token'),
               hosid:this.hosid,
               orgid:this.hosid,
-              idcard:this.patCard,
+              medcardno:"027888287",
+              idcard:"620321196303280021",
               bdate:this.threeMonth,
               edate:this.nowTime,
             }).then((data)=>{
@@ -214,7 +215,7 @@
               }
             })
           }
-        }else if(time == '半年内'){
+        }else if(time == '三至六个月'){
           this.reportInfo = 1
           if(this.selectValue == '检验报告'){
             this.showToast = true

@@ -9,7 +9,7 @@
         <div class="avatar">
             <span></span>
         </div>
-        <div class="line"></div>
+        <!--<div class="line"></div>-->
         <p class="doctorInfoTitle border-1px">个人信息</p>
         <div class="doctorInfo">
           <div class="circleAngle">
@@ -17,7 +17,10 @@
               <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
-                  <div class="weui-cell__bd">
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
+                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
+                  </div>
+                  <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
                   </div>
                 </div>
@@ -60,13 +63,19 @@
                 <!--</a>-->
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
-                  <div class="weui-cell__bd">
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
+                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
+                  </div>
+                  <div class="weui-cell__bd" v-else @click="goPhone">
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
                   </div>
                 </div>
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">身份证号</label></div>
-                  <div class="weui-cell__bd">
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
+                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
+                  </div>
+                  <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
                   </div>
                 </div>
@@ -98,7 +107,7 @@
             <!--</div>-->
           </div>
         </div>
-        <div class="secondLine"></div>
+        <!--<div class="secondLine"></div>-->
         <p class="patientInfoTitle"> <span class="leftPatTitle">医院账号</span>  </p>
         <div class="patientInfo">
           <div class="weui-cells" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
@@ -142,7 +151,7 @@
 //    mixins: [isLoginMixin],
     data(){
       return{
-          title:"个人资料",
+          title:"就诊人详情",
           rightTitle:"保存修改",
           personInfo:"",
           patOption:"",
@@ -220,6 +229,11 @@
              console.log(data,333)
          })
       },
+      goPhone(){
+        this.$router.push({
+          path:"/changeSelfPhone"
+        })
+      },
       getData(){
         http('smarthos.user.commpat.list',{
           token:this.token
@@ -229,6 +243,7 @@
             this.list = res.list;
             this.patName = this.list[this.index].commpatName
             this.patIdCard = this.list[this.index].commpatIdcard
+            console.log(this.patIdCard,999)
             this.patMobile = this.list[this.index].commpatMobile
             console.log()
           }else {
@@ -268,7 +283,7 @@
           "token":localStorage.getItem("token"),
           "commpatId":this.list[this.index].id,
           "commpatName":this.patName,
-          "commpatIdcard":this.patIdcard,
+          "commpatIdcard":this.patIdCard,
           relationship:this.list[this.index].relationship ? this.list[this.index].relationship : this.compatInfo[this.clickIndex],
           areaCode: this.result == null || this.result.area.code == '' ? this.list[this.index].areaCode :this.result.area.code,
         }).then(res=>{
@@ -387,7 +402,7 @@
       padding-left: 40px;
       display: flex;
       justify-content: space-between;
-      /*background-color: #E64340;*/
+      background-color: #f5f5f5;
     }
     .patientInfoTitle{
       width: 690px;
@@ -395,8 +410,11 @@
       font-size: 28px;
       /*text-align: right;*/
       color: $mainColor;
+      height: 80px;
+      line-height: 80px;
       /*padding-right: 40px;*/
       display: flex;
+      background-color: #f5f5f5;
       justify-content: space-between;
       .leftPatTitle{
         color: #333333;
@@ -437,7 +455,8 @@
         align-items: center;
         justify-content: center;
         img{
-          width:36px;
+          width:30px;
+          height:30px;
           margin-left: 10px;
         }
       }

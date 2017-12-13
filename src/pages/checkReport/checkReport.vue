@@ -11,16 +11,16 @@
       <div class="hosTitle">
         <p class="titleToggle" v-if="allPatient && allPatient[index].userCommonPatRecords"> <span>病案号</span>
           <span class="hosTitleLeft illNumColor">
-            <span v-if="allPatient[index].userCommonPatRecords.length != 0">{{ allPatient[index].userCommonPatRecords[0].compatRecord  }}(义乌復元医院)</span>
+            <span v-if="allPatient[index].userCommonPatRecords.length != 0">{{ allPatient[index].userCommonPatRecords[0].compatRecord  }}</span>
             <span v-else>暂未绑定病案号</span>
-            <img src="../../../static/img/icon/arrow-right.png" alt="">
+            <!--<img src="../../../static/img/icon/arrow-right.png" alt="">-->
           </span>
         </p>
       </div>
       <div class="checkMenu">
-          <button @click="goTest">检验单查询</button>
+          <button @click="isBindCard('检验单')">检验单查询</button>
           <p></p>
-          <button @click="goCheck">检查单查询</button>
+          <button @click="isBindCard('检查单')">检查单查询</button>
       </div>
       <div class="warmWrap">
         <div class="warmTips">
@@ -76,6 +76,12 @@
                 :dialogRightFoot="dialogRightFoot"
                 v-if="showDialog"
                 @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+      <v-dialog :dialogTitle="dialogCreateTitle"
+                :dialogMain="dialogCreateMain"
+                :dialogLeftFoot="dialogCreateLeftFoot"
+                :dialogRightFoot="dialogCreateRightFoot"
+                v-if="showCreateDialog"
+                @on-cancel="cancelCreate" @on-download="createCard"></v-dialog>
       <patient-toggle :patList="allPatient" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>
       <div class="emptyHistory" v-if="fail">
         <bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>
@@ -83,8 +89,11 @@
       <div class="emptyHistory" v-if="successDisplay">
         <bind-success :title="description" :illNumber="alertStatus" :failKnow="failKnow" @on-iSee="iSee()"></bind-success>
       </div>
+      <div class="emptyHistory" v-if="createDisplay">
+        <create-success :title="createWord" :illNumber="createNumber" :secondLine="secondCreateLine" :failKnow="failKnow" @on-iSee="iSeeCreate()"></create-success>
+      </div>
       <toast v-if="showToast"></toast>
-      <v-mask v-if="fail || successDisplay"></v-mask>
+      <v-mask v-if="fail || successDisplay || createDisplay"></v-mask>
     </div>
   </transition>
 </template>
@@ -93,9 +102,10 @@
   import http from '../../lib/http'
   import api from '../../lib/bookApi'
   import Dialog from '../../base/dialog'
-//  import bindSuccess from '../../../base/bindSuccess/bindSuccess'
-//  import bindFail from '../../../base/bindFail/bindFail'
-//  import VMask from '../../../base/mask'
+  import bindSuccess from '../../base/bindSuccess/bindSuccess'
+  import bindFail from '../../base/bindFail/bindFail'
+  import createSuccess from '../../base/createSuccess/createSuccess.vue'
+  import VMask from '../../base/mask'
   import Toast from '../../base/toast'
   import patientToggle from '../../base/patientToggle.vue'
 //  import weui from 'weui.js'
@@ -110,6 +120,15 @@
         allPatient:"",
         index:0,
         hosIndex:0,
+        dialogCreateTitle:"",
+        dialogCreateMain:"该就诊人没有在医院建过档，请先新建医院账号，才能使用功能。",
+        dialogCreateLeftFoot:"取消",
+        dialogCreateRightFoot:"新建医院账号",
+        showCreateDialog:false,
+        createDisplay:false,
+        createWord:"新建成功，您的医院账号是",
+        createNumber:"",
+        secondCreateLine:"初次前往医院就诊时请务必携带身份证和医保卡(本)，缺一不可",
         dialogTitle:"",
         dialogMain:"该就诊人没有绑定病案号，无法执行该操作",
         dialogLeftFoot:"取消",
@@ -142,38 +161,48 @@
       }else{
         this.hosIndex = 0
       }
-      api("smarthos.yygh.ApiHospitalService.areaHosList",{
-      }).then((data)=>{
-        if(data.code == 0){
-          this.hosList = data.list
-        }else{
-          weui.alert(data.msg)
-        }
-        console.log(data)
-      })
-      http("smarthos.user.commpat.list",{
-        token:localStorage.getItem('token')
-      }).then((data)=>{
-         console.log(data)
-        if(data.code == 0){
-          this.allPatient=data.list
-        }else if(!(data.msg)){
-          weui.alert("网络错误，请稍后重试")
-        }else{
-          weui.alert(data.msg)
-        }
-//        this.changeName = this.allPatient[this.index].compatName
-//        this.changeID = this.allPatient[this.index].compatIdcard
-//        this.compatId = this.allPatient[this.index].compatId
-        console.log(data.list)
-      })
+       this.getHosList()
+       this.getPatientList()
     },
     methods:{
+      getHosList(){
+        api("smarthos.yygh.ApiHospitalService.areaHosList",{
+        }).then((data)=>{
+          if(data.code == 0){
+            this.hosList = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+          console.log(data)
+        })
+      },
+      getPatientList(){
+        http("smarthos.user.commpat.list",{
+          token:localStorage.getItem('token')
+        }).then((data)=>{
+          console.log(data)
+          if(data.code == 0){
+            this.allPatient=data.list
+          }else if(!(data.msg)){
+            weui.alert("网络错误，请稍后重试")
+          }else{
+            weui.alert(data.msg)
+          }
+          console.log(data.list)
+        })
+      },
       cancelDialog(){
         this.showDialog = false
       },
       closePatient(){
         this.showPat = false
+      },
+      cancelCreate(){
+        this.showCreateDialog = false
+      },
+      createCard(){
+        this.showCreateDialog = false
+        this.createCard()
       },
       check(item){
         console.log(item)
@@ -183,26 +212,70 @@
       togglePatient(){
         this.showPat = true
       },
+      iSeeCreate(){
+        this.getPatientList()
+        this.createDisplay = false
+      },
       bindCard(){
         this.showDialog = false
         this.showToast = true
-        api("nethos.book.compat.bind",{
-          token:tokenCache.get(),
-          compatId:this.allPatient[this.index].compatId
+        http("smarthos.user.commpat.record.bind",{
+          bookHosId:this.hosList[this.hosIndex].yyid,
+          commpatId:this.allPatient[this.index].id
         }).then((data)=>{
-          this.alertStatus = data.msg
           this.showToast = false
           if(data.code == 0){
+            this.alertStatus = data.obj.compatRecord
             this.fail = false
             this.successDisplay = true
           }else{
+            this.alertStatus = data.msg
             this.successDisplay = false
             this.fail = true
           }
           console.log(data)
         })
       },
+      createCard(){
+        http("smarthos.user.commpat.record.new",{
+          commpatId:this.allPatient[this.index].id,
+          bookHosId:this.hosList[this.hosIndex].yyid
+        }).then((data)=>{
+          if(data.code == 0){
+            console.log(data)
+            this.createNumber = data.obj.compatRecord
+            this.createDisplay = true
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
+      isBindCard(type){
+        this.showToast = true
+        http("smarthos.user.commpat.record.check",{
+          commpatId:this.allPatient[this.index].id,
+          bookHosId:this.hosList[this.hosIndex].yyid
+        }).then((data)=>{
+          this.showToast = false
+          if(data.code == 0){
+            if(data.obj == 'needCreate'){
+              this.showCreateDialog = true
+            }else if(data.obj == 'needBind'){
+              this.bindCard()
+            }else{
+                if(type == '检验单'){
+                  this.goTest()
+                }else{
+                   this.goCheck()
+                }
+            }
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
       iSee(){
+        this.getPatientList()
         this.successDisplay = false
         this.fail = false
       },
@@ -244,9 +317,10 @@
       "VHeader":header,
       "VDialog":Dialog,
       patientToggle,
-//      bindSuccess,
-//      VMask,
-//      bindFail,
+      bindSuccess,
+      VMask,
+      bindFail,
+      createSuccess,
       Toast
     }
   }
@@ -255,6 +329,10 @@
   @import '../../common/common.scss';
   .emptyHistory{
     position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
     width:100%;
     height:100%;
     display: flex;

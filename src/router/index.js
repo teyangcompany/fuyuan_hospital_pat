@@ -11,6 +11,9 @@ import teamCard from "./teamCard"
 import inquiry from "./inquiry"
 import checkReport from './checkReport'
 import waitCallNumber from './waitCallNumber'
+import hosService from './hosService'
+import consultPay from './consultPay'
+import doType from './doType'
 
 Vue.use(Router)
 
@@ -34,7 +37,10 @@ const router = new Router({
   ...teamCard,
   ...inquiry,
   ...checkReport,
-  ...waitCallNumber
+  ...waitCallNumber,
+  ...hosService,
+  ...consultPay,
+  ...doType
   ]
 })
 

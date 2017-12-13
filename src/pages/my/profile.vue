@@ -110,12 +110,16 @@
   import relationToggle from '../../base/relationToggle.vue'
   import vueArea from 'vue-area'
   import { getAge } from '../../lib/filter'
+  import upload from "../../base/upload.vue"
+  import config from '../../lib/config'
   export default{
 //    mixins: [isLoginMixin],
     data(){
       return{
         title:"个人资料",
         rightTitle:"保存",
+        picList: [],
+        config: config,
         personInfo:"",
         patOption:"",
         showPat:false,
@@ -238,6 +242,7 @@
               path:"/changeSelfPhone"
          })
       },
+
       uploadImg(){
         this.$refs.upload.click()
       },
@@ -308,6 +313,7 @@
       Toast,
       top,
       vueArea,
+      upload,
       relationToggle,
       "VHeader":header
     }
@@ -336,6 +342,12 @@
     .weui-cell__ft{
       font-size: 32px;
     }
+  }
+  .upload{
+    position: absolute;
+    width:500px;
+    height:100px;
+    /*background-color: #1FB820;*/
   }
   .emptyHistory{
     position: absolute;

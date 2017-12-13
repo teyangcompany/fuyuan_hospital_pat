@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "./config"
+import {getApiUrl} from "./util"
 
 import {openidCache} from './cache'
 
@@ -11,7 +12,7 @@ export default function (service, options) {
     ...baseParams,
     ...options
   };
-
+  let url = getApiUrl();
   let openid = openidCache.get()
   if(openid){
     data.token = 'OPENID_PAT_'+ openid
@@ -23,7 +24,7 @@ export default function (service, options) {
       "Content-Type": "application/json"
     },
   }
-  return axios.post(config.api_url, data, axiosConfig)
+  return axios.post(url, data, axiosConfig)
     .then((res) => {
       if (res.status == 200) {
         return res.data;

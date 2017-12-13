@@ -41,6 +41,26 @@
                 <div class="whatsay_text" v-else-if="item.msgType == 'PIC'" @click="makeLarge(item.msgContent)">
                   <img :src="item.msgContent" alt="">
                 </div>
+                <div @click="goItemDetail(JSON.parse(item.msgContent))" v-else-if="item.msgType=='CHECK'" class="whatsay_text">
+                  <div class="jcItem border-1px">
+                    <p>{{ JSON.parse(item.msgContent).type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                    <p>{{ JSON.parse(item.msgContent).inspectionTypeName }}</p>
+                    <p>{{ JSON.parse(item.msgContent).inspectionItemName }}</p>
+                  </div>
+                  <div class="seeJcDetail">
+                    <p>查看详情</p>
+                  </div>
+                </div>
+                <div @click="goItemDetail(JSON.parse(item.msgContent))" v-else-if="item.msgType=='INSPECT'" class="whatsay_text">
+                  <div class="jcItem border-1px">
+                    <p>{{ JSON.parse(item.msgContent).type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                    <p>{{ JSON.parse(item.msgContent).inspectionTypeName }}</p>
+                    <p>{{ JSON.parse(item.msgContent).inspectionItemName }}</p>
+                  </div>
+                  <div class="seeJcDetail">
+                    <p>查看详情</p>
+                  </div>
+                </div>
               </div>
             </div>
           </li>
@@ -227,11 +247,29 @@
       }
     },
     methods: {
+      goItemDetail(item){
+        console.log(item)
+        if(item.type == 'CHECK'){
+          this.$router.push({
+            path:"/displayJc",
+            query:{id:item.id}
+          })
+        }else{
+          this.$router.push({
+            path:"/displayJy",
+            query:{id:item.id}
+          })
+        }
+      },
       goArticle(id) {
-        this.$router.push({
-          path: "/articleDetail",
-          query: {articleId: id}
-        })
+        if(id){
+          this.$router.push({
+            path: "/articleDetail",
+            query: {articleId: id}
+          })
+        }else{
+            weui.alert("该文章已被删除，无法查看！")
+        }
       },
       getInitChat(){
         http("smarthos.follow.message.detail.list", {
@@ -620,6 +658,33 @@
               margin-right: 5px;
               width: 110px;
               height: 110px;
+            }
+            .jcItem{
+              margin-left: 0;
+              width:300px;
+              background-color:#ffffff;
+              border-top-right-radius: 20px;
+              border-top-left-radius: 20px;
+              p{
+                padding:15px 15px 5px 15px;
+                font-size: 30px;
+                color: #333333;
+              }
+            }
+            .seeJcDetail{
+              width:300px;
+              margin-left: 0;
+              background-color: #ffffff;
+              text-align: center;
+              height:60px;
+              border-bottom-right-radius: 20px;
+              border-bottom-left-radius: 20px;
+              p{
+                color: #3d9bff;
+                font-size: 32px;
+                height: 60px;
+                line-height: 60px;
+              }
             }
           }
           .articleSection {

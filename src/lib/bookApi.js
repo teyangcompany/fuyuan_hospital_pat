@@ -2,6 +2,8 @@
  * Created by Administrator on 2017/10/10 0001.
  */
 import axios from "axios";
+import {openidCache} from './cache'
+
 let url = "http://test-zsyy-fep.hztywl.cn:6060/api";
 let spid = "1101";
 let random = "";
@@ -30,6 +32,11 @@ export default function (service, options) {
   //   bus.$emit("loading", {status: 'start'});
   // }
   let obj = {...base,service,...options};
+  let openid = openidCache.get()
+  if(openid){
+    obj.token = 'OPENID_PAT_'+ openid
+  }
+
   // let sign = hex_md5(hex_md5("aAr9MVS9j1") + JSON.stringify(obj));
   let config = {
     headers: {

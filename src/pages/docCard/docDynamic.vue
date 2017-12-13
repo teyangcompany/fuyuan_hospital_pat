@@ -4,7 +4,8 @@
             <div class="msg" v-if="docRestNotice && docRestNotice.content">
                <p>
                    <span>停诊公告</span>
-                   <span class="restTime">{{ docRestNotice.noticeStartDate | Todate}}~{{ docRestNotice.noticeEndDate | Todate}}</span>
+                   <span class="restTime" v-if="docRestNotice.noticeStartDate != docRestNotice.noticeEndDate">{{ docRestNotice.noticeStartDate | getForMoment}}~{{ docRestNotice.noticeEndDate | getForMoment}}</span>
+                   <span class="restTime" v-else>{{ docRestNotice.noticeStartDate | getForMoment}}</span>
                </p>
                <p>&nbsp; &nbsp;&nbsp; &nbsp;{{docRestNotice.content}}</p>
             </div>
@@ -21,7 +22,7 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import api from '../../lib/http'
-    import {Todate,getDay,} from '../../lib/filter'
+    import {Todate,getDay,getForMoment} from '../../lib/filter'
     export default{
         components: {
             top
@@ -30,6 +31,7 @@
         filters:{
           Todate,
           getDay,
+          getForMoment
         },
         data(){
             return {

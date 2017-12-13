@@ -35,10 +35,10 @@
         </div>
       </div>
       <div class="wrapMy" v-if="aboutConsult.length != 0">
-        <ul class="border-1px" key="item" v-for="item in aboutConsult"
+        <ul key="item" v-for="item in aboutConsult"
             @click="goDetail(item.consultInfo.consultType,item.consultInfo.id)">
           <li>
-            <div>
+            <div class="titleSection">
               <p class="picConsult" v-if="item.consultInfo.consultType == 'ONE2ONEPIC'">医生咨询<span> {{ item.consultInfo.payFee | consultPrice }}</span></p>
               <p class="picConsult" v-else-if="item.consultInfo.consultType == 'PLATFORMPIC'">科室咨询<span> {{ item.consultInfo.payFee |consultPrice }}</span></p>
               <span class="consultTim" v-if="item.consultInfo.consultStatus == 0">待付款</span>
@@ -72,8 +72,8 @@
                      暂无医生回答
                 </span>
               </span>
-              <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | goodTime}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
-              <span class="money" v-else>{{ item.consultInfo.createTime | goodTime}}创建 | 0条回复</span>
+              <span class="money" v-if="item.consultInfo.replyCount">{{ item.consultInfo.createTime | exactTime}}创建 | {{ item.consultInfo.replyCount }}条回复</span>
+              <span class="money" v-else>{{ item.consultInfo.createTime | exactTime}}创建 | 0条回复</span>
             </div>
           </li>
         </ul>
@@ -90,7 +90,7 @@
   import http from '../../../../lib/http'
   import { consultPrice } from '../../../../lib/filter'
   import {tokenCache} from '../../../../lib/cache'
-  import {Getdate,goodTime} from '../../../../lib/filter'
+  import {Getdate,goodTime,exactTime} from '../../../../lib/filter'
   import Toast from '../../../../base/toast.vue'
   export default{
     data(){
@@ -107,6 +107,7 @@
     filters:{
       Getdate,
       goodTime,
+      exactTime,
       consultPrice
     },
     created(){
@@ -277,19 +278,21 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: white;
+      background-color: #f5f5f5;
       overflow: auto;
       ul {
-        margin-top: 5px;
+        margin-bottom: 20px;
+        width:100%;
+        background-color: white;
         li {
           width: 690px;
           /*height: 166px;*/
           border-radius: 7px;
-          background-color: white;
           list-style-type: none;
           margin: 0 auto;
           padding: 0px 8px 8px 8px;
-          > div {
+          .titleSection{
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             p.picConsult {
@@ -335,6 +338,9 @@
           }
           div.ConsultRelate {
             margin-top: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
             span.name {
               font-size: 28px;
               color: #999999;

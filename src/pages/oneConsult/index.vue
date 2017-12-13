@@ -42,7 +42,7 @@
           </div>
           <div class="createDiv">
             <span class="mfc create"> <img :src="userPat.patAvatar" alt=""> <span>{{consultInfo.consulterName}} </span></span>
-            <span class="date">{{consultInfo.createTime | goodTime}} |
+            <span class="date">{{consultInfo.createTime | exactTime}} |
               <span v-if="consultInfo.replyCount">{{consultInfo.replyCount}}条回复</span>
               <span v-else>暂无回复</span>
           </span>
@@ -80,6 +80,26 @@
                 <div class="whatsay_text" v-else-if="item.consultMessage.replyContentType == 'PIC'"
                      @click="makeLarge(item.consultMessage.replyContent)">
                   <img :src="item.consultMessage.replyContent" alt="">
+                </div>
+                <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='CHECK'" class="whatsay_text">
+                  <div class="jcItem border-1px">
+                    <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                    <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+                    <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+                  </div>
+                  <div class="seeJcDetail">
+                    <p>查看详情</p>
+                  </div>
+                </div>
+                <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='INSPECT'" class="whatsay_text">
+                  <div class="jcItem border-1px">
+                    <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                    <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+                    <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+                  </div>
+                  <div class="seeJcDetail">
+                    <p>查看详情</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -173,7 +193,7 @@
   import http from '../../lib/http'
   import dialog from '../../base/dialog'
   import Toast from '../../base/toast'
-  import {Todate, goodTime} from '../../lib/filter'
+  import {Todate,exactTime,goodTime} from '../../lib/filter'
   import mask from '../../base/mask.vue'
 
   import {mainHeightMixin, jssdkMixin} from '../../lib/mixin'
@@ -231,6 +251,7 @@
     filters: {
       Todate,
       goodTime,
+      exactTime,
       consultPrice
     },
     components: {
@@ -266,7 +287,20 @@
     },
     watch: {},
     methods: {
-//<<<<<<< HEAD
+      goItemDetail(item){
+        console.log(item)
+        if(item.type == 'CHECK'){
+          this.$router.push({
+            path:"/displayJc",
+            query:{id:item.id}
+          })
+        }else{
+          this.$router.push({
+            path:"/displayJy",
+            query:{id:item.id}
+          })
+        }
+      },
       getInitChat() {
         http("smarthos.consult.message.list.page", {
           token: localStorage.getItem('token'),
@@ -276,6 +310,11 @@
           console.log(data, 333)
           if (data.code == 0) {
             this.aboutReplyMessage = data.list
+            this.aboutReplyMessage.forEach((item)=>{
+              if(item.consultMessage.replyContentType == 'INSPECT' || item.consultMessage.replyContentType == 'CHECK'){
+                item.consultMessage.newContent =  JSON.parse(item.consultMessage.replyContent)
+              }
+            })
           } else {
             weui.alert(data.msg)
           }
@@ -378,6 +417,10 @@
         }).then((data) => {
           if (data.code == 0) {
             this.getInitData()
+            this.$router.push({
+              path: "/evaluate/" + this.consultId,
+              query: {consultType: this.consultInfo.consultType}
+            })
           } else {
             weui.alert(data.msg)
           }
@@ -576,6 +619,7 @@
     bottom: 0;
     display: flex;
     flex-direction: column;
+    background-color: #f5f5f5;
     .largePicArea {
       position: fixed;
       top: 0px;
@@ -664,8 +708,6 @@
     background: white;
     box-sizing: border-box;
     padding: 20px;
-    border-radius: 20px;
-    border-bottom: 1px solid gainsboro;
     .patImg {
       .thumb {
         width: 160px;
@@ -810,6 +852,33 @@
               margin-right: 5px;
               width: 110px;
               height: 110px;
+            }
+            .jcItem{
+              margin-left: 0;
+              width:300px;
+              background-color:#ffffff;
+              border-top-right-radius: 20px;
+              border-top-left-radius: 20px;
+              p{
+                padding:15px 15px 5px 15px;
+                font-size: 30px;
+                color: #333333;
+              }
+            }
+            .seeJcDetail{
+              width:300px;
+              margin-left: 0;
+              background-color: #ffffff;
+              text-align: center;
+              height:60px;
+              border-bottom-right-radius: 20px;
+              border-bottom-left-radius: 20px;
+              p{
+                color: #3d9bff;
+                font-size: 32px;
+                height: 60px;
+                line-height: 60px;
+              }
             }
           }
           .articleSection {

@@ -1,6 +1,6 @@
 {
     "name": "fuyuan_hospital_pat",
-    "version": "1.0.37",
+    "version": "1.0.51",
     "description": "A Vue.js project",
     "author": "lmw6412036 <lmw6412036@sina.com>",
     "private": true,
@@ -20,6 +20,7 @@
         "d3-queue": "^3.0.7",
         "good-storage": "^1.0.1",
         "hprose": "^2.0.45",
+        "jsbarcode": "^3.8.0",
         "jsonp": "^0.2.1",
         "lmw-validate": "^1.0.11",
         "vue": "^2.4.2",

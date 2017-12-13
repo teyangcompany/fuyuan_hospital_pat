@@ -4,10 +4,9 @@
     <div class="checkList">
       <div>
         <div class="topMenu border-1px-top">
-          <p class="picked" @click="seeTime('一周内')">一周内</p>
-          <p @click="seeTime('三个月')">三个月</p>
-          <p @click="seeTime('半年内')">半年内</p>
-          <p @click="seeTime('一年内')">一年内</p>
+          <p class="picked" @click="seeTime('一个月内')">一个月内</p>
+          <p @click="seeTime('近三个月')">近三个月</p>
+          <p @click="seeTime('三至六个月')">三至六个月</p>
         </div>
         <div class="wrapContent" ref="wrapContent">
           <div>
@@ -160,7 +159,7 @@
         return y + (month < 10 ? "0" + month : month)+(d < 10 ? "0" + d : d);
       },
       seeTime(time){
-        if(time == "一周内"){
+        if(time == "一个月内"){
           this.showToast = true
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
@@ -186,7 +185,7 @@
               }
             })
           }
-        }else if(time == '三个月'){
+        }else if(time == '近三个月'){
           this.showToast = true
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
@@ -214,7 +213,7 @@
               }
             })
           }
-        }else if(time == '半年内'){
+        }else if(time == '三至六个月'){
           this.showToast = true
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{

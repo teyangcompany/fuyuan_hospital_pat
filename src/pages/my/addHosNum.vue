@@ -44,9 +44,9 @@
   import http from '../../lib/http'
   import api from '../../lib/bookApi'
   import Dialog from '../../base/dialog'
-  //  import bindSuccess from '../../../base/bindSuccess/bindSuccess'
-  //  import bindFail from '../../../base/bindFail/bindFail'
-  //  import VMask from '../../../base/mask'
+  import bindSuccess from '../../base/bindSuccess/bindSuccess'
+  import bindFail from '../../base/bindFail/bindFail'
+  import VMask from '../../base/mask'
   import Toast from '../../base/toast'
   import patientToggle from '../../base/patientToggle.vue'
   import createSuccess from '../../base/createSuccess/createSuccess.vue'
@@ -57,7 +57,7 @@
 //    mixins: [isLoginMixin],
     data(){
       return{
-        title:"添加病案号",
+        title:"添加医院账号",
         rightTitle:"",
         allPatient:"",
         index:0,
@@ -106,17 +106,20 @@
       }else{
         this.hosIndex = 0
       }
-      api("smarthos.yygh.ApiHospitalService.areaHosList",{
-      }).then((data)=>{
-        if(data.code == 0){
-          this.hosList = data.list
-        }else{
-          weui.alert(data.msg)
-        }
-        console.log(data)
-      })
+      this.getHosList()
     },
     methods:{
+      getHosList(){
+        api("smarthos.yygh.ApiHospitalService.areaHosList",{
+        }).then((data)=>{
+          if(data.code == 0){
+            this.hosList = data.list
+          }else{
+            weui.alert(data.msg)
+          }
+          console.log(data)
+        })
+      },
       cancelDialog(){
         this.showDialog = false
       },
@@ -143,25 +146,25 @@
       iSeeCreate(){
         this.createDisplay = false
       },
-      bindCard(){
-        this.showDialog = false
-        this.showToast = true
-        api("nethos.book.compat.bind",{
-          token:tokenCache.get(),
-          compatId:this.allPatient[this.index].compatId
-        }).then((data)=>{
-          this.alertStatus = data.msg
-          this.showToast = false
-          if(data.code == 0){
-            this.fail = false
-            this.successDisplay = true
-          }else{
-            this.successDisplay = false
-            this.fail = true
-          }
-          console.log(data)
-        })
-      },
+//      bindCard(){
+//        this.showDialog = false
+//        this.showToast = true
+//        api("nethos.book.compat.bind",{
+//          token:tokenCache.get(),
+//          compatId:this.allPatient[this.index].compatId
+//        }).then((data)=>{
+//          this.alertStatus = data.msg
+//          this.showToast = false
+//          if(data.code == 0){
+//            this.fail = false
+//            this.successDisplay = true
+//          }else{
+//            this.successDisplay = false
+//            this.fail = true
+//          }
+//          console.log(data)
+//        })
+//      },
       iSee(){
         this.successDisplay = false
         this.fail = false
@@ -180,16 +183,19 @@
           commpatId:this.id,
           bookHosId:this.hosList[0].yyid
         }).then((data)=>{
-          console.log(this.hosid)
-          console.log(this.compatInfo[this.index].id)
-          this.alertStatus = data.obj.compatRecord
+//          console.log(this.hosid)
+//          console.log(this.compatInfo[this.index].id)
+          console.log(data,5555)
           this.showToast = false
           if(data.code == 0){
             this.fail = false
             this.successDisplay = true
+            this.alertStatus = data.obj.compatRecord
+            this.record = data.obj.compatRecord
           }else{
             this.successDisplay = false
             this.fail = true
+            this.alertStatus = data.msg
           }
           console.log(data)
         })
@@ -223,9 +229,9 @@
             if(data.obj == 'needCreate'){
               this.showCreateDialog = true
             }else if(data.obj == 'needBind'){
-              this.showDialog = true
+              this.bindCard()
             }else{
-              this.finalBook()
+//              this.finalBook()
             }
           }else{
             weui.alert(data.msg)
@@ -237,9 +243,9 @@
       "VHeader":header,
       "VDialog":Dialog,
       patientToggle,
-//      bindSuccess,
-//      VMask,
-//      bindFail,
+      bindSuccess,
+      VMask,
+      bindFail,
       Toast
     }
   }
@@ -248,6 +254,10 @@
   @import '../../common/common.scss';
   .emptyHistory{
     position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
     width:100%;
     height:100%;
     display: flex;

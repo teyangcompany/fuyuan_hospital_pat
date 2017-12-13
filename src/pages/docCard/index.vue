@@ -12,14 +12,18 @@
                    分享
              </span>
            </span>
-
-          <!--<span class="headerImg">-->
-          <!--<img src="../../../static/img/guan.png" alt="" @click="attention">-->
-
-          <!--<span class="mfw">-->
-          <!--关注  &nbsp;&nbsp;-->
-          <!--</span>-->
-          <!--</span>-->
+          <span class="headerImg" v-if="!isFollow" @click="attention">
+            <img src="../../../static/img/guan.png" alt="">
+            <span class="mfw">
+            关注  &nbsp;&nbsp;
+            </span>
+          </span>
+          <span class="headerImg" v-else  @click="attention">
+            <img src="../../../static/img/爱心2.png" alt="">
+            <span class="mfw">
+            取消  &nbsp;&nbsp;
+            </span>
+          </span>
         </div>
         <div class="teamDetail">
           <ul>
@@ -47,25 +51,33 @@
         </div>
       </div>
       <div class="navbar">
-        <div class="mfb pub" :class="item.name" v-for="(item,index) in bar" @click="selItem(index,item)">
-          <span :class="{bar:index==num}">
+        <router-link :to="{name:item.router}" class="mfb pub menu"  v-for="(item,index) in bar" :key="item.id">
+          <span class="styleline">
                <span > {{item.value}}  </span><img :src="item.value1" alt="" class="hideImg">
           </span>
-        </div>
+        </router-link>
       </div>
       <router-view></router-view>
     </div>
     <div ref="footer" class="btn">
-      <div class="mfw registration" @click="book">
-        预约挂号
+      <div @click="book">
+        <img src="../../../static/img/预约挂号.png" alt="">
+        <p>预约挂号</p>
       </div>
-      <div class="mfw onLine" @click="showService">
-        在线问诊
+      <div v-for="item in docServeList" @click="showService">
+        <img :src="`./static/img/${item.serveName}.png`" alt="">
+        <p>{{ item.serveName }}</p>
       </div>
-      <div class="mfw patient">
-        <span @click="attention" v-if="!isFollow">关注医生</span>
-        <span @click="attention" v-else>取消关注</span>
-      </div>
+      <!--<div class="mfw registration">-->
+        <!--预约挂号-->
+      <!--</div>-->
+      <!--<div class="mfw onLine" >-->
+        <!--在线问诊-->
+      <!--</div>-->
+      <!--<div class="mfw patient">-->
+        <!--<span @click="attention" v-if="!isFollow">关注医生</span>-->
+        <!--<span @click="attention" v-else>取消关注</span>-->
+      <!--</div>-->
     </div>
     <div class="alertArea" v-if="showAndroid || showIos">
       <img src="../../../static/img/安卓引导.png" alt="" @click="hidePic" v-if="showAndroid">
@@ -121,6 +133,13 @@
         flag: false,
         docId: "",
         token: localStorage.getItem('token'),
+        serveList:[
+          {serveName:'电话问诊'},
+          {serveName:'视频问诊'},
+          {serveName:'图文问诊'},
+          {serveName:'团队问诊'},
+          {serveName:'预约挂号'},
+        ],
         doc: {},
         docServeList: "",
         isFollow: false,
@@ -201,12 +220,16 @@
         this.$router.go(-1)
       },
       book(){
-        let urlParams = getParamsFromUrl(location.href);
-        debug("ppp", urlParams)
-        if (urlParams.query && urlParams.query.comefrom == "share") {
-          this.showQrcode = true
-          return;
-        }
+//        let urlParams = getParamsFromUrl(location.href);
+//        debug("ppp", urlParams)
+//        if (urlParams.query && urlParams.query.comefrom == "share") {
+//          this.showQrcode = true
+//          return;
+//        }
+//        this.$router.push({
+//             path:"/home/server/book/famousPage",
+//             query:{bookDocId:this.doc.id,hosid:'058101',hosName:"义乌復元医院"}
+//        })
       },
       attention() {
         let urlParams = getParamsFromUrl(location.href);
@@ -223,7 +246,7 @@
 //                    console.log(res,88888);
             if (res.succ) {
               this.isFollow = true
-              weui.alert("关注成功")
+              weui.toast("关注成功")
             } else {
               weui.alert(res.msg)
             }
@@ -236,7 +259,7 @@
 //                    console.log(res,88888);
             if (res.succ) {
               this.isFollow = false
-              weui.alert("已取消关注")
+              weui.toast("已取消关注")
             } else {
               weui.alert(res.msg)
             }
@@ -248,6 +271,7 @@
         api('smarthos.user.doc.card.get', {
           docId: this.docId
         }).then(res => {
+          console.log(res,1111)
           this.showToast = false
           if (res.succ) {
             this.doc = res.obj.doc;
@@ -297,6 +321,7 @@
       },
       selItem(index, item) {
         this.num = index;
+        console.log(item)
         this.$router.push({
           name: item.router
         })
@@ -430,13 +455,25 @@
   }
 
   .navbar {
-    width: 100%;
+    width: 690px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    /*flex-direction: row;*/
+    /*justify-content: space-around;*/
     align-items: center;
-    padding: 10px 0;
+    /*padding: 10px 0;*/
+    margin:0 auto;
     margin-top: 15px;
+    .menu{
+      flex:1;
+      height:80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .router-link-exact-active{
+        border-bottom: 4px solid $mainColor;
+
+    }
       img{
         width:40px;
         margin-left: 5px;
@@ -460,11 +497,30 @@
 
   .btn {
     width: 100%;
-    height: 100px;
+    /*height: 100px;*/
     /*display: flex;*/
-    line-height: 100px;
-    text-align: center;
-    /*background-color: ;*/
+    /*line-height: 100px;*/
+    display: flex;
+    justify-content: space-around;
+    /*text-align: center;*/
+    background-color: $boederCol;
+    >div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        img{
+          width: 72px;
+          height:72px;
+          margin-bottom: 10px;
+        }
+        p{
+           font-size: 30px;
+          color: #333333;
+        }
+    }
   }
   /*.popService{*/
       /*position: fixed;*/

@@ -19,7 +19,7 @@
                  <div class="mainContent">
                    <p v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consultContent }}</p>
                    <div>
-                     <img :src="secondItem.attaFileUrl" alt="" v-for="secondItem in detailInfo.attaList" @click="makeLarge(secondItem.attaFileUrl)">
+                     <img src="../../../../../static/img/privacy.png" alt="" v-for="secondItem in detailInfo.attaList" @click="makeLarge(secondItem.attaFileUrl)">
                    </div>
                  </div>
                  <div class="ConsultRelate">
@@ -82,7 +82,7 @@
                         </span>
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='PIC'" class="replyCon">
-               <img class="replyImg" :src="item.consultMessage.replyContent" alt="" @click="makeSinLarge(item.consultMessage.replyContent)">
+               <img class="replyImg" src="../../../../../static/img/privacy.png" alt="" @click="makeSinLarge(item.consultMessage.replyContent)">
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon">
                <span> </span>

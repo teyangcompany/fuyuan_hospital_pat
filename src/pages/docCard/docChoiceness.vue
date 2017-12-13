@@ -46,9 +46,9 @@
                 <span class="mfb">精选文章</span>
                 <span class="more mfc" @click="goArticleList">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
             </div>
-            <div class="docImg voice" v-for="(item,index) in DocArticleList" @click="goArticleDe(item)">
-                <div class="essay">
-                   <p class="mfb">{{item.title}}</p>
+            <div class="docImg voice border-1px" v-for="(item,index) in DocArticleList">
+                <div class="essay" @click="goArticleDe(item)">
+                   <p class="mfb articleTitle">{{item.title}}</p>
                    <p class="mfc essayCon">{{item.content}}</p>
                 </div>
                 <!--<div class="docTitle">-->
@@ -57,7 +57,7 @@
                 <div class="mfc bottomLine">
                     <!--<span>{{item.docName}}</span>-->
                     <span class="lis smc" >
-                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
+                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan_off.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
                     {{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span class="lis smc audience" >阅读 {{item.readCount}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -68,10 +68,13 @@
                 <span class="mfb">精选咨询</span>
                 <span class="more mfc" @click="goConsultMore">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
             </div>
-            <div class="docImg voice" v-for="item in consultInfoList" @click="goConsultDetail(item.consultInfo.id)">
+            <div class="docImg voice border-1px" v-for="item in consultInfoList" @click="goConsultDetail(item.consultInfo.id)">
                 <div class="essay">
+                   <p class="consultTitle"> <span>{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
                    <p class="mfc essayCon">{{ item.consultInfo.consultContent }}</p>
-                   <img :src="subItem.attaFileUrl" alt="" v-for="(subItem,index) in item.attaList" @click="makeLarge(subItem.attaFileUrl,index)">
+                    <div class="wrapImg">
+                      <!--<img src="../../../static/img/privacy.png" alt="" v-for="(subItem,index) in item.attaList" @click="makeLarge(subItem.attaFileUrl,index)">-->
+                    </div>
                 </div>
                 <!--<div class="docTitle">-->
                     <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
@@ -162,6 +165,7 @@
                     console.log(res,6666);
                     if(res.succ){
                         this.getData()
+                        weui.alert("点赞成功")
                     }else {
                        weui.alert(res.msg)
                     }
@@ -293,14 +297,43 @@
     }
     .essay{
         /*margin: 20px 30px;*/
-      img{
-        width:160px;
-        height:160px;
-        margin-left: 20px;
+      .consultTitle{
+          span{
+            color: $mainColor;
+            border:1px solid $mainColor;
+            border-radius: 10px;
+            padding:2px 10px 2px 10px;
+          }
+      }
+      .articleTitle{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        word-break: break-all;
+      }
+      .wrapImg{
+        width:690px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        word-break: break-all;
+        img{
+          width:150px;
+          height:150px;
+          margin-left: 20px;
+        }
       }
     }
     .essayCon{
-        padding: 20px 0;
+        width:690px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        word-break: break-all;
+        margin-bottom: 20px;
     }
     .docTitle{
     .smallImg{
@@ -313,7 +346,7 @@
         margin-left: 260px;
     }
     .voice{
-        border-bottom: 1px solid gainsboro;
+        /*border-bottom: 1px solid gainsboro;*/
         padding-bottom: 20px;
       .bottomLine{
         width:690px;

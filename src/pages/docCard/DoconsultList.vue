@@ -4,20 +4,25 @@
     <!--<i slot="back"></i>-->
     <!--</top>-->
     <v-header :title="title" :rightTitle="rightTitle"></v-header>
-    <scroll class="articleList"  :height="scrollHeight" :data="easyList">
+    <scroll class="articleList"  :data="easyList">
       <div>
         <div class="easy border-1px" >
           <div class="border-1px center" v-for="item in easyList" @click="goDetail(item.consultInfo.id)">
-            <!--<p class="title"> 《{{item.title}}》 </p>-->
-            <p class="content">
+            <!--<p class="title"> {{item.title}} </p>-->
+            <div class="content">
               <span>{{item.consultInfo.consultContent}}</span>
-              <img :src="subItem.attaFileUrl" alt="" v-for="subItem in item.attaList">
-            </p>
+              <div class="wrapImg">
+                <img :src="subItem.attaFileUrl" alt="" v-for="subItem in item.attaList">
+              </div>
+            </div>
             <p class="footNote">
               <span class="zan"> {{item.consultInfo.replyCount}}条回复</span>
               <span class="zan">{{item.consultInfo.createTime | goodTime}}创建 &nbsp;|</span>
             </p>
           </div>
+        </div>
+        <div class="assistScroll">
+
         </div>
       </div>
     </scroll>
@@ -99,6 +104,9 @@
     bottom:0;
     left:0;
     right:0;
+    .assistScroll{
+      height:20px;
+    }
     .easy{
       /*height:400px;*/
       background: white;
@@ -132,12 +140,26 @@
           font-size: 28px;
           text-align: left;
           span{
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            word-break: break-all;
              display: block;
           }
-          img{
-            width:140px;
-            margin-top: 20px;
-            margin-left: 20px;
+          .wrapImg{
+            width:690px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+            word-break: break-all;
+            img{
+              width:150px;
+              height:150px;
+              margin-top: 20px;
+              margin-left: 20px;
+            }
           }
         }
         .footNote{

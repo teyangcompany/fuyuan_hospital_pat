@@ -196,7 +196,7 @@
       </transition>
       <scroll class="teamList" :data="followList" :pullup="pullup"  @scrollToEnd="scrollToEnd()" v-if="followList.length != 0">
         <div >
-          <ul class="border-1px" v-for="item in followList">
+          <ul v-for="item in followList">
             <div @click="goDocCard(item.id)">
               <li class="teamLi">
                 <div class="cancelImg" v-if="item.docAvatar">
@@ -207,26 +207,29 @@
                 </div>
                 <div class="cancelIntro">
                   <div>
-                    <p>
-                      <span>
-                        <span class="followName">{{ item.docName }}</span>
-                        <span class="myDoctor"></span>
-                      </span>
-                      <span class="commentValue" v-if="item.docScoure">{{ item.docScoure }}分</span>
-                      <span class="commentValue" v-else>暂无评价</span>
-                    </p>
+                    <div class="wrapTitle">
+                      <span class="followName">{{ item.docName }}</span>
+                      <span class="myDoctor" v-if="item.docScoure">{{ item.docScoure }}分</span>
+                      <span class="myDoctor" v-else>暂无评价</span>
+                      <!--<span class="commentValue" v-else>暂无评价</span>-->
+                    </div>
                     <p>{{ item.deptName }} {{ item.docTitle }}</p>
                     <p>{{ item.hosName }}</p>
+                    <p class="goodDes">擅长：{{ item.docSkill }}</p>
                   </div>
                 </div>
               </li>
               <li class="goodAt">
                 <section>
-                  <p>擅长：{{ item.docSkill }}</p>
+
                 </section>
                 <section v-if="item.userDocServes">
                   <div v-for="subItem in item.userDocServes">
-                    <p >{{ subItem.serveName }}{{ subItem.servePrice | consultPrice }}元</p>
+                    <img :src="`./static/img/${subItem.serveName}.png`" alt="">
+                    <div class="wrapPrice">
+                      <p>{{ subItem.serveName }}</p>
+                      <p>{{ subItem.servePrice | consultPrice }}元</p>
+                    </div>
                   </div>
                 </section>
               </li>
@@ -402,6 +405,7 @@
            http("smarthos.consult.platform.price",{
                token:localStorage.getItem("token"),
            }).then((data)=>{
+               console.log(data,333)
                if(data.code == 0){
                    this.roomPrice = data.obj
                }else{
@@ -628,85 +632,6 @@
   .showcover-enter, .showcover-leave-active {
     opacity: 0
   }
-  .toggle{
-    /*display: none;*/
-    .wrapMy{
-        position: absolute;
-        top:180px;
-        left:0;
-        right:0;
-        bottom:0;
-        overflow: auto;
-      ul {
-        /*margin-top: 10px;*/
-        /*padding-bottom: 5px;*/
-        li {
-          width: 690px;
-          /*height: 166px;*/
-          border-radius: 7px;
-          background-color:white;
-          list-style-type: none;
-          margin: 0 auto;
-          padding: 0px 8px 8px 8px;
-          >div {
-            display: flex;
-            justify-content: space-between;
-            span.picConsult {
-              font-size: 32px;
-            }
-            span.consultTim {
-              font-size: 32px;
-              color: gray;
-            }
-          }
-          div.mainContent {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            >div{
-              margin-top: 10px;
-              img{
-                width: 22.5%;
-                height: 120px;
-              }
-            }
-            p {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-              font-size: 28px;
-              color: gray;
-              padding-top: 5px;
-              /*background-color: #E64340;*/
-            }
-          }
-          div.ConsultRelate {
-            margin-top: 5px;
-            span.name {
-              font-size: 28px;
-              color: gray;
-              .circle {
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                margin-right: 3px;
-                background-color: red;
-                border-radius: 50%;
-              }
-            }
-            span.money {
-              font-size: 28px;
-              color: #999999;
-            }
-          }
-        }
-        li:nth-child(1){
-          padding-top: 5px;
-        }
-      }
-    }
-  }
   .back_cover{
     position: fixed;
     width:100%;
@@ -714,23 +639,6 @@
     z-index: 3;
     opacity: 0.3;
     background-color: rgb(0,0,0);
-  }
-  .topNav{
-    width:100%;
-    height: 90px;
-    display: flex;
-    position: relative;
-    z-index:100;
-    background-color: #ffffff;
-    p{
-      flex:1;
-      height: 90px;
-      display: flex;
-      font-size: 32px;
-      color: #333333;
-      align-items: center;
-      justify-content: center;
-    }
   }
   .searchArea{
     width:100%;
@@ -743,13 +651,13 @@
       margin:0 auto;
       display: flex;
       align-items: center;
+      border-radius: 7px;
       input{
         width: 600px;
         height: 60px;
         font-size: 32px;
         margin-top: 15px;
         margin-bottom: 15px;
-        border-radius: 7px;
         text-align: center;
       }
       button{
@@ -911,18 +819,20 @@
     ul{
       padding:0;
       margin:0;
+      margin-bottom: 20px;
       /*height: 180px;*/
       background-color: #ffffff;
       /*border-bottom: 1px solid rgb(205,205,205);*/
       .teamLi{
         list-style-type: none;
-        height: 180px;
+        /*height: 180px;*/
         display: flex;
         .cancelImg{
           width: 180px;
           display: flex;
           justify-content: center;
-          align-items: center;
+          margin-top: 30px;
+          /*align-items: center;*/
         }
         .cancelIntro{
           flex:2;
@@ -930,30 +840,35 @@
           align-items: center;
           /*line-height: 25px;*/
           >div{
-            .followName{
-              font-size: 32px;
-              color: #333333;
-            }
-            .myDoctor{
-              font-size: 28px;
-              color: #999999;
-              /*line-height: 18px;*/
-              text-align: center;
+            .wrapTitle{
+              width: 570px;
+              margin-top: 30px;
+              .followName{
+                font-size: 34px;
+                color: #333333;
+              }
+              .myDoctor{
+                font-size: 20px;
+                color: #FFB415;
+                border:1px solid #FFB415;
+                border-radius: 6px;
+                padding:3px 18px 3px 18px;
+                /*line-height: 18px;*/
+                text-align: center;
+                margin-left: 20px;
+              }
             }
             p{
-              margin:0;
-              padding:0;
-              color: #999999;
-              font-size: 28px;
+              color: #888888;
+              font-size: 26px;
+              margin-top: 20px;
             }
-            p:nth-child(1){
-              width: 570px;
-              display: flex;
-              justify-content: space-between;
-              .commentValue{
-                padding-right: 30px;
-                color: #000;
-              }
+            .goodDes{
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              word-break: break-all;
             }
           }
         }
@@ -964,13 +879,13 @@
         }
       }
       .goodAt{
-        width: 100%;
+        width: 660px;
         /*height: 0px;*/
-        margin:0 auto;
+        margin-left: 180px;
         background-color: #ffffff;
         section{
-          width: 690px;
-          margin:0 auto;
+          width: 570px;
+          /*margin-bottom: 40px;*/
         }
         section:nth-child(1){
           p{
@@ -979,34 +894,40 @@
             -webkit-line-clamp: 2;
             overflow: hidden;
             word-break: break-all;
-            font-size: 28px;
-            color: #666666;
+            font-size: 26px;
+            color: #888888;
           }
         }
         section:nth-child(2){
           margin-top: 15px;
-          /*display: flex;*/
-          width:690px;
-          word-wrap: break-word;
-          word-break: break-all;
+          display: flex;
+          width:570px;
+          /*word-wrap: break-word;*/
+          /*word-break: break-all;*/
           >div{
+            margin-top: 20px;
+            margin-bottom: 30px;
+             display: flex;
+            align-items: center;
+            justify-content: space-between;
             /*flex:1;*/
             /*border:1px solid #999999;*/
-            margin-left: 15px;
-            margin-bottom: 15px;
-            display: inline-block;
-            word-wrap: break-word;
-            word-break: break-all;
-            p{
-              /*width: 280px;*/
-              border:1px solid #999999;
-              color: #999999;
-              /*display: flex;*/
-              font-size: 30px;
-              padding:5px 8px 5px 8px;
-              /*border-radius: 7px;*/
-              /*align-items: center;*/
-              /*justify-content: center;*/
+            /*margin-left: 15px;*/
+            /*margin-bottom: 15px;*/
+            /*display: inline-block;*/
+            /*word-wrap: break-word;*/
+            /*word-break: break-all;*/
+            img{
+              width:42px;
+              height:42px;
+              margin-right: 16px;
+            }
+            .wrapPrice{
+              margin-right: 30px;
+              p{
+                color: #888888;
+                font-size: 24px;
+              }
             }
           }
         }

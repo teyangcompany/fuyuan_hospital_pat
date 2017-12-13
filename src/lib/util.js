@@ -8,6 +8,26 @@ export function makeRandom(length) {
   return ret;
 }
 
+/**
+ * 获得api_url
+ * @param callback
+ * @returns {string}
+ */
+export function getApiUrl() {
+  let hostname = url("hostname");
+  let api_url = "";
+  for (let key in API_URL) {
+    if (hostname == key) {
+      api_url = API_URL[key].api;
+    }
+  }
+  if (!api_url) {
+    api_url = API_URL[Object.keys(config.api_url)[0]].api;
+  }
+  return api_url;
+}
+
+
 export function getAppid() {
   let hostname = url("hostname");
   let api_url = "";

@@ -64,12 +64,13 @@
         this.$emit("activate",index);
       },
       addPat(){
-        if(this.path == '/home/server/book/confirmOrder'){
-          this.$router.push({
-            path:"/my/addUser",
-            query:{num:"1"}
-          });
-        }
+        this.$router.push({
+          path:"/my/addUser",
+          query:{num:"1"}
+        });
+//        if(this.path == '/home/server/book/confirmOrder'){
+//
+//        }
 
       },
       close(){

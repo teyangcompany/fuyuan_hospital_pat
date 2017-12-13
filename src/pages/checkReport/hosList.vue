@@ -63,6 +63,16 @@
                 path:"/waitCallNumber",
                 query:{pickedIndex:index}
               })
+          }else if(this.from == 'guard'){
+              this.$router.replace({
+                path:"/hosService",
+                query:{pickedIndex:index}
+              })
+          }else if(this.from == 'consultPay'){
+            this.$router.replace({
+              path:"/consultPay",
+              query:{pickedIndex:index}
+            })
           }else{
               this.$router.replace({
                    path:"/checkReport",
