@@ -25,13 +25,13 @@
                 :dialogLeftFoot="dialogLeftFoot"
                 :dialogRightFoot="dialogRightFoot"
                 v-if="showDialog"
-                @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+                @on-cancel="cancelDialog" @on-download="confirmBindCard"></v-dialog>
       <v-dialog :dialogTitle="dialogCreateTitle"
                 :dialogMain="dialogCreateMain"
                 :dialogLeftFoot="dialogCreateLeftFoot"
                 :dialogRightFoot="dialogCreateRightFoot"
                 v-if="showCreateDialog"
-                @on-cancel="cancelCreate" @on-download="createCard"></v-dialog>
+                @on-cancel="cancelCreate" @on-download="ConfirmCreateCard"></v-dialog>
       <patient-toggle :patList="allPatient" :showPat="showPat" :option="patOption" @activate="check" @toggleClosed="closePatient()"></patient-toggle>
       <div class="emptyHistory" v-if="fail">
         <bind-fail :title="failDes" :failKnow="failKnow" :failDetail="alertStatus"  @on-iSee="iSee()"></bind-fail>
@@ -143,13 +143,17 @@
       cancelDialog(){
         this.showDialog = false
       },
+      confirmBindCard(){
+        this.showDialog = false
+        this.bindCard()
+      },
       closePatient(){
         this.showPat = false
       },
       cancelCreate(){
         this.showCreateDialog = false
       },
-      createCard(){
+      ConfirmCreateCard(){
         this.showCreateDialog = false
         this.createCard()
       },
@@ -210,7 +214,7 @@
             if(data.obj == 'needCreate'){
               this.showCreateDialog = true
             }else if(data.obj == 'needBind'){
-              this.bindCard()
+              this.showDialog = true
             }else{
               this.goTest()
             }

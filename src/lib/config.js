@@ -20,7 +20,7 @@ export default {
     {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答", route: "my/consultService/consultDoc"}
   ],
   index_nav: [
-    {name: "guide", value: "智能导诊", path: "/login"},
+    {name: "guide", value: "智能导诊", path: ""},
     {name: "book", value: "预约挂号", path: "/home/server/book"},
     {name: "queuing", value: "排队叫号",path:"/waitCallNumber"},
     {name: "payment", value: "诊间支付",path:"/consultPay"},

@@ -25,9 +25,9 @@
                 <img src="../../../static/img/费用名称@2x.png" alt="" style="width:30px;margin-right:10px;display:block">
               </div>
               <div class="weui-cell__bd">
-                <p>费用名称</p>
+                <p>{{ name }}</p>
               </div>
-              <div class="weui-cell__ft">{{ displayInfo.costname }}</div>
+              <div class="weui-cell__ft" style="color: #F07818;">¥{{ displayInfo.totalcost }}</div>
             </div>
           </div>
           <div class="itemList">

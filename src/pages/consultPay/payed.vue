@@ -51,6 +51,7 @@
       },
       created(){
         this.previousInfo =  JSON.parse(localStorage.getItem('attachContent'))
+        console.log(this.previousInfo,666)
         this.getList()
       },
       components:{
@@ -61,7 +62,7 @@
               this.showToast = true
               http("smarthos.yygh.ApiHosPayService.completePayList",{
                 orgid:this.previousInfo.hosId,
-                idcard:"330726198611113320"
+                idcard:this.previousInfo.idCard
               }).then((data)=>{
                 this.showToast = false
                 this.isLoad = true
@@ -74,7 +75,7 @@
                         this.payList.forEach((item,index)=>{
                           console.log(item.invoicenumber)
                           JsBarcode(`#${item.forID}`, item.invoicenumber,{
-                            lineColor: "#F07818",
+//                            lineColor: "#F07818",
                             height:40,
                             width:2
                           });

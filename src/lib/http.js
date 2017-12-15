@@ -24,7 +24,7 @@ export default function (service, options) {
       "Content-Type": "application/json"
     },
   }
-  return axios.post(url, data, axiosConfig)
+  return axios.post(config.api_url, data, axiosConfig)
     .then((res) => {
       if (res.status == 200) {
         return res.data;

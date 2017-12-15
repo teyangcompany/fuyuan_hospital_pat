@@ -163,12 +163,12 @@
               })
           },
           pay(){
-//              if(!this.ddid){
-//                  weui.alert('请先选择支付项目')
-//              }else{
+              if(!this.ddid){
+                  weui.alert('请先选择支付项目')
+              }else{
                   http("smarthos.yygh.ApiHosPayService.pay",{
                     orgid:this.previousInfo.hosId,
-                    ddid:"10000037",
+                    ddid:this.ddid,
                     patName:this.previousInfo.patName,
                     paymode:"2",
                     patid:this.previousInfo.patId,
@@ -209,7 +209,7 @@
                       weui.alert(data.msg)
                     }
                   })
-//              }
+              }
           },
           getList(){
               this.showToast = true

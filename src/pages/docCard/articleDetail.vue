@@ -10,9 +10,10 @@
                     <h3>{{articleObj.title}}</h3>
                 </div>
                 <div class="date">
-                    <span class="mfc reader">{{articleObj.readCount}} 阅读</span>
-                    <span class="mfc reader">{{articleObj.likesCount}} 赞</span>
+                    <span class="mfc reader">{{articleObj.docName}} </span>
                     <span class="mfc reader">{{articleObj.createTime | Todate}}</span>
+                    <span class="mfc reader">阅读 {{articleObj.readCount}} </span>
+                    <!--<span class="mfc reader">{{articleObj.likesCount}} 赞</span>-->
                 </div>
                 <div class="contain mfb" v-html="articleObj.content">
 

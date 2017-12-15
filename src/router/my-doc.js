@@ -14,6 +14,9 @@ export default [
   {
     path:"/articleDetail",
     component:()=>import('../pages/my-doc/articleDetail.vue')
+  },
+  {
+    path:"/docCommentList",
+    component:()=>import('../pages/docCard/docCommentList.vue')
   }
-
 ]

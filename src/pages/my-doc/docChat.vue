@@ -36,7 +36,7 @@
 
                 </div>
                 <div class="whatsay_text" v-else-if="item.msgType == 'AUDIO'">
-                  <audio autoplay="autoplay" controls="controls" :src="item.msgContent" alt=""></audio>
+                  <audio  controls="controls" :src="item.msgContent" alt=""></audio>
                 </div>
                 <div class="whatsay_text" v-else-if="item.msgType == 'PIC'" @click="makeLarge(item.msgContent)">
                   <img :src="item.msgContent" alt="">
@@ -252,24 +252,32 @@
         if(item.type == 'CHECK'){
           this.$router.push({
             path:"/displayJc",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.aboutUserInfo.userPat.id}
           })
         }else{
           this.$router.push({
             path:"/displayJy",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.aboutUserInfo.userPat.id}
           })
         }
       },
       goArticle(id) {
-        if(id){
-          this.$router.push({
-            path: "/articleDetail",
-            query: {articleId: id}
-          })
-        }else{
-            weui.alert("该文章已被删除，无法查看！")
-        }
+        console.log(id)
+        http('smarthos.user.doc.article.get',{
+          token:localStorage.getItem('token'),
+          id:id
+        }).then((data)=>{
+            console.log(data)
+            if(data.code == 0){
+              this.$router.push({
+                path: '/articleDetail',
+                query:{articleId:id}
+              })
+            }else{
+              weui.alert("该文章已被删除，无法查看！")
+              return
+            }
+        })
       },
       getInitChat(){
         http("smarthos.follow.message.detail.list", {

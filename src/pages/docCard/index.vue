@@ -44,7 +44,7 @@
                             <span class="mfw">
                                 粉丝&nbsp;&nbsp; {{ doc.fansNum }}&nbsp;&nbsp;&nbsp;&nbsp; 服务&nbsp;&nbsp; {{ doc.serveNum
                               }}
-                                &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} >
+                               <span @click="goComment(doc)"> &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} ></span>
                             </span>
             </li>
           </ul>
@@ -53,9 +53,10 @@
       <div class="navbar">
         <router-link :to="{name:item.router}" class="mfb pub menu"  v-for="(item,index) in bar" :key="item.id">
           <span class="styleline">
-               <span > {{item.value}}  </span><img :src="item.value1" alt="" class="hideImg">
+               <span > {{item.value}}  </span>
           </span>
         </router-link>
+        <img src="../../../static/img/stop.png" alt="" class="hideImg" v-if="showHideImg">
       </div>
       <router-view></router-view>
     </div>
@@ -148,7 +149,8 @@
         showIos: false,
         docRestNotice: "",
         showToast:false,
-        maskFlag:false
+        maskFlag:false,
+        showHideImg:false,
       }
     },
     created() {
@@ -216,6 +218,13 @@
 //          path: "/share"
 //        })
 //      },
+      goComment(doc){
+          localStorage.setItem('docInfo',JSON.stringify(doc))
+          this.$router.push({
+               path:"/docCommentList",
+               query:{id:doc.id}
+          })
+      },
       goBack() {
         this.$router.go(-1)
       },
@@ -226,10 +235,14 @@
 //          this.showQrcode = true
 //          return;
 //        }
-//        this.$router.push({
-//             path:"/home/server/book/famousPage",
-//             query:{bookDocId:this.doc.id,hosid:'058101',hosName:"义乌復元医院"}
-//        })
+        if(!this.doc.bookDocId){
+            weui.alert("暂无可预约号源")
+        }else{
+          this.$router.push({
+            path:"/home/server/book/famousPage",
+            query:{bookDocId:this.doc.bookDocId,hosid:this.doc.bookHosId,hosName:"义乌復元医院"}
+          })
+        }
       },
       attention() {
         let urlParams = getParamsFromUrl(location.href);
@@ -300,19 +313,9 @@
           if (res.succ) {
             res.obj.docRestNotice ? this.docRestNotice = res.obj.docRestNotice : this.docRestNotice = null
             if(this.docRestNotice && this.docRestNotice.content){
-                this.bar[0].value1 = ''
-                this.bar[1].value1 = ''
-                this.bar[2].value1 = './static/img/stop.png'
-               document.getElementsByClassName('hideImg')[0].style.display='none'
-              document.getElementsByClassName('hideImg')[1].style.display='none'
-              document.getElementsByClassName('hideImg')[2].style.display='block'
+                this.showHideImg = true
             }else{
-              this.bar[0].value1 = ''
-              this.bar[1].value1 = ''
-              this.bar[2].value1 = ''
-              document.getElementsByClassName('hideImg')[0].style.display='none'
-              document.getElementsByClassName('hideImg')[1].style.display='none'
-              document.getElementsByClassName('hideImg')[2].style.display='none'
+                this.showHideImg = false
             }
           } else {
             weui.alert(res.msg)
@@ -456,6 +459,7 @@
 
   .navbar {
     width: 690px;
+    position: relative;
     display: flex;
     /*flex-direction: row;*/
     /*justify-content: space-around;*/
@@ -463,6 +467,12 @@
     /*padding: 10px 0;*/
     margin:0 auto;
     margin-top: 15px;
+    .hideImg{
+        position: absolute;
+        right: 30px;
+        width: 32px;
+        height: 32px;
+    }
     .menu{
       flex:1;
       height:80px;

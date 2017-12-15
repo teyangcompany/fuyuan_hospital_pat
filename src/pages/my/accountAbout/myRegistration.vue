@@ -229,7 +229,9 @@
             this.showToast = true
             api("smarthos.yygh.apiOrderService.cancel",{
               orderid:this.item.ddid,
-              pass:this.item.qhmm
+              pass:this.item.qhmm,
+              visitdate:this.item.czsj.substr(0,10),
+              orgid:this.item.yyid
             }).then((data)=>{
               this.showToast = false
                 if(data.code == 0){
@@ -242,7 +244,7 @@
           cancelBook(item){
               this.showDialog = true
               this.item = item
-//              console.log(item)
+              console.log(item,555)
           },
           scrollToEnd(){
             if (this.preventRepeatRequest) {

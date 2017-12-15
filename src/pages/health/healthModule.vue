@@ -11,12 +11,12 @@
     <div class="wrapList">
       <div v-for="item in healthList"  class="healthList border-1px"  :key="item.id" @click="goDetail(item)">
         <div>
-          <div>
+          <div class="imgWrap">
             <img :src="item.titleCoverImg" alt="">
           </div>
           <div>
             <p>{{ item.title }}</p>
-            <p>{{ item.content }}</p>
+            <p>{{ item.sourceName }}</p>
           </div>
         </div>
       </div>
@@ -194,6 +194,10 @@
               line-height: 46px;
               word-break: break-all;
             }
+          }
+          .imgWrap{
+            height:135px;
+            width:200px;
           }
         }
       }

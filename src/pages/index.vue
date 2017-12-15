@@ -9,12 +9,12 @@
                     </div>
                 </div>
                 <div class="swiper-pagination"></div>
-                <div class="search">
-                    <i></i><span>搜索医生</span>
-                </div>
-                <div class="message">
-                    <span>0</span>
-                </div>
+                <!--<div class="search">-->
+                    <!--<i></i><span>搜索医生</span>-->
+                <!--</div>-->
+                <!--<div class="message">-->
+                    <!--<span>0</span>-->
+                <!--</div>-->
             </div>
             <div class="fastnav">
                 <ul>
@@ -132,7 +132,11 @@
 //      },
             goPage(item) {
                 console.log(item)
-                item.path && this.$router.push(item.path);
+                if(item.name == 'guide'){
+                    weui.alert("该功能正在建设中")
+                }else{
+                  item.path && this.$router.push(item.path);
+                }
             },
             goDoctor(){
                 this.$router.push({

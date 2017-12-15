@@ -247,7 +247,10 @@
         <span>暂未搜索到相关结果</span>
       </div>
       <div class="directConsult border-1px-top" @click="goOffice">
-        <p> <span>直接咨询科室</span> <span>{{ roomPrice | consultPrice }}元</span></p>
+        <p v-if="roomPrice.length > 1"> <span>直接咨询科室(自愿付费)</span> </p>
+        <p v-if="roomPrice.length == 1 && roomPrice[0] != 0"> <span>直接咨询科室({{ roomPrice[0] | consultPrice}})</span></p>
+        <p v-if="roomPrice.length == 1 && roomPrice[0] == 0"> <span>直接咨询科室(免费)</span></p>
+        <p v-if="roomPrice.length == 0"> <span>直接咨询科室(免费)</span> </p>
       </div>
     </div>
     <toast v-if="showToast"></toast>
@@ -284,7 +287,7 @@
         orderByDocTitle:false,
         showToast:false,
         isComplete:false,
-        roomPrice:"",
+        roomPrice:[],
         pages:"",
         allRoom:[
           {
@@ -408,6 +411,7 @@
                console.log(data,333)
                if(data.code == 0){
                    this.roomPrice = data.obj
+                   console.log(data.obj.length)
                }else{
                    weui.alert(data.msg)
                }
@@ -961,7 +965,8 @@
       line-height: 90px;
       text-align: center;
       font-size: 32px;
-      background-color: #ffffff;
+      color: #ffffff;
+      background-color: $mainColor;
     }
   }
 </style>

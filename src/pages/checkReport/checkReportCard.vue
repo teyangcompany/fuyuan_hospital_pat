@@ -12,7 +12,7 @@
             <p>送检医生:{{ reportInfoArray[specialIndex].sjdocname }}</p>
           </div>
           <div class="name">
-            <p class="first">性别:{{reportInfoArray[specialIndex].compatGender == 'sex'?'女':'男'}}</p>
+            <p class="first">性别:{{reportInfoArray[specialIndex].sex == '2'?'女':'男'}}</p>
             <p>检验医生:</p>
           </div>
           <div class="name">

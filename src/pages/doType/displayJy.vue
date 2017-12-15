@@ -31,25 +31,26 @@
             <div class="weui-cell__bd">
               <p>姓名：</p>
             </div>
-            <div class="weui-cell__ft">{{ jcInfo.commpatName }}</div>
+            <div class="weui-cell__ft">{{ userInfo.commpatName }}</div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
               <p>手机号：</p>
             </div>
-            <div class="weui-cell__ft">{{ jcInfo.commpatPhone }}</div>
+            <div class="weui-cell__ft">{{ userInfo.commpatMobile }}</div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
               <p>身份证号：</p>
             </div>
-            <div class="weui-cell__ft">{{ jcInfo.commpatIdcard }}</div>
+            <div class="weui-cell__ft">{{ userInfo.commpatIdcard }}</div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
               <p>病案号：</p>
             </div>
-            <div class="weui-cell__ft"></div>
+            <div class="weui-cell__ft" v-if="userInfo && userInfo.userCommonPatRecords.length != 0">{{ userInfo.userCommonPatRecords[0].compatRecord}}</div>
+            <div class="weui-cell__ft" v-else>暂无病案号</div>
           </div>
         </div>
       </div>
@@ -119,6 +120,7 @@
         symptom:"",
         sampleType:"",
         jcInfo:"",
+        userInfo:"",
         name:"",
         showAllItem:true,
         itemLength:0,
@@ -130,7 +132,9 @@
     },
     created(){
       this.id = this.$route.query.id
+      this.patId = this.$route.query.patId
       this.getDetail()
+      this.getUserInfo()
     },
     components:{
       "VHeader":header
@@ -138,6 +142,18 @@
     methods:{
       toggleDisplay(){
         this.showAllItem  = !this.showAllItem
+      },
+      getUserInfo(){
+        http("smarthos.user.commpat.doc.get.default",{
+          patId:this.patId
+        }).then((data)=>{
+          if(data.code == 0){
+            this.userInfo = data.obj
+            console.log(data,3333)
+          }else{
+            weui.alert(data.msg)
+          }
+        })
       },
       getDetail(){
         http("smarthos.appiontment.inspection.sheet.detail",{

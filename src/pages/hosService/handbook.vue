@@ -39,8 +39,11 @@
                    <img src="../../../static/img/left@2x.png" alt="">
                    <p @click="getcompleteTime('negative')">前一天</p>
                  </div>
-                 <p class="middle" @click="selectStart" v-if="wholeStart">{{ wholeStart }}</p>
-                 <p class="middle" @click="selectStart" v-else>{{ now }}</p>
+                 <div class="middleTime">
+                   <p class="middle" @click="selectStart" v-if="wholeStart">{{ wholeStart }}</p>
+                   <p class="middle" @click="selectStart" v-else>{{ now }}</p>
+                   <img src="../../../static/img/date.png" alt="">
+                 </div>
                  <div class="next">
                    <p @click="getcompleteTime('add')">后一天</p>
                    <img src="../../../static/img/left@2x.png" alt="">
@@ -70,7 +73,7 @@
     </div>
     <div v-else class="emptyStatus">
         <img src="../../../static/img/形状-8.png" alt="">
-        <p>没有住院病人信息或者该病人已经出院了</p>
+        <p>暂无相关记录</p>
     </div>
     <toast v-if="showToast"></toast>
   </div>
@@ -106,7 +109,7 @@
            this.id = this.$route.query.id
            this.patid = this.$route.query.patId
            this.hosid = this.$route.query.hosId
-           this.now = formatDate(new Date())
+           this.now = this.previousDay()
            this.getInfo()
          var dd = new Date();
          console.log(dd.getDate(),434)
@@ -165,23 +168,39 @@
            getcompleteTime(value){
              if(value == 'add'){
                this.i = this.i + 1
+               if(this.wholeStart == this.now || this.wholeStart == ''){
+                 weui.alert("最多只能查询到当前日期")
+                 return
+               }
              }else{
                this.i = this.i - 1
+               if(this.wholeStart == this.patientInfo.begintime.substr(0,10)){
+                 weui.alert("最多只能查询到当前日期")
+                 return
+               }
              }
              var dd = new Date();
-             dd.setDate(dd.getDate()+this.i);//获取AddDayCount天后的日期
+             dd.setDate(dd.getDate()-1+this.i);//获取AddDayCount天后的日期
              var y = dd.getFullYear().toString();
              var month = dd.getMonth()+1;//获取当前月份的日期
              var d = dd.getDate();
 
              this.wholeStart = (y) + '-'+ (month < 10 ? "0" + month : month) + '-'+ (d < 10 ? "0" + d : d);
            },
+            previousDay(){
+             var dd = new Date();
+             dd.setDate(dd.getDate()-1);//获取AddDayCount天后的日期
+             var y = dd.getFullYear().toString();
+             var month = dd.getMonth()+1;//获取当前月份的日期
+             var d = dd.getDate();
+             return (y) + '-'+ (month < 10 ? "0" + month : month) + '-'+ (d < 10 ? "0" + d : d);
+           },
            selectStart(){
              let that =this
              let pastTime = this.patientInfo.begintime.substr(0,10)
              weui.datePicker({
                start: pastTime,
-               end: new Date(),
+               end: this.now,
                defaultValue: [new Date().getFullYear(), new Date().getMonth()+1 , new Date().getDate()],
                onChange: function(result){
                },
@@ -305,6 +324,15 @@
                width: 20px;
                height:32px;
              }
+         }
+         .middleTime{
+           display: flex;
+           align-items: center;
+           img{
+             width: 24px;
+             height:18px;
+             margin-left: 10px;
+           }
          }
          .previous{
             img{

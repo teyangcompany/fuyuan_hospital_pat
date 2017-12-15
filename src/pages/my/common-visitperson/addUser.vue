@@ -196,7 +196,7 @@
             this.$set(this.$data,'showNameError',true)
           }else if(this.$v.patIdcard.$invalid){
             this.$set(this.$data,'showCd',true)
-          }else if(this.captcha.length!=4){
+          }else if(this.captcha.length!=4 || this.cid == ''){
             weui.alert('请输入正确的验证码')
           }else {
             api("smarthos.user.commpat.add",{
