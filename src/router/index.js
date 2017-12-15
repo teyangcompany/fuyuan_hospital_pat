@@ -33,14 +33,14 @@ const router = new Router({
     ...Health,
     ...My,
     ...Home,
-  ...Account,
-  ...teamCard,
-  ...inquiry,
-  ...checkReport,
-  ...waitCallNumber,
-  ...hosService,
-  ...consultPay,
-  ...doType
+    ...Account,
+    ...teamCard,
+    ...inquiry,
+    ...checkReport,
+    ...waitCallNumber,
+    ...hosService,
+    ...consultPay,
+    ...doType
   ]
 })
 

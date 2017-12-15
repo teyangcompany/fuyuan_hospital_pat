@@ -260,6 +260,7 @@
   import BScroll from 'better-scroll'
   import Scroll from '../../../../base/scroll'
   import {tokenCache} from '../../../../lib/cache'
+  import {isBindMixin} from "../../../../lib/mixin"
   import http from '../../../../lib/http'
   import Toast from '../../../../base/toast.vue'
   import { consultPrice } from '../../../../lib/filter'
@@ -296,10 +297,17 @@
         ],
       }
     },
+    mixins: [isBindMixin],
     filters:{
       consultPrice
     },
     created(){
+      this._isBind().then((res) => {
+        if (res === false) {
+          this.$router.push("/login")
+        } else {
+        }
+      });
         this.showToast = true
          http("smarthos.user.doc.search",{
            pageSize:10,

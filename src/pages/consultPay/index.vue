@@ -57,12 +57,13 @@
   import createSuccess from '../../base/createSuccess/createSuccess.vue'
   import VMask from '../../base/mask'
   import Toast from '../../base/toast'
+  import {isBindMixin} from '../../lib/mixin'
   import patientToggle from '../../base/patientToggle.vue'
   //  import weui from 'weui.js'
   //  import {isLoginMixin} from "../../../lib/mixin"
   //  import {tokenCache} from '../../../lib/cache'
   export default{
-//    mixins: [isLoginMixin],
+    mixins: [isBindMixin],
     data(){
       return{
         title:"诊间支付",
@@ -102,7 +103,12 @@
       }
     },
     created(){
-
+      this._isBind().then((res) => {
+        if (res === false) {
+          fromCache.set(this.$route.fullPath);
+          this.$router.push("/login")
+        }
+      });
       if(this.$route.query.index){
         this.index = this.$route.query.index
       }else{

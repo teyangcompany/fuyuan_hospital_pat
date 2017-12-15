@@ -3,24 +3,20 @@
  */
 import axios from "axios";
 import {openidCache} from './cache'
+import {getApiUrl,getEnv} from "./util"
+import  config  from './config'
 
-let url = "http://test-zsyy-fep.hztywl.cn:6060/api";
+
+// let url = "http://test-zsyy-fep.hztywl.cn:6060/api";
 let spid = "1101";
 let random = "";
 for (let i = 0; i < 4; i++) {
   random += "1234567890".substr(Math.floor(Math.random() * 10), 1);
 }
 
+let base = config.base_params;
 
 
-let base = {
-  "channel": "0",
-  // "format": "JSON",
-  "oper": "127.0.0.1",
-  // "random": "1234",
-  // "sign": "test",
-  "spid": "1101"
-};
 
 
 export default function (service, options) {
@@ -32,6 +28,7 @@ export default function (service, options) {
   //   bus.$emit("loading", {status: 'start'});
   // }
   let obj = {...base,service,...options};
+  // let sign = hex_md5(hex_md5('aAr9MVS9j1') + JSON.stringify(obj));
   let openid = openidCache.get()
   if(openid){
     obj.token = 'OPENID_PAT_'+ openid
@@ -41,10 +38,11 @@ export default function (service, options) {
   let config = {
     headers: {
       "Content-Type": "application/json",
-      // "test":true
+      "sign": 'test',
     },
   }
-
+  let url = getEnv().api;
+  console.log(url)
   return axios.post(url, obj, config)
     .then((res) => {
       // bus.$emit("loading", {status: 'stop'});

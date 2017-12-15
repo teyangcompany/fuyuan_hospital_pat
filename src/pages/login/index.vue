@@ -103,7 +103,8 @@
           patMobile: '',
           current: '',
           cid: "",
-          captcha: ""
+          captcha: "",
+          accountType:""
         }
       },
       created() {
@@ -116,49 +117,39 @@
         error(msg) {
           console.log(msg);
         },
-        sendCode() {
-          api("smarthos.captcha.pat.wechat.bind", {
-            mobile: this.patMobile
-          }).then((res) => {
-            if (res.code == 0) {
-              this.cid = res.obj.cid;
-              this.captcha = res.obj.value ? res.obj.value : "";
-              if (res.obj.nextBiz == 'REGISTER') {
-                this.$router.push({
-                  path: "/register",
-                  query: {
-                    cid: res.obj.cid,
-                    captcha: res.obj.value,
-                    mobile: this.patMobile
-                  }
-                })
-              } else {
-                this.bind()
-              }
-            } else {
-              weui.alert(res.msg)
-            }
-          })
-        },
+//        sendCode() {
+//          api("smarthos.captcha.pat.wechat.bind", {
+//            mobile: this.patMobile
+//          }).then((res) => {
+//            if (res.code == 0) {
+//              this.cid = res.obj.cid;
+//              console.log(this.captcha,12)
+////              this.captcha = res.obj.value ? res.obj.value : "";
+//              if (res.obj.nextBiz == 'REGISTER') {
+//                this.$router.push({
+//                  path: "/register",
+//                  query: {
+//                    cid: res.obj.cid,
+//                    captcha: res.obj.value,
+//                    mobile: this.patMobile
+//                  }
+//                })
+//              } else {
+//                this.bind()
+//              }
+//            } else {
+//              weui.alert(res.msg)
+//            }
+//          })
+//        },
         onResult(res) {
           if (res.code == 0) {
             this.cid = res.obj.cid;
-            this.captcha = res.obj.value ? res.obj.value : "";
-            if (res.obj.nextBiz == 'REGISTER') {
-              this.$router.push({
-                path: "/register",
-                query: {
-                  cid: res.obj.cid,
-                  captcha: res.obj.value,
-                  mobile: this.patMobile
-                }
-              })
-            } else {
-
-            }
+            console.log(res.obj.value,12)
+//            this.captcha = res.obj.value ? res.obj.value : "";
+            this.accountType = res.obj.nextBiz
           } else {
             weui.alert(res.msg)
-//>>>>>>> 19a60ae2a7506d67891bb50b1660a1d4c127db1a
           }
         },
         onError(msg) {
@@ -191,6 +182,17 @@
            }else if(this.captcha == ''){
                weui.alert("验证码不能为空")
            }else{
+              if(this.accountType == 'REGISTER'){
+                this.$router.push({
+                  path: "/register",
+                  query: {
+                    cid: this.cid,
+                    captcha: this.captcha,
+                    mobile: this.patMobile
+                  }
+                })
+                return
+              }
              api("smarthos.user.pat.wechat.bind", {
                openid: openidCache.get(),
                captcha: this.captcha,
@@ -198,7 +200,7 @@
              }).then((res) => {
                console.log(res);
                if (res.code != 0) {
-                 weui.alert(res.msg);
+//                 weui.alert(res.msg);
                  this.$router.push({
                    name: 'home'
                  })
