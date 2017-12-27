@@ -13,4 +13,7 @@ export const API_URL = {
     appid: "wx7d475d39a1ea1aa9",
     plat: 'pro'
   },
-}
+};
+
+
+
