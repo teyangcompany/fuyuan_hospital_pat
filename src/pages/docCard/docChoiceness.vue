@@ -49,18 +49,19 @@
             <div class="docImg voice border-1px" v-for="(item,index) in DocArticleList">
                 <div class="essay" @click="goArticleDe(item)">
                    <p class="mfb articleTitle">{{item.title}}</p>
-                   <p class="mfc essayCon">{{item.content}}</p>
+                   <p class="mfc essayCon"></p>
                 </div>
                 <!--<div class="docTitle">-->
                     <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
                 <!--</div>-->
                 <div class="mfc bottomLine">
-                    <!--<span>{{item.docName}}</span>-->
+                    <span>{{item.docName}}</span>
                     <span class="lis smc" >
-                    <img class="good" :class="{big:num==index}" src="../../../static/img/zan_off.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;
-                    {{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <!--<img class="good" :class="{big:num==index}" src="../../../static/img/zan_off.png" @click="addZan(index,item.id)" alt="">&nbsp;&nbsp;-->
+                    <!--{{item.likesCount}}&nbsp;&nbsp;&nbsp;&nbsp;-->
+                       <span >阅读 {{item.readCount}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </span>
-                    <span class="lis smc audience" >阅读 {{item.readCount}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span class="lis smc audience" >{{ item.createTime | exactTime }}创建 |</span>
                 </div>
             </div>
             <div class="headerTro">
@@ -80,11 +81,12 @@
                     <!--<img class="smallImg" src="../../../static/img/test.jpg" alt="">-->
                 <!--</div>-->
                 <div class="mfc bottomLine">
-                    <span> </span>
+                    <img :src="item.userDocVo.docAvatar" alt="">
+                    <span>{{ item.userDocVo.docName }} 回答</span>
                     <span class="lis smc" >
-                    |&nbsp;&nbsp;{{ item.consultInfo.replyCount }}条回复&nbsp;&nbsp;
+                    |&nbsp;&nbsp;点赞{{ item.consultInfo.praiseCount}}&nbsp;&nbsp;
                     </span>
-                    <span class="lis smc audience" >{{ item.consultInfo.createTime | goodTime }}创建 &nbsp;</span>
+                    <span class="lis smc audience" >阅读{{ item.consultInfo.readCount }} &nbsp;</span>
                 </div>
             </div>
         </div>
@@ -95,14 +97,15 @@
     import top from '../../components/app-header.vue'
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
-    import { goodTime } from '../../lib/filter'
+    import { goodTime,exactTime } from '../../lib/filter'
     import api from '../../lib/http'
     export default{
             components: {
             top
         },
         filters:{
-          goodTime
+          goodTime,
+          exactTime
         },
         mixins: [mainHeightMixin],
         data(){
@@ -137,8 +140,8 @@
             },
             goConsultDetail(id){
               this.$router.push({
-                path:'/docConsultDetail',
-                query:{consultId:id}
+                path:'/bestPickDetail',
+                query:{id:id}
               })
             },
             getData(){
@@ -344,12 +347,18 @@
     }
     .audience{
         margin-left: 260px;
+        margin-right: 5px;
     }
     .voice{
         /*border-bottom: 1px solid gainsboro;*/
         padding-bottom: 20px;
       .bottomLine{
         width:690px;
+        img{
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+        }
       }
     }
 

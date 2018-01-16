@@ -66,7 +66,7 @@
 
                 http(this.service, {mobile: this.mobile}).then((res) => {
                     if (res.code == 0) {
-                        this.$emit("input", res.obj.cid);
+//                        this.$emit("input", res.obj.cid);
                     }
                     this.$emit("result", res);
                 })

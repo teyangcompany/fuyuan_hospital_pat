@@ -15,14 +15,21 @@
             <div class="weui-cells weui-cells_form">
               <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">头像</label></div>
-                <div class="weui-cell__bd" @click="uploadImg">
+                <div class="weui-cell__bd alignCenter" @click="uploadImg">
                   <img :src="patAvatar" alt="" v-if="patAvatar">
                   <img src="../../../static/img/pat.m.jpg" alt="" v-else-if="!patAvatar && personInfo.commpatGender == 'M'">
                   <img src="../../../static/img/pat.f.jpg" alt="" v-else>
+                  <img src="../../../static/img/icon/arrow-right-grow.png" alt="" class="arrow">
                   <input type="file" style="display: none" accept="image/*" name="upload" id="upload" ref="upload" @change="onFileChange">
                 </div>
               </div>
-              <div class="weui-cell">
+              <div class="weui-cell" v-if="personInfo && personInfo.userCommonPatRecords.length != 0" @click="alertInfo('姓名')">
+                <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                <div class="weui-cell__bd">
+                  <p>{{patName}}</p>
+                </div>
+              </div>
+              <div class="weui-cell" v-else>
                 <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                 <div class="weui-cell__bd">
                   <input class="weui-input" style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
@@ -31,17 +38,24 @@
               <div class="weui-cell" v-if="showGender">
                 <div class="weui-cell__hd"><label class="weui-label">性别</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly style="text-align: right" type="text"  v-model="changeGender"  placeholder=""/>
+                  <p>{{ changeGender }}</p>
                 </div>
               </div>
 
               <div class="weui-cell" v-if="showAge">
                 <div class="weui-cell__hd"><label class="weui-label">年龄</label></div>
                 <div class="weui-cell__bd">
-                  <input class="weui-input" readonly style="text-align: right" type="text"  v-model="changeAge"  placeholder=""/>
+                  <p>{{ changeAge }}</p>
                 </div>
               </div>
-              <div class="weui-cell" @click="goPhone">
+              <div class="weui-cell"  v-if="personInfo && personInfo.userCommonPatRecords.length != 0" @click="alertInfo('手机号')">
+                <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
+                <div class="weui-cell__bd">
+                  <p >{{ patMobile }}</p>
+                  <!--<input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>-->
+                </div>
+              </div>
+              <div class="weui-cell"  v-else @click="goPhone">
                 <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
                 <div class="weui-cell__bd">
                   <p >{{ patMobile }}</p>
@@ -57,8 +71,9 @@
               </div>
               <div class="weui-cell" v-else-if="areaName" @click="toggleArea">
                 <div class="weui-cell__hd"><label class="weui-label">所在地区</label></div>
-                <div class="weui-cell__bd">
+                <div class="weui-cell__bd alignCenter">
                   <p>{{ areaName }}</p>
+                  <img src="../../../static/img/icon/arrow-right-grow.png" alt="" class="arrow">
                   <!--<input class="weui-input" readonly  style="text-align: right" type="text"  v-model="areaName" placeholder=""/>-->
                 </div>
               </div>
@@ -85,13 +100,36 @@
               <!--</a>-->
               <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">身份证号</label></div>
-                <div class="weui-cell__bd">
+                <div class="weui-cell__bd"  v-if="personInfo && personInfo.userCommonPatRecords.length != 0" @click="alertInfo('身份证号')">
+                  <p>{{ patIdCard }}</p>
+                </div>
+                <div class="weui-cell__bd"  v-else>
                   <input class="weui-input" style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">与我的关系</label></div>
+                <div class="weui-cell__bd">
+                    <p>本人</p>
                 </div>
               </div>
             </div>
 
             <!--</div>-->
+          </div>
+          <div class="hosNumber">
+             <p>医院账号</p>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label" style="font-size: 16px">义乌復元医院</label></div>
+            <div class="weui-cell__bd">
+              <p v-if="personInfo && personInfo.userCommonPatRecords.length != 0" style="font-size: 16px">{{ personInfo.userCommonPatRecords[0].compatRecord }}</p>
+              <p v-else style="font-size: 16px">暂无病案号</p>
+            </div>
+          </div>
+          <div class="addNumber" @click="goAddNumber">
+               <p>添加医院账号</p>
+               <img src="../../../static/img/add.png" alt="">
           </div>
         </div>
       </div>
@@ -177,9 +215,24 @@
           this.showAgeSec = false
           this.showGenderSec = false
         }
+      },
+      result(){
+          if(this.result){
+              this.modifyArea()
+          }
       }
     },
     methods:{
+      alertInfo(value){
+          console.log(value)
+         if(value == '姓名'){
+              weui.alert("姓名不可修改")
+         }else if(value == '手机号'){
+           weui.alert("手机号不可修改")
+        }else{
+           weui.alert("身份证号不可修改")
+         }
+      },
       getPersonInfo(){
         http("smarthos.user.pat.get",{
           token:localStorage.getItem('token')
@@ -199,6 +252,12 @@
           }
         })
       },
+      goAddNumber(){
+        this.$router.push({
+          path:"/my/addHosNum",
+          query:{record:this.personInfo.userCommonPatRecords[0] && this.personInfo.userCommonPatRecords[0].compatRecord ? this.personInfo.userCommonPatRecords[0].compatRecord :'',id:this.personInfo.id }
+        })
+      },
       getHosList(){
         api("smarthos.yygh.ApiHospitalService.areaHosList",{
         }).then((data)=>{
@@ -213,8 +272,8 @@
           this.selectedName =  result.province.name + ','+ result.city.name + ','+  result.area.name
         }
 
-        console.log(this.show)
-        console.log(this.result)
+//        console.log(this.show,)
+        console.log(this.result,111)
       },
       check(index){
         console.log(index)
@@ -290,6 +349,21 @@
           }
         })
       },
+      modifyArea(){
+        http("smarthos.user.pat.infomation.modify",{
+          areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
+        }).then((data)=>{
+          if(data.code == 0){
+            this.getPersonInfo()
+            weui.toast("修改成功")
+            this.$router.push({
+              path:"/my"
+            })
+          }else{
+            weui.alert(data.msg)
+          }
+        })
+      },
       modify(){
            http("smarthos.user.pat.infomation.modify",{
              areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
@@ -298,7 +372,7 @@
            }).then((data)=>{
                if(data.code == 0){
                   this.getPersonInfo()
-                  weui.alert("修改成功")
+                  weui.toast("修改成功")
                   this.$router.push({
                       path:"/my"
                   })
@@ -307,7 +381,6 @@
                }
            })
       },
-
     },
     components:{
       Toast,
@@ -321,19 +394,6 @@
 </script>
 <style scoped lang="scss">
   @import '../../common/common.scss';
-  .weui-cell{
-    /*padding:0;*/
-    label{
-      font-size: 32px;
-    }
-    input{
-      font-size: 32px;
-    }
-    p{
-        font-size: 32px;
-        color: #666666;
-    }
-  }
   .weui-cells{
     margin:0;
     p{
@@ -341,6 +401,29 @@
     }
     .weui-cell__ft{
       font-size: 32px;
+    }
+    .weui-cell{
+      /*padding:0;*/
+      label{
+        font-size: 32px;
+      }
+      input{
+        font-size: 32px;
+      }
+      p{
+        font-size: 32px;
+        color: #666666;
+      }
+      .alignCenter{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        .arrow{
+          width: 18px;
+          height:30px;
+          margin-left: 10px;
+        }
+      }
     }
   }
   .upload{
@@ -399,6 +482,37 @@
               font-size: 32px;
               color: #666666;
           }
+      }
+      .hosNumber{
+        width:710px;
+        margin:0 auto;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        p{
+          height: 30px;
+          line-height: 30px;
+          font-size: 32px;
+          padding-left: 10px;
+          border-left: 8px solid #3d9bff;
+        }
+      }
+      .addNumber{
+        width:100%;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /*margin-top: 20px;*/
+        p{
+          font-size: 32px;
+          color: #333333;
+        }
+        img{
+          width: 30px;
+          height: 30px;
+          margin-left: 10px;
+        }
       }
     }
 

@@ -8,16 +8,18 @@
       <div>
         <div class="easy border-1px" >
           <div class="border-1px center" v-for="item in easyList" @click="goDetail(item.consultInfo.id)">
-            <!--<p class="title"> {{item.title}} </p>-->
+            <p class="title"> <span>{{ item.userDocVo.deptName }}</span> <span>{{item.consultInfo.illnessName}}</span></p>
             <div class="content">
               <span>{{item.consultInfo.consultContent}}</span>
               <div class="wrapImg">
-                <img :src="subItem.attaFileUrl" alt="" v-for="subItem in item.attaList">
+                <!--<img :src="subItem.attaFileUrl" alt="" v-for="subItem in item.attaList">-->
               </div>
             </div>
             <p class="footNote">
-              <span class="zan"> {{item.consultInfo.replyCount}}条回复</span>
-              <span class="zan">{{item.consultInfo.createTime | goodTime}}创建 &nbsp;|</span>
+              <img :src="item.userDocVo.docAvatar" alt="">
+              <span class="docName">{{ item.userDocVo.docName }} 回答</span>
+              <span class="zan">点赞 {{item.consultInfo.praiseCount}}</span>
+              <span class="zan">阅读{{item.consultInfo.readCount}} &nbsp;|</span>
             </p>
           </div>
         </div>
@@ -75,8 +77,8 @@
     methods:{
       goDetail(id){
         this.$router.push({
-          path:'/docConsultDetail',
-          query:{consultId:id}
+          path:'/bestPickDetail',
+          query:{id:id}
         })
       }
     },
@@ -118,15 +120,20 @@
           width:690px;
         }
         .title{
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 1;
-          overflow: hidden;
-          word-break: break-all;
+          /*display: -webkit-box;*/
+          /*-webkit-box-orient: vertical;*/
+          /*-webkit-line-clamp: 1;*/
+          /*overflow: hidden;*/
+          /*word-break: break-all;*/
           text-align: left;
           color: #333333;
           font-size: 32px;
           margin-top: 10px;
+          span{
+            border:1px solid #3d9bff;
+            border-radius: 10px;
+            padding:2px 5px 2px 5px;
+          }
         }
         .content{
           display: -webkit-box;
@@ -164,6 +171,17 @@
         }
         .footNote{
           height:50px;
+          img{
+            float: left;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+          }
+        }
+        .docName{
+          float: left;
+
         }
         .zan{
           display: inline-block;

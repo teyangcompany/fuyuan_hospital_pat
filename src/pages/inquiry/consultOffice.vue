@@ -34,6 +34,13 @@
                   </div>
                   <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
                 </div>
+                <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePrice" v-if="roomPrice.length > 1">
+                  <div class="weui-cell__bd">
+                    <p class="mfb" style="color: #FFB415">悬赏金额</p>
+                  </div>
+                  <div class="weui-cell__ft mfb" v-if="pickedPrice == ''">选择您愿意支付的金额</div>
+                  <div class="weui-cell__ft mfb" style="color: #FFB415" v-else>{{ pickedPrice | consultPrice }}</div>
+                </a>
             </div>
             <div class="weui-cells__title">病情资料</div>
             <div class="weui-cells weui-cells_form">
@@ -78,7 +85,7 @@
     import scroll from '../../base/scroll.vue'
     import uploadImg from '../../base/uploadImg.vue'
     import selPatient from '../../base/selPatient.vue'
-    import {Todate} from '../../lib/filter'
+    import {Todate,consultPrice} from '../../lib/filter'
     import api from '../../lib/http'
     export default{
         components: {
@@ -87,6 +94,9 @@
             upload,
             uploadImg,
             selPatient
+        },
+        filters:{
+          consultPrice
         },
         mixins: [mainHeightMixin],
         data(){
@@ -107,7 +117,8 @@
                 textLength:0,
                 text:"",
                 pickedIndex:0,
-                roomPrice:"",
+                roomPrice:[],
+                pickedPrice:"",
                 token:localStorage.getItem('token')
             }
         },
@@ -156,6 +167,27 @@
           deleteImg(index){
             this.picList.splice(index,1)
           },
+          togglePrice(){
+            var symbol = []
+            if(!symbol.length){
+                this.roomPrice.forEach((item)=>{
+                  var symbols_item = {}
+                  symbols_item.label = item
+                  symbols_item.value = item
+                  symbol.push(symbols_item)
+                })
+            }
+            console.log(symbol)
+            let that = this
+            weui.picker(symbol,{
+              defaultValue: ['1', 'A'],
+              onConfirm: function (result) {
+                  console.log(result)
+                that.pickedPrice = result[0].label
+              },
+              id: 'multiPickerBtn'
+            })
+          },
             submit(){
                 if(this.illDescribe == ''){
                      weui.alert("病情资料不可为空")
@@ -178,12 +210,19 @@
                   }).then(res=>{
                     console.log(res,3535535);
                     if(res.succ){
-                      if(this.roomPrice == 0){
+                      if(this.roomPrice.length == 0){
+                        this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
+                      }else if(this.roomPrice.length == 1 && this.roomPrice[0] != 0){
+                        this.$router.push({
+                          path: '/pay/' + res.obj.consultInfo.id,
+                          query: {roomPrice: this.roomPrice[0],source:'room'}
+                        })
+                      }else if(this.roomPrice.length == 1 && this.roomPrice[0] == 0){
                         this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
                       }else{
                          this.$router.push({
                            path: '/pay/' + res.obj.consultInfo.id,
-                           query: {roomPrice: this.roomPrice,source:'room'}
+                           query: {roomPrice: this.pickedPrice,source:'room'}
                          })
                       }
                     }else {

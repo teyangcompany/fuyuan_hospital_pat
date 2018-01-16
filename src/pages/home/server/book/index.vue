@@ -51,7 +51,7 @@
     created(){
       this._isBind().then((res) => {
         if (res === false) {
-          fromCache.set(this.$route.fullPath);
+//          fromCache.set(this.$route.fullPath);
           this.$router.push("/login")
         }
       });

@@ -89,9 +89,19 @@
             </div>
           </div>
           <div v-if="item.consultMessage.replyContentType=='TEXT'" class="replyCon">
-                        <span class="bf">
-                            {{item.consultMessage.replyContent}}
-                        </span>
+            <span class="bf">
+                {{item.consultMessage.replyContent}}
+            </span>
+          </div>
+          <div v-else-if="item.consultMessage.replyContentType=='ARTICLE'" class="replyCon"
+               @click="goArticleDetail(JSON.parse(item.consultMessage.replyContent).articleId)">
+            <div class="jcItem border-1px-white">
+              <p>标题：{{ JSON.parse(item.consultMessage.replyContent).title}}</p>
+              <p>作者：{{ JSON.parse(item.consultMessage.replyContent).author}}</p>
+            </div>
+            <div class="seeJcDetail">
+              <p>查看详情</p>
+            </div>
           </div>
           <div v-else-if="item.consultMessage.replyContentType=='PIC'" class="replyCon">
             <img class="replyImg" :src="item.consultMessage.replyContent" alt=""
@@ -201,7 +211,7 @@
     },
     data() {
       return {
-        title:"",
+        title:"科室咨询",
         rightTitle:"",
         rightOverTitle:"结束咨询",
         showToast:false,
@@ -253,17 +263,35 @@
     },
     watch: {},
     methods: {
+      goArticleDetail(id) {
+        console.log(id)
+        api('smarthos.user.doc.article.get',{
+          token:localStorage.getItem('token'),
+          id:id
+        }).then((data)=>{
+          console.log(data)
+          if(data.code == 0){
+            this.$router.push({
+              path: '/articleDetail',
+              query:{articleId:id}
+            })
+          }else{
+            weui.alert("该文章已被删除，无法查看！")
+            return
+          }
+        })
+      },
       goItemDetail(item){
         console.log(item)
         if(item.type == 'CHECK'){
           this.$router.push({
             path:"/displayJc",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.userPat.id}
           })
         }else{
           this.$router.push({
             path:"/displayJy",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.userPat.id}
           })
         }
       },

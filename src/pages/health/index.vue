@@ -35,7 +35,7 @@
                             </div>
                             <div class="info flex1">
                                 <h3>{{ i.title }}</h3>
-                                <div class="cate" v-html="i.content"></div>
+                                <div class="cate"></div>
                                 <p style="color: #666666">来源：{{ i.sourceName }}</p>
                             </div>
                         </li>
@@ -219,7 +219,7 @@
                     }
                     .cate {
                         /*margin-top: 20px;*/
-                        height:70px;
+                        height:20px;
                         /*display: -webkit-box;*/
                         /*-webkit-box-orient: vertical;*/
                         /*-webkit-line-clamp: 2;*/

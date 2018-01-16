@@ -17,8 +17,8 @@
               <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
-                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
-                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
+                    <p>{{ patName }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
@@ -27,14 +27,14 @@
                 <div class="weui-cell" v-if="showGender">
                   <div class="weui-cell__hd"><label class="weui-label">性别</label></div>
                   <div class="weui-cell__bd">
-                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="changeGender"  placeholder=""/>
+                    <p>{{ changeGender }}</p>
                   </div>
                 </div>
 
                 <div class="weui-cell" v-if="showAge">
                   <div class="weui-cell__hd"><label class="weui-label">年龄</label></div>
                   <div class="weui-cell__bd">
-                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="changeAge"  placeholder=""/>
+                    <p>{{ changeAge }}</p>
                   </div>
                 </div>
                 <!--<a class="weui-cell weui-cell_access" href="javascript:;" v-if="showGender">-->
@@ -63,8 +63,8 @@
                 <!--</a>-->
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
-                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
-                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
+                    <p>{{ patMobile }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else @click="goPhone">
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">身份证号</label></div>
-                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0">
-                    <input class="weui-input" readonly style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
+                  <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
+                    <p>{{ patIdCard }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
@@ -234,6 +234,9 @@
           path:"/changeSelfPhone"
         })
       },
+      preventModify(){
+          weui.alert("暂不可修改")
+      },
       getData(){
         http('smarthos.user.commpat.list',{
           token:this.token
@@ -284,7 +287,7 @@
           "commpatId":this.list[this.index].id,
           "commpatName":this.patName,
           "commpatIdcard":this.patIdCard,
-          relationship:this.list[this.index].relationship ? this.list[this.index].relationship : this.compatInfo[this.clickIndex],
+          relationship:this.compatInfo[this.clickIndex] ? this.compatInfo[this.clickIndex] : this.list[this.index].relationship  ,
           areaCode: this.result == null || this.result.area.code == '' ? this.list[this.index].areaCode :this.result.area.code,
         }).then(res=>{
           console.log(res)

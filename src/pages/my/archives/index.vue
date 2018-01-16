@@ -18,7 +18,8 @@
             <div>姓名：{{commpat.commpatName}}</div>
             <p v-if="commpat">
               {{commpat.commpatGender == 'M' ? '男' : '女'}} {{ JSON.stringify(new Date()).substr(1, 4) - commpat.commpatIdcard.substr(6, 4)
-              }}岁</p>
+              }}岁 {{ commpat.areaName }}
+            </p>
           </div>
         </div>
 

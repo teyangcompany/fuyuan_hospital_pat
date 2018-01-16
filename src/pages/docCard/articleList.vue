@@ -8,11 +8,12 @@
              <div>
                  <div class="easy border-1px" >
                     <div class="border-1px center" v-for="item in easyList" @click="goDetail(item.id)">
-                      <p class="title"> 《{{item.title}}》 </p>
-                      <p class="content">{{item.content}}</p>
+                      <p class="title"> {{item.title}} </p>
+                      <p class="content"></p>
                       <p class="footNote">
-                        <span class="zan"> {{item.likesCount}} 赞</span>
-                        <span class="zan">{{item.readCount}}  阅读</span>
+                        <span class="docName">{{ item.docName }}</span>
+                        <span class="zan">阅读{{item.readCount}}</span>
+                        <span class="zan">{{item.createTime | exactTime}}创建 |</span>
                       </p>
                     </div>
                  </div>
@@ -28,16 +29,20 @@
     import header from '../../base/header.vue'
     import scroll from  '../../base/scroll.vue'
     import Toast from '../../base/toast.vue'
+    import {exactTime} from '../../lib/filter'
     export default{
       data(){
           return{
               scrollHeight:"",
               doctorId:"",
               easyList:[],
-              title:"精选文章",
+              title:"医生文章",
             rightTitle:"",
             showToast:false
           }
+      },
+      filters:{
+        exactTime
       },
        created(){
            this.scrollHeight = window.innerHeight-45
@@ -122,12 +127,17 @@
           }
           .footNote{
             height:50px;
+            .docName{
+              float: left;
+              font-size: 30px;
+              color: #666666;
+            }
           }
           .zan{
             display: inline-block;
             float: right;
             color: #999999;
-            margin-right: 20px;
+            margin-right: 5px;
             font-size: 28px;
           }
         }

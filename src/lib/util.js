@@ -22,7 +22,7 @@ export function getApiUrl() {
     }
   }
   if (!api_url) {
-    api_url = API_URL[Object.keys(config.api_url)[0]].api;
+    api_url = API_URL[Object.keys(API_URL)[0]].api;
   }
   return api_url;
 }
@@ -40,7 +40,11 @@ export function getEnv() {
     }
   }
   if (!api_url) {
+// <<<<<<< HEAD
+//     api_url = API_URL[Object.keys(API_URL)[0]].appid;
+// =======
     api_url = API_URL[Object.keys(config.api_url)[0]];
+// >>>>>>> 7887e9a58213ade01e9c16bd7f25493aaa3cad07
   }
   return api_url;
 }

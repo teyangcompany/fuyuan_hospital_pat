@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "./config"
-import {getApiUrl} from "./util"
+import {getApiUrl,getEnv} from "./util"
 
 import {openidCache} from './cache'
 
@@ -12,7 +12,8 @@ export default function (service, options) {
     ...baseParams,
     ...options
   };
-  let url = getApiUrl();
+  let url = getEnv().api;
+  console.log(url)
   let openid = openidCache.get()
   if(openid){
     data.token = 'OPENID_PAT_'+ openid

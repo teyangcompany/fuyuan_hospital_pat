@@ -247,7 +247,10 @@
         <span>暂未搜索到相关结果</span>
       </div>
       <div class="directConsult border-1px-top" @click="goOffice">
-        <p> <span>直接咨询科室</span> <span>{{ roomPrice | consultPrice }}元</span></p>
+        <p v-if="roomPrice.length > 1"> <span>直接咨询科室(自愿付费)</span> </p>
+        <p v-if="roomPrice.length == 1 && roomPrice[0] != 0"> <span>直接咨询科室({{ roomPrice[0] | consultPrice}})</span></p>
+        <p v-if="roomPrice.length == 1 && roomPrice[0] == 0"> <span>直接咨询科室(免费)</span></p>
+        <p v-if="roomPrice.length == 0"> <span>直接咨询科室(免费)</span> </p>
       </div>
     </div>
     <toast v-if="showToast"></toast>
@@ -257,6 +260,7 @@
   import BScroll from 'better-scroll'
   import Scroll from '../../../../base/scroll'
   import {tokenCache} from '../../../../lib/cache'
+  import {isBindMixin} from "../../../../lib/mixin"
   import http from '../../../../lib/http'
   import Toast from '../../../../base/toast.vue'
   import { consultPrice } from '../../../../lib/filter'
@@ -284,7 +288,7 @@
         orderByDocTitle:false,
         showToast:false,
         isComplete:false,
-        roomPrice:"",
+        roomPrice:[],
         pages:"",
         allRoom:[
           {
@@ -293,10 +297,17 @@
         ],
       }
     },
+    mixins: [isBindMixin],
     filters:{
       consultPrice
     },
     created(){
+      this._isBind().then((res) => {
+        if (res === false) {
+          this.$router.push("/login")
+        } else {
+        }
+      });
         this.showToast = true
          http("smarthos.user.doc.search",{
            pageSize:10,
@@ -408,6 +419,7 @@
                console.log(data,333)
                if(data.code == 0){
                    this.roomPrice = data.obj
+                   console.log(data.obj.length)
                }else{
                    weui.alert(data.msg)
                }
@@ -961,7 +973,8 @@
       line-height: 90px;
       text-align: center;
       font-size: 32px;
-      background-color: #ffffff;
+      color: #ffffff;
+      background-color: $mainColor;
     }
   }
 </style>

@@ -164,7 +164,7 @@
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
               token:localStorage.getItem('token'),
-              idcard:this.patCard,
+              idcard:"620321196303280021",
               orgid:this.hosid,
               hosid:this.hosid,
               bdate:this.oneWeek,
@@ -190,7 +190,7 @@
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
               token:localStorage.getItem('token'),
-              idcard:this.patCard,
+              idcard:"620321196303280021",
               orgid:this.hosid,
               hosid:this.hosid,
               bdate:this.threeMonth,
@@ -218,11 +218,11 @@
           if(this.selectValue == '检查报告'){
             api("smarthos.yygh.apiQueryInspectionService.selectCheckList",{
               token:localStorage.getItem('token'),
-              idcard:this.patCard,
+              idcard:"620321196303280021",
               orgid:this.hosid,
               hosid:this.hosid,
               bdate:this.halfYear,
-              edate:this.nowTime,
+              edate:this.threeMonth,
             }).then((data)=>{
               this.showToast = false
               this.isChanged = true

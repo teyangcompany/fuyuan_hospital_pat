@@ -205,7 +205,7 @@
           idcard:this.patCard,
           userid:this.$refs.input[this.index].checked ?  null : this.userId ,
           remind:this.changedGhNum,
-          visitdate:this.$refs.input[this.index].checked ?  null : this.visitdate  ,
+          visitdate:this.visitdate  ,
           ghnumber:this.$refs.input[this.index].checked ?  null : this.ghnumber  ,
           hosid:this.hosId,
           docid:this.docid,

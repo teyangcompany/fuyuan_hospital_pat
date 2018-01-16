@@ -194,8 +194,8 @@
               token:localStorage.getItem('token'),
               hosid:this.hosid,
               orgid:this.hosid,
-              medcardno:"027888287",
-              idcard:"620321196303280021",
+//              medcardno:"027888287",
+              idcard:"332601195512242418",
               bdate:this.threeMonth,
               edate:this.nowTime,
             }).then((data)=>{
@@ -223,9 +223,9 @@
               token:localStorage.getItem('token'),
               hosid:this.hosid,
               orgid:this.hosid,
-              idcard:this.patCard,
+              idcard:"332601195512242418",
               bdate:this.halfYear,
-              edate:this.nowTime,
+              edate:this.threeMonth,
             }).then((data)=>{
               this.showToast = false
               if(data.code == 0){

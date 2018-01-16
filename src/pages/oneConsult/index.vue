@@ -66,7 +66,7 @@
                   {{ item.consultMessage.replyContent}}
                 </div>
                 <div class="whatsay_text articleSection" v-if="item.consultMessage.replyContentType == 'ARTICLE'"
-                     @click="goArticle(JSON.parse(item.msgContent).articleId)">
+                     @click="goArticle(JSON.parse(item.consultMessage.replyContent).articleId)">
                   <div>
                     <span>文章标题：{{ JSON.parse(item.consultMessage.replyContent).title }}</span><br/>
                     <span>作者： {{ JSON.parse(item.consultMessage.replyContent).author }}</span>
@@ -119,9 +119,9 @@
     </footer>
     <footer class="payButton" v-else-if="consultInfo.consultStatus == '1' || consultInfo.consultStatus == '2'">
       <div class="payWrap border-1px-top">
-        <!--<div class="consultAgain">-->
-        <!--<p>请等待医生回复，48小时未回复自动退款</p>-->
-        <!--</div>-->
+        <div class="consultAgain">
+        <p>请等待医生回复，48小时未回复自动退款</p>
+        </div>
       </div>
     </footer>
     <footer class="payButton" v-else-if="consultInfo.consultStatus == '6'">
@@ -292,12 +292,12 @@
         if(item.type == 'CHECK'){
           this.$router.push({
             path:"/displayJc",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.userPat.id}
           })
         }else{
           this.$router.push({
             path:"/displayJy",
-            query:{id:item.id}
+            query:{id:item.id,patId:this.userPat.id}
           })
         }
       },
@@ -401,10 +401,25 @@
         })
       },
       goArticle(id) {
-        this.$router.push({
-          path: "/articleDetail",
-          query: {articleId: id}
+        http('smarthos.user.doc.article.get',{
+          token:localStorage.getItem('token'),
+          id:id
+        }).then((data)=>{
+          console.log(data)
+          if(data.code == 0){
+            this.$router.push({
+              path: '/articleDetail',
+              query:{articleId:id}
+            })
+          }else{
+            weui.alert("该文章已被删除，无法查看！")
+            return
+          }
         })
+//        this.$router.push({
+//          path: "/articleDetail",
+//          query: {articleId: id}
+//        })
       },
       over() {
         this.showOverConsult = false

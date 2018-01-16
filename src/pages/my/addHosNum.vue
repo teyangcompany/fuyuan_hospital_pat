@@ -17,7 +17,7 @@
                 :dialogLeftFoot="dialogLeftFoot"
                 :dialogRightFoot="dialogRightFoot"
                 v-if="showDialog"
-                @on-cancel="cancelDialog" @on-download="bindCard"></v-dialog>
+                @on-cancel="cancelDialog" @on-download="confirmBindCard"></v-dialog>
       <v-dialog :dialogTitle="dialogCreateTitle"
                 :dialogMain="dialogCreateMain"
                 :dialogLeftFoot="dialogCreateLeftFoot"
@@ -63,7 +63,7 @@
         index:0,
         hosIndex:0,
         dialogTitle:"",
-        dialogMain:"该就诊人没有绑定病案号，无法执行该操作",
+        dialogMain:"该就诊人没有绑定病案号，确定绑定",
         dialogLeftFoot:"取消",
         dialogRightFoot:"去绑卡",
         showDialog:false,
@@ -122,6 +122,10 @@
       },
       cancelDialog(){
         this.showDialog = false
+      },
+      confirmBindCard(){
+        this.showDialog = false
+        this.bindCard()
       },
       closePatient(){
         this.showPat = false
@@ -210,6 +214,7 @@
           if(data.code == 0){
             this.createDisplay = true
             this.createNumber = data.obj.compatRecord
+            this.record = data.obj.compatRecord
           }else{
             weui.alert(data.msg)
           }
@@ -229,7 +234,7 @@
             if(data.obj == 'needCreate'){
               this.showCreateDialog = true
             }else if(data.obj == 'needBind'){
-              this.bindCard()
+              this.showDialog = true
             }else{
 //              this.finalBook()
             }
@@ -244,6 +249,7 @@
       "VDialog":Dialog,
       patientToggle,
       bindSuccess,
+      createSuccess,
       VMask,
       bindFail,
       Toast

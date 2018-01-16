@@ -1,23 +1,24 @@
 <template>
   <div>
     <v-header :title="title" :rightTitle="rightTitle"></v-header>
-    <div class="wrapArticle" ref="wrapArticle">
+    <scroll class="wrapArticle" ref="wrapArticle" :data="article">
       <div>
         <div class="articleTop">
           <p class="title">{{ article.title }}</p>
-          <p class="time"> {{ article.createTime | Getdate }}  阅读：{{ article.readCount }}次</p>
+          <p class="time">{{ article.docName }} {{ article.createTime | Getdate }}  阅读：{{ article.readCount }}次</p>
         </div>
         <div class="contentWrap">
           <div v-html="article.content">
           </div>
         </div>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 <script>
   import header from '../../base/header'
   import http from '../../lib/http'
+  import scroll from '../../base/scroll.vue'
   import {Getdate} from '../../lib/filter'
   export default{
     data(){
@@ -38,13 +39,18 @@
         token:localStorage.getItem('token'),
         id:this.articleId
       }).then((data)=>{
-        this.article = data.obj
+          if(data.code == 0){
+            this.article = data.obj
+          }else{
+              weui.alert(data.msg)
+          }
 //        this.time = formatDate(new Date(this.article.createTime))
         console.log(data)
       })
     },
     components:{
-      "VHeader":header
+      "VHeader":header,
+      scroll
     }
   }
 </script>
