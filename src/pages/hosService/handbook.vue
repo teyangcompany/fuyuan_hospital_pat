@@ -17,21 +17,27 @@
              <div class="secondLine">
                <div>
                     <p>总计费用</p>
-                    <p>¥{{ patientInfo.totalamount }}</p>
+                    <p v-if="patientInfo.totalamount != 0">¥{{ patientInfo.totalamount }}</p>
+                    <p v-else>--</p>
                </div>
                <div>
                  <p>共交预缴金</p>
-                 <p>¥{{ patientInfo.payamount }}</p>
+                 <p v-if="patientInfo.payamount != 0">¥{{ patientInfo.payamount }}</p>
+                 <p v-else>--</p>
                </div>
                <div>
                  <p>预缴金余额</p>
-                 <p></p>
+                 <p>--</p>
                </div>
              </div>
            </div>
            <div class="bottomLine" @click="payMoney">
              缴纳住院预缴金
            </div>
+         </div>
+         <div class="timeArea border-1px">
+           <p class="large" @click="selectStart" v-if="wholeStart">{{ wholeStart }}</p>
+           <p class="large" @click="selectStart" v-else>{{ now }}</p>
          </div>
          <div class="historyList">
              <div class="topSelect border-1px">
@@ -40,26 +46,24 @@
                    <p @click="getcompleteTime('negative')">前一天</p>
                  </div>
                  <div class="middleTime">
-                   <p class="middle" @click="selectStart" v-if="wholeStart">{{ wholeStart }}</p>
-                   <p class="middle" @click="selectStart" v-else>{{ now }}</p>
-                   <img src="../../../static/img/date.png" alt="">
+                   <p class="middle" v-if="totalMount">合计费用:¥{{ totalMount }}</p>
                  </div>
                  <div class="next">
                    <p @click="getcompleteTime('add')">后一天</p>
                    <img src="../../../static/img/left@2x.png" alt="">
                  </div>
              </div>
-             <div class="topSelect border-1px" v-if="totalMount">
-               <p>当日费用合计</p>
-               <p></p>
-               <p>¥{{ totalMount }}</p>
-             </div>
+             <!--<div class="topSelect border-1px" v-if="totalMount">-->
+               <!--<p>当日费用合计</p>-->
+               <!--<p></p>-->
+               <!--<p>¥{{ totalMount }}</p>-->
+             <!--</div>-->
          </div>
          <div class="itemList" v-for="item in historyList">
-           <div class="topSelect border-1px">
-             <p>项目名称</p>
-             <p></p>
-             <p>{{ item.chargeName }}</p>
+           <div class="topSelect border-1px-dashed">
+             <p>项目名称 {{ item.chargeName }}</p>
+             <!--<p></p>-->
+             <!--<p>{{ item.chargeName }}</p>-->
            </div>
            <div class="itemDetail border-1px" v-for="subItem in item.costList">
                <p>
@@ -145,8 +149,8 @@
                   http("smarthos.yygh.ApiPrepaidInpatientGoldService.queryDailyHospitalizationList",{
                     orgid:this.hosid,
                     hosid:this.hosid,
-                    patientidentitycardnumber:"330726198911131517",
-//                    patientidentitycardnumber:this.idCard,
+//                    patientidentitycardnumber:"330726198911131517",
+                    patientidentitycardnumber:this.idCard,
                     costdate:this.wholeStart ? this.wholeStart : this.now
                   }).then((data)=>{
                       this.showToast = false
@@ -223,7 +227,7 @@
                localStorage.setItem('patientInfo',JSON.stringify(this.patientInfo))
                this.$router.push({
                    path:"/payLog",
-                   query:{hosid:this.hosid}
+                   query:{hosid:this.hosid,idCard:this.idCard}
                })
           }
        }
@@ -251,13 +255,15 @@
          line-height: 90px;
          text-align: center;
          background-color: $mainColor;
+         border-bottom-left-radius: 15px;
+         border-bottom-right-radius: 15px;
        }
        .center{
          width: 650px;
          margin:0 auto;
          .topLine{
-           padding:30px 0 0 0 ;
-           border-bottom: 1px dashed #666666;
+           padding:30px 0 0px 0 ;
+           border-bottom: 1px dashed #F1F1F1;
            .title{
              font-size: 34px;
              color: #333333;
@@ -299,9 +305,21 @@
          }
        }
      }
+     .timeArea{
+       width:100%;
+       margin-top: 30px;
+       background-color: white;
+       height: 80px;
+       line-height: 80px;
+       padding-left: 30px;
+       .large{
+           font-size: 34px;
+           color: #333333;
+       }
+     }
      .historyList{
        width: 100%;
-       margin:30px auto 0;
+       margin:0px auto 0;
        background-color: white;
        .topSelect{
          width:690px;
@@ -346,8 +364,8 @@
              }
          }
          .middle{
-           font-size: 34px;
-           color: #3d9bff;
+           font-size: 30px;
+           color: #666666;
          }
        }
      }
@@ -362,7 +380,7 @@
          align-items: center;
          justify-content: space-between;
          p:nth-child(1){
-           font-size: 34px;
+           font-size: 30px;
            color: #333333;
          }
          p:nth-child(3){
@@ -373,7 +391,8 @@
        .itemDetail{
          width:690px;
          height: 90px;
-         margin: 0 auto 10px;
+         margin: 0 auto 0px;
+         padding-left: 40px;
          display: flex;
          align-items: center;
          justify-content: space-between;
@@ -382,12 +401,12 @@
            flex-direction: column;
            span{
               font-size: 30px;
-              color: #666666;
+              color: #999999;
            }
          }
          p:nth-child(2){
             font-size: 30px;
-            color: #666666;
+            color: #999999;
          }
        }
      }

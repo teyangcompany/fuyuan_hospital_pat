@@ -24,7 +24,7 @@
       </div>
       <div ref="right" class="subdept flex0">
         <ul>
-          <router-link tag="li" :to="{path:'/home/server/book/doc/expert',query:{depid:item.ksid,hosid:hosid,selected:item.ksmc,hosName:hosName}}" :key="index" v-for="(item,index) in subDept">{{item.ksmc}}</router-link>
+          <li :key="index" v-for="(item,index) in subDept" @click="goNext(item)">{{item.ksmc}}</li>
         </ul>
       </div>
     </div>
@@ -47,6 +47,7 @@
         hosName:"",
         parentList:"",
         subDept:"",
+        from:"",
         showToast:false
       };
     },
@@ -66,6 +67,7 @@
     created(){
         this.hosid = this.$route.query.hosid
         this.hosName = this.$route.query.hosName
+        this.from  = this.$route.query.from
         this.showToast = true
         api("smarthos.yygh.ApiDepartmentService.oneClassDepartmentList",{
           hosId:this.hosid
@@ -99,6 +101,19 @@
       selectRoom(index){
           this.currentDept = index
         this.subDept = this.parentList[index].yyghYyksList
+      },
+      goNext(item){
+         if(this.from == 'book'){
+             this.$router.push({
+                  path:'/home/server/book/doc/expert',
+                 query:{depid:item.ksid,hosid:this.hosid,selected:item.ksmc,hosName:this.hosName}
+             })
+         }else{
+           this.$router.push({
+             path:'/home/server/todayList',
+             query:{depid:item.ksid,hosid:this.hosid,selected:item.ksmc,hosName:this.hosName}
+           })
+         }
       },
       gohosList(){
         this.$router.back(-1)

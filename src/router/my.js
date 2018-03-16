@@ -32,6 +32,10 @@ export default [
     component:()=>import('../pages/my/changeSelfPhone.vue')
   },
   {
+    path:"/changeOtherPhone",
+    component:()=>import('../pages/my/changeOtherPhone.vue')
+  },
+  {
     path:"/my/addHosNum",
     component:()=>import('../pages/my/addHosNum.vue')
   },
@@ -103,6 +107,10 @@ export default [
     path: '/my/myRegistration',
     name: 'myRegistration',
     component: () => import("../pages/my/accountAbout/myRegistration.vue")
+  },
+  {
+    path:"/my/registerDetail",
+    component:()=>import('../pages/my/accountAbout/registerDetail.vue')
   },
   {
     path: '/my/edit',

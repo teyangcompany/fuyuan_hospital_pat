@@ -9,13 +9,13 @@
     <div class="wrapper" ref="main">
       <div class="list">
         <ul>
-          <router-link :key="item.id" :to="{path:'/home/server/book/dept',query:{hosid:item.yyid,hosName:item.yyjc}}" tag="li" class="flex" v-for="item in hosList">
+          <router-link :key="item.id" :to="{path:'/home/server/book/dept',query:{hosid:item.yyid,hosName:item.yyjc,from:'book'}}" tag="li" class="flex" v-for="item in hosList">
             <div class="ava flex0">
               <img :src="item.yytp" alt="" v-if="item.yytp" onerror="javascript:this.src='./static/img/fuyuanPic.jpg'">
               <img src="../../../../../static/img/fuyuanPic.jpg" alt="" v-else>
             </div>
             <div class="info flex1">
-              <h3>{{ item.yyjc }}</h3>
+              <h3>{{ item.yymc }}</h3>
               <div>{{ item.yydj }}</div>
               <p>{{ item.yydz }}</p>
             </div>
@@ -49,6 +49,7 @@
 
     },
     created(){
+
       this._isBind().then((res) => {
         if (res === false) {
 //          fromCache.set(this.$route.fullPath);

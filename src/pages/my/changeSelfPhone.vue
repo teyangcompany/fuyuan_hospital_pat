@@ -44,6 +44,10 @@
       },
       methods:{
            getOldCode(){
+             if(this.newPhone == ''){
+               weui.alert("手机号不能为空")
+               return
+             }
                http("smarthos.captcha.pat.mobile.modify",{
                    token:localStorage.getItem('token')
                }).then((data)=>{

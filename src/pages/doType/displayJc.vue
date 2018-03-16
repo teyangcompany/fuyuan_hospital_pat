@@ -14,7 +14,7 @@
         <div class="weui-cells weui-cells_radio" v-if="showAllItem">
           <label class="weui-cell weui-check__label"  v-for="item in itemArray">
             <div class="weui-cell__bd centerP">
-              <p>{{ inspectionItemName }}</p>
+              <p>{{ item }}</p>
             </div>
             <div class="weui-cell__ft">
               <i class="weui-icon-success"></i>

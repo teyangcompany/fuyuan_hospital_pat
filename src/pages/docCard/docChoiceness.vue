@@ -41,12 +41,15 @@
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
-            <div class="headerTro">
+            <div class="headerTro" v-if="DocArticleList.length == 0 && consultInfoList.length == 0">
+              <span class="mfb">暂无内容</span>
+            </div>
+            <div class="headerTro" v-if="DocArticleList.length != 0">
                 <span class="col"></span>
                 <span class="mfb">精选文章</span>
                 <span class="more mfc" @click="goArticleList">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
             </div>
-            <div class="docImg voice border-1px" v-for="(item,index) in DocArticleList">
+            <div class="docImg voice border-1px" v-for="(item,index) in DocArticleList" v-if="DocArticleList">
                 <div class="essay" @click="goArticleDe(item)">
                    <p class="mfb articleTitle">{{item.title}}</p>
                    <p class="mfc essayCon"></p>
@@ -64,12 +67,12 @@
                     <span class="lis smc audience" >{{ item.createTime | exactTime }}创建 |</span>
                 </div>
             </div>
-            <div class="headerTro">
+            <div class="headerTro" v-if="consultInfoList.length != 0">
                 <span class="col"></span>
                 <span class="mfb">精选咨询</span>
                 <span class="more mfc" @click="goConsultMore">查看更多 <img src="../../../static/img/icon/arrow-right-grow.png" alt=""> </span>
             </div>
-            <div class="docImg voice border-1px" v-for="item in consultInfoList" @click="goConsultDetail(item.consultInfo.id)">
+            <div class="docImg voice border-1px" v-for="item in consultInfoList" @click="goConsultDetail(item.consultInfo.id)" v-if="consultInfoList">
                 <div class="essay">
                    <p class="consultTitle"> <span>{{ item.userDocVo.deptName }}</span> <span>{{ item.consultInfo.illnessName }}</span></p>
                    <p class="mfc essayCon">{{ item.consultInfo.consultContent }}</p>
@@ -98,6 +101,7 @@
     import {mainHeightMixin} from '../../lib/mixin'
     import config from '../../lib/config'
     import { goodTime,exactTime } from '../../lib/filter'
+    import {debug, getShareLink, getParamsFromUrl} from "../../lib/util"
     import api from '../../lib/http'
     export default{
             components: {
@@ -139,6 +143,12 @@
               this.$router.push('/articleDetail/'+item.id)
             },
             goConsultDetail(id){
+              let urlParams = getParamsFromUrl(location.href);
+              debug("ppp", urlParams)
+              if (urlParams.query && urlParams.query.comefrom == "share") {
+                this.showQrcode = true
+                return;
+              }
               this.$router.push({
                 path:'/bestPickDetail',
                 query:{id:id}
@@ -152,6 +162,7 @@
                   console.log(res,222222);
                   if(res.succ){
                       this.DocArticleList = res.obj.userDocArticleList
+                      console.log(this.DocArticleList,666)
                       res.obj.consultInfoList ? this.consultInfoList = res.obj.consultInfoList : this.consultInfoList = null
                   }else {
                      weui.alert(res.msg)
@@ -301,6 +312,7 @@
     .essay{
         /*margin: 20px 30px;*/
       .consultTitle{
+         margin-bottom: 20px;
           span{
             color: $mainColor;
             border:1px solid $mainColor;

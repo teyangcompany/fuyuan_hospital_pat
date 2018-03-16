@@ -142,7 +142,7 @@
                   this.returnInfo = JSON.parse(data.keyword)
                   console.log(this.returnInfo)
                   let conf = {
-                    "appId": this.returnInfo.appid,     //公众号名称，由商户传入
+                    "appId": this.returnInfo.sub_appid,     //公众号名称，由商户传入
                     "timeStamp": this.returnInfo.time_stamp,         //时间戳，自1970年以来的秒数
                     "nonceStr": this.returnInfo.nonce_str, //随机串
                     "package": `prepay_id=${this.returnInfo.prepay_id}`,

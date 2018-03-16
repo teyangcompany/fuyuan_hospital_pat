@@ -40,6 +40,7 @@
       created(){
           this.patientInfo = JSON.parse(localStorage.getItem('patientInfo'))
           this.hosid = this.$route.query.hosid
+          this.idCard = this.$route.query.idCard
           this.getLog()
       },
       components:{
@@ -50,7 +51,8 @@
               http("smarthos.yygh.ApiPrepaidInpatientGoldService.queryRechargeRecord",{
                 orgid:this.hosid,
                 hosid:this.hosid,
-                patientidentitycardnumber:"330726198911131517"
+                patientidentitycardnumber:this.idCard,
+//                patientidentitycardnumber:"330726198911131517"
               }).then((data)=>{
                   console.log(data)
                 if(data.code == 0){

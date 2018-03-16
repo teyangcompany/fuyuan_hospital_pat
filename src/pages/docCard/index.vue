@@ -21,7 +21,7 @@
           <span class="headerImg" v-else  @click="attention">
             <img src="../../../static/img/爱心2.png" alt="">
             <span class="mfw">
-            取消  &nbsp;&nbsp;
+            已关注  &nbsp;&nbsp;
             </span>
           </span>
         </div>
@@ -44,7 +44,8 @@
                             <span class="mfw">
                                 粉丝&nbsp;&nbsp; {{ doc.fansNum }}&nbsp;&nbsp;&nbsp;&nbsp; 服务&nbsp;&nbsp; {{ doc.serveNum
                               }}
-                               <span @click="goComment(doc)"> &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} ></span>
+                               <span @click="goComment(doc)" v-if="doc.docScoure"> &nbsp;&nbsp;&nbsp;&nbsp;评分&nbsp;&nbsp;{{ doc.docScoure }} ></span>
+                               <span @click="goComment(doc)" v-else> &nbsp;&nbsp;&nbsp;&nbsp;暂无评分&nbsp;&nbsp; ></span>
                             </span>
             </li>
           </ul>
@@ -229,12 +230,12 @@
         this.$router.go(-1)
       },
       book(){
-//        let urlParams = getParamsFromUrl(location.href);
-//        debug("ppp", urlParams)
-//        if (urlParams.query && urlParams.query.comefrom == "share") {
-//          this.showQrcode = true
-//          return;
-//        }
+        let urlParams = getParamsFromUrl(location.href);
+        debug("ppp", urlParams)
+        if (urlParams.query && urlParams.query.comefrom == "share") {
+          this.showQrcode = true
+          return;
+        }
         if(!this.doc.bookDocId){
             weui.alert("暂无可预约号源")
         }else{
@@ -247,6 +248,7 @@
       attention() {
         let urlParams = getParamsFromUrl(location.href);
         debug("ppp", urlParams)
+        console.log(urlParams.query.openid,555)
         if (urlParams.query && urlParams.query.comefrom == "share") {
           this.showQrcode = true
           return;
@@ -340,7 +342,6 @@
           this.showQrcode = true
           return;
         }
-
 
         if (this.docServeList.length != 0) {
          this.$refs.ser.flag = true

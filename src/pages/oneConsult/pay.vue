@@ -7,7 +7,7 @@
       <div class="paySum border-1px">
         <span>订单金额</span>
         <span v-if="fee">{{ fee | consultPrice }}</span>
-        <span v-else>{{ roomPrice | consultPrice }}</span>
+        <span v-else>¥{{ roomPrice }}元</span>
       </div>
       <p class="border-1px payMethod">支付方式:</p>
       <div class="payBy border-1px">
@@ -75,7 +75,7 @@
           if (res.code == 0 && res.obj) {
             this.returnInfo = JSON.parse(res.obj)
             let conf = {
-              "appId": this.returnInfo.appid,     //公众号名称，由商户传入
+              "appId": this.returnInfo.sub_appid,     //公众号名称，由商户传入
               "timeStamp": this.returnInfo.time_stamp,         //时间戳，自1970年以来的秒数
               "nonceStr": this.returnInfo.nonce_str, //随机串
               "package": `prepay_id=${this.returnInfo.prepay_id}`,
@@ -217,7 +217,7 @@
         border-radius: 7px;
         color: white;
         font-size:32px;
-        background-color: #3CC51F;
+        background-color: $mainColor;
       }
     }
   }

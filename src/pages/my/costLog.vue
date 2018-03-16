@@ -19,7 +19,8 @@
                 <div>
                   <span class="chatDoctor" v-if="item.docName && item.payContent != '住院预交金充值'">{{item.docName}}</span>
                   <span class="chatDoctor" v-else-if="!(item.docName) && item.payContent == '住院预交金充值'">住院预缴金充值</span>
-                  <span class="chatDoctor" v-else-if="!(item.docName) && item.payContent != '住院预交金充值'">科室咨询</span>
+                  <span class="chatDoctor" v-else-if="!(item.docName) && item.payContent != '住院预交金充值'"></span>
+                  <span class="chatDoctor" v-else>科室咨询</span>
                   <p class="oneLine">{{ item.createTime | Getdate }}</p>
                   <p style="color: #333333;">{{ item.paySubject }}</p>
                 </div>

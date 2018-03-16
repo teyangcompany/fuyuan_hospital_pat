@@ -51,7 +51,7 @@
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 4"
                     style="color: #2772FF;">待评价</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == 6"
-                    style="color: #999999;">已结束</span>
+                    style="color: #999999;">已评价</span>
               <span class="consultTim" v-else-if="item.consultInfo.consultStatus == -1"
                     style="color: #999999;">已取消</span>
             </div>

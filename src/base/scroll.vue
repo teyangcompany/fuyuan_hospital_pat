@@ -11,7 +11,7 @@
         props: {
           scrollbar:{
              type:Boolean,
-            default:true
+            default:false
           },
             /**
              * scroll区域高度

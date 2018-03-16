@@ -49,7 +49,7 @@
         您的个人信息一经确认将无法修改，提交前请仔细核对，如提交错误，请联系客服，谢谢！
       </div>
       <div class="btn" @click="register">
-        <a style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">确定</a>
+        <a style="background: #3d9bff" href="javascript:;" class="weui-btn weui-btn_primary">确定</a>
       </div>
     </div>
 </template>
@@ -141,6 +141,6 @@
       color: red;
       box-sizing: border-box;
       padding-left: 15px;
-      font-size: 12px;
+      font-size: 24px;
     }
 </style>

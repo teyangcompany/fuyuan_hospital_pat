@@ -22,6 +22,8 @@ export default (cb) => {
       let redirect_uri = encodeURIComponent(href);
       // let APPID = config.appid;
       let {appid: APPID, plat} = getEnv();
+      console.log(getEnv(),111)
+      console.log(APPID,222)
       //alert(`http://test-zheer-wx.hztywl.cn/dev_oauth2/?appid=${APPID}&callback=${redirect_uri}`);
       location.replace(`http://test-zheer-wx.hztywl.cn/oauth2/?plat=${plat}&appid=${APPID}&callback=${redirect_uri}`);
     }

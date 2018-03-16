@@ -5,8 +5,23 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>復元医院患者版</title>
+    <title>復元医院</title>
     <script>
+      var UA = window.navigator.userAgent.toLocaleLowerCase();
+      if (/iphone/.test(UA)) {
+        window.device = "iphone";
+      }
+      if (/android/.test(UA)) {
+        window.device = "android";
+      }
+
+      if (/micromessenger/.test(UA)) {
+        window.brower = "weixin";
+      } else {
+        window.brower = "";
+      }
+
+
       /*程序版本号*/
       window.version = document.querySelector("meta[name='version']").content;
       /*程序开始时间*/
@@ -22,6 +37,7 @@
 
     <script src="static/lib/swiper/swiper-3.4.2.min.js"></script>
     <link rel="stylesheet" href="static/css/weui.css"/>
+    <link rel="stylesheet" href="static/css/animate.css"/>
     <link rel="stylesheet" href="static/lib/swiper/swiper-3.4.2.min.css">
     <script src="static/js/md5-min.js"></script>
     <script src="static/js/sha512.min.js"></script>

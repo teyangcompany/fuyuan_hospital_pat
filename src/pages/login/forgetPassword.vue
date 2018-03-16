@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="btn">
-        <a @click="goNext" style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">下一步</a>
+        <a @click="goNext" style="background: #3d9bff" href="javascript:;" class="weui-btn weui-btn_primary">下一步</a>
       </div>
     </div>
 </template>
@@ -152,6 +152,6 @@
       color: red;
       box-sizing: border-box;
       padding-left: 15px;
-      font-size: 12px;
+      font-size: 24px;
     }
 </style>

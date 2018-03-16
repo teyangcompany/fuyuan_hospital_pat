@@ -10,7 +10,7 @@
               <p v-else-if="item.executionstatus == '1'">（已取药）</p>
               <p v-else-if="item.executionstatus == '2'">（已执行）</p>
           </div>
-          <div class="itemArea">
+          <div class="itemArea" @click="goPayedDetail">
             <div class="leftName">
               <p>收费项目：</p>
               <p>费用：</p>
@@ -20,7 +20,7 @@
               <p>备注：</p>
             </div>
             <div class="rightDetail">
-              <p>西药费用Lorem ipsum dolor sit amet</p>
+              <p>{{ item.costname }}</p>
               <p class="money">¥{{ item.totalcost }}</p>
               <p>{{ item.invoicenumber }}</p>
               <p>{{ item.cashierclerk }}</p>
@@ -73,8 +73,8 @@
                       })
                       this.$nextTick(()=>{
                         this.payList.forEach((item,index)=>{
-                          console.log(item.invoicenumber)
-                          JsBarcode(`#${item.forID}`, item.invoicenumber,{
+                          console.log(item.jzkh)
+                          JsBarcode(`#${item.forID}`, item.jzkh,{
 //                            lineColor: "#F07818",
                             height:40,
                             width:2
@@ -86,6 +86,11 @@
                       weui.alert(data.msg)
                   }
               })
+          },
+          goPayedDetail(){
+//               this.$router.push({
+//                   path:"/payedDetail"
+//               })
           },
           makeBig(forId){
             var img =  document.getElementById(forId).src

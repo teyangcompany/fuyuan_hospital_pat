@@ -14,6 +14,9 @@ import waitCallNumber from './waitCallNumber'
 import hosService from './hosService'
 import consultPay from './consultPay'
 import doType from './doType'
+import download from './download'
+import help from './help'
+import smart from './smart'
 
 Vue.use(Router)
 
@@ -29,6 +32,10 @@ const router = new Router({
       name: "home",
       component: () => import("../pages/index")
     },
+    {
+      path:"/remove",
+      component:()=>import('../pages/removeStorage')
+    },
     ...MyDoc,
     ...Health,
     ...My,
@@ -40,7 +47,10 @@ const router = new Router({
     ...waitCallNumber,
     ...hosService,
     ...consultPay,
-    ...doType
+    ...doType,
+    ...download,
+    ...help,
+    ...smart
   ]
 })
 

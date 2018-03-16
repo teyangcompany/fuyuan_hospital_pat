@@ -1,0 +1,39 @@
+/**
+ * Created by Administrator on 2018/1/23.
+ */
+export default [
+  {
+    path:"/home/server/smart",
+    component: () => import("../pages/smart/index.vue"),
+    children:[
+      {
+        path:"bodyImg",
+        component:()=>import('../pages/smart/bodyImg.vue')
+      },
+      {
+        path:"bodyList",
+        component:()=>import('../pages/smart/bodyList.vue')
+      }
+    ]
+  },
+  {
+     path:"/home/server/symptom",
+    component:()=>import('../pages/smart/symptom.vue')
+  },
+  {
+    path:"/home/server/sympDetail",
+    component:()=>import('../pages/smart/sympDetail.vue')
+  },
+  {
+    path:"/home/server/age",
+    component:()=>import('../pages/smart/age.vue')
+  },
+  {
+    path:"/home/server/recommendRoom",
+    component:()=>import('../pages/smart/recommendRoom.vue')
+  },
+  {
+    path:"/home/server/room",
+    component:()=>import('../pages/smart/room.vue')
+  }
+]

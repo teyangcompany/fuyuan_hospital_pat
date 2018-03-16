@@ -2,9 +2,13 @@
     <div>
         <div class="weui-cells weui-cells_checkbox" v-for="item in waitPayList">
           <label class="weui-cell weui-check__label">
-            <div class="weui-cell__hd">
+            <div class="weui-cell__hd" v-if="item.coststate != 1">
               <input type="checkbox" class="weui-check" name="checkbox1"  v-model="itemPickedAll"/>
-              <i class="weui-icon-checked"></i>
+              <i class="weui-icon-checked" ></i>
+            </div>
+            <div class="weui-cell__hd" v-else>
+              <!--<input type="checkbox" class="weui-check" name="checkbox1"  v-model="itemPickedAll"/>-->
+              <i class="weui-icon-success"></i>
             </div>
             <div class="weui-cell__bd title">
               <p>{{ item.deptname }}</p>
@@ -12,9 +16,13 @@
             </div>
           </label>
           <label class="weui-cell weui-check__label" v-for="subItem in item.list" v-if="subItem">
-            <div class="weui-cell__hd">
+            <div class="weui-cell__hd" v-if="item.coststate != 1">
               <input type="checkbox" class="weui-check"  v-model="itemPickedAll" name="checkbox1"/>
-              <i class="weui-icon-checked"></i>
+              <i class="weui-icon-checked" ></i>
+            </div>
+            <div class="weui-cell__hd" v-else>
+              <!--<input type="checkbox" class="weui-check"  v-model="itemPickedAll" name="checkbox1"/>-->
+              <i class="weui-icon-success"></i>
             </div>
             <div class="weui-cell__bd content" @click="goDetail(subItem)">
               <p>{{ subItem.projecttype }}</p>
@@ -26,22 +34,38 @@
            <img src="../../../static/img/形状-8.png" alt="">
           <p>您没有需要支付的费用</p>
         </div>
-        <div class="bottomTotal" v-if="waitPayList.length != 0 && isLoad">
-          <div class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" for="s11">
-              <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check" name="checkbox1" v-model="itemPickedAll"  id="s11" />
-                <i class="weui-icon-checked"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <p>全选 共 <span>¥{{ totalPrice }}</span></p>
-              </div>
-            </label>
+        <div class="bottomTotal" v-if="waitPayList.length != 0 && isLoad && !defaultPick">
+      <div class="weui-cells weui-cells_checkbox">
+        <label class="weui-cell weui-check__label" for="s11">
+          <div class="weui-cell__hd">
+            <input type="checkbox" class="weui-check" name="checkbox1" v-model="itemPickedAll"  id="s11" />
+            <i class="weui-icon-checked" ></i>
           </div>
-          <div class="payBtn" @click="pay">
-              立即支付
+          <div class="weui-cell__bd">
+            <p>全选 共 <span>¥{{ totalPrice }}</span></p>
           </div>
+        </label>
+      </div>
+      <div class="payBtn" @click="pay">
+        立即支付
+      </div>
+    </div>
+        <div class="bottomTotal" v-if="waitPayList.length != 0 && isLoad && defaultPick">
+        <div class="weui-cells weui-cells_checkbox">
+          <label class="weui-cell weui-check__label" for="s11">
+            <div class="weui-cell__hd">
+              <input type="checkbox" class="weui-check" name="checkbox1" v-model="itemPickedAll"   />
+              <i class="weui-icon-success"></i>
+            </div>
+            <div class="weui-cell__bd">
+              <p>全选 共 <span>¥{{ totalPrice }}</span></p>
+            </div>
+          </label>
         </div>
+        <div class="payBtn" @click="pay">
+          立即支付
+        </div>
+      </div>
         <toast v-if="showToast"></toast>
     </div>
 </template>
@@ -53,6 +77,7 @@
           return{
               waitPayList:[],
               itemPickedAll:false,
+               defaultPick:false,
 //              subItemPicked:[],
               pickedPrice:[],
               totalPrice:0,
@@ -178,7 +203,7 @@
                       console.log(data)
                       this.returnInfo = JSON.parse(data.keyword)
                       let conf = {
-                        "appId": this.returnInfo.appid,     //公众号名称，由商户传入
+                        "appId": this.returnInfo.sub_appid,     //公众号名称，由商户传入
                         "timeStamp": this.returnInfo.time_stamp,         //时间戳，自1970年以来的秒数
                         "nonceStr": this.returnInfo.nonce_str, //随机串
                         "package": `prepay_id=${this.returnInfo.prepay_id}`,
@@ -207,6 +232,7 @@
 
                     }else{
                       weui.alert(data.msg)
+                      this.getList();
                     }
                   })
               }
@@ -222,10 +248,17 @@
                 this.showToast = false
                 this.isLoad = true
                   if(data.code ==0 ){
-                      console.log(data)
+                      console.log(data,22)
                      if(data.list){
                        this.waitPayList = data.list
+                       console.log(this.waitPayList,333)
                        this.waitPayList.forEach((item)=>{
+                           if(item.coststate == 1){
+                                this.itemPickedAll = true
+                                this.defaultPick = true
+                                this.$set(this.$data,'defaultPick',true)
+                                console.log(this.defaultPick)
+                           }
                          item.list.forEach((subItem,index)=>{
                            subItem.uniqueId = `${item.deptname}${index}`
                          })

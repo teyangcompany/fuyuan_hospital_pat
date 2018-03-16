@@ -4,6 +4,26 @@ export default [
     component: () => import("../pages/home/server/book/index.vue")
   },
   {
+    path: "/home/server/today",
+    component: () => import("../pages/home/server/todayBook/index.vue")
+  },
+  {
+    path: "/home/server/todayList",
+    component: () => import("../pages/home/server/todayBook/todayList.vue")
+  },
+  {
+    path:"/home/server/confirmPage",
+    component: () => import("../pages/home/server/todayBook/confirmPage.vue")
+  },
+  {
+    path:"/home/server/todayPay",
+    component: () => import("../pages/home/server/todayBook/todayPay.vue")
+  },
+  {
+    path:"/home/server/paySucc",
+    component: () => import("../pages/home/server/todayBook/paySucc.vue")
+  },
+  {
     path: "/home/server/book/dept",
     component: () => import("../pages/home/server/book/dept.vue")
   },

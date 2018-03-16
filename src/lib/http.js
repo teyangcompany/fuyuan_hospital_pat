@@ -18,7 +18,7 @@ export default function (service, options) {
   if(openid){
     data.token = 'OPENID_PAT_'+ openid
   }
-
+  // let sign = hex_md5(hex_md5('aAr9MVS9j1') + JSON.stringify(data));
   let axiosConfig = {
     headers: {
       "sign": "test",
