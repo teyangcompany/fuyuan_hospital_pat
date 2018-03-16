@@ -5,12 +5,14 @@
             <div slot="right" class="right absolute" @click="submit">立即提问</div>
         </top>
         <div class="myHeader">
+            <div>
                 <span class="col">
                         请务必保证填写资料的真实、详细；
                 </span><br>
                 <span class="col">
                         该科室的医生会根据您的情况安排适合的医生回答。
                 </span>
+            </div>
         </div>
         <div>
             <div class="weui-cells__title">咨询信息</div>
@@ -21,25 +23,29 @@
                     </div>
                     <div class="weui-cell__ft mfb">{{officeName}}</div>
                 </div>
-                <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
+                <a class="weui-cell weui-cell_access border-1px" href="javascript:;" @click="togglePatient">
                     <div class="weui-cell__bd">
                         <p class="mfb">就诊人</p>
                     </div>
                     <div class="weui-cell__ft mfb" v-if="userList.length != 0">{{userList[pickedIndex].commpatName}} {{ userList[pickedIndex].commpatGender == 'M'?'男':'女' }} {{ ( JSON.stringify( new Date())).substr(1,4) - userList[pickedIndex].commpatIdcard.substr(6,4)}}</div>
                 </a>
-                <div class="weui-cell"v style="background: white">
-                  <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
-                  <div class="weui-cell__bd">
-                    <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
-                  </div>
-                  <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
+                <div class="illNameLine">
+                    <span class="leftName">疾病名称</span>
+                   <input class="illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
                 </div>
+                <!--<div class="weui-cell"v style="background: white">-->
+                  <!--<div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>-->
+                  <!--<div class="weui-cell__bd">-->
+
+                  <!--</div>-->
+                  <!--&lt;!&ndash;<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">&ndash;&gt;-->
+                <!--</div>-->
                 <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePrice" v-if="roomPrice.length > 1">
                   <div class="weui-cell__bd">
                     <p class="mfb" style="color: #FFB415">悬赏金额</p>
                   </div>
-                  <div class="weui-cell__ft mfb" v-if="pickedPrice == ''">选择您愿意支付的金额</div>
-                  <div class="weui-cell__ft mfb" style="color: #FFB415" v-else>{{ pickedPrice | consultPrice }}</div>
+                  <div class="weui-cell__ft mfb" v-if="pickedPrice === ''">选择您愿意支付的金额</div>
+                  <div class="weui-cell__ft mfb" style="color: #FFB415" v-else>¥{{ pickedPrice  }}元</div>
                 </a>
             </div>
             <div class="weui-cells__title">病情资料</div>
@@ -57,7 +63,7 @@
             <upload-img :picList="picList" @delete="deleteImg">
 
                 <upload slot="upload" class="float-left"
-                        :server="config.api_url"
+                        :server="serverURl"
                         :params="config.base_params"
                         service="smarthos.system.file.upload"
                         module="MEDICAL"
@@ -86,6 +92,7 @@
     import uploadImg from '../../base/uploadImg.vue'
     import selPatient from '../../base/selPatient.vue'
     import {Todate,consultPrice} from '../../lib/filter'
+    import {getApiUrl,getEnv} from "../../lib/util"
     import api from '../../lib/http'
     export default{
         components: {
@@ -112,6 +119,7 @@
                 userAge:"",
                 illName:"",
                 userObj:{},
+                serverURl:"",
                 illDescribe:"",
                 attaIdList:[],
                 textLength:0,
@@ -119,6 +127,7 @@
                 pickedIndex:0,
                 roomPrice:[],
                 pickedPrice:"",
+                requestPrice:"",
                 token:localStorage.getItem('token')
             }
         },
@@ -129,6 +138,8 @@
         created(){
           this.getData();
           this.roomPrice = this.$route.query.roomPrice
+          let url = getEnv().api;
+          this.serverURl = url
         },
         mounted(){
             window.addEventListener('resize', function () {
@@ -172,8 +183,8 @@
             if(!symbol.length){
                 this.roomPrice.forEach((item)=>{
                   var symbols_item = {}
-                  symbols_item.label = item
-                  symbols_item.value = item
+                  symbols_item.label = item / 100
+                  symbols_item.value = item / 100
                   symbol.push(symbols_item)
                 })
             }
@@ -184,6 +195,7 @@
               onConfirm: function (result) {
                   console.log(result)
                 that.pickedPrice = result[0].label
+                console.log(that.pickedPrice,77)
               },
               id: 'multiPickerBtn'
             })
@@ -193,11 +205,14 @@
                      weui.alert("病情资料不可为空")
                 }else if(this.textLength > 500){
                   weui.alert("病情资料不能超过500个字")
+                }else if(this.roomPrice.length > 1 && this.pickedPrice === ''){
+                  weui.alert("请选择一个悬赏金额")
                 }else{
                   console.log(this.picList,88888);
                   for(var i=0;i<this.picList.length;i++){
                     this.attaIdList.push(this.picList[i].imgId)
                   };
+                  this.roomPrice.length > 1 ? this.requestPrice = this.pickedPrice*100 : this.requestPrice = this.roomPrice[0]
                   api('smarthos.consult.platform.pic.issue',{
                     attaIdList:this.attaIdList,
                     token:this.token,
@@ -206,6 +221,7 @@
                     "consulterIdcard":this.userObj.commpatIdcard,
                     "consultContent":this.illDescribe,
                     "deptId":this.deptId,
+                     payFee:Math.round(this.requestPrice),
                     "illnessName":this.illName
                   }).then(res=>{
                     console.log(res,3535535);
@@ -215,9 +231,11 @@
                       }else if(this.roomPrice.length == 1 && this.roomPrice[0] != 0){
                         this.$router.push({
                           path: '/pay/' + res.obj.consultInfo.id,
-                          query: {roomPrice: this.roomPrice[0],source:'room'}
+                          query: {fee: this.roomPrice[0],source:'room'}
                         })
                       }else if(this.roomPrice.length == 1 && this.roomPrice[0] == 0){
+                        this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
+                      }else if(this.roomPrice.length > 1 && this.pickedPrice === 0){
                         this.$router.push('/consuitDetail/'+res.obj.consultInfo.id)
                       }else{
                          this.$router.push({
@@ -313,7 +331,7 @@
     .page{
         display: flex;
         flex: 1;
-        overflow: hidden;
+        overflow: auto;
         flex-direction: column;
         .weui-cell{
           label{
@@ -321,6 +339,20 @@
           }
           input{
             font-size: 32px;
+          }
+        }
+        .illNameLine{
+          width: 690px;
+          margin:0 auto;
+          height:90px;
+          display: flex;
+          align-items: center;
+          .leftName{
+            width:300px;
+            font-size: 32px;
+          }
+          input{
+              font-size: 32px;
           }
         }
     }
@@ -341,6 +373,9 @@
         width: 100%;
         height: 90px;
         background: #e1ebff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
     }
     .col{

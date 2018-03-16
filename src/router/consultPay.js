@@ -23,5 +23,9 @@ export default[
   {
     path:"/waitPayDetail",
     component:()=>import('../pages/consultPay/waitPayDetail.vue')
+  },
+  {
+    path:"/payedDetail",
+    component:()=>import('../pages/consultPay/payedDetail.vue')
   }
 ]

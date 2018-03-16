@@ -20,14 +20,15 @@ export default {
     {name: "fast-consult", value: "问医生", text: "快速询问医生", btn: "专家解答", route: "my/consultService/consultDoc"}
   ],
   index_nav: [
-    {name: "guide", value: "智能导诊", path: ""},
+    {name: "guide", value: "智能导诊", path: "/home/server/smart/bodyImg"},
     {name: "book", value: "预约挂号", path: "/home/server/book"},
+    {name: "book", value: "当天挂号",path:"/home/server/today"},
     {name: "queuing", value: "排队叫号",path:"/waitCallNumber"},
     {name: "payment", value: "诊间支付",path:"/consultPay"},
     {name: "report", value: "查报告单", path: '/checkReport'},
     {name: "steward", value: "住院管家",path:"/hosService"},
-    {name: "help", value: "就诊指南"},
-    {name: "more", value: "更多"}
+    {name: "help", value: "就诊指南",path:'/help'},
+    // {name: "more", value: "更多"}
     // {name: "more", value: "更多", path: '/home/moreSel'}
   ],
   my_doc_nav: [

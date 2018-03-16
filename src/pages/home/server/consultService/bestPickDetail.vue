@@ -29,7 +29,7 @@
                        <img :src="detailInfo.userPat.patAvatar" alt="" v-if="detailInfo.userPat.patAvatar">
                        <img src="../../../../../static/img/pat.f.jpg" alt="" v-else-if="!(detailInfo.userPat.patAvatar) && detailInfo.userPat.patGender != 'M'">
                        <img src="../../../../../static/img/pat.m.jpg" alt="" v-else>
-                       <span v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.consulterName.substr(0,1) }}**</span>
+                       <span v-if="detailInfo.userPat">{{ detailInfo.userPat.patName.substr(0,1) }}**</span>
                      </span>
                    </span>
                    <span class="money" v-if="detailInfo.consultInfo">{{ detailInfo.consultInfo.createTime | goodTime }}&nbsp;
@@ -77,9 +77,39 @@
                </div>
              </div>
              <div v-if="item.consultMessage.replyContentType=='TEXT'" class="replyCon">
-                        <span class="bf" >
-                            {{item.consultMessage.replyContent}}
-                        </span>
+                <span class="bf" >
+                    {{item.consultMessage.replyContent}}
+                </span>
+             </div>
+             <div v-else-if="item.consultMessage.replyContentType=='ARTICLE'" class="replyCon"
+                  @click="goArticleDetail(JSON.parse(item.consultMessage.replyContent).articleId)">
+               <div class="jcItem border-1px-white">
+                 <p>标题：{{ JSON.parse(item.consultMessage.replyContent).title}}</p>
+                 <p>作者：{{ JSON.parse(item.consultMessage.replyContent).author}}</p>
+               </div>
+               <div class="seeJcDetail">
+                 <p>查看详情</p>
+               </div>
+             </div>
+             <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='CHECK'" class="replyCon">
+               <div class="jcItem border-1px-white">
+                 <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                 <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+                 <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+               </div>
+               <div class="seeJcDetail">
+                 <p>查看详情</p>
+               </div>
+             </div>
+             <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='INSPECT'" class="replyCon">
+               <div class="jcItem border-1px-white">
+                 <p>{{ item.consultMessage.newContent.type == 'CHECK' ? '检查单' : '检验单' }}</p>
+                 <p>{{ item.consultMessage.newContent.inspectionTypeName }}</p>
+                 <p>{{ item.consultMessage.newContent.inspectionItemName }}</p>
+               </div>
+               <div class="seeJcDetail">
+                 <p>查看详情</p>
+               </div>
              </div>
              <div v-else-if="item.consultMessage.replyContentType=='PIC'" class="replyCon">
                <img class="replyImg" src="../../../../../static/img/privacy.png" alt="" @click="makeSinLarge(item.consultMessage.replyContent)">
@@ -93,7 +123,7 @@
        </scroll>
        <div class="bottom" ref="footer">
           <div class="leftBottom border-1px-right" v-if="detailInfo.consultInfo">
-            <span class="money">看过&nbsp; <span v-if="detailInfo.consultInfo.readCount">{{ detailInfo.consultInfo.readCount }}</span>
+            <span class="money" style="color: #666666;"> <img src="../../../../../static/img/see.png" alt="" style="margin-right: 8px"><span v-if="detailInfo.consultInfo.readCount">{{ detailInfo.consultInfo.readCount }}</span>
               <span v-else>0</span>
             |
             &nbsp;
@@ -127,6 +157,7 @@
             consultId:"",
             detailInfo:"",
             largePicUrl:"",
+            userPat:"",
             showLargePic:false,
             arr:[]
           }
@@ -147,6 +178,38 @@
           this.getConsultDetail()
       },
       methods:{
+        goArticleDetail(id) {
+          console.log(id)
+          http('smarthos.user.doc.article.get',{
+            token:localStorage.getItem('token'),
+            id:id
+          }).then((data)=>{
+            console.log(data)
+            if(data.code == 0){
+              this.$router.push({
+                path: '/articleDetail',
+                query:{articleId:id}
+              })
+            }else{
+              weui.alert("该文章已被删除，无法查看！")
+              return
+            }
+          })
+        },
+        goItemDetail(item){
+          console.log(item)
+          if(item.type == 'CHECK'){
+            this.$router.push({
+              path:"/displayJc",
+              query:{id:item.id,patId:this.userPat.id}
+            })
+          }else{
+            this.$router.push({
+              path:"/displayJy",
+              query:{id:item.id,patId:this.userPat.id}
+            })
+          }
+        },
         getConsultDetail(){
           http("smarthos.consult.details",{
             token:tokenCache.get(),
@@ -155,6 +218,7 @@
             if(data.code == 0){
               console.log(data,333)
               this.detailInfo = data.obj
+              this.userPat = data.obj.userPat
 //                this.arr =  data.obj.consultMessage
             }else{
               weui.alert(data.msg)
@@ -169,6 +233,11 @@
              }).then((data)=>{
                  if(data.code == 0){
                    this.arr =  data.list
+                   this.arr.forEach((item)=>{
+                     if(item.consultMessage.replyContentType == 'INSPECT' || item.consultMessage.replyContentType == 'CHECK'){
+                       item.consultMessage.newContent =  JSON.parse(item.consultMessage.replyContent)
+                     }
+                   })
                  }else{
                      weui.alert(data.msg)
                  }
@@ -392,6 +461,34 @@
                  font-size: 32px;
                  color: #333333;
              }
+             .jcItem{
+               margin-left: 0;
+               width:300px;
+               background-color: #3d9bff;
+               border-top-right-radius: 20px;
+               border-top-left-radius: 20px;
+               p{
+                 padding:15px 15px 5px 15px;
+                 font-size: 30px;
+                 color: #333333;
+                 color: #ffffff;
+               }
+             }
+             .seeJcDetail{
+               width:300px;
+               margin-left: 0;
+               background-color: #3d9bff;
+               text-align: center;
+               height:60px;
+               border-bottom-right-radius: 20px;
+               border-bottom-left-radius: 20px;
+               p{
+                 color: #ffffff;
+                 font-size: 32px;
+                 height: 60px;
+                 line-height: 60px;
+               }
+             }
            }
            .patAnswer{
              display: flex;
@@ -471,6 +568,8 @@
          align-items: center;
          justify-content: center;
          font-size: 32px;
+         color: white;
+         background-color: #3d9bff;
        }
      }
    }

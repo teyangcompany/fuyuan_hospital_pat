@@ -13,8 +13,8 @@
         <ul  class="border-1px">
           <div>
             <li>
-              <div class="cancelImg" v-if="doctorInfo.docAvatar">
-                <img :src="doctorInfo.docAvatar" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
+              <div class="cancelImg" v-if="doctorInfo.yszpwjm">
+                <img :src="doctorInfo.yszpwjm" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
               </div>
               <div class="cancelImg" v-else>
                 <img src="../../../../../static/img/doctorM.png" alt="">
@@ -127,6 +127,7 @@
         this.patOption = (index.schdate).substr(0,10) + (index.ampm == '1'?'上午':'下午')
         console.log(this.patOption)
         this.allInfo = JSON.stringify(index)
+        console.log(index,666)
 
 //          console.log(data.obj)
 

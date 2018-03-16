@@ -176,7 +176,7 @@
               </router-link>
               <div class="ConsultRelate">
                 <span class="name">
-                  <span class="number">
+                  <span class="number" v-if="item.userDocVo">
                     <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
                     <img src="../../../../../static/img/doctorM.png" alt="" v-else>
                     {{item.userDocVo.docName}}回答

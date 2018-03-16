@@ -283,7 +283,13 @@ const state = function (item) {
 const consultPrice = function (price) {
   return `￥${parseInt(price) / 100}`
 }
+const convertms = (time)=>{
+  let m = Math.floor( time / 1000 / 60)
+  let s = Math.floor((time  / 1000) - m*60)
+  let myM
+  m == 0 ? myM = '' : myM = m + "'"
+  return myM  + s + '"'
+}
 
-
-export {Todate,formatDate,getForMoment,getWeek, getDay, goodTime,exactTime, getMyDay, getAge, getGender, Getdate, week, state, consultPrice}
+export {Todate,formatDate,getForMoment,getWeek,convertms, getDay, goodTime,exactTime, getMyDay, getAge, getGender, Getdate, week, state, consultPrice}
 

@@ -25,7 +25,7 @@
                 </div>
                 <div class="title flex">
                     <div class="name flex1">健康资讯</div>
-                    <div class="more flex0" @click="goConsultList">更多</div>
+                    <div class="more flex0" @click="goConsultList"> <span>更多</span></div>
                 </div>
                 <div class="list">
                     <router-link tag="ul" :to="{path:'/healthInfoDetail',query:{newId:i.id}}" v-for="i in healthList" :key="i.id">
@@ -187,13 +187,17 @@
             background-repeat: no-repeat;
             background-size: 18px 30px;
             background-image: url(../../../static/img/icon/arrow-right.png);
+            span{
+                margin-right: 6px;
+            }
         }
     }
 
     .list {
         ul {
             background-color: white;
-            padding-top: 30px;
+            /*padding-top: 30px;*/
+             padding-bottom: 20px;
             li + li {
                 margin-top: 30px;
             }

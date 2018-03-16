@@ -150,6 +150,7 @@
   import { getAge } from '../../lib/filter'
   import upload from "../../base/upload.vue"
   import config from '../../lib/config'
+  import {getApiUrl,getEnv} from "../../lib/util"
   export default{
 //    mixins: [isLoginMixin],
     data(){
@@ -162,6 +163,10 @@
         patOption:"",
         showPat:false,
         showToast:false,
+        originName:"",
+        originIdCard:"",
+        modifyName:true,
+        modifyIdCard:true,
         compatInfo:['本人','父母','配偶','子女','亲戚','朋友','其他'],
         result: null,
         show: false,
@@ -201,7 +206,13 @@
       this.getPersonInfo()
     },
     watch:{
+      patName(){
+           if(this.originName != this.patName){
+             this.modifyName = false
+           }
+      },
       patIdCard(){
+        this.originIdCard == this.patIdCard ? this.modifyIdCard : this.modifyIdCard = false
         if(this.patIdCard.substr(16,1) != ''){
           this.nowAge = this.patIdCard.substr(6,4)
           this.showAge = true
@@ -242,7 +253,9 @@
             this.personInfo = data.obj.userCommonPatVo
             this.patAvatar = data.obj.pat.patAvatar
             this.patName = this.personInfo.commpatName
+            this.originName = this.personInfo.commpatName
             this.patIdCard = this.personInfo.commpatIdcard
+            this.originIdCard = this.personInfo.commpatIdcard
             this.patMobile = this.personInfo.commpatMobile
             if(this.personInfo.areaName ){
               this.areaName = this.personInfo.areaName
@@ -297,9 +310,9 @@
         console.log(this.success)
       },
       goPhone(){
-         this.$router.push({
-              path:"/changeSelfPhone"
-         })
+//         this.$router.push({
+//              path:"/changeSelfPhone"
+//         })
       },
 
       uploadImg(){
@@ -336,11 +349,15 @@
         }
       },
       modifyPic(){
+        if(!this.showAge || !this.showGender || this.patIdCard.length != 18){
+            weui.alert("身份证号不合法")
+            return
+        }
         http("smarthos.user.pat.infomation.modify",{
           patAvatar:this.previewImg,
-          areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
-          patName:this.patName,
-          patIdcard:this.patIdCard
+//          areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
+//          patName:this.patName,
+//          patIdcard:this.patIdCard
         }).then((data)=>{
           if(data.code == 0){
             this.getPersonInfo()
@@ -365,8 +382,15 @@
         })
       },
       modify(){
-           http("smarthos.user.pat.infomation.modify",{
-             areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
+        if(!this.showAge || !this.showGender || this.patIdCard.length != 18){
+          weui.alert("身份证号不合法")
+          return
+        }else if(this.modifyIdCard &&  this.modifyName){
+           weui.alert("您没有进行修改")
+           return
+        }
+        http("smarthos.user.pat.infomation.modify",{
+//             areaCode:this.result == null || this.result.area.code == '' ? this.personInfo.areaCode :this.result.area.code,
              patName:this.patName,
              patIdcard:this.patIdCard
            }).then((data)=>{

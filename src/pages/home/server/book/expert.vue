@@ -31,8 +31,8 @@
       <ul  class="border-1px" v-for="(item,index) in doctorList" v-if="item.ysid">
         <div @click="goFamousPage(index)">
           <li>
-            <div class="avartarImg" v-if="item.docAvatar">
-              <img :src="item.docAvatar" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
+            <div class="avartarImg" v-if="item.yszpwjm">
+              <img :src="item.yszpwjm" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
             </div>
             <div class="avartarImg" v-else>
               <img src="../../../../../static/img/doctorM.png" alt="">

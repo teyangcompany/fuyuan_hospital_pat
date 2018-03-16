@@ -149,7 +149,6 @@
         }).then((data)=>{
           if(data.code == 0){
             this.userInfo = data.obj
-            console.log(data,3333)
           }else{
             weui.alert(data.msg)
           }
@@ -160,12 +159,12 @@
           id:this.id
         }).then((data)=>{
           if(data.code == 0){
-            console.log(data)
             this.jcInfo = data.obj
             this.diagnosis = data.obj.diagnosis
             this.name = data.obj.inspectionTypeName
             this.inspectionItemName = data.obj.inspectionItemName
             this.itemArray = this.inspectionItemName.split(';')
+            console.log(this.itemArray,333)
             this.remark = data.obj.remark
             this.symptom =  data.obj.symptom
             this.sampleType = data.obj.sampleType

@@ -91,6 +91,7 @@
 }
     .skillText{
         flex: 1;
+        word-break: break-all;
     }
     .teamName{
         display: flex;

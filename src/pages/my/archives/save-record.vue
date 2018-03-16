@@ -31,7 +31,7 @@
                 <upload-img :picList="picList"  @delete="deleteImg">
                     <span slot="upload">
                         <upload class="float-left"
-                                :server="config.api_url"
+                                :server="serverURl"
                                 :params="config.base_params"
                                 service="smarthos.system.file.upload"
                                 module="MEDICAL"
@@ -60,6 +60,7 @@
     import config from "../../../lib/config"
     import api from "../../../lib/http"
     import {jssdkMixin} from '../../../lib/mixin'
+    import {getApiUrl,getEnv} from "../../../lib/util"
     export default {
         data() {
             return {
@@ -68,6 +69,7 @@
                 picList: [],
                 config: config,
                 time:"",
+                serverURl:"",
                 description:'',
                 textLength:0,
                 token:localStorage.getItem('token')
@@ -81,6 +83,8 @@
             date
         },
         created() {
+          let url = getEnv().api;
+          this.serverURl = url
             if (this.$route.params.type) {
                 let type = this.$route.params.type
                 this.title = (type == "add") ? "添加病历" : "病历详情";

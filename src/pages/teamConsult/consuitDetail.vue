@@ -12,10 +12,10 @@
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
               <p>
-                                <span class="bf">患者资料： {{consultInfo.consulterName}}
-                                    {{consultInfo.consulterGender = 'M' ? '男' : '女'}}
-                                  {{consultInfo.consulterAge}}
-                                </span>
+                <span class="bf">患者资料： {{consultInfo.consulterName}}
+                    {{consultInfo.consulterGender = 'M' ? '男' : '女'}}
+                  {{consultInfo.consulterAge}}
+                </span>
               </p>
             </div>
             <!--<div class="weui-cell__ft bfc"></div>-->
@@ -23,9 +23,9 @@
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
               <p>
-                                <span class="bf">
-                                    疾病名称：{{consultInfo.illnessName}}
-                                </span>
+                <span class="bf">
+                    疾病名称：{{consultInfo.illnessName}}
+                </span>
               </p>
             </div>
             <!--<div class="weui-cell__ft bfc"></div>-->
@@ -33,8 +33,8 @@
 
         </div>
         <div class="contain">
-          <div>
-            <span class="bf">{{consultInfo.consultContent}}</span>
+          <div class="wrapCon">
+            <span class="bf mainCon">{{consultInfo.consultContent}}</span>
           </div>
           <div class="patImg">
             <div v-for="item in attaList" class="thumb">
@@ -55,7 +55,7 @@
                         </span>
           </div>
         </div>
-        <div class="answerList" v-for="item in arr" ref="lastItem">
+        <div class="answerList" v-for="(item,index) in arr" ref="lastItem" @click="play(item,index)">
           <div class="patAnswer" v-if="item.consultMessage.replierType == 'DOC'">
             <div class="docImg">
               <img :src="item.userDocVo.docAvatar" alt="" v-if="item.userDocVo.docAvatar">
@@ -107,8 +107,10 @@
             <img class="replyImg" :src="item.consultMessage.replyContent" alt=""
                  @touchend.stop="makeLarge(item.consultMessage.replyContent)">
           </div>
-          <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon">
-            <audio controls :src="item.consultMessage.replyContent"></audio>
+          <div v-else-if="item.consultMessage.replyContentType=='AUDIO'" class="replyCon playerArea">
+            <audio :src="item.consultMessage.replyContent"></audio>
+            <div class="playAnimation voicePlay" ref="animate"></div>
+            <span>{{ item.consultMessage.duration | convertms}} </span>
           </div>
           <div @click="goItemDetail(item.consultMessage.newContent)" v-else-if="item.consultMessage.replyContentType=='CHECK'" class="replyCon">
             <div class="jcItem border-1px-white">
@@ -133,37 +135,57 @@
         </div>
       </div>
     </div>
-    <div v-show="consultInfo.consultStatus=='3'" class="bottom">
-      <div class="robot-room-wirte yk-box yk-cell">
-        <!--<div class="talkImg">-->
-        <!--<img src="../../../static/img/talk.png" alt="" @click="setType">-->
+    <div v-show="consultInfo.consultStatus=='3'"  ref="footer" class="bottom footer">
+
+      <section class="foot_top">
+        <div class="picture">
+          <input type="file" name="picture" id="upPicture" ref="picture" @change="upLoad">
+          <img src="../../../static/img/图片.png" alt="" @click="selectImg()">
+        </div>
+        <div class="chatInput">
+          <input type="text" id="inputArea" maxlength="100" @blur="blured" @focus="focus()" ref="inputFocus"
+                 v-model="text" @input="whatInput" class="input-text">
+        </div>
+        <div class="chatSend">
+          <div class="send" @click.prevent="send()" v-if="light">
+            <span>发送</span>
+          </div>
+          <div v-else @click="upMore()" class="addmore">
+            <span>发送</span>
+            <!--<img src="../../../../static/img/聊天界面-添加.png" alt="">-->
+          </div>
+        </div>
+      </section>
+
+
+      <!--<div class="robot-room-wirte yk-box yk-cell">-->
+        <!--&lt;!&ndash;<div class="talkImg">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="../../../static/img/talk.png" alt="" @click="setType">&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">&ndash;&gt;-->
+        <!--&lt;!&ndash;{{msg}}&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--<div class="yk-cell-bd mr10">-->
+          <!--<input :message="clean" v-model="text"  class="input-text"/>-->
         <!--</div>-->
-        <!--<div class="audioInput mfc" v-show="type=='audio'" ref="recordButton">-->
-        <!--{{msg}}-->
+        <!--<div v-if="text == ''" class="showJia" @click="showCheckList">-->
+          <!--<span class="jia">+</span>-->
         <!--</div>-->
-        <div class="yk-cell-bd mr10">
-          <input :message="clean" v-model="text" id="inputArea" class="input-text"/>
-        </div>
-        <div v-if="text == ''" class="showJia" @click="showCheckList">
-          <span class="jia">+</span>
-        </div>
-        <button v-if="text != ''" class="send-btn" @click="send">发送</button>
-      </div>
-      <div class="checkList" v-show="checkList">
-        <div class="upload">
-          <label for="upload_img" class="label_img">图片</label>
-          <input type="file" id="upload_img" @change="upLoad">
-        </div>
-      </div>
+        <!--<button v-if="text != ''" class="send-btn" @click="send">发送</button>-->
+      <!--</div>-->
+      <!--<div class="checkList" v-show="checkList">-->
+        <!--<div class="upload">-->
+          <!--<label for="upload_img" class="label_img">图片</label>-->
+          <!--<input type="file" id="upload_img" @change="upLoad">-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <div class="btn" v-show="consultInfo.consultStatus=='1' || consultInfo.consultStatus=='2'">
       <p class="mfb reply">请等待医生回复，48小时未回复自动退款</p>
     </div>
-    <div class="btn" v-show="consultInfo.consultStatus=='-1'">
-      <div class="cancelStatus">
-        <p class="mfb reply">问诊已取消</p>
-        <p class="mfb reply">如有退款将在7~10个工作日返回您的支付账户</p>
-      </div>
+    <div class="cancel" v-show="consultInfo.consultStatus=='-1'">
+        <p class="">问诊已取消</p>
+        <p class="">如有退款将在7~10个工作日返回您的支付账户</p>
     </div>
     <div class="btn" v-show="consultInfo.consultStatus=='0'">
       <span class="mfb evaluate bor" @click="cancelConsult">取消申请</span>
@@ -197,7 +219,7 @@
   import header from '../../base/header.vue'
   import editDiv from '../../components/editDiv.vue'
   import api from '../../lib/http'
-  import {goodTime, Getdate,exactTime,consultPrice} from '../../lib/filter'
+  import {goodTime, Getdate,exactTime,consultPrice,convertms} from '../../lib/filter'
   import ajax from '../../lib/ajax'
   import dialog from '../../base/dialog.vue'
   import Toast from '../../base/toast.vue'
@@ -218,6 +240,8 @@
         flag: true,
         text: '',
         clean: false,
+        light: false,
+        inter:"",
         checkList: false,
         type: "text",
         time: '',
@@ -229,6 +253,7 @@
         consultInfo: {},
         userPat: {},
         picURL:"",
+        docId:"",
         noReadReplyCount: Number,
         replyContentType: "TEXT",
         showOverConsult: false,
@@ -247,7 +272,8 @@
       goodTime,
       Getdate,
       exactTime,
-      consultPrice
+      consultPrice,
+      convertms
     },
     mounted() {
       this.consultId = this.$route.params.id;
@@ -255,14 +281,50 @@
       this.getInitChat()
 //            this.$refs.recordButton.addEventListener("touchstart",this.startRecord);
 //            this.$refs.recordButton.addEventListener("touchend",this.stopRecord);
-      this.scroll = new BScroll(this.$refs.Scroll, {
-        click: true,
-        probeType: 1,
-        bounce: true
-      });
+//      this.scroll = new BScroll(this.$refs.Scroll, {
+//        click: true,
+//        probeType: 1,
+//        bounce: true
+//      });
     },
-    watch: {},
+    watch: {
+        arr(){
+          setTimeout(() => {
+            this.scroll = new BScroll(this.$refs.Scroll, {
+              click: true,
+              probeType: 1,
+              bounce: true
+            });
+          }, 500)
+        }
+    },
     methods: {
+      play(item,index){
+//        wx.ready(() => {
+
+          for(var i=0;i<this.arr.length;i++){
+            if(document.getElementsByClassName('answerList')[i].getElementsByClassName('playerArea')[0]){
+              document.getElementsByClassName('answerList')[i].getElementsByClassName('playerArea')[0].
+              getElementsByTagName('div')[0].style.animationDuration = 0 + 's'
+              this.$refs.lastItem[i].getElementsByClassName('playerArea')[0].getElementsByTagName('audio')[0].pause()
+            }
+          }
+          if(this.$refs.lastItem[index].getElementsByClassName('playerArea')[0].getElementsByTagName('audio')[0].paused){
+            this.$refs.lastItem[index].getElementsByClassName('playerArea')[0].getElementsByTagName('audio')[0].play()
+            document.getElementsByClassName('answerList')[index].getElementsByClassName('playerArea')[0].
+            getElementsByTagName('div')[0].style.animationDuration = 1 + 's'
+          }else{
+            this.$refs.lastItem[index].getElementsByClassName('playerArea')[0].getElementsByTagName('audio')[0].pause()
+            document.getElementsByClassName('answerList')[index].getElementsByClassName('playerArea')[0].
+            getElementsByTagName('div')[0].style.animationDuration = 0 + 's'
+          }
+          this.$refs.lastItem[index].getElementsByClassName('playerArea')[0].getElementsByTagName('audio')[0].onended = function(){
+            document.getElementsByClassName('answerList')[index].getElementsByClassName('playerArea')[0].
+            getElementsByTagName('div')[0].style.animationDuration = 0 + 's'
+          }
+
+//        })
+      },
       goArticleDetail(id) {
         console.log(id)
         api('smarthos.user.doc.article.get',{
@@ -383,7 +445,7 @@
       },
       //再次咨询
       consultAgain() {
-        this.$router.push('/officeConsult')
+        this.$router.push('/docCard/'+this.docId)
       },
       //评价
       comment() {
@@ -453,6 +515,7 @@
             this.userPat = res.obj.userPat;
             this.noReadReplyCount = res.obj.noReadReplyCount;
             res.obj.consultMessage ? this.arr = res.obj.consultMessage : "";
+            res.obj.userDocVo ? this.docId = res.obj.userDocVo.id : this.docId = '';
 
             setTimeout(() => {
               this.scroll = new BScroll(this.$refs.Scroll, {
@@ -462,7 +525,7 @@
               });
 //                          this.scroll.scrollToElement(this.$refs.lastItem[this.$refs.lastItem.length-1])
 
-            }, 500)
+            }, 300)
           } else {
             alert(res.msg)
           }
@@ -472,6 +535,27 @@
         this.$router.push({
           path: "/my/consultService/myConsult"
         })
+      },
+      selectImg(e) {
+        this.$refs.picture.click()
+      },
+      blured() {
+        clearInterval(this.inter)
+      },
+      focus() {
+        this.inter = setInterval(() => {
+          document.getElementsByClassName("foot_top")[0].scrollIntoView()
+        }, 500)
+      },
+      whatInput() {
+        if (this.text.replace(/\s+/g, "") == '') {
+          this.light = false
+        } else {
+          this.light = true
+        }
+        this.inter = setInterval(() => {
+          document.getElementsByClassName("foot_top")[0].scrollIntoView()
+        }, 500)
       },
       send() {
         console.log(this.text, 22222);
@@ -554,7 +638,22 @@
     height: 150px;
     margin: 10px;
   }
-
+  .cancel{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height:90px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    p{
+      color: #333333;
+      font-size: 32px;
+    }
+  }
   .btn {
     position: fixed;
     left: 0;
@@ -576,6 +675,93 @@
         font-size: 26px;
         color: #666666;
         padding-top: 5px;
+      }
+    }
+  }
+
+  .footer {
+    width: 100%;
+    /*height: 200px;*/
+    position: absolute;
+    bottom: 0;
+    -webkit-user-select: auto;
+    background-color: white;
+    .foot_top {
+      display: flex;
+      .picture {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 20px;
+        /*<!--margin-top: 60px;-->*/
+        img {
+          width: 65px;
+          height: 65px;
+          display: block;
+          margin-bottom: 15px;
+        }
+
+        /*<!--span{-->*/
+        /*<!--font-size: 28px;-->*/
+        /*<!--color:#666666-->*/
+        /*<!--}-->*/
+        /*<!--span.red{-->*/
+        /*<!--margin-top: 5px;-->*/
+        /*<!--color: red;-->*/
+        /*<!--}-->*/
+      }
+      .picture {
+        > input {
+          display: none;
+        }
+      }
+      .chatInput {
+        width: 520px;
+        margin-left: 30px;
+        text-align: center;
+        input {
+          width: 520px;
+          height: 64px;
+          border: none;
+          font-size: 32px;
+          outline: medium;
+          border-radius: 7px;
+          background-color: rgb(243, 243, 243);
+          border-bottom: 1px solid #e0e0e0;
+        }
+        .greenBorder {
+          border-bottom: 1px solid #19ad17;
+          /*border-color:#19ad17;*/
+        }
+      }
+      .chatSend {
+        width: 110px;
+        height: 70px;
+        margin-left: 10px;
+        /*background-color: dodgerblue;*/
+        text-align: center;
+        .send {
+          width: 110px;
+          height: 70px;
+          background: #16af17;
+          border-radius: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          span {
+            display: block;
+            color: white;
+          }
+        }
+        .addmore {
+          span {
+            color: #666666;
+          }
+          /*<!--img{-->*/
+          /*<!--width: 58px;-->*/
+          /*<!--height: 58px;-->*/
+          /*<!--}-->*/
+        }
       }
     }
   }
@@ -618,9 +804,16 @@
     box-sizing: border-box;
     padding: 20px;
     margin-top: 20px;
+    .wrapCon{
+       .mainCon{
+           font-size: 30px;
+           color: #333333;
+       }
+    }
     .createDiv {
       display: flex;
       justify-content: space-between;
+      margin-top: 20px;
       .create {
         width: 200px;
         display: flex;
@@ -673,6 +866,31 @@
       width: 500px;
       margin-top: 20px;
       margin-left: 100px;
+      .playAnimation{
+        position: absolute;
+        left:50px;
+        top: 15px;
+        width: 44px;
+        height: 44px;
+        /*margin-left: 30px;*/
+        background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAAAYCAYAAAAF6fiUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzlFRDZDRDNENzlFMTFFNkJDN0NFMjA2QTFFRTRDQkIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzlFRDZDRDJENzlFMTFFNkJDN0NFMjA2QTFFRTRDQkIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTAxQkEzQ0RENzM2MTFFNjgyMEI5MTNDRkQ0OTM5QUEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTAxQkEzQ0VENzM2MTFFNjgyMEI5MTNDRkQ0OTM5QUEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4K4iKVAAACUUlEQVR42uSazytEURTHvTHjR4kaU8xsSDZSdmbjx4oSK8XGQrJlpSwYTSmxEWWhUIpsZK3kD7DRNBuSBZFCNjZ+JPKcV6ecXu/d3sy7595bc+vbfXPue5/749z77o83lm3bZYYFC8RZqAbQAigP2tXNj5aZF7gdkAZNk9+7WvnOCCgxRUCb9n/o1sk3pUH6QDHF/GNsoM+QeYfiy6qkFeLZDBb0GlTB4AAR/xXT9nXxZVa0WCekQd9Y0HOJjg3CHySviiZmfjO3AyIhnu0gBc0wjAIR/wLtW8z87aAOWAI9gqaYRoAff4ZUoi7EKCiUP462j4CdSCrfK4N1Ahpi6I0i/hPa50M4oFB+Dbm/SzXfL5MD4rUogxP8+Itozynm59E+q5ovyuQdHxphWh568XvR5kxq1SEn40L4e0XMA1L4EcEe7RTjLqYdqRf/gezQUwr5LxjXq+aLHPCFcTmTA7z4tutIQhXfLiJPKXyRA/oxzgW8v9DgxU+S62eF/ATGr6r5fg26Corj9RHD4Z0fvwfjS9CbQn4bxrfK+R6TyzxZNk260solTL4i/g3al10TsMXIryA72T7VfK8MnJO8X9CKy14lafXjxx8jFUsSeyUzfxhtPwHPoqTy/TJJMJzJiPgNpJdsuNJizPwztB/q4JtwHN2KW3sn3HuMOouR30l6bbsOvgkOyGIBnaPbRldalJl/h2knuvgmOKAWNAFKMUz4Iv4O6Z1xXXxTPxtazHy6khnVyS/Fb8IDpHGyuvmWgX9L4Q4toDnQFWhNN/9PgAEAR4w1ULjdCbEAAAAASUVORK5CYII=)  right 0 no-repeat;
+        z-index:100;
+      }
+      .voicePlay{
+        animation-name: voice;
+        /*animation-duration: 1s;*/
+        animation-direction: normal;
+        animation-iteration-count: infinite;
+        animation-timing-function: steps(3);
+      }
+      @keyframes voice {
+        0% {
+          background-position: 0;
+        }
+        100% {
+          background-position: 100%;
+        }
+      }
       span{
         font-size: 32px;
         color: #333333;
@@ -704,6 +922,20 @@
           height: 60px;
           line-height: 60px;
         }
+      }
+    }
+    .playerArea{
+      position: relative;
+      width: 304px;
+      height:80px;
+      background-color: white;
+      background-image: url("../../../static/img/player.png");
+      background-size: 304px 80px;
+      span{
+        position: absolute;
+        color: white;
+        top:17px;
+        right:50px;
       }
     }
   }

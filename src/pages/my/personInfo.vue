@@ -10,7 +10,7 @@
             <span></span>
         </div>
         <!--<div class="line"></div>-->
-        <p class="doctorInfoTitle border-1px">个人信息</p>
+        <p class="doctorInfoTitle border-1px">就诊人信息</p>
         <div class="doctorInfo">
           <div class="circleAngle">
             <!--<div class="aboutConsult">-->
@@ -18,7 +18,7 @@
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                   <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
-                    <p>{{ patName }}</p>
+                    <p class="alignRight">{{ patName }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patName"  placeholder="请输入姓名"/>
@@ -27,14 +27,14 @@
                 <div class="weui-cell" v-if="showGender">
                   <div class="weui-cell__hd"><label class="weui-label">性别</label></div>
                   <div class="weui-cell__bd">
-                    <p>{{ changeGender }}</p>
+                    <p class="alignRight">{{ changeGender }}</p>
                   </div>
                 </div>
 
                 <div class="weui-cell" v-if="showAge">
                   <div class="weui-cell__hd"><label class="weui-label">年龄</label></div>
                   <div class="weui-cell__bd">
-                    <p>{{ changeAge }}</p>
+                    <p class="alignRight">{{ changeAge }}</p>
                   </div>
                 </div>
                 <!--<a class="weui-cell weui-cell_access" href="javascript:;" v-if="showGender">-->
@@ -64,7 +64,7 @@
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
                   <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
-                    <p>{{ patMobile }}</p>
+                    <p class="alignRight">{{ patMobile }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else @click="goPhone">
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patMobile" placeholder="请输入手机号"/>
@@ -73,7 +73,7 @@
                 <div class="weui-cell">
                   <div class="weui-cell__hd"><label class="weui-label">身份证号</label></div>
                   <div class="weui-cell__bd" v-if="list[index] && list[index].userCommonPatRecords.length != 0" @click="preventModify">
-                    <p>{{ patIdCard }}</p>
+                    <p class="alignRight">{{ patIdCard }}</p>
                   </div>
                   <div class="weui-cell__bd" v-else>
                     <input class="weui-input" style="text-align: right" type="text"  v-model="patIdCard"  placeholder="请输入身份证号"/>
@@ -231,7 +231,8 @@
       },
       goPhone(){
         this.$router.push({
-          path:"/changeSelfPhone"
+          path:"/changeOtherPhone",
+          query:{commpatId:this.list[this.index].id}
         })
       },
       preventModify(){
@@ -282,6 +283,7 @@
         console.log(this.success)
       },
       goSave(){
+         console.log(this.patIdCard)
         http('smarthos.user.commpat.infomation.modify',{
           "token":localStorage.getItem("token"),
           "commpatId":this.list[this.index].id,
@@ -333,6 +335,9 @@
       p{
         font-size: 32px;
       }
+       .alignRight{
+         text-align: right;
+       }
        .weui-cell__ft{
         font-size: 32px;
        }

@@ -5,12 +5,14 @@
             <div slot="right" class="right absolute" @click="submit">下一步</div>
         </top>
         <div class="myHeader">
-                <span class="col">
-                        请务必保证填写资料的真实、详细；
-                </span><br>
-            <span class="col">
-                        医生会在48小时内回复您，否则将为您退款。
-                </span>
+           <div>
+              <span class="col">
+                      请务必保证填写资料的真实、详细；
+              </span><br>
+             <span class="col">
+                      医生会在48小时内回复您，否则将为您退款。
+              </span>
+           </div>
         </div>
         <div>
             <div class="weui-cells__title">咨询信息</div>
@@ -21,7 +23,7 @@
                     </div>
                     <div class="weui-cell__ft mfb">{{docName}}</div>
                 </div>
-                <a class="weui-cell weui-cell_access" href="javascript:;" @click="togglePatient">
+                <a class="weui-cell weui-cell_access border-1px" href="javascript:;" @click="togglePatient">
                     <div class="weui-cell__bd">
                         <p class="mfb">就诊人</p>
                     </div>
@@ -29,12 +31,9 @@
                         {{showPat}}
                     </div>
                 </a>
-                <div class="weui-cell" >
-                  <div class="weui-cell__hd"><label class="weui-label illNameLabel">疾病名称</label></div>
-                  <div class="weui-cell__bd">
-                    <input class="weui-input illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
-                  </div>
-                  <!--<img src="../../../static/img/icon/arrow-right-grow.png" class="illArrow" alt="">-->
+                <div class="illNameLine">
+                  <span class="leftName">疾病名称</span>
+                  <input class="illName" v-model="illName" type="text" placeholder="未确诊请不要填写"/>
                 </div>
             </div>
             <div class="weui-cells__title">病情资料</div>
@@ -54,7 +53,7 @@
             <upload-img :picList="picList" @delete="deleteImg">
 
                 <upload slot="upload" class="float-left"
-                        :server="config.api_url"
+                        :server="serverURl"
                         :params="config.base_params"
                         service="smarthos.system.file.upload"
                         module="MEDICAL"
@@ -83,6 +82,7 @@
     import uploadImg from '../../base/uploadImg.vue'
     import selPatient from '../../base/selPatient.vue'
     import api from '../../lib/http'
+    import {getApiUrl,getEnv} from "../../lib/util"
     import {getAge, getGender} from "../../lib/filter"
 
     export default {
@@ -104,6 +104,7 @@
                 userSex: "",
                 userAge: "",
                 userObj: {},
+                serverURl:"",
                 token: localStorage.getItem('token'),
                 docName: "",
                 docId: "",
@@ -128,6 +129,8 @@
         created() {
             this.scrollHeight = window.innerHeight - 45
             this.fee = this.$route.query.fee
+            let url = getEnv().api;
+            this.serverURl = url
         },
         mounted() {
             window.addEventListener('resize', function () {
@@ -285,7 +288,7 @@
     .page {
         display: flex;
         flex: 1;
-        overflow: hidden;
+        overflow: auto;
         flex-direction: column;
         .weui-cells__title {
             font-size: 30px;
@@ -299,6 +302,20 @@
         }
         input{
             font-size: 32px;
+        }
+      }
+      .illNameLine{
+        width: 690px;
+        margin:0 auto;
+        height:90px;
+        display: flex;
+        align-items: center;
+        .leftName{
+          width:300px;
+          font-size: 32px;
+        }
+        input{
+          font-size: 32px;
         }
       }
     }
@@ -321,6 +338,9 @@
         height: 90px;
         background: #e1ebff;
         text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .col {

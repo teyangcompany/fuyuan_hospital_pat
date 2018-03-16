@@ -1,17 +1,20 @@
 <template>
     <div class="notice">
         <div class="contain">
+            <div v-if="!docRestNotice && !docOrdinaryNotice">
+                <p>暂无内容</p>
+            </div>
             <div class="msg" v-if="docRestNotice && docRestNotice.content">
                <p>
                    <span>停诊公告</span>
                    <span class="restTime" v-if="docRestNotice.noticeStartDate != docRestNotice.noticeEndDate">{{ docRestNotice.noticeStartDate | getForMoment}}~{{ docRestNotice.noticeEndDate | getForMoment}}</span>
                    <span class="restTime" v-else>{{ docRestNotice.noticeStartDate | getForMoment}}</span>
                </p>
-               <p>&nbsp; &nbsp;&nbsp; &nbsp;{{docRestNotice.content}}</p>
+               <p style="color: #666666;">&nbsp; &nbsp;&nbsp; &nbsp;{{docRestNotice.content}}</p>
             </div>
-            <div>
+            <div v-if="docOrdinaryNotice">
                <p>医生公告</p>
-               <p>{{docOrdinaryNotice.content}}</p>
+               <p style="color: #666666;">{{docOrdinaryNotice.content}}</p>
             </div>
         </div>
 
@@ -50,6 +53,7 @@
                 if(res.succ){
                     this.docOrdinaryNotice = res.obj.docOrdinaryNotice
                     this.docRestNotice = res.obj.docRestNotice
+                    console.log(this.docRestNotice,333)
                 }else {
                     alert(res.msg)
                 }

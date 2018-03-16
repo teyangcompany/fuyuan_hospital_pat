@@ -5,10 +5,11 @@
       <div>
         <div class="topBanner">
           <p>{{ reportInfoArray[specialIndex].assayitemname }}</p>
+          <span>NO.{{ reportInfoArray[specialIndex].assayitemno }}</span>
         </div>
         <div class="testType">
           <div class="type">
-            <h4>NO.{{ reportInfoArray[specialIndex].assayitemno }}</h4>
+            <!--<h4>NO.{{ reportInfoArray[specialIndex].assayitemno }}</h4>-->
           </div>
           <div class="name">
             <p class="first">姓名：{{ reportInfoArray[specialIndex].name }}</p>
@@ -43,22 +44,30 @@
         <div class="blank"></div>
         <div class="testInfo">
           <table>
-            <tr style="text-align: center" class="title">
-              <td>NO</td>
-              <td>项目</td>
-              <td>结果</td>
-              <td>参考值</td>
-              <td>单位</td>
+            <tr  class="title">
+              <td class="alignLeft">NO</td>
+              <td class="alignLeft">项目/单位</td>
+              <td class="alignRight">结果/参考值</td>
+              <!--<td>参考值</td>-->
+              <!--<td>单位</td>-->
             </tr>
             <tr v-for="(item,index) in experiment">
-              <td>{{ item.assayitemcode }}</td>
-              <td class="secondCol">{{ item.assayitemname }}</td>
-              <td >{{ item.result }}
-                <img v-if="status[index] == 'up'" src="../../../static/img/up@2x.png" alt="">
-                <img v-else-if="status[index] == 'down'" src="../../../static/img/down@2x.png" alt="">
+              <td class="secondCol">{{ item.assayitemcode }}</td>
+              <td class="secondCol">
+                 <p>{{ item.assayitemname }}</p>
+                 <p>[{{ item.unit }}]</p>
               </td>
-              <td>{{ item.refrange}}</td>
-              <td>{{ item.unit }}</td>
+              <td class="thirdCol">
+                 <p>{{ item.result }}
+                   <img v-if="status[index] == 'up'" src="../../../static/img/up@2x.png" alt="">
+                   <img v-else-if="status[index] == 'down'" src="../../../static/img/down@2x.png" alt="">
+                 </p>
+                <p>参考值:{{ item.refrange}}</p>
+              </td>
+              <!--<td>-->
+                  <!--<p>{{ item.refrange}}</p>-->
+              <!--</td>-->
+              <!--<td>{{ item.unit }}</td>-->
             </tr>
           </table>
         </div>
@@ -169,6 +178,12 @@
         font-size: 32px;
         word-break: break-all;
       }
+      span{
+        color: white;
+        font-size: 32px;
+        padding-left: 30px;
+        padding-bottom: 15px;
+      }
     }
     .testType{
       width:750px;
@@ -258,15 +273,30 @@
           }
         }
         .secondCol{
-         width:350px;
+         /*width:350px;*/
+          text-align: left;
+          padding-left: 20px;
+        }
+        .thirdCol{
+          text-align: right;
+          padding-right: 30px;
         }
         tr:nth-child(even){
           background-color: rgb(250,250,250);
         }
         .title{
+          width:690px;
           td{
             font-size: 32px;
             color: #333333;
+          }
+          .alignLeft{
+              text-align: left;
+              padding-left: 20px;
+          }
+          .alignRight{
+              text-align: right;
+              padding-right: 30px;
           }
         }
       }

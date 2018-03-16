@@ -56,7 +56,7 @@
           <upload-img :picList="picList" :imgList="imgList" @large="makeLarge" @delete="deleteImg">
                     <span slot="upload">
                         <upload class="float-left"
-                                :server="config.api_url"
+                                :server="serverURl"
                                 :params="config.base_params"
                                 service="smarthos.system.file.upload"
                                 module="MEDICAL"
@@ -99,6 +99,7 @@
   import config from "../../../lib/config"
   import Dialog from '../../../base/dialog.vue'
   import {Getdate,Todate,getDay} from '../../../lib/filter'
+  import {getApiUrl,getEnv} from "../../../lib/util"
   import api from '../../../lib/http'
   export default{
     components: {
@@ -122,6 +123,7 @@
         imgList:[],
         imgId:[],
         id:'',
+        serverURl:"",
         creatorName:'',
         picList: [],
         config: config,
@@ -144,6 +146,8 @@
       }
     },
     created(){
+      let url = getEnv().api;
+      this.serverURl = url
       var caseObj = this.$route.params.caseObj;
       console.log(caseObj,121212)
       this.$set(this.$data,'caseObj',caseObj)

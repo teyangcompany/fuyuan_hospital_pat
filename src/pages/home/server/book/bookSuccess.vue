@@ -14,7 +14,7 @@
           </div>
           <div class="weui-msg__opr-area">
             <p class="weui-btn-area">
-              <a href="javascript:;" class="weui-btn weui-btn_default" @click="goMyBookNumber()">查看预约记录</a>
+              <a href="javascript:;" class="weui-btn weui-btn_primary" @click="goMyBookNumber()">查看预约记录</a>
             </p>
           </div>
         </div>
@@ -68,7 +68,8 @@
     background-color:rgb(249,249,249);
     z-index: 200;
     .page{
-      margin-top: 288px;
+      /*margin-top: 288px;*/
+      padding-top: 238px;
       p.numberCode{
         font-size: 40px;
         font-weight: bold;

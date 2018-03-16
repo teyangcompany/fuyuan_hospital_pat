@@ -27,7 +27,7 @@
         <span class="form-group__message" v-show="equal">俩次密码不一致</span>
       </div>
       <div class="btn">
-        <a @click="editPassword" style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">确定</a>
+        <a @click="editPassword" style="background: #3d9bff" href="javascript:;" class="weui-btn weui-btn_primary">确定</a>
       </div>
     </div>
 </template>
@@ -117,6 +117,6 @@
       color: red;
       box-sizing: border-box;
       padding-left: 15px;
-      font-size: 12px;
+      font-size: 24px;
     }
 </style>

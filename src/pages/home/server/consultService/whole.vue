@@ -52,10 +52,10 @@
       }
     }
     .toggleNmae{
-      width:650px;
-      margin: 0 auto;
+      width:500px;
+      margin-left: 40px;
       >div{
-        width:500px;
+        width:450px;
         margin:0 auto;
         display: flex;
         p{

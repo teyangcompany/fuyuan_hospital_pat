@@ -234,10 +234,10 @@
       color: red;
       box-sizing: border-box;
       padding-left: 15px;
-      font-size: 12px;
+      font-size: 24px;
     }
     .add{
-      color: #0FBDFF;
+      color: #3d9bff;
     }
   .weui-cell_warn{
     color: black;
@@ -249,7 +249,7 @@
       margin: 30px 0;
     }
   .weui-vcode-btn{
-    background:#0fbdff;
+    background:#3d9bff;
     color: white;
   }
   .weui-label{

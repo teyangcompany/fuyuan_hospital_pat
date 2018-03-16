@@ -36,7 +36,7 @@
                 <p>科室 <span> {{ allInfoArray.deptname }} </span> </p>
               </div>
               <div class="list border-1px">
-                <p>医生 <span> {{ allInfoArray.docname }} </span> </p>
+                <p>医生 <span> {{ allInfoArray.docname ? allInfoArray.docname : '普通号'}} </span> </p>
               </div>
               <div class="list border-1px">
                 <p>就诊日期 <span>{{ allInfoArray.schdate.substr(0,4) }}-{{ allInfoArray.schdate.substr(4,2) }}-{{ allInfoArray.schdate.substr(6) }} {{ allInfoArray.ampm == '1'? '上午':'下午' }} </span> </p>
@@ -57,7 +57,7 @@
         <p class="patientInfoTitle"> <span class="leftPatTitle">就诊人信息</span> <span @click="goToggle">切换就诊人</span> </p>
         <div class="patientInfo">
           <div class="leftTitle">
-            <span>姓&nbsp;&nbsp;名:</span>
+            <span>姓名:</span>
             <span>身份证号:</span>
             <span>手机号:</span>
             <span>病案号:</span>
@@ -296,16 +296,18 @@
           commpatId:this.compatInfo[this.index].id,
           bookHosId:this.hosid
         }).then((data)=>{
+          console.log(data,11)
           console.log(this.hosid)
           console.log(this.compatInfo[this.index].id)
-          this.alertStatus = data.obj.compatRecord
           this.showToast = false
           if(data.code == 0){
             this.fail = false
             this.successDisplay = true
+            this.alertStatus = data.obj.compatRecord
           }else{
             this.successDisplay = false
             this.fail = true
+            this.alertStatus = data.msg
           }
           console.log(data)
         })
@@ -679,10 +681,11 @@
       /*<!--background-color: $bgColor2;-->*/
       display: flex;
       .leftTitle{
-        width: 150px;
+        width: 180px;
+        margin-left: 25px;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         span{
           height:80px;
           line-height: 80px;
@@ -691,7 +694,7 @@
         }
       }
       .rightMatch{
-        width:540px;
+        width:485px;
         display: flex;
         flex-direction: column;
         align-items: flex-end;

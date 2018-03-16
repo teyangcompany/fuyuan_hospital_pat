@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="btn" @click="bind">
-                <span :class="{active:current==1}" style="background: #30cfd0" href="javascript:;"
+                <span :class="{active:current==1}" style="background: #3d9bff" href="javascript:;"
                       class="weui-btn weui-btn_primary">绑定</span>
                 </div>
                 <div class="bottom">
@@ -193,20 +193,20 @@
                 })
                 return
               }
+              console.log(openidCache.get())
              api("smarthos.user.pat.wechat.bind", {
                openid: openidCache.get(),
                captcha: this.captcha,
                cid: this.cid
              }).then((res) => {
                console.log(res);
-               if (res.code != 0) {
-//                 weui.alert(res.msg);
+               if (res.code == 0) {
                  this.$router.push({
                    name: 'home'
                  })
-               } else {
-
-
+               } else if(res.msg == '验证码错误'){
+                 weui.alert(res.msg)
+               }else {
 //            inputText(){
 //                window.setInterval(()=>{
 //                    this.$refs.bottom.scrollIntoView(true)
@@ -257,10 +257,10 @@
 //                    }
 //                })
 //
-//          }
-                 this.$router.push({
-                   name: 'home'
-                 })
+                weui.alert(res.msg);
+//                 this.$router.push({
+//                   name: 'home'
+//                 })
                }
              })
            }

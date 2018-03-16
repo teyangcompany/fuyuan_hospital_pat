@@ -10,6 +10,10 @@
         <div class="contentWrap">
           <div v-html="article.content">
           </div>
+           <div class="codeImg">
+             <span>扫描二维码关注我</span>
+             <img :src="doc.docQrcode" alt="">
+           </div>
         </div>
       </div>
     </scroll>
@@ -27,7 +31,9 @@
         rightTitle:"",
         article:"",
         articleId:"",
-        time:""
+        time:"",
+        doc:"",
+        docId:""
       }
     },
     filters:{
@@ -35,18 +41,51 @@
     },
     created(){
       this.articleId = this.$route.query.articleId
+      this.docId = this.$route.query.docId
       http("smarthos.user.doc.article.get",{
         token:localStorage.getItem('token'),
         id:this.articleId
       }).then((data)=>{
           if(data.code == 0){
             this.article = data.obj
+//            this.getDocInfo()
+            this.getData()
           }else{
               weui.alert(data.msg)
           }
-//        this.time = formatDate(new Date(this.article.createTime))
-        console.log(data)
       })
+
+    },
+    methods:{
+       getDocInfo(){
+         http("smarthos.user.doc.card.get",{
+           docId:this.article.docId
+         }).then((data)=>{
+           console.log(data,99)
+           if(data.code == 0){
+             console.log(data)
+           }else{
+             weui.alert(data.msg)
+           }
+         })
+       },
+      getData() {
+//        this.docId = sessionStorage.getItem('docId')
+        http('smarthos.user.doc.card.get', {
+          docId: this.article.docId
+        }).then(res => {
+          if (res.succ) {
+            this.doc = res.obj.doc;
+          } else {
+            if (res.msg == '医患关系不存在') {
+
+            } else {
+             weui.alert(res.msg)
+              console.log(res,444)
+            }
+          }
+        })
+      },
     },
     components:{
       "VHeader":header,
@@ -62,6 +101,8 @@
     left:0;
     right:0;
     bottom:40px;
+    overflow: auto;
+    background-color: white;
     .articleTop{
       width:690px;
       margin:0 auto;
@@ -80,6 +121,17 @@
     .contentWrap{
       width:690px;
       margin: 0 auto;
+      .codeImg{
+          margin-top: 30px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          img{
+            width: 400px;
+            height:400px;
+          }
+      }
     }
   }
 </style>

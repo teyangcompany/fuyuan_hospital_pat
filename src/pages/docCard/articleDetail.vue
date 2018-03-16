@@ -18,6 +18,10 @@
                 <div class="contain mfb" v-html="articleObj.content">
 
                 </div>
+                <div class="codeImg">
+                   <span>扫描二维码关注我</span>
+                  <img :src="doc.docQrcode" alt="">
+                </div>
             </div>
         </scroll>
     </div>
@@ -43,6 +47,8 @@
         data(){
             return {
                 id:"",
+                doc:"",
+                docId:"",
                 token:localStorage.getItem('token'),
                 scrollHeight:"",
                 articleObj:{},
@@ -52,6 +58,7 @@
         },
         created(){
           this.scrollHeight = window.innerHeight-45
+          this.getData()
         },
         mounted(){
             this.id = this.$route.params.id
@@ -66,6 +73,25 @@
                     alert(res.msg)
                 }
             })
+        },
+        methods:{
+          getData() {
+            this.docId = sessionStorage.getItem('docId')
+            api('smarthos.user.doc.card.get', {
+              docId: this.docId
+            }).then(res => {
+              console.log(res,1111)
+              if (res.succ) {
+                this.doc = res.obj.doc;
+              } else {
+                if (res.msg == '医患关系不存在') {
+
+                } else {
+                  alert(res.msg)
+                }
+              }
+            })
+          },
         }
     }
 </script>
@@ -94,5 +120,17 @@
         padding: 30px;
         font-size: 28px;
         color: #333333;
+    }
+    .codeImg{
+      width: 690px;
+      margin:0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+        img{
+          width: 400px;
+          height:400px;
+        }
     }
 </style>

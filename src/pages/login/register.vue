@@ -55,7 +55,7 @@
     <!--</label>-->
 
     <div class="btn" @click="myDetail">
-      <a style="background: #30cfd0" href="javascript:;" class="weui-btn weui-btn_primary">完善信息</a>
+      <a style="background: #3d9bff" href="javascript:;" class="weui-btn weui-btn_primary">完善信息</a>
     </div>
   </div>
 </template>
@@ -184,6 +184,6 @@
     color: red;
     box-sizing: border-box;
     padding-left: 15px;
-    font-size: 12px;
+    font-size: 24px;
   }
 </style>

@@ -63,7 +63,7 @@
             <div class="border-1px"  v-if="item.ysid" v-for="item in commonRoom">
               <div  class="border-1px" @click="selectTime(single,index)"  v-for="(single,index) in item.deptSchemeList[0].schemeList">
                 <div class="cancelImg">
-                  <img class="avartarImg" v-if="item.docAvatar" :src="item.docAvatar" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
+                  <img class="avartarImg" v-if="item.yszpwjm" :src="item.yszpwjm" alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
                   <img class="avartarImg" src="../../../../../static/img/doctorM.png" v-else alt="" onerror="javascript:this.src='./static/img/doctor.m.png'">
                 </div>
                 <div class="cancelIntro">
@@ -185,7 +185,11 @@
         }).then((data)=>{
            console.log(data)
           if(data.code == 0){
-            this.commonRoom = data.list
+            if(data.msg){
+              this.commonRoom = []
+            }else{
+              this.commonRoom = data.list
+            }
           }else if(!(data.msg)){
             this.commonRoom = true
            weui.alert("网络错误，稍后重试")
@@ -255,7 +259,11 @@
         }).then((data)=>{
            console.log(data,333)
           if(data.code == 0){
-            this.commonRoom = data.list
+            if(data.msg){
+              this.commonRoom = []
+            }else{
+              this.commonRoom = data.list
+            }
           }else if(!(data.msg)){
             this.commonRoom = true
             weui.alert("网络错误，稍后重试")

@@ -143,27 +143,32 @@
         }
     }
     .navbar{
-        flex:0 ;
+        /*flex:0 ;*/
         width: 100%;
-        margin-top: 15px;
+        /*margin-top: 15px;*/
         display: flex;
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
-        padding-top: 10px;
-        padding-bottom: 50px;
-        border-bottom: 1px solid gainsboro;
-        height: 100px;
+        /*padding-top: 10px;*/
+        /*padding-bottom: 50px;*/
+        /*border-bottom: 1px solid gainsboro;*/
+        height: 80px;
+      >div{
+           span{
+                font-size: 32px;
+           }
+      }
     }
     .bar{
         padding-bottom: 20px;
-        border-bottom: 1px solid #2772ff;
-        color: #2772ff;
+        border-bottom: 1px solid #3d9bff;
+        color: #3d9bff;
     }
     .docImg{
-        width: 130px;
-        height: 130px;
-        border-radius: 65px;
+        width: 125px;
+        height: 125px;
+        border-radius:50%;
         margin-right: 50px;
     }
     .famous{
@@ -173,8 +178,8 @@
         line-height: 30px;
         display: inline-block;
         margin-left: 20px;
-        color: blue;
-        border: 1px solid blue;
+        color: #3d9bff;
+        border: 1px solid #3d9bff;
         border-radius: 5px;
         font-size: 24px;
     }

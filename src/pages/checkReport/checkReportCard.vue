@@ -5,6 +5,7 @@
       <div>
         <div class="testType">
           <div class="type" style="background-color: #3d9bff;">
+            <h4 style="color: white;">医疗名称</h4>
             <h4 style="color: white;">{{  reportInfoArray[specialIndex].inspectitemname }}</h4>
           </div>
           <div class="name firstLine">
@@ -126,6 +127,7 @@
           color: #333333;
           padding-left: 15px;
           padding-bottom: 15px;
+          padding-right: 15px;
         }
         p{
           font-size: 32px;

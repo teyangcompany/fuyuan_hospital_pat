@@ -835,110 +835,113 @@
       /*height: 180px;*/
       background-color: #ffffff;
       /*border-bottom: 1px solid rgb(205,205,205);*/
-      .teamLi{
-        list-style-type: none;
-        /*height: 180px;*/
-        display: flex;
-        .cancelImg{
-          width: 180px;
+      >div{
+          padding-bottom: 15px;
+        .teamLi{
+          list-style-type: none;
+
           display: flex;
-          justify-content: center;
-          margin-top: 30px;
-          /*align-items: center;*/
+          .cancelImg{
+            width: 180px;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            /*align-items: center;*/
+          }
+          .cancelIntro{
+            flex:2;
+            display: flex;
+            align-items: center;
+            /*line-height: 25px;*/
+            >div{
+              .wrapTitle{
+                width: 570px;
+                margin-top: 30px;
+                .followName{
+                  font-size: 34px;
+                  color: #333333;
+                }
+                .myDoctor{
+                  font-size: 20px;
+                  color: #FFB415;
+                  border:1px solid #FFB415;
+                  border-radius: 6px;
+                  padding:3px 18px 3px 18px;
+                  /*line-height: 18px;*/
+                  text-align: center;
+                  margin-left: 20px;
+                }
+              }
+              p{
+                color: #888888;
+                font-size: 26px;
+                margin-top: 10px;
+              }
+              .goodDes{
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                word-break: break-all;
+              }
+            }
+          }
+          img{
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+          }
         }
-        .cancelIntro{
-          flex:2;
-          display: flex;
-          align-items: center;
-          /*line-height: 25px;*/
-          >div{
-            .wrapTitle{
-              width: 570px;
-              margin-top: 30px;
-              .followName{
-                font-size: 34px;
-                color: #333333;
-              }
-              .myDoctor{
-                font-size: 20px;
-                color: #FFB415;
-                border:1px solid #FFB415;
-                border-radius: 6px;
-                padding:3px 18px 3px 18px;
-                /*line-height: 18px;*/
-                text-align: center;
-                margin-left: 20px;
-              }
-            }
+        .goodAt{
+          width: 660px;
+          /*height: 0px;*/
+          margin-left: 180px;
+          background-color: #ffffff;
+          section{
+            width: 570px;
+            /*margin-bottom: 40px;*/
+          }
+          section:nth-child(1){
             p{
-              color: #888888;
-              font-size: 26px;
-              margin-top: 20px;
-            }
-            .goodDes{
               display: -webkit-box;
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 2;
               overflow: hidden;
               word-break: break-all;
+              font-size: 26px;
+              color: #888888;
             }
           }
-        }
-        img{
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-        }
-      }
-      .goodAt{
-        width: 660px;
-        /*height: 0px;*/
-        margin-left: 180px;
-        background-color: #ffffff;
-        section{
-          width: 570px;
-          /*margin-bottom: 40px;*/
-        }
-        section:nth-child(1){
-          p{
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            word-break: break-all;
-            font-size: 26px;
-            color: #888888;
-          }
-        }
-        section:nth-child(2){
-          margin-top: 15px;
-          display: flex;
-          width:570px;
-          /*word-wrap: break-word;*/
-          /*word-break: break-all;*/
-          >div{
-            margin-top: 20px;
-            margin-bottom: 30px;
-             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            /*flex:1;*/
-            /*border:1px solid #999999;*/
-            /*margin-left: 15px;*/
-            /*margin-bottom: 15px;*/
-            /*display: inline-block;*/
+          section:nth-child(2){
+            margin-top: 15px;
+            display: flex;
+            width:570px;
             /*word-wrap: break-word;*/
             /*word-break: break-all;*/
-            img{
-              width:42px;
-              height:42px;
-              margin-right: 16px;
-            }
-            .wrapPrice{
-              margin-right: 30px;
-              p{
-                color: #888888;
-                font-size: 24px;
+            >div{
+              margin-top: 20px;
+              margin-bottom: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              /*flex:1;*/
+              /*border:1px solid #999999;*/
+              /*margin-left: 15px;*/
+              /*margin-bottom: 15px;*/
+              /*display: inline-block;*/
+              /*word-wrap: break-word;*/
+              /*word-break: break-all;*/
+              img{
+                width:42px;
+                height:42px;
+                margin-right: 16px;
+              }
+              .wrapPrice{
+                margin-right: 30px;
+                p{
+                  color: #888888;
+                  font-size: 24px;
+                }
               }
             }
           }
