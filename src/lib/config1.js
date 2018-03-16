@@ -4,8 +4,8 @@
 export const CACHE_PREFIX = "fyyy_pat_" + window.version + "_";
 export const API_URL = {
   "localhost": {
-    api: "//api.ywfyhospital.com/app",
-    // api: "//test-api-ywfy.hztywl.cn/app",
+    //api: "//api.ywfyhospital.com/app",
+    api: "//test-api-ywfy.hztywl.cn/app",
     appid: "wx7d475d39a1ea1aa9",
     plat: 'dev'
   },
