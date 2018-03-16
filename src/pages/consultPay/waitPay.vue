@@ -72,8 +72,9 @@
 <script>
   import http from '../../lib/bookApi'
   import Toast from '../../base/toast.vue'
-  export default{
-    data(){
+
+  export default {
+    data() {
       return {
         waitPayList: [],
         itemPickedAll: false,
@@ -91,7 +92,7 @@
         isLoad: false
       }
     },
-    created(){
+    created() {
       this.previousInfo = JSON.parse(localStorage.getItem('attachContent'))
       this.getList()
     },
@@ -99,7 +100,7 @@
       Toast
     },
     watch: {
-      itemPickedAll(){
+      itemPickedAll() {
         console.log(this.itemPickedAll)
         if (this.itemPickedAll) {
           this.addRelative()
@@ -137,7 +138,7 @@
 //        }
     },
     methods: {
-      addRelative(){
+      addRelative() {
         this.waitPayList.forEach((item) => {
           item.list.forEach((subItem, index) => {
             this.totalArray.push({
@@ -158,7 +159,7 @@
         })
         this.serverendSum()
       },
-      unique(){
+      unique() {
         var array = this.totalArray
         var flags = [], output = [], l = array.length, i;
         for (i = 0; i < l; i++) {
@@ -173,7 +174,7 @@
         }
         this.addArray = output
       },
-      getList(){
+      getList() {
         this.showToast = true
         http("smarthos.yygh.ApiHosPayService.queryPendPayList", {
           orgid: this.previousInfo.hosId,
@@ -205,7 +206,7 @@
           }
         })
       },
-      goDetail(item){
+      goDetail(item) {
         this.$router.push({
           path: "/waitPayDetail",
           query: {
@@ -216,26 +217,26 @@
           }
         })
       },
-      serverendSum(){
+      serverendSum() {
         return http("smarthos.yygh.ApiHosPayService.clinicPayPreSettlement", {
           orgid: this.previousInfo.hosId,
           identificationNumbers: this.totalString
         }).then((data) => {
           if (data.code == 0) {
-            console.log(data, 333)
             this.totalPrice = data.obj.amount
             this.ddid = data.obj.ddid
           } else {
-            weui.alert(data.msg)
+            weui.alert(data.msg, () => {
+              location.reload();
+            })
           }
           return data
         })
       },
-      async pay(){
+      async pay() {
         let ret = await this.serverendSum();
-        console.log("kldkd",ret)
+        console.log("kldkd", ret)
         if (ret.code != 0) {
-          this.getList();
           return
         }
         if (!this.ddid) {
@@ -282,7 +283,6 @@
 
             } else {
               weui.alert(data.msg)
-              this.getList();
             }
             return
           })
